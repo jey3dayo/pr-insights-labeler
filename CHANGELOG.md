@@ -24,6 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - redirect menu output to stderr for command substitution
 - remove color codes for better terminal compatibility
 - use printf instead of echo -e for better shell compatibility
+
 ## [1.5.0] - 2025-10-31
 
 ### Added
