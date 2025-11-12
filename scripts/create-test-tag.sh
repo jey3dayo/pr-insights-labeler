@@ -80,7 +80,7 @@ git push origin test --force
 print_info "✅ Successfully created @test tag"
 echo ""
 print_info "Usage in workflows:"
-echo "  uses: jey3dayo/pr-labeler@test"
+echo "  uses: jey3dayo/pr-insights-labeler@test"
 echo ""
 print_info "To verify:"
 echo "  git show test"

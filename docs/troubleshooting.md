@@ -168,7 +168,7 @@ labels:
 Directory-Based Labeling automatically creates missing labels (no configuration needed):
 
 ```yaml
-- uses: jey3dayo/pr-labeler@v1
+- uses: jey3dayo/pr-insights-labeler@v1
   with:
     github_token: ${{ secrets.GITHUB_TOKEN }}
     enable_directory_labeling: true  # Labels are auto-created with default color (cccccc)
@@ -201,7 +201,7 @@ By default, `skip_draft_pr` is set to `"true"`, causing the action to skip draft
 Explicitly set `skip_draft_pr` to `"false"`:
 
 ```yaml
-- uses: jey3dayo/pr-labeler@v1
+- uses: jey3dayo/pr-insights-labeler@v1
   with:
     github_token: ${{ secrets.GITHUB_TOKEN }}
     skip_draft_pr: "false"  # Run on draft PRs
@@ -271,7 +271,7 @@ npx eslint src/
 If complexity analysis is not critical, disable it:
 
 ```yaml
-- uses: jey3dayo/pr-labeler@v1
+- uses: jey3dayo/pr-insights-labeler@v1
   with:
     github_token: ${{ secrets.GITHUB_TOKEN }}
     complexity_enabled: "false"  # Disable complexity analysis
@@ -284,7 +284,7 @@ If complexity analysis is not critical, disable it:
 Add problematic files to exclusion patterns:
 
 ```yaml
-- uses: jey3dayo/pr-labeler@v1
+- uses: jey3dayo/pr-insights-labeler@v1
   with:
     github_token: ${{ secrets.GITHUB_TOKEN }}
     additional_exclude_patterns: |
@@ -336,7 +336,7 @@ Review the [Default Exclude Patterns](configuration.md#default-exclude-patterns)
 If you want to analyze all files, disable default exclusions:
 
 ```yaml
-- uses: jey3dayo/pr-labeler@v1
+- uses: jey3dayo/pr-insights-labeler@v1
   with:
     github_token: ${{ secrets.GITHUB_TOKEN }}
     use_default_excludes: "false"  # Analyze all files
@@ -386,7 +386,7 @@ Possible causes:
 Ensure `enable_summary` is set to `"true"` (default):
 
 ```yaml
-- uses: jey3dayo/pr-labeler@v1
+- uses: jey3dayo/pr-insights-labeler@v1
   with:
     github_token: ${{ secrets.GITHUB_TOKEN }}
     enable_summary: "true"  # Enable summary output
@@ -397,7 +397,7 @@ Ensure `enable_summary` is set to `"true"` (default):
 For large PRs, disable summary output:
 
 ```yaml
-- uses: jey3dayo/pr-labeler@v1
+- uses: jey3dayo/pr-insights-labeler@v1
   with:
     github_token: ${{ secrets.GITHUB_TOKEN }}
     enable_summary: "false"  # Disable for large PRs
@@ -423,7 +423,7 @@ Error: Unable to process summary. Size exceeds limit.
 Enable debug logging for detailed output:
 
 ```yaml
-- uses: jey3dayo/pr-labeler@v1
+- uses: jey3dayo/pr-insights-labeler@v1
   with:
     github_token: ${{ secrets.GITHUB_TOKEN }}
   env:

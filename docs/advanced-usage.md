@@ -49,7 +49,7 @@ jobs:
           # IMPORTANT: Check out the PR's code, not the base branch
           ref: ${{ github.event.pull_request.head.sha }}
 
-      - uses: jey3dayo/pr-labeler@v1
+      - uses: jey3dayo/pr-insights-labeler@v1
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
 ```
@@ -82,7 +82,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: jey3dayo/pr-labeler@v1
+      - uses: jey3dayo/pr-insights-labeler@v1
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           # Add additional patterns to exclude
@@ -111,7 +111,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: jey3dayo/pr-labeler@v1
+      - uses: jey3dayo/pr-insights-labeler@v1
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
 ```
@@ -136,7 +136,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: jey3dayo/pr-labeler@v1
+      - uses: jey3dayo/pr-insights-labeler@v1
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
 ```
@@ -166,7 +166,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: jey3dayo/pr-labeler@v1
+      - uses: jey3dayo/pr-insights-labeler@v1
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           file_size_limit: "100KB"
@@ -209,7 +209,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: jey3dayo/pr-labeler@v1
+      - uses: jey3dayo/pr-insights-labeler@v1
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
@@ -241,7 +241,7 @@ Control which label types are applied individually.
 By default, all label types (size, complexity, category, risk) are enabled:
 
 ```yaml
-- uses: jey3dayo/pr-labeler@v1
+- uses: jey3dayo/pr-insights-labeler@v1
   with:
     github_token: ${{ secrets.GITHUB_TOKEN }}
     # All label types enabled by default
@@ -251,7 +251,7 @@ By default, all label types (size, complexity, category, risk) are enabled:
 
 ```yaml
 # Example 1: Disable complexity labels only
-- uses: jey3dayo/pr-labeler@v1
+- uses: jey3dayo/pr-insights-labeler@v1
   with:
     github_token: ${{ secrets.GITHUB_TOKEN }}
     complexity_enabled: "false"
@@ -260,7 +260,7 @@ By default, all label types (size, complexity, category, risk) are enabled:
 
 ```yaml
 # Example 2: Only size and risk labels
-- uses: jey3dayo/pr-labeler@v1
+- uses: jey3dayo/pr-insights-labeler@v1
   with:
     github_token: ${{ secrets.GITHUB_TOKEN }}
     size_enabled: "true"
@@ -272,7 +272,7 @@ By default, all label types (size, complexity, category, risk) are enabled:
 ### Custom Thresholds with Selective Enabling
 
 ```yaml
-- uses: jey3dayo/pr-labeler@v1
+- uses: jey3dayo/pr-insights-labeler@v1
   with:
     github_token: ${{ secrets.GITHUB_TOKEN }}
 
@@ -458,7 +458,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: jey3dayo/pr-labeler@v1
+      - uses: jey3dayo/pr-insights-labeler@v1
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           enable_directory_labeling: true  # Enable feature
@@ -589,7 +589,7 @@ PR Insights Labeler supports English and Japanese output for GitHub Actions Summ
 #### Method 1: Environment Variable
 
 ```yaml
-- uses: jey3dayo/pr-labeler@v1
+- uses: jey3dayo/pr-insights-labeler@v1
   with:
     github_token: ${{ secrets.GITHUB_TOKEN }}
   env:
@@ -599,7 +599,7 @@ PR Insights Labeler supports English and Japanese output for GitHub Actions Summ
 #### Method 2: Input Parameter
 
 ```yaml
-- uses: jey3dayo/pr-labeler@v1
+- uses: jey3dayo/pr-insights-labeler@v1
   with:
     github_token: ${{ secrets.GITHUB_TOKEN }}
     language: ja  # or 'en' (default: 'en')
