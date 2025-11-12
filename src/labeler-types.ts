@@ -107,7 +107,7 @@ export interface LabelDecisions {
 export interface LabelReasoning {
   label: string;
   reason: string; // 例: "additions (1234) exceeds large threshold (1000)"
-  category: 'size' | 'complexity' | 'category' | 'risk';
+  category: 'size' | 'complexity' | 'category' | 'risk' | 'violation';
   matchedFiles?: string[]; // ラベルに対応するファイルリスト
 }
 

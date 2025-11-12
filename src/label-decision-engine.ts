@@ -6,12 +6,12 @@
 import { minimatch } from 'minimatch';
 import { ok, Result } from 'neverthrow';
 
-import { allCIPassed, anyCIFailed } from './ci-status.js';
-import { COMPLEXITY_LABELS, RISK_LABELS } from './configs/label-defaults.js';
+import { COMPLEXITY_LABELS, VIOLATION_LABELS } from './configs/label-defaults.js';
+import type { Violations } from './errors/types.js';
 import { t } from './i18n.js';
+import { decideRiskLabel, getRiskAffectedFiles, getRiskReason } from './label-decisions/risk-evaluator.js';
 import type { LabelDecisions, LabelerConfig, LabelReasoning, PRMetrics } from './labeler-types.js';
-import type { ChangeType, PRContext } from './types.js';
-import type { RiskConfig } from './types/config.js';
+import type { PRContext } from './types.js';
 import { extractNamespace, matchesNamespacePattern } from './utils/namespace-utils.js';
 import { calculateSizeLabel } from './utils/size-label-utils.js';
 
@@ -21,12 +21,14 @@ import { calculateSizeLabel } from './utils/size-label-utils.js';
  *
  * @param metrics - PR metrics (additions, files, complexity)
  * @param config - Labeler configuration
+ * @param violations - Violations detected during file analysis
  * @param prContext - Optional PR context with CI status and commit messages
  * @returns LabelDecisions with labels to add/remove and reasoning
  */
 export function decideLabels(
   metrics: PRMetrics,
   config: LabelerConfig,
+  violations: Violations,
   prContext?: PRContext,
 ): Result<LabelDecisions, never> {
   const reasoning: LabelReasoning[] = [];
@@ -92,6 +94,11 @@ export function decideLabels(
       });
     }
   }
+
+  // 5. Decide violation labels (if violations exist)
+  const violationLabels = decideViolationLabels(violations);
+  labelsToAdd.push(...violationLabels.labels);
+  reasoning.push(...violationLabels.reasoning);
 
   // Determine labels to remove based on namespace policies
   const labelsToRemove = determineLabelsToRemove(labelsToAdd, config.labels.namespace_policies);
@@ -213,218 +220,6 @@ export function decideCategoryLabelsWithFiles(
 }
 
 /**
- * Detect change type from commit messages
- * Checks each message prefix for conventional commits to avoid false positives
- *
- * @param commitMessages - List of commit messages (subject lines)
- * @returns Detected change type
- */
-function detectChangeType(commitMessages: string[]): ChangeType {
-  if (commitMessages.length === 0) {
-    return 'unknown';
-  }
-
-  // Check each message prefix for conventional commits
-  for (const message of commitMessages) {
-    const lower = message.toLowerCase().trim();
-
-    if (lower.startsWith('refactor:') || lower.startsWith('refactor(')) {
-      return 'refactor';
-    }
-    if (lower.startsWith('fix:') || lower.startsWith('fix(')) {
-      return 'fix';
-    }
-    if (lower.startsWith('feat:') || lower.startsWith('feat(')) {
-      return 'feature';
-    }
-    if (lower.startsWith('docs:') || lower.startsWith('docs(')) {
-      return 'docs';
-    }
-    if (lower.startsWith('test:') || lower.startsWith('test(')) {
-      return 'test';
-    }
-    if (lower.startsWith('style:') || lower.startsWith('style(')) {
-      return 'style';
-    }
-    if (lower.startsWith('chore:') || lower.startsWith('chore(')) {
-      return 'chore';
-    }
-  }
-
-  return 'unknown';
-}
-
-/**
- * Analyze risk factors from file changes
- *
- * @param files - List of changed file paths
- * @param config - Risk configuration (core_paths and config_files)
- * @returns Risk factors analysis
- */
-function analyzeRiskFactors(
-  files: string[],
-  config: { core_paths: string[]; config_files: string[] },
-): { hasTestFiles: boolean; hasCoreChanges: boolean; hasConfigChanges: boolean } {
-  return {
-    hasTestFiles: files.some(
-      f => f.includes('__tests__/') || f.includes('tests/') || /\.(test|spec)\.(ts|tsx|js|jsx)$/i.test(f),
-    ),
-    hasCoreChanges: files.some(f => config.core_paths.some(pattern => minimatch(f, pattern))),
-    hasConfigChanges: files.some(f => config.config_files.some(pattern => minimatch(f, pattern))),
-  };
-}
-
-/**
- * Risk evaluation result containing both label and reason
- */
-type RiskEvaluation = {
-  label: string | null;
-  reason: string;
-};
-
-type RiskEvaluationConfig = Pick<
-  RiskConfig,
-  'high_if_no_tests_for_core' | 'core_paths' | 'config_files' | 'use_ci_status'
->;
-
-/**
- * Evaluate risk based on file changes, CI status, and commit messages
- * Combines label decision and reason generation
- *
- * Risk evaluation logic:
- * 1. CI Status-based evaluation (when available):
- *    - risk/high: CI checks failed
- *    - No label: Refactoring with all CI passed
- *    - risk/high: New feature without tests in core paths
- * 2. Fallback evaluation (no CI status):
- *    - risk/high: Core changes without test files
- *    - risk/medium: Configuration file changes (.github/workflows/**, package.json, etc.)
- *    - No label: Safe changes (docs, tests, refactoring)
- *
- * @param files - List of changed file paths
- * @param config - Risk configuration
- * @param prContext - Optional PR context with CI status and commit messages
- * @returns Risk evaluation with label and reason
- */
-function evaluateRisk(files: string[], config: RiskEvaluationConfig, prContext?: PRContext): RiskEvaluation {
-  const { hasTestFiles, hasCoreChanges, hasConfigChanges } = analyzeRiskFactors(files, config);
-  const useCIStatus = config.use_ci_status ?? true;
-
-  // If CI status is available and enabled, consider it
-  if (useCIStatus && prContext?.ciStatus) {
-    const ciStatus = prContext.ciStatus;
-
-    // High risk: CI checks failed
-    // Any CI failure (tests, type-check, build, lint) indicates potential issues
-    if (anyCIFailed(ciStatus)) {
-      return {
-        label: RISK_LABELS.high,
-        reason: t('labels', 'reasoning.riskCIFailed'),
-      };
-    }
-
-    // Detect change type from commit messages (feat:, refactor:, docs:, etc.)
-    const changeType = prContext.commitMessages ? detectChangeType(prContext.commitMessages) : 'unknown';
-
-    // Low risk: Refactoring with all CI passed
-    // Safe refactoring is indicated by all CI passing + refactor: commit prefix
-    if (changeType === 'refactor' && allCIPassed(ciStatus)) {
-      return {
-        label: null,
-        reason: t('labels', 'reasoning.riskRefactoringSafe'),
-      };
-    }
-
-    // High risk: Feature addition without test files + core changes
-    // New features in core paths should include test files
-    if (changeType === 'feature' && !hasTestFiles && hasCoreChanges && config.high_if_no_tests_for_core) {
-      return {
-        label: RISK_LABELS.high,
-        reason: t('labels', 'reasoning.riskFeatureNoTests'),
-      };
-    }
-  }
-
-  // Fallback to original logic when CI status is not available or disabled
-  // High risk: No tests + core changes
-  if (!hasTestFiles && hasCoreChanges && config.high_if_no_tests_for_core) {
-    return {
-      label: RISK_LABELS.high,
-      reason: t('labels', 'reasoning.riskCoreNoTests'),
-    };
-  }
-
-  // Medium risk: Config file changes
-  // Configuration changes are inherently risky as they affect the entire project
-  // Default config_files: .github/workflows/**, package.json, tsconfig.json
-  if (hasConfigChanges) {
-    return {
-      label: RISK_LABELS.medium,
-      reason: t('labels', 'reasoning.riskConfigChanged'),
-    };
-  }
-
-  // No risk label: Safe changes (documentation, tests, style, etc.)
-  return {
-    label: null,
-    reason: '',
-  };
-}
-
-/**
- * Decide risk label based on file changes, configuration, and PR context
- *
- * @param files - List of changed file paths
- * @param config - Risk configuration
- * @param prContext - Optional PR context with CI status and commit messages
- * @returns Risk label or null
- */
-export function decideRiskLabel(files: string[], config: RiskEvaluationConfig, prContext?: PRContext): string | null {
-  return evaluateRisk(files, config, prContext).label;
-}
-
-/**
- * Get risk reason for label reasoning
- *
- * @param files - List of changed file paths
- * @param config - Risk configuration
- * @param label - Risk label (for validation)
- * @returns Reason string
- */
-function getRiskReason(files: string[], config: RiskEvaluationConfig, label: string, prContext?: PRContext): string {
-  const evaluation = evaluateRisk(files, config, prContext);
-
-  // Validate that the provided label matches the evaluated label
-  if (evaluation.label === label) {
-    return evaluation.reason;
-  }
-
-  return 'unknown risk condition';
-}
-
-/**
- * Get files affected by risk factors
- *
- * @param files - List of changed file paths
- * @param config - Risk configuration (core_paths and config_files)
- * @returns List of files that contributed to risk assessment
- */
-function getRiskAffectedFiles(files: string[], config: { core_paths: string[]; config_files: string[] }): string[] {
-  const affectedFiles: string[] = [];
-
-  // Core files
-  const coreFiles = files.filter(f => config.core_paths.some(pattern => minimatch(f, pattern)));
-  affectedFiles.push(...coreFiles);
-
-  // Config files
-  const configFiles = files.filter(f => config.config_files.some(pattern => minimatch(f, pattern)));
-  affectedFiles.push(...configFiles);
-
-  // Remove duplicates and return
-  return Array.from(new Set(affectedFiles));
-}
-
-/**
  * Determine labels to remove based on namespace policies
  * For 'replace' policies, existing labels in that namespace should be removed
  *
@@ -451,4 +246,64 @@ function determineLabelsToRemove(labelsToAdd: string[], policies: Record<string,
   // Return list of namespace patterns to remove
   // The actual removal will be done by comparing with current labels in the applicator
   return Array.from(namespacesToReplace);
+}
+
+/**
+ * Decide violation labels based on detected violations
+ *
+ * @param violations - Violations detected during file analysis
+ * @returns Violation labels and reasoning
+ */
+export function decideViolationLabels(violations: Violations): {
+  labels: string[];
+  reasoning: LabelReasoning[];
+} {
+  const labels: string[] = [];
+  const reasoning: LabelReasoning[] = [];
+
+  // auto/large-files - Individual files too large
+  if (violations.largeFiles.length > 0) {
+    labels.push(VIOLATION_LABELS.largeFiles);
+    reasoning.push({
+      label: VIOLATION_LABELS.largeFiles,
+      reason: t('labels', 'reasoning.largeFiles', { count: violations.largeFiles.length }),
+      category: 'violation',
+      matchedFiles: violations.largeFiles.map(v => v.file),
+    });
+  }
+
+  // auto/too-many-lines - Individual files exceed line limits
+  if (violations.exceedsFileLines.length > 0) {
+    labels.push(VIOLATION_LABELS.tooManyLines);
+    reasoning.push({
+      label: VIOLATION_LABELS.tooManyLines,
+      reason: t('labels', 'reasoning.tooManyLines', { count: violations.exceedsFileLines.length }),
+      category: 'violation',
+      matchedFiles: violations.exceedsFileLines.map(v => v.file),
+    });
+  }
+
+  // auto/excessive-changes - Total additions exceed limit
+  if (violations.exceedsAdditions) {
+    labels.push(VIOLATION_LABELS.excessiveChanges);
+    reasoning.push({
+      label: VIOLATION_LABELS.excessiveChanges,
+      reason: t('labels', 'reasoning.excessiveChanges'),
+      category: 'violation',
+      matchedFiles: [],
+    });
+  }
+
+  // auto/too-many-files - Too many files changed
+  if (violations.exceedsFileCount) {
+    labels.push(VIOLATION_LABELS.tooManyFiles);
+    reasoning.push({
+      label: VIOLATION_LABELS.tooManyFiles,
+      reason: t('labels', 'reasoning.tooManyFiles'),
+      category: 'violation',
+      matchedFiles: [],
+    });
+  }
+
+  return { labels, reasoning };
 }

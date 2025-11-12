@@ -13,7 +13,7 @@
 Streamline your PR review process with intelligent automation:
 
 - **📏 Smart Size Detection**: Automatically label PRs by size (small → xxlarge) to help reviewers prioritize
-  - **Excludes**: Lock files, generated files, test files, and documentation metadata for accurate code size measurement
+  - **Excludes**: Lock files, generated files, test files (including snapshot files), and documentation metadata for accurate code size measurement
   - Example: `size/small`, `size/medium`, `size/large`, `size/xlarge`, `size/xxlarge`
 - **🏷️ Auto-Categorization**: Classify changes by type (tests, docs, CI/CD, config, specs, dependencies) for quick filtering
   - **All files**: Including metadata files (`.kiro/`, `.claude/`, etc.) for comprehensive classification

@@ -29,6 +29,10 @@
     "riskRefactoringSafe": "リファクタリング - すべてのCIチェックが成功",
     "riskFeatureNoTests": "テストファイルなしでコア機能に新機能を追加",
     "riskCoreNoTests": "テストファイルなしでコア機能を変更",
-    "riskConfigChanged": "設定ファイルが変更されました"
+    "riskConfigChanged": "設定ファイルが変更されました",
+    "largeFiles": "{{count}}個のファイルがサイズ制限を超過",
+    "tooManyLines": "{{count}}個のファイルが行数制限を超過",
+    "excessiveChanges": "総追加行数が制限を超過",
+    "tooManyFiles": "ファイル数が制限を超過"
   }
 }

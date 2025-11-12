@@ -5,9 +5,10 @@ import {
   decideCategoryLabelsWithFiles,
   decideComplexityLabel,
   decideLabels,
-  decideRiskLabel,
   decideSizeLabel,
+  decideViolationLabels,
 } from '../src/label-decision-engine';
+import { decideRiskLabel } from '../src/label-decisions/risk-evaluator';
 import { DEFAULT_LABELER_CONFIG, type PRMetrics } from '../src/labeler-types';
 import {
   ciCdCategory,
@@ -20,6 +21,14 @@ import {
 } from './__fixtures__/index.js';
 
 describe('Label Decision Engine', () => {
+  // Empty violations object for tests where no violations exist
+  const emptyViolations = {
+    largeFiles: [],
+    exceedsFileLines: [],
+    exceedsAdditions: false,
+    exceedsFileCount: false,
+  };
+
   describe('decideSizeLabel', () => {
     const thresholds = defaultSizeThresholds;
 
@@ -243,7 +252,7 @@ describe('Label Decision Engine', () => {
         allFiles: ['src/index.ts', '__tests__/index.test.ts', 'docs/README.md'],
       };
 
-      const result = decideLabels(metrics, config);
+      const result = decideLabels(metrics, config, emptyViolations);
       expect(result.isOk()).toBe(true);
 
       const decisions = result._unsafeUnwrap();
@@ -261,7 +270,7 @@ describe('Label Decision Engine', () => {
         allFiles: ['src/small.ts'],
       };
 
-      const result = decideLabels(metrics, config);
+      const result = decideLabels(metrics, config, emptyViolations);
       const decisions = result._unsafeUnwrap();
       expect(decisions.labelsToAdd).toContain('size/small');
     });
@@ -274,7 +283,7 @@ describe('Label Decision Engine', () => {
         allFiles: ['src/core.ts'],
       };
 
-      const result = decideLabels(metrics, config);
+      const result = decideLabels(metrics, config, emptyViolations);
       const decisions = result._unsafeUnwrap();
       expect(decisions.labelsToAdd).toContain('risk/high');
     });
@@ -287,7 +296,7 @@ describe('Label Decision Engine', () => {
         allFiles: ['src/index.ts'],
       };
 
-      const result = decideLabels(metrics, config);
+      const result = decideLabels(metrics, config, emptyViolations);
       const decisions = result._unsafeUnwrap();
 
       expect(decisions.reasoning).toHaveLength(decisions.labelsToAdd.length);
@@ -302,7 +311,7 @@ describe('Label Decision Engine', () => {
         allFiles: ['src/a.ts'],
       };
 
-      const result = decideLabels(metrics, config);
+      const result = decideLabels(metrics, config, emptyViolations);
       const decisions = result._unsafeUnwrap();
       expect(decisions.labelsToAdd.find(l => l.startsWith('complexity/'))).toBeUndefined();
     });
@@ -330,7 +339,7 @@ describe('Label Decision Engine', () => {
         },
       };
 
-      const result = decideLabels(metrics, customConfig);
+      const result = decideLabels(metrics, customConfig, emptyViolations);
       const decisions = result._unsafeUnwrap();
       expect(decisions.labelsToAdd.find(l => l.startsWith('complexity/'))).toBeUndefined();
     });
@@ -348,7 +357,7 @@ describe('Label Decision Engine', () => {
         allFiles: ['src/a.ts'],
       };
 
-      const result = decideLabels(metrics, customConfig);
+      const result = decideLabels(metrics, customConfig, emptyViolations);
       const decisions = result._unsafeUnwrap();
       expect(decisions.labelsToAdd.find(l => l.startsWith('size/'))).toBeUndefined();
       expect(decisions.reasoning.find(r => r.category === 'size')).toBeUndefined();
@@ -370,7 +379,7 @@ describe('Label Decision Engine', () => {
         allFiles: ['__tests__/foo.test.ts', 'docs/guide.md'],
       };
 
-      const result = decideLabels(metrics, customConfig);
+      const result = decideLabels(metrics, customConfig, emptyViolations);
       const decisions = result._unsafeUnwrap();
       expect(decisions.labelsToAdd.find(l => l.startsWith('category/'))).toBeUndefined();
       expect(decisions.reasoning.find(r => r.category === 'category')).toBeUndefined();
@@ -389,7 +398,7 @@ describe('Label Decision Engine', () => {
         allFiles: ['src/critical.ts'],
       };
 
-      const result = decideLabels(metrics, customConfig);
+      const result = decideLabels(metrics, customConfig, emptyViolations);
       const decisions = result._unsafeUnwrap();
       expect(decisions.labelsToAdd.find(l => l.startsWith('risk/'))).toBeUndefined();
       expect(decisions.reasoning.find(r => r.category === 'risk')).toBeUndefined();
@@ -421,7 +430,7 @@ describe('Label Decision Engine', () => {
         },
       };
 
-      const result = decideLabels(metrics, customConfig);
+      const result = decideLabels(metrics, customConfig, emptyViolations);
       const decisions = result._unsafeUnwrap();
       expect(decisions.labelsToAdd).toEqual([]);
       expect(decisions.reasoning).toEqual([]);
@@ -630,7 +639,7 @@ describe('Label Decision Engine', () => {
         allFiles: ['src/file1.ts', 'src/file2.ts'],
       };
 
-      const result = decideLabels(metrics, config);
+      const result = decideLabels(metrics, config, emptyViolations);
       const decisions = result._unsafeUnwrap();
 
       const sizeReasoning = decisions.reasoning.find(r => r.category === 'size');
@@ -656,7 +665,7 @@ describe('Label Decision Engine', () => {
         },
       };
 
-      const result = decideLabels(metrics, config);
+      const result = decideLabels(metrics, config, emptyViolations);
       const decisions = result._unsafeUnwrap();
 
       const complexityReasoning = decisions.reasoning.find(r => r.category === 'complexity');
@@ -672,7 +681,7 @@ describe('Label Decision Engine', () => {
         allFiles: ['__tests__/test.test.ts', 'docs/README.md'],
       };
 
-      const result = decideLabels(metrics, config);
+      const result = decideLabels(metrics, config, emptyViolations);
       const decisions = result._unsafeUnwrap();
 
       const categoryReasoning = decisions.reasoning.filter(r => r.category === 'category');
@@ -696,13 +705,117 @@ describe('Label Decision Engine', () => {
         allFiles: ['src/core.ts', 'package.json'],
       };
 
-      const result = decideLabels(metrics, config);
+      const result = decideLabels(metrics, config, emptyViolations);
       const decisions = result._unsafeUnwrap();
 
       const riskReasoning = decisions.reasoning.find(r => r.category === 'risk');
       expect(riskReasoning).toBeDefined();
       expect(riskReasoning?.matchedFiles).toContain('src/core.ts');
       expect(riskReasoning?.matchedFiles).toContain('package.json');
+    });
+  });
+
+  describe('decideViolationLabels', () => {
+    it('should return empty arrays when no violations', () => {
+      const result = decideViolationLabels(emptyViolations);
+      expect(result.labels).toEqual([]);
+      expect(result.reasoning).toEqual([]);
+    });
+
+    it('should add auto/large-files label when largeFiles violation exists', () => {
+      const violations = {
+        ...emptyViolations,
+        largeFiles: [
+          {
+            file: 'large.ts',
+            actualValue: 2048000,
+            limit: 1048576,
+            violationType: 'size' as const,
+            severity: 'critical' as const,
+          },
+        ],
+      };
+      const result = decideViolationLabels(violations);
+      expect(result.labels).toContain('auto/large-files');
+      expect(result.reasoning).toHaveLength(1);
+      expect(result.reasoning[0]?.category).toBe('violation');
+      expect(result.reasoning[0]?.matchedFiles).toEqual(['large.ts']);
+    });
+
+    it('should add auto/too-many-lines label when exceedsFileLines violation exists', () => {
+      const violations = {
+        ...emptyViolations,
+        exceedsFileLines: [
+          {
+            file: 'long.ts',
+            actualValue: 600,
+            limit: 500,
+            violationType: 'lines' as const,
+            severity: 'warning' as const,
+          },
+        ],
+      };
+      const result = decideViolationLabels(violations);
+      expect(result.labels).toContain('auto/too-many-lines');
+      expect(result.reasoning).toHaveLength(1);
+      expect(result.reasoning[0]?.category).toBe('violation');
+      expect(result.reasoning[0]?.matchedFiles).toEqual(['long.ts']);
+    });
+
+    it('should add auto/excessive-changes label when exceedsAdditions is true', () => {
+      const violations = {
+        ...emptyViolations,
+        exceedsAdditions: true,
+      };
+      const result = decideViolationLabels(violations);
+      expect(result.labels).toContain('auto/excessive-changes');
+      expect(result.reasoning).toHaveLength(1);
+      expect(result.reasoning[0]?.category).toBe('violation');
+      expect(result.reasoning[0]?.matchedFiles).toEqual([]);
+    });
+
+    it('should add auto/too-many-files label when exceedsFileCount is true', () => {
+      const violations = {
+        ...emptyViolations,
+        exceedsFileCount: true,
+      };
+      const result = decideViolationLabels(violations);
+      expect(result.labels).toContain('auto/too-many-files');
+      expect(result.reasoning).toHaveLength(1);
+      expect(result.reasoning[0]?.category).toBe('violation');
+      expect(result.reasoning[0]?.matchedFiles).toEqual([]);
+    });
+
+    it('should add multiple violation labels when multiple violations exist', () => {
+      const violations = {
+        largeFiles: [
+          {
+            file: 'large.ts',
+            actualValue: 2048000,
+            limit: 1048576,
+            violationType: 'size' as const,
+            severity: 'critical' as const,
+          },
+        ],
+        exceedsFileLines: [
+          {
+            file: 'long.ts',
+            actualValue: 600,
+            limit: 500,
+            violationType: 'lines' as const,
+            severity: 'warning' as const,
+          },
+        ],
+        exceedsAdditions: true,
+        exceedsFileCount: true,
+      };
+      const result = decideViolationLabels(violations);
+      expect(result.labels).toHaveLength(4);
+      expect(result.labels).toContain('auto/large-files');
+      expect(result.labels).toContain('auto/too-many-lines');
+      expect(result.labels).toContain('auto/excessive-changes');
+      expect(result.labels).toContain('auto/too-many-files');
+      expect(result.reasoning).toHaveLength(4);
     });
   });
 });
