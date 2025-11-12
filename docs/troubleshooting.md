@@ -56,7 +56,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: jey3dayo/pr-labeler@v1
+      - uses: jey3dayo/pr-insights-labeler@v1
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
 ```
@@ -82,7 +82,7 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.head.sha }}
 
-      - uses: jey3dayo/pr-labeler@v1
+      - uses: jey3dayo/pr-insights-labeler@v1
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
 ```
@@ -460,8 +460,8 @@ Test PR Insights Labeler behavior locally:
 
 ```bash
 # Clone the repository
-git clone https://github.com/jey3dayo/pr-labeler.git
-cd pr-labeler
+git clone https://github.com/jey3dayo/pr-insights-labeler.git
+cd pr-insights-labeler
 
 # Install dependencies
 pnpm install
@@ -498,11 +498,11 @@ If you encounter issues not covered in this guide:
 
 Report bugs, request features, or ask questions:
 
-**🐛 Bug Report**: [Create an issue](https://github.com/jey3dayo/pr-labeler/issues/new)
+**🐛 Bug Report**: [Create an issue](https://github.com/jey3dayo/pr-insights-labeler/issues/new)
 
-**✨ Feature Request**: [Create an issue](https://github.com/jey3dayo/pr-labeler/issues/new)
+**✨ Feature Request**: [Create an issue](https://github.com/jey3dayo/pr-insights-labeler/issues/new)
 
-**💬 Questions**: [View existing issues](https://github.com/jey3dayo/pr-labeler/issues)
+**💬 Questions**: [View existing issues](https://github.com/jey3dayo/pr-insights-labeler/issues)
 
 ### Before Reporting
 

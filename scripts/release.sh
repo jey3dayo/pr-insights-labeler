@@ -230,7 +230,7 @@ $changelog_content
 
 ## 🔗 Full Changelog
 
-**Full Changelog**: https://github.com/jey3dayo/pr-labeler/compare/v${prev_version}...v${new_version}
+**Full Changelog**: https://github.com/jey3dayo/pr-insights-labeler/compare/v${prev_version}...v${new_version}
 EOF
 )
 
@@ -280,7 +280,7 @@ $changelog_content"
     --title "v${new_version}" \
     --notes "$release_notes"
 
-  success "GitHub release created: https://github.com/jey3dayo/pr-labeler/releases/tag/v${new_version}"
+  success "GitHub release created: https://github.com/jey3dayo/pr-insights-labeler/releases/tag/v${new_version}"
 }
 
 # Main

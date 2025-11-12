@@ -4,10 +4,10 @@
   "description": "PR Insights Labeler delivers intelligent PR analysis with automated size, category, risk, and complexity labels for GitHub Actions",
   "author": "jey3dayo",
   "license": "MIT",
-  "homepage": "https://github.com/jey3dayo/pr-labeler",
+  "homepage": "https://github.com/jey3dayo/pr-insights-labeler",
   "repository": {
     "type": "git",
-    "url": "https://github.com/jey3dayo/pr-labeler.git"
+    "url": "https://github.com/jey3dayo/pr-insights-labeler.git"
   },
   "engines": {
     "node": ">=20"
