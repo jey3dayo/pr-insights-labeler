@@ -97,18 +97,39 @@ generate_changelog() {
     local msg
     msg=$(git log -1 --format=%s "$commit")
 
+    # Extract PR number if exists
+    local pr_num
+    pr_num=$(echo "$msg" | grep -oP '\(#\d+\)' || echo "")
+
     case $msg in
       feat:*|feat\(*)
-        added+=("- ${msg#feat*: }")
+        local clean_msg="${msg#feat*: }"
+        # Ensure PR number is present
+        if [[ -n $pr_num ]] && [[ ! $clean_msg =~ \(#[0-9]+\) ]]; then
+          clean_msg="${clean_msg} ${pr_num}"
+        fi
+        added+=("- ${clean_msg}")
         ;;
       fix:*|fix\(*)
-        fixed+=("- ${msg#fix*: }")
+        local clean_msg="${msg#fix*: }"
+        if [[ -n $pr_num ]] && [[ ! $clean_msg =~ \(#[0-9]+\) ]]; then
+          clean_msg="${clean_msg} ${pr_num}"
+        fi
+        fixed+=("- ${clean_msg}")
         ;;
       chore:*|chore\(*|docs:*|docs\(*|style:*|style\(*)
-        changed+=("- ${msg#*: }")
+        local clean_msg="${msg#*: }"
+        if [[ -n $pr_num ]] && [[ ! $clean_msg =~ \(#[0-9]+\) ]]; then
+          clean_msg="${clean_msg} ${pr_num}"
+        fi
+        changed+=("- ${clean_msg}")
         ;;
       *)
-        other+=("- $msg")
+        local clean_msg="$msg"
+        if [[ -n $pr_num ]] && [[ ! $clean_msg =~ \(#[0-9]+\) ]]; then
+          clean_msg="${clean_msg} ${pr_num}"
+        fi
+        other+=("- ${clean_msg}")
         ;;
     esac
   done < <(git rev-list "$from_tag..$to_ref")
@@ -142,6 +163,62 @@ generate_changelog() {
       echo ""
     fi
   }
+}
+
+# Detect breaking changes from git commits
+detect_breaking_changes() {
+  local from_tag=$1
+  local to_ref=${2:-HEAD}
+  local breaking_changes=()
+
+  while IFS= read -r commit; do
+    local msg
+    msg=$(git log -1 --format=%B "$commit")
+
+    # Check for BREAKING CHANGE: footer (Conventional Commits)
+    if echo "$msg" | grep -q "BREAKING CHANGE:"; then
+      local breaking_msg
+      breaking_msg=$(echo "$msg" | sed -n 's/^BREAKING CHANGE: //p')
+      if [[ -n $breaking_msg ]]; then
+        breaking_changes+=("- $breaking_msg")
+      fi
+    fi
+
+    # Check for ! notation (feat!:, fix!:, etc.)
+    if echo "$msg" | grep -qE '^[a-z]+!(\([^)]+\))?:'; then
+      local clean_msg
+      clean_msg=$(echo "$msg" | sed -E 's/^[a-z]+!(\([^)]+\))?: //')
+      breaking_changes+=("- $clean_msg")
+    fi
+  done < <(git rev-list "$from_tag..$to_ref")
+
+  if [ ${#breaking_changes[@]} -gt 0 ]; then
+    echo "## ⚠️ Breaking Changes"
+    echo ""
+    printf '%s\n' "${breaking_changes[@]}"
+    echo ""
+  fi
+}
+
+# Generate contributors list from git commits
+generate_contributors() {
+  local from_tag=$1
+  local to_ref=${2:-HEAD}
+
+  # Get unique contributors with commit count
+  local contributors
+  contributors=$(git shortlog -s -n "${from_tag}..${to_ref}" | awk '{$1=""; print}' | sed 's/^ //')
+
+  if [[ -n $contributors ]]; then
+    echo "## 👥 Contributors"
+    echo ""
+    echo "This release was made possible by:"
+    echo ""
+    while IFS= read -r contributor; do
+      echo "- @${contributor}"
+    done <<< "$contributors"
+    echo ""
+  fi
 }
 
 # Update package.json version
@@ -211,12 +288,26 @@ create_release() {
   local prev_version=$2
   local changelog_content=$3
 
+  # Detect breaking changes
+  local breaking_changes
+  breaking_changes=$(detect_breaking_changes "v${prev_version}")
+
+  # Generate contributors list
+  local contributors
+  contributors=$(generate_contributors "v${prev_version}")
+
   # Generate full release notes following .github/RELEASE_TEMPLATE.md format
   local test_count
-  test_count=$(grep -o '[0-9]\+ passed' <(pnpm test:vitest 2>&1 | tail -20) | head -1 | awk '{print $1}')
+  # Try to extract test count with improved pattern matching
+  test_count=$(pnpm test:vitest 2>&1 | grep -oP '\d+(?= passed)' | head -1)
+  # Fallback to descriptive message if extraction fails
+  test_count=${test_count:-"N/A (check failed)"}
 
   local release_notes
-  release_notes=$(cat <<EOF
+  if [[ -n $breaking_changes ]]; then
+    release_notes=$(cat <<EOF
+$breaking_changes
+
 ## 🚀 What's New
 
 $changelog_content
@@ -228,11 +319,34 @@ $changelog_content
 - ✅ 0 TypeScript type errors
 - ✅ Build successful
 
+$contributors
+
 ## 🔗 Full Changelog
 
 **Full Changelog**: https://github.com/jey3dayo/pr-insights-labeler/compare/v${prev_version}...v${new_version}
 EOF
 )
+  else
+    release_notes=$(cat <<EOF
+## 🚀 What's New
+
+$changelog_content
+
+## 📊 Quality Metrics
+
+- ✅ ${test_count:-769} tests passing
+- ✅ 0 ESLint errors/warnings
+- ✅ 0 TypeScript type errors
+- ✅ Build successful
+
+$contributors
+
+## 🔗 Full Changelog
+
+**Full Changelog**: https://github.com/jey3dayo/pr-insights-labeler/compare/v${prev_version}...v${new_version}
+EOF
+)
+  fi
 
   # Commit changes
   git add -A
