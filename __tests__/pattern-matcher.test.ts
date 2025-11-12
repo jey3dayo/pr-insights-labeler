@@ -87,6 +87,16 @@ describe('PatternMatcher', () => {
         expect(patterns).toContain(pattern);
       });
     });
+
+    it('should include spec-driven metadata and documentation patterns', () => {
+      const patterns = getDefaultExcludePatterns();
+
+      const metadataPatterns = ['.claude/**', '.codex/**', '.kiro/**', 'docs/**', 'documentation/**'];
+
+      metadataPatterns.forEach(pattern => {
+        expect(patterns).toContain(pattern);
+      });
+    });
   });
 
   describe('normalizePattern', () => {

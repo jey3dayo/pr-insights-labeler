@@ -1,6 +1,6 @@
 {
   "name": "pr-labeler",
-  "version": "1.6.0",
+  "version": "1.6.1",
   "description": "GitHub Action to check file sizes and line counts in PRs, automatically apply labels for large files",
   "author": "jey3dayo",
   "license": "MIT",
