@@ -72,7 +72,7 @@ exports[`ReportFormatter > Summary Output Snapshots (Multilingual) > should matc
 
 | File Name | Size | Lines | Changes |
 |------|------|-------|----------|
-| src/example.ts | 50 KB | 450 | +120/-30 |
+| \`src/example.ts\` | 50 KB | 450 | +120/-30 |
 
 "
 `;
@@ -183,7 +183,7 @@ exports[`ReportFormatter > Summary Output Snapshots (Multilingual) > should matc
 
 | ファイル名 | サイズ | 行数 | 変更 |
 |------|------|-------|----------|
-| src/example.ts | 50 KB | 450 | +120/-30 |
+| \`src/example.ts\` | 50 KB | 450 | +120/-30 |
 
 "
 `;

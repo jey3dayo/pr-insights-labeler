@@ -1,5 +1,4 @@
 import { t } from '../../i18n.js';
-import { escapeMarkdown } from './common.js';
 
 /**
  * Format applied labels for Summary output.
@@ -17,7 +16,7 @@ export function formatAppliedLabels(labels: string[] | undefined): string {
 
   let output = header;
   for (const label of labels) {
-    output += `- \`${escapeMarkdown(label)}\`\n`;
+    output += `- \`${label}\`\n`;
   }
   output += '\n';
 
