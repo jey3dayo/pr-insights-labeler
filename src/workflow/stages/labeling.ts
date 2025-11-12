@@ -88,7 +88,7 @@ export function applyLabelsStage(
         }
       }
 
-      const labelerDecisions = decideLabels(prMetrics, labelerConfig, extendedPRContext);
+      const labelerDecisions = decideLabels(prMetrics, labelerConfig, analysis.violations, extendedPRContext);
       if (labelerDecisions.isOk()) {
         const decisions = labelerDecisions.value;
         logInfoI18n('labels.labelsToAdd', { labels: decisions.labelsToAdd.join(', ') || 'none' });
