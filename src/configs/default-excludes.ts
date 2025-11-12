@@ -96,6 +96,10 @@ export const DEFAULT_EXCLUDE_PATTERNS: string[] = [
   '.codex/**',
   '.kiro/**',
 
+  // Documentation
+  'docs/**',
+  'documentation/**',
+
   // Generated files
   '*.generated.*',
   '*.gen.ts',
