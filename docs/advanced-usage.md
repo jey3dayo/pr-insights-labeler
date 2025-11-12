@@ -9,7 +9,7 @@ Real-world examples and advanced configurations for PR Insights Labeler.
 - [Strict Mode](#strict-mode)
 - [Summary Only Mode](#summary-only-mode)
 - [Selective Label Enabling](#selective-label-enabling)
-- [PR Insights Labeler YAML Configuration](#pr-labeler-yaml-configuration)
+- [PR Insights Labeler YAML Configuration](#pr-insights-labeler-yaml-configuration)
 - [Directory-Based Labeling](#directory-based-labeling)
 - [Multi-language Support](#multi-language-support)
 
