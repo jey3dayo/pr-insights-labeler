@@ -69,7 +69,7 @@ export function generateComplexitySummary(
     metrics.skippedFiles.forEach(file => {
       const reasonKey = `complexity.skipReasons.${file.reason}` as const;
       const reasonText = t('summary', reasonKey);
-      markdown += `- \`${escapeMarkdown(file.path)}\`: ${reasonText}`;
+      markdown += `- \`${file.path}\`: ${reasonText}`;
       if (file.details) {
         markdown += ` - ${escapeMarkdown(file.details)}`;
       }
