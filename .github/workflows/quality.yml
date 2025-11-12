@@ -363,7 +363,7 @@ jobs:
           fi
 
   self-check:
-    name: PR Labeler Self-Check
+    name: PR Insights Labeler Self-Check
     runs-on: ubuntu-latest
     if: github.event_name == 'pull_request'
     permissions:
@@ -376,7 +376,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Run PR Labeler (self-check)
+      - name: Run PR Insights Labeler (self-check)
         uses: ./
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
@@ -455,9 +455,9 @@ jobs:
 
             # 自己チェック結果（PR時のみ）
             if [[ "$self_check_result" == "success" ]]; then
-              echo "✅ PR Labeler self-check passed" >> $GITHUB_STEP_SUMMARY
+              echo "✅ PR Insights Labeler self-check passed" >> $GITHUB_STEP_SUMMARY
             elif [[ "$self_check_result" == "failure" ]]; then
-              echo "❌ PR Labeler self-check failed" >> $GITHUB_STEP_SUMMARY
+              echo "❌ PR Insights Labeler self-check failed" >> $GITHUB_STEP_SUMMARY
               all_success=false
             fi
 

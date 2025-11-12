@@ -23,7 +23,7 @@ const getDefaultDirectoryLabelingInputs = () => ({
   use_default_excludes: 'true',
 });
 
-// デフォルトのPR Labeler入力値を持つヘルパー
+// デフォルトのPR Insights Labeler入力値を持つヘルパー
 const getDefaultPRLabelerInputs = () => ({
   size_enabled: 'true',
   size_thresholds: '{"small": 200, "medium": 500, "large": 1000, "xlarge": 3000}',
@@ -387,7 +387,7 @@ describe('InputMapper', () => {
         expect(config.prAdditionsLimit).toBe(5000);
         expect(config.prFilesLimit).toBe(50);
         expect(config.autoRemoveLabels).toBe(true);
-        // PR Labeler - Selective Label Enabling
+        // PR Insights Labeler - Selective Label Enabling
         expect(config.sizeEnabled).toBe(true);
         expect(config.sizeThresholdsV2.small).toBe(200);
         expect(config.sizeThresholdsV2.medium).toBe(500);

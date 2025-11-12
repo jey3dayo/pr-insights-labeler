@@ -4,7 +4,7 @@
 
 ### 1.1 Design Goals
 
-Configuration Layer Pattern は、PR Labeler の設定管理を統一し、以下の目標を達成します：
+Configuration Layer Pattern は、PR Insights Labeler の設定管理を統一し、以下の目標を達成します：
 
 1. **明確な優先順位**: action input > pr-labeler.yml > 環境変数 > デフォルト値
 2. **疎結合化**: 各関数は必要なパラメータのみを受け取る（例: `initializeI18n(language)` not `initializeI18n(config)`）
@@ -176,13 +176,13 @@ export interface ParsedInputs {
   prAdditionsLimit: number;
   prFilesLimit: number;
 
-  // PR Labeler - 有効化フラグ（boolean 型）
+  // PR Insights Labeler - 有効化フラグ（boolean 型）
   sizeEnabled: boolean;
   complexityEnabled: boolean;
   categoryEnabled: boolean;
   riskEnabled: boolean;
 
-  // PR Labeler - 閾値（型安全なオブジェクト）
+  // PR Insights Labeler - 閾値（型安全なオブジェクト）
   sizeThresholdsV2: SizeThresholds;
   complexityThresholdsV2: ComplexityThresholds;
 
@@ -559,13 +559,13 @@ export interface ParsedInputs {
   prAdditionsLimit: number;
   prFilesLimit: number;
 
-  /** PR Labeler - 有効化フラグ（boolean 型） */
+  /** PR Insights Labeler - 有効化フラグ（boolean 型） */
   sizeEnabled: boolean;
   complexityEnabled: boolean;
   categoryEnabled: boolean;
   riskEnabled: boolean;
 
-  /** PR Labeler - 閾値（型安全なオブジェクト） */
+  /** PR Insights Labeler - 閾値（型安全なオブジェクト） */
   sizeThresholdsV2: SizeThresholds;
   complexityThresholdsV2: ComplexityThresholds;
 

@@ -2,7 +2,7 @@
 
 ## Overview
 
-Label-Based Workflow Failure Control機能は、PR Labelerアクションにおいて、適用されたラベルに基づいて個別にワークフローの成否を制御する新しい仕組みを提供します。現在の`fail_on_violation`による一括制御を、より柔軟で直感的なラベルベース制御に進化させ、チームの品質ポリシーを技術的に担保します。
+Label-Based Workflow Failure Control機能は、PR Insights Labelerアクションにおいて、適用されたラベルに基づいて個別にワークフローの成否を制御する新しい仕組みを提供します。現在の`fail_on_violation`による一括制御を、より柔軟で直感的なラベルベース制御に進化させ、チームの品質ポリシーを技術的に担保します。
 
 **Purpose**: この機能は、GitHubワークフローの実行者に対して、PRのサイズ、ファイル数、複雑度などの品質指標に応じた細かな失敗制御を提供します。
 
@@ -29,7 +29,7 @@ Label-Based Workflow Failure Control機能は、PR Labelerアクションにお�
 
 ### Existing Architecture Analysis
 
-PR Labelerは、GitHub Actions上で動作するTypeScriptベースの単一プロセスアプリケーションです。既存アーキテクチャは以下の特徴を持ちます:
+PR Insights Labelerは、GitHub Actions上で動作するTypeScriptベースの単一プロセスアプリケーションです。既存アーキテクチャは以下の特徴を持ちます:
 
 - **Railway-Oriented Programming (ROP)**: neverthrowの`Result<T, E>`型による明示的なエラーハンドリング
 - **レイヤー分離**: Input層（actions-io.ts）、Validation層（input-mapper.ts）、Business Logic層（index.ts）の3層構造
@@ -681,7 +681,7 @@ function calculateSizeCategory(
 - **API**: `GET /repos/{owner}/{repo}/issues/{issue_number}/labels`
 - **認証**: `GITHUB_TOKEN`（自動提供、`pull-requests: read`権限必要）
 - **レート制限**: 5000 requests/hour（authenticated）
-- **ページネーション**: 最大100ラベル/ページ、PR Labelerでは通常10個以下のため1ページで十分
+- **ページネーション**: 最大100ラベル/ページ、PR Insights Labelerでは通常10個以下のため1ページで十分
 - **エラーケース**:
   - 401 Unauthorized: トークン無効
   - 403 Forbidden: 権限不足

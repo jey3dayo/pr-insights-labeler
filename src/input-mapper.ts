@@ -39,7 +39,7 @@ export interface Config {
   prAdditionsLimit: number; // number
   prFilesLimit: number; // number
   autoRemoveLabels: boolean;
-  // PR Labeler - Selective Label Enabling
+  // PR Insights Labeler - Selective Label Enabling
   sizeEnabled: boolean;
   sizeThresholdsV2: { small: number; medium: number; large: number; xlarge: number };
   complexityEnabled: boolean;
@@ -204,7 +204,7 @@ export function parseSizeThresholds(value: string): Result<SizeThresholds, Parse
 
 /**
  * Parse size thresholds from JSON string (V2: small/medium/large with additions only)
- * Used by PR Labeler feature
+ * Used by PR Insights Labeler feature
  */
 export function parseSizeThresholdsV2(
   value: string,
@@ -252,7 +252,7 @@ export function parseSizeThresholdsV2(
 
 /**
  * Parse complexity thresholds from JSON string (V2: medium/high)
- * Used by PR Labeler feature
+ * Used by PR Insights Labeler feature
  */
 export function parseComplexityThresholdsV2(value: string): Result<{ medium: number; high: number }, ParseError> {
   try {
@@ -314,7 +314,7 @@ export function mapActionInputsToConfig(inputs: ActionInputs): Result<Config, Co
     return err(createConfigurationError('pr_files_limit', inputs.pr_files_limit, 'PR files limit must be a number'));
   }
 
-  // Parse PR Labeler enabled flags (strict validation)
+  // Parse PR Insights Labeler enabled flags (strict validation)
   const sizeEnabledResult = parseBooleanStrict(inputs.size_enabled);
   if (sizeEnabledResult.isErr()) {
     return err(sizeEnabledResult.error);
@@ -335,7 +335,7 @@ export function mapActionInputsToConfig(inputs: ActionInputs): Result<Config, Co
     return err(riskEnabledResult.error);
   }
 
-  // Parse PR Labeler thresholds
+  // Parse PR Insights Labeler thresholds
   const sizeThresholdsV2Result = parseSizeThresholdsV2(inputs.size_thresholds);
   if (sizeThresholdsV2Result.isErr()) {
     return err(sizeThresholdsV2Result.error);
@@ -388,7 +388,7 @@ export function mapActionInputsToConfig(inputs: ActionInputs): Result<Config, Co
     prAdditionsLimit,
     prFilesLimit,
     autoRemoveLabels: parseBoolean(inputs.auto_remove_labels),
-    // PR Labeler - Selective Label Enabling
+    // PR Insights Labeler - Selective Label Enabling
     sizeEnabled: sizeEnabledResult.value,
     sizeThresholdsV2: sizeThresholdsV2Result.value,
     complexityEnabled: complexityEnabledResult.value,

@@ -1,6 +1,6 @@
 {
   "initialization": {
-    "starting": "Starting PR Labeler",
+    "starting": "Starting PR Insights Labeler",
     "gettingInputs": "Getting action inputs...",
     "analyzingPr": "Analyzing PR #{{prNumber}} in {{owner}}/{{repo}}",
     "i18nInitializing": "Initializing i18n with language: {{language}}",
@@ -26,13 +26,13 @@
     "complexityFailed": "Failed to analyze code complexity: {{message}}"
   },
   "labels": {
-    "loading": "Loading PR Labeler configuration...",
+    "loading": "Loading PR Insights Labeler configuration...",
     "loadedCustom": "Loaded custom labeler configuration from .github/pr-labeler.yml",
     "merging": "Merging action inputs with labeler configuration...",
     "decidingLabels": "Deciding labels based on PR metrics...",
     "labelsToAdd": "Labels to add: {{labels}}",
     "labelsToRemove": "Labels to remove: {{labels}}",
-    "applying": "Applying PR Labeler decisions...",
+    "applying": "Applying PR Insights Labeler decisions...",
     "applied": "Applied: +{{added}} labels, -{{removed}} labels",
     "applyFailed": "Failed to apply labels: {{message}}",
     "apiCalls": "API calls: {{count}}",
@@ -87,8 +87,8 @@
     "allChecksPassed": "All checks passed!"
   },
   "completion": {
-    "success": "PR Labeler completed successfully",
-    "skippedDraft": "PR Labeler completed (skipped draft PR)",
+    "success": "PR Insights Labeler completed successfully",
+    "skippedDraft": "PR Insights Labeler completed (skipped draft PR)",
     "failed": "Action failed: {{message}}",
     "failedViolations": "PR contains violations and fail_on_violation is enabled"
   },

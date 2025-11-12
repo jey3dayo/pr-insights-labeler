@@ -1,6 +1,6 @@
 # Release Process
 
-このドキュメントは、PR Labelerの新バージョンをリリースする手順を説明します。
+このドキュメントは、PR Insights Labelerの新バージョンをリリースする手順を説明します。
 
 ## 📋 目次
 

@@ -1,5 +1,5 @@
 /**
- * Error type definitions for PR Labeler
+ * Error type definitions for PR Insights Labeler
  * Following Railway-Oriented Programming pattern with neverthrow
  */
 

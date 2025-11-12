@@ -2,7 +2,7 @@
 
 ## Introduction
 
-Label-Based Workflow Failure Control機能は、PR Labelerアクションにおいて、適用されたラベルに基づいて個別にワークフローの成否を制御する機能です。
+Label-Based Workflow Failure Control機能は、PR Insights Labelerアクションにおいて、適用されたラベルに基づいて個別にワークフローの成否を制御する機能です。
 
 現在の`fail_on_violation`は、すべての違反を一括で制御するため、運用上の柔軟性に欠けています。本機能により、「大きいファイルの検出は厳格にチェックするが、PRサイズは警告のみ」といった細かい制御が可能になり、チームの開発ポリシーに応じた柔軟な運用を実現します。
 
@@ -21,23 +21,23 @@ Label-Based Workflow Failure Control機能は、PR Labelerアクションにお�
 
 #### Acceptance Criteria
 
-1. WHEN PR Labelerが起動される THEN PR Labelerは`fail_on_large_files` inputを受け付けなければならない
+1. WHEN PR Insights Labelerが起動される THEN PR Insights Labelerは`fail_on_large_files` inputを受け付けなければならない
    - 型: boolean (文字列 "true" または "false")
    - デフォルト値: "false"
    - 説明: "Fail workflow when 'auto/large-files' label is applied"
 
-2. WHEN PR Labelerが起動される THEN PR Labelerは`fail_on_too_many_files` inputを受け付けなければならない
+2. WHEN PR Insights Labelerが起動される THEN PR Insights Labelerは`fail_on_too_many_files` inputを受け付けなければならない
    - 型: boolean (文字列 "true" または "false")
    - デフォルト値: "false"
    - 説明: "Fail workflow when 'auto/too-many-files' label is applied"
 
-3. WHEN PR Labelerが起動される THEN PR Labelerは`fail_on_pr_size` inputを受け付けなければならない
+3. WHEN PR Insights Labelerが起動される THEN PR Insights Labelerは`fail_on_pr_size` inputを受け付けなければならない
    - 型: string (空文字列 or サイズ閾値)
    - 有効な値: "", "small", "medium", "large", "xlarge", "xxlarge"
    - デフォルト値: ""（無効）
    - 説明: "Fail when PR size reaches threshold (small/medium/large/xlarge/xxlarge). Empty to disable."
 
-4. WHEN PR Labelerがバージョンアップされる THEN `fail_on_violation` inputは**非推奨として維持**され、ユーザーに移行を促す警告を出力しなければならない
+4. WHEN PR Insights Labelerがバージョンアップされる THEN `fail_on_violation` inputは**非推奨として維持**され、ユーザーに移行を促す警告を出力しなければならない
    - `action.yml`には`deprecated`記法または説明文で非推奨である旨を明記
    - 実行時に`fail_on_violation`が指定された場合、ログに移行ガイダンスを出力する（i18n対応）
    - 挙動: `fail_on_violation: true` の場合は以下の互換モードを適用する
@@ -45,7 +45,7 @@ Label-Based Workflow Failure Control機能は、PR Labelerアクションにお�
 
 5. WHEN `fail_on_violation` inputが指定される THEN 新しいラベルベース設定にマッピングされた値が、明示的な新規inputよりも優先度が低い（優先度: 新規input > 既存互換入力）ことを保証しなければならない
 
-6. WHEN ユーザーが無効な`fail_on_pr_size`値を指定する THEN PR Labelerはバリデーションエラーをthrowしなければならない
+6. WHEN ユーザーが無効な`fail_on_pr_size`値を指定する THEN PR Insights Labelerはバリデーションエラーをthrowしなければならない
    - 有効な値以外（例: "huge", "tiny", "123"）は受け付けない
    - エラーメッセージに有効な値のリストを含める
 
@@ -55,15 +55,15 @@ Label-Based Workflow Failure Control機能は、PR Labelerアクションにお�
 
 #### Acceptance Criteria
 
-1. WHEN `fail_on_large_files` inputが提供される THEN PR Labelerは値を`Config.failOnLargeFiles: boolean`にマッピングしなければならない
+1. WHEN `fail_on_large_files` inputが提供される THEN PR Insights Labelerは値を`Config.failOnLargeFiles: boolean`にマッピングしなければならない
 
-2. WHEN `fail_on_too_many_files` inputが提供される THEN PR Labelerは値を`Config.failOnTooManyFiles: boolean`にマッピングしなければならない
+2. WHEN `fail_on_too_many_files` inputが提供される THEN PR Insights Labelerは値を`Config.failOnTooManyFiles: boolean`にマッピングしなければならない
 
-3. WHEN `fail_on_pr_size` inputが提供される THEN PR Labelerは値を`Config.failOnPrSize: string`にマッピングしなければならない
+3. WHEN `fail_on_pr_size` inputが提供される THEN PR Insights Labelerは値を`Config.failOnPrSize: string`にマッピングしなければならない
    - 空文字列の場合は空文字列のまま保持
    - 有効なサイズ値の場合はそのまま保持
 
-4. IF `fail_on_pr_size`が指定されている AND `size_enabled`が`false`である THEN PR Labelerは`ConfigurationError`をthrowしなければならない
+4. IF `fail_on_pr_size`が指定されている AND `size_enabled`が`false`である THEN PR Insights Labelerは`ConfigurationError`をthrowしなければならない
    - エラーメッセージ: "fail_on_pr_size requires size_enabled to be true"
    - サイズラベルが付与されない状態で失敗判定はできない
 
@@ -77,23 +77,23 @@ Label-Based Workflow Failure Control機能は、PR Labelerアクションにお�
 
 #### Acceptance Criteria
 
-1. WHEN PR Labelerがラベル適用を完了する THEN PR Labelerは現在PRに適用されているラベル一覧を取得し、さらにラベルが付与されていない場合に備えて分析結果（violations）も参照できなければならない
+1. WHEN PR Insights Labelerがラベル適用を完了する THEN PR Insights Labelerは現在PRに適用されているラベル一覧を取得し、さらにラベルが付与されていない場合に備えて分析結果（violations）も参照できなければならない
    - GitHub API経由で最新のラベル一覧を取得
    - ラベル適用後の状態を正確に反映
    - `apply_labels: false` や権限不足でラベルが付与されない場合でも、分析結果を用いて失敗判定が行えること
 
-2. IF `fail_on_large_files`が`true` AND (`auto/large-files`ラベルが適用されている OR 分析結果の`violations.largeFiles`が存在する) THEN PR Labelerは失敗リストに"Large files detected"を追加しなければならない
+2. IF `fail_on_large_files`が`true` AND (`auto/large-files`ラベルが適用されている OR 分析結果の`violations.largeFiles`が存在する) THEN PR Insights Labelerは失敗リストに"Large files detected"を追加しなければならない
 
-3. IF `fail_on_too_many_files`が`true` AND (`auto/too-many-files`ラベルが適用されている OR `violations.exceedsFileCount`が`true`) THEN PR Labelerは失敗リストに"Too many files in PR"を追加しなければならない
+3. IF `fail_on_too_many_files`が`true` AND (`auto/too-many-files`ラベルが適用されている OR `violations.exceedsFileCount`が`true`) THEN PR Insights Labelerは失敗リストに"Too many files in PR"を追加しなければならない
 
-4. IF `fail_on_pr_size`が指定されている AND (適用されたサイズラベルが閾値以上 OR 分析結果から算出したサイズカテゴリが閾値以上である) THEN PR Labelerは失敗リストに"PR size ({適用サイズ}) exceeds threshold ({閾値})"を追加しなければならない
+4. IF `fail_on_pr_size`が指定されている AND (適用されたサイズラベルが閾値以上 OR 分析結果から算出したサイズカテゴリが閾値以上である) THEN PR Insights Labelerは失敗リストに"PR size ({適用サイズ}) exceeds threshold ({閾値})"を追加しなければならない
    - ラベルが存在しない場合は `analysis.metrics.totalAdditions` と `size_thresholds` を用いてサイズカテゴリを算出し、比較に利用する
 
-5. WHEN 失敗リストが空でない THEN PR Labelerは`core.setFailed()`をすべての失敗理由を結合したメッセージで呼び出さなければならない
+5. WHEN 失敗リストが空でない THEN PR Insights Labelerは`core.setFailed()`をすべての失敗理由を結合したメッセージで呼び出さなければならない
    - 結合形式: `failures.join(', ')`
    - 例: "Large files detected, PR size (size/xlarge) exceeds threshold (large)"
 
-6. WHEN 失敗リストが空である THEN PR Labelerはワークフローを成功で終了しなければならない
+6. WHEN 失敗リストが空である THEN PR Insights Labelerはワークフローを成功で終了しなければならない
 
 7. WHEN 新しいラベルベース判定ロジックが導入される THEN 既存の`hasViolations && config.failOnViolation`判定ロジックは、互換モードと同等の条件を満たす内部ヘルパーに置き換えられ、既存ユーザーの期待する結果を維持しなければならない
 
@@ -105,22 +105,22 @@ Label-Based Workflow Failure Control機能は、PR Labelerアクションにお�
 
 #### Acceptance Criteria
 
-1. WHEN PR Labelerが初期化される THEN サイズ順序定義`["small", "medium", "large", "xlarge", "xxlarge"]`が利用可能でなければならない
+1. WHEN PR Insights Labelerが初期化される THEN サイズ順序定義`["small", "medium", "large", "xlarge", "xxlarge"]`が利用可能でなければならない
 
-2. WHEN 適用サイズラベル（例: "size/large"）と閾値（例: "medium"）が提供される THEN PR Labelerは適用サイズが閾値以上かどうかを判定しなければならない
+2. WHEN 適用サイズラベル（例: "size/large"）と閾値（例: "medium"）が提供される THEN PR Insights Labelerは適用サイズが閾値以上かどうかを判定しなければならない
    - "size/small" vs "medium" → false（閾値未満）
    - "size/medium" vs "medium" → true（閾値と同じ）
    - "size/large" vs "medium" → true（閾値超過）
    - "size/xlarge" vs "medium" → true（閾値超過）
    - "size/xxlarge" vs "medium" → true（閾値超過）
 
-3. WHEN 適用サイズラベルが"size/"プレフィックスを持つ THEN PR Labelerはプレフィックスを除去してサイズ値を抽出しなければならない
+3. WHEN 適用サイズラベルが"size/"プレフィックスを持つ THEN PR Insights Labelerはプレフィックスを除去してサイズ値を抽出しなければならない
    - 例: "size/xlarge" → "xlarge"
 
-4. WHEN サイズ値がサイズ順序定義に存在しない THEN PR Labelerは比較を失敗として扱わなければならない
+4. WHEN サイズ値がサイズ順序定義に存在しない THEN PR Insights Labelerは比較を失敗として扱わなければならない
    - インデックスが-1の場合は比較不可
 
-5. WHEN 複数のサイズラベルが適用されている（異常ケース） THEN PR Labelerは最初に見つかったサイズラベルを使用しなければならない
+5. WHEN 複数のサイズラベルが適用されている（異常ケース） THEN PR Insights Labelerは最初に見つかったサイズラベルを使用しなければならない
    - `appliedLabels.find(l => l.startsWith('size/'))`の結果を使用
 
 ### Requirement 5: i18n対応
@@ -129,7 +129,7 @@ Label-Based Workflow Failure Control機能は、PR Labelerアクションにお�
 
 #### Acceptance Criteria
 
-1. WHEN 失敗メッセージが生成される THEN PR Labelerは`src/locales/{language}/logs.json`から対応するメッセージキーを取得しなければならない
+1. WHEN 失敗メッセージが生成される THEN PR Insights Labelerは`src/locales/{language}/logs.json`から対応するメッセージキーを取得しなければならない
 
 2. WHEN 英語ロケールが使用される THEN 以下のメッセージキーが定義されていなければならない:
 
@@ -240,15 +240,15 @@ Label-Based Workflow Failure Control機能は、PR Labelerアクションにお�
 
 #### Acceptance Criteria
 
-1. WHEN 設定エラーが発生する THEN PR Labelerは`ConfigurationError`型のエラーをthrowしなければならない
+1. WHEN 設定エラーが発生する THEN PR Insights Labelerは`ConfigurationError`型のエラーをthrowしなければならない
    - neverthrowの`Result<T, E>`パターンに従う
    - エラーメッセージは具体的で実行可能なアクションを含む
 
-2. WHEN ラベル取得に失敗する THEN PR Labelerはエラーをログに記録し、適切にハンドリングしなければならない
+2. WHEN ラベル取得に失敗する THEN PR Insights Labelerはエラーをログに記録し、適切にハンドリングしなければならない
    - GitHub API呼び出しの失敗を想定
    - リトライロジックまたはフォールバック動作
 
-3. WHEN 失敗判定が実行される THEN PR Labelerは判定プロセスをログに記録しなければならない
+3. WHEN 失敗判定が実行される THEN PR Insights Labelerは判定プロセスをログに記録しなければならない
    - デバッグレベル: 各フラグの評価結果
    - インフォレベル: 最終的な失敗判定結果
 
@@ -261,7 +261,7 @@ Label-Based Workflow Failure Control機能は、PR Labelerアクションにお�
 
 #### Acceptance Criteria
 
-1. WHEN ラベル一覧を取得する THEN PR Labelerは最小限のAPI呼び出しで実現しなければならない
+1. WHEN ラベル一覧を取得する THEN PR Insights Labelerは最小限のAPI呼び出しで実現しなければならない
    - 既存のラベル適用処理の結果を再利用できる場合は再利用
 
 2. WHEN サイズ比較ロジックが実行される THEN O(1)の計算量で完了しなければならない

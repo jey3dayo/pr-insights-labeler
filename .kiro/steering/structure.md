@@ -1,6 +1,6 @@
-# Project Structure - PR Labeler
+# Project Structure - PR Insights Labeler
 
-> updated_at: 2024-11-24
+> updated_at: 2025-11-12T08:47:09Z
 
 ## Root Directory Organization
 
@@ -67,8 +67,8 @@ src/
 ├── report-formatter.ts        # Markdownレポート生成
 ├── actions-io.ts              # GitHub Actions I/O（summary, output）
 ├── ci-status.ts               # CI実行状態管理
-├── labeler-types.ts           # PR Labeler型定義とデフォルト設定
-├── config-loader.ts           # YAML設定読み込みとバリデーション（PR Labeler）
+├── labeler-types.ts           # PR Insights Labeler型定義とデフォルト設定
+├── config-loader.ts           # YAML設定読み込みとバリデーション（PR Insights Labeler）
 ├── label-decision-engine.ts   # ラベル判定ロジック（サイズ/複雑度/カテゴリ/リスク）
 ├── label-applicator.ts        # ラベル適用と冪等性保証
 ├── complexity-analyzer.ts     # コード複雑度分析（ESLint標準API使用）
@@ -220,7 +220,7 @@ docs/
 6. **Comment Manager**: コメント操作のみ（レポート生成は委譲）
 7. **Report Formatter**: Markdown生成のみ（GitHub API呼び出しなし）
 
-**PR Labelerモジュール**:
+**PR Insights Labelerモジュール**:
 
 1. **Complexity Analyzer**: コード複雑度分析のみ（ESLint標準API使用）
 2. **Label Decision Engine**: メトリクスベースのラベル判定のみ
@@ -271,7 +271,7 @@ File Metrics → Metrics Data
   ↓
 ┌─────────────┴────────────────────────────────┐
 ↓                                              ↓
-PR Labeler Flow                     Directory-Based Labeler Flow
+PR Insights Labeler Flow                     Directory-Based Labeler Flow
   ↓                                              ↓
 Complexity Analyzer (if enabled)      Directory Config Loader
   ↓                                              ↓

@@ -1,5 +1,5 @@
 /**
- * PR Labeler - Main entry point
+ * PR Insights Labeler - Main entry point
  * Analyzes pull request files and enforces size limits
  */
 

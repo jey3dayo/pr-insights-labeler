@@ -1,6 +1,6 @@
-# Technology Stack - PR Metrics Action
+# Technology Stack - PR Insights Labeler
 
-> updated_at: 2024-11-24
+> updated_at: 2025-11-12T08:47:09Z
 
 ## Architecture
 
@@ -36,12 +36,12 @@ GitHub Event (PR) → Action Runner → dist/index.js
 6. **Comment Manager** (`comment-manager.ts`): PRコメントの作成・更新
 7. **Report Formatter** (`report-formatter.ts`): Markdownレポート生成
 
-**🆕 PR Labeler機能（新規）**:
+**🆕 PR Insights Labeler機能（新規）**:
 
 1. **Configuration Loader** (`config-loader.ts`): YAML設定の読み込みとバリデーション
 2. **Label Decision Engine** (`label-decision-engine.ts`): メトリクスベースのラベル判定ロジック
 3. **Label Applicator** (`label-applicator.ts`): 冪等性を保証したラベル適用
-4. **Labeler Types** (`labeler-types.ts`): PR Labeler用の型定義とデフォルト設定
+4. **Labeler Types** (`labeler-types.ts`): PR Insights Labeler用の型定義とデフォルト設定
 5. **Complexity Analyzer** (`complexity-analyzer.ts`): ESLint標準complexityルールによる循環的複雑度分析
 6. **Input Mapper** (`input-mapper.ts`): 選択的ラベル有効化を含む入力パラメータマッピング
 
@@ -145,7 +145,7 @@ GitHub Event (PR) → Action Runner → dist/index.js
   "minimatch": "^10.0.3",          // Globパターンマッチング
   "neverthrow": "^8.2.0",          // Railway-Oriented Programming
   "p-limit": "3.1.0",              // 🆕 並行処理制御（複雑度分析の並列化）
-  "js-yaml": "^4.1.0",             // 🆕 YAML設定パース（PR Labeler / Directory Labeler）
+  "js-yaml": "^4.1.0",             // 🆕 YAML設定パース（PR Insights Labeler / Directory Labeler）
   "@typescript-eslint/parser": "^8.46.1"  // 🆕 TypeScript AST解析（複雑度分析）
 }
 ```

@@ -1,7 +1,7 @@
 {
-  "name": "pr-labeler",
-  "version": "1.7.1",
-  "description": "GitHub Action to check file sizes and line counts in PRs, automatically apply labels for large files",
+  "name": "pr-insights-labeler",
+  "version": "1.8.0",
+  "description": "PR Insights Labeler delivers intelligent PR analysis with automated size, category, risk, and complexity labels for GitHub Actions",
   "author": "jey3dayo",
   "license": "MIT",
   "homepage": "https://github.com/jey3dayo/pr-labeler",
@@ -80,6 +80,7 @@
     "code-review",
     "pull-request",
     "label",
-    "automation"
+    "automation",
+    "pr-insights-labeler"
   ]
 }

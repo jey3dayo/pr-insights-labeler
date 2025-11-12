@@ -273,7 +273,7 @@ describe('Integration Tests', () => {
 
   describe('Selective Label Enabling Integration', () => {
     beforeEach(() => {
-      // PR Labeler inputs を追加
+      // PR Insights Labeler inputs を追加
       vi.spyOn(core, 'getInput').mockImplementation((name: string) => {
         const inputs: Record<string, string> = {
           github_token: 'mock-token',

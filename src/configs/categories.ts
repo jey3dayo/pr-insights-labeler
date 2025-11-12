@@ -1,5 +1,5 @@
 /**
- * Default category configurations for PR Labeler
+ * Default category configurations for PR Insights Labeler
  */
 
 import type { CategoryConfig } from '../types/config.js';

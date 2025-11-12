@@ -1,6 +1,6 @@
 # Implementation Plan: i18n Support
 
-本実装計画は、PR Labelerに多言語対応（i18n）機能を追加し、GitHub Actions Summary、エラーメッセージ、ログメッセージ、PRコメントを英語と日本語で提供するものです。
+本実装計画は、PR Insights Labelerに多言語対応（i18n）機能を追加し、GitHub Actions Summary、エラーメッセージ、ログメッセージ、PRコメントを英語と日本語で提供するものです。
 
 ## Phase 1: 基盤構築とSummary多言語化
 

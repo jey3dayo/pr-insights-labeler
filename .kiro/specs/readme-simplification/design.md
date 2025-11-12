@@ -2,7 +2,7 @@
 
 ## Overview
 
-**Purpose**: This feature simplifies the PR Labeler project's README.md from 717 lines to 200-300 lines by restructuring documentation, prioritizing quick-start workflows, and separating detailed information into dedicated docs/ files. This improves first-time user onboarding, accelerates information access for existing users, and reduces documentation maintenance burden.
+**Purpose**: This feature simplifies the PR Insights Labeler project's README.md from 717 lines to 200-300 lines by restructuring documentation, prioritizing quick-start workflows, and separating detailed information into dedicated docs/ files. This improves first-time user onboarding, accelerates information access for existing users, and reduces documentation maintenance burden.
 
 **Users**:
 
@@ -23,7 +23,7 @@
 
 ### Non-Goals
 
-- Adding new features to PR Labeler functionality
+- Adding new features to PR Insights Labeler functionality
 - Changing action.yml input parameters or behavior
 - Translating all documentation to multiple languages (Japanese README.ja.md is optional, not required)
 - Redesigning the visual identity or branding
@@ -315,7 +315,7 @@ flowchart LR
 **Content Structure**:
 
 ```markdown
-# PR Labeler
+# PR Insights Labeler
 [Badges: License, TypeScript, Test Status, Coverage]
 
 > One-line description
@@ -346,7 +346,7 @@ flowchart LR
 **Detailed Layout Example with Anchor Compatibility**:
 
 ````markdown
-# PR Labeler
+# PR Insights Labeler
 
 [Badges: License, TypeScript, Test Status, Coverage]
 
@@ -565,7 +565,7 @@ Brief introduction to configuration system
 - Complete workflow examples for each
 - Decision guidance
 
-## Custom PR Labeler Configuration
+## Custom PR Insights Labeler Configuration
 - .github/pr-labeler.yml setup
 - Complete configuration examples
 - Category customization
