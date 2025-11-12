@@ -67,6 +67,8 @@ export const DEFAULT_EXCLUDE_PATTERNS: string[] = [
   '**/*.spec.tsx',
   '**/*.spec.js',
   '**/*.spec.jsx',
+  '**/__snapshots__/**',
+  '**/*.snap',
 
   // Logs
   '*.log',
