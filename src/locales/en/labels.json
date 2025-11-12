@@ -29,6 +29,10 @@
     "riskRefactoringSafe": "refactoring with all CI checks passed",
     "riskFeatureNoTests": "new feature in core functionality without test files",
     "riskCoreNoTests": "core functionality changed without test files",
-    "riskConfigChanged": "configuration files changed"
+    "riskConfigChanged": "configuration files changed",
+    "largeFiles": "{{count}} file(s) exceed size limit",
+    "tooManyLines": "{{count}} file(s) exceed line limit",
+    "excessiveChanges": "total additions exceed limit",
+    "tooManyFiles": "file count exceeds limit"
   }
 }
