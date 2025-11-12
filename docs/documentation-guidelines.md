@@ -335,4 +335,4 @@ const example = "code";
 
 ---
 
-**メンテナー**: jey3dayo | **ライセンス**: MIT | **リポジトリ**: [jey3dayo/pr-insights-labeler](https://github.com/jey3dayo/pr-insights-labeler)
+**メンテナー**: jey3dayo | **ライセンス**: MIT | **リポジトリ**: [jey3dayo/pr-labeler](https://github.com/jey3dayo/pr-labeler)

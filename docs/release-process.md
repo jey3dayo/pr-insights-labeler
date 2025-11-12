@@ -164,7 +164,7 @@ cat package.json | grep version
 ### Fixed
 - バグ修正の説明
 
-[X.Y.Z]: https://github.com/jey3dayo/pr-insights-labeler/releases/tag/vX.Y.Z
+[X.Y.Z]: https://github.com/jey3dayo/pr-labeler/releases/tag/vX.Y.Z
 ```
 
 ### Step 3: package.json のバージョン更新
@@ -259,10 +259,10 @@ git push origin v1 --force
 
 ## 🔗 Full Changelog
 
-**Full Changelog**: https://github.com/jey3dayo/pr-insights-labeler/compare/v[PREVIOUS]...v[CURRENT]
+**Full Changelog**: https://github.com/jey3dayo/pr-labeler/compare/v[PREVIOUS]...v[CURRENT]
 ```
 
-**参考例**: [v1.5.0 Release](https://github.com/jey3dayo/pr-insights-labeler/releases/tag/v1.5.0)
+**参考例**: [v1.5.0 Release](https://github.com/jey3dayo/pr-labeler/releases/tag/v1.5.0)
 
 ### 自動化スクリプト使用時
 

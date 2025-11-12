@@ -343,7 +343,7 @@ PR Insights Labelerの詳細なAPI仕様書です。
 
   ```yaml
   # .github/workflows/pr-check.yml
-  - uses: jey3dayo/pr-insights-labeler@v1
+  - uses: jey3dayo/pr-labeler@v1
     with:
       github_token: ${{ secrets.GITHUB_TOKEN }}
     env:
@@ -633,7 +633,7 @@ GitHub API呼び出しエラー
 #### 1. シンプル設定（推奨）
 
 ```yaml
-- uses: jey3dayo/pr-insights-labeler@v1
+- uses: jey3dayo/pr-labeler@v1
   with:
     github_token: ${{ secrets.GITHUB_TOKEN }}
 ```
@@ -649,7 +649,7 @@ GitHub API呼び出しエラー
 #### 2. カスタム制限
 
 ```yaml
-- uses: jey3dayo/pr-insights-labeler@v1
+- uses: jey3dayo/pr-labeler@v1
   with:
     github_token: ${{ secrets.GITHUB_TOKEN }}
     file_size_limit: "200KB"
@@ -661,7 +661,7 @@ GitHub API呼び出しエラー
 #### 3. 厳格モード
 
 ```yaml
-- uses: jey3dayo/pr-insights-labeler@v1
+- uses: jey3dayo/pr-labeler@v1
   with:
     github_token: ${{ secrets.GITHUB_TOKEN }}
     file_size_limit: "100KB"
@@ -675,7 +675,7 @@ GitHub API呼び出しエラー
 #### 4. Summary出力のみ
 
 ```yaml
-- uses: jey3dayo/pr-insights-labeler@v1
+- uses: jey3dayo/pr-labeler@v1
   with:
     github_token: ${{ secrets.GITHUB_TOKEN }}
     # すべてのラベルを無効化
@@ -694,7 +694,7 @@ GitHub API呼び出しエラー
 ```yaml
 - name: Check PR Metrics
   id: metrics
-  uses: jey3dayo/pr-insights-labeler@v1
+  uses: jey3dayo/pr-labeler@v1
   with:
     github_token: ${{ secrets.GITHUB_TOKEN }}
 
@@ -724,7 +724,7 @@ GitHub API呼び出しエラー
 ```yaml
 - name: Check PR Metrics
   id: metrics
-  uses: jey3dayo/pr-insights-labeler@v1
+  uses: jey3dayo/pr-labeler@v1
   with:
     github_token: ${{ secrets.GITHUB_TOKEN }}
 
@@ -738,7 +738,7 @@ GitHub API呼び出しエラー
 #### 3. カスタム除外パターン（モノレポ対応）
 
 ```yaml
-- uses: jey3dayo/pr-insights-labeler@v1
+- uses: jey3dayo/pr-labeler@v1
   with:
     github_token: ${{ secrets.GITHUB_TOKEN }}
     additional_exclude_patterns: |
@@ -771,7 +771,7 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.head.sha }}
 
-      - uses: jey3dayo/pr-insights-labeler@v1
+      - uses: jey3dayo/pr-labeler@v1
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
 ```
