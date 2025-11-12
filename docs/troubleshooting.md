@@ -346,15 +346,15 @@ If you want to analyze all files, disable default exclusions:
 
 #### 3. Verify Excluded Files
 
-Check GitHub Actions Summary for the "Excluded Files" section:
+Check GitHub Actions Summary for the "Excluded from Analysis" section:
 
 ```
 📊 PR Metrics
 - Total Additions: 150 lines
 - Files Changed: 10 files
-- Excluded Files: 5 files
+- Excluded from Analysis: 5 files
 
-Excluded Files:
+Excluded from Analysis:
 - package-lock.json (lock file)
 - dist/index.js (build artifact)
 - src/large.min.js (minified file)

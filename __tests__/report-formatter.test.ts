@@ -151,7 +151,7 @@ describe('ReportFormatter', () => {
 
       const result = formatBasicMetrics(metrics);
 
-      expect(result).toContain('Excluded Files: **3**');
+      expect(result).toContain('Excluded from Analysis: **3**');
       expect(result).toContain('Binary files skipped: **2**');
     });
 
@@ -213,9 +213,9 @@ describe('ReportFormatter', () => {
       const result = formatExcludedFiles(['dist/index.js', 'node_modules/@types/index.d.ts']);
 
       expect(result).toContain('<details>');
-      expect(result).toContain('Excluded Files');
+      expect(result).toContain('Excluded from Analysis');
       expect(result).toContain('dist/index.js');
-      expect(result).toContain('node\\_modules/@types/index.d.ts');
+      expect(result).toContain('node_modules/@types/index.d.ts'); // No escaping in code blocks
     });
 
     it('should return empty string when no files provided', () => {
@@ -775,7 +775,8 @@ describe('ReportFormatter', () => {
 
       const result = formatImprovementActions(violations);
 
-      expect(result).toContain('### 💡 Improvement Actions');
+      expect(result).toContain('<details open>');
+      expect(result).toContain('<summary><strong>💡');
       expect(result).toContain('Here are some ways to reduce your PR size');
     });
 
@@ -824,7 +825,8 @@ describe('ReportFormatter', () => {
       const result = formatImprovementActions(violations);
 
       expect(result).not.toBe('');
-      expect(result).toContain('### 💡 Improvement Actions');
+      expect(result).toContain('<details open>');
+      expect(result).toContain('<summary><strong>💡');
     });
 
     it('should return improvement actions when exceedsFileCount is true', () => {
@@ -838,7 +840,8 @@ describe('ReportFormatter', () => {
       const result = formatImprovementActions(violations);
 
       expect(result).not.toBe('');
-      expect(result).toContain('### 💡 Improvement Actions');
+      expect(result).toContain('<details open>');
+      expect(result).toContain('<summary><strong>💡');
     });
   });
 
@@ -1449,7 +1452,7 @@ describe('ReportFormatter', () => {
       expect(result).toContain('<details>');
       expect(result).toContain('category/tests');
       expect(result).toContain('1 file');
-      expect(result).toContain('`\\_\\_tests\\_\\_/test.ts`'); // Escaped underscores
+      expect(result).toContain('`__tests__/test.ts`'); // No escaping in code blocks
       expect(result).toContain('category/documentation');
       expect(result).toContain('2 files');
       expect(result).toContain('`docs/README.md`');
@@ -1614,7 +1617,7 @@ describe('ReportFormatter', () => {
 
       expect(result).toContain('適用されたラベルとファイル');
       expect(result).toContain('category/tests');
-      expect(result).toContain('`\\_\\_tests\\_\\_/test.ts`'); // Escaped underscores
+      expect(result).toContain('`__tests__/test.ts`'); // No escaping in code blocks
 
       // Reset to English
       changeLanguage('en');
@@ -1632,8 +1635,9 @@ describe('ReportFormatter', () => {
 
       const result = formatLabelFileGroups(reasoning, createFileMetrics());
 
-      expect(result).toContain('special\\_file.test.ts');
-      expect(result).toContain('\\[bracket\\].ts');
+      // File paths in code blocks don't need escaping
+      expect(result).toContain('special_file.test.ts');
+      expect(result).toContain('[bracket].ts');
     });
   });
 });

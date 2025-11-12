@@ -7,8 +7,10 @@ export function formatImprovementActions(violations: Violations): string {
     return '';
   }
 
-  let output = '';
-  output += `### 💡 ${t('summary', 'improvementActions.title')}\n\n`;
+  const title = t('summary', 'improvementActions.title');
+
+  let output = '<details open>\n';
+  output += `<summary><strong>💡 ${title}</strong></summary>\n\n`;
   output += `${t('summary', 'improvementActions.intro')}\n\n`;
 
   output += `#### 📦 ${t('summary', 'improvementActions.splitting.title')}\n`;
@@ -25,6 +27,8 @@ export function formatImprovementActions(violations: Violations): string {
   output += `- ${t('summary', 'improvementActions.generated.excludeLock')}\n`;
   output += `- ${t('summary', 'improvementActions.generated.manageArtifacts')}\n`;
   output += `- ${t('summary', 'improvementActions.generated.separateGenerated')}\n\n`;
+
+  output += '</details>\n\n';
 
   return output;
 }

@@ -13,8 +13,8 @@
     "excludedAdditions": "除外ファイルの追加行数",
     "totalFiles": "変更ファイル数",
     "filesAnalyzed": "解析対象ファイル数",
-    "excludedFiles": "除外ファイル数",
-    "excludedFilesDetail": "除外ファイル ({{count}})",
+    "excludedFiles": "分析除外ファイル数",
+    "excludedFilesDetail": "分析除外ファイル ({{count}})",
     "binaryFilesSkipped": "バイナリファイルをスキップ",
     "filesWithErrors": "エラーのあるファイル",
     "analysisTime": "分析時刻"
