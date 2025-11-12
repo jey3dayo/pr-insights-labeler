@@ -12,7 +12,7 @@
   "engines": {
     "node": ">=20"
   },
-  "packageManager": "pnpm@10.20.0",
+  "packageManager": "pnpm@10.21.0",
   "main": "dist/index.js",
   "scripts": {
     "generate:i18n-types": "tsx scripts/generate-i18n-types.ts",
@@ -40,10 +40,10 @@
   "dependencies": {
     "@actions/core": "^1.11.1",
     "@actions/github": "^6.0.1",
-    "@typescript-eslint/parser": "^8.46.2",
+    "@typescript-eslint/parser": "^8.46.4",
     "bytes": "^3.1.2",
-    "eslint": "^9.38.0",
-    "i18next": "^25.6.0",
+    "eslint": "^9.39.1",
+    "i18next": "^25.6.2",
     "js-yaml": "^4.1.0",
     "minimatch": "^10.1.1",
     "neverthrow": "^8.2.0",
@@ -51,27 +51,27 @@
   },
   "devDependencies": {
     "@eslint/compat": "^1.4.1",
-    "@eslint/js": "^9.38.0",
+    "@eslint/js": "^9.39.1",
     "@types/bytes": "^3.1.5",
     "@types/js-yaml": "^4.0.9",
-    "@types/node": "^24.9.2",
+    "@types/node": "^24.10.1",
     "@vercel/ncc": "^0.38.4",
-    "@vitest/coverage-v8": "^4.0.5",
-    "@vitest/ui": "^4.0.5",
+    "@vitest/coverage-v8": "^4.0.8",
+    "@vitest/ui": "^4.0.8",
     "dependency-cruiser": "^17.2.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-import-resolver-typescript": "^4.4.4",
     "eslint-plugin-import": "^2.32.0",
     "eslint-plugin-neverthrow": "^1.1.4",
     "eslint-plugin-simple-import-sort": "^12.1.1",
-    "knip": "^5.66.4",
+    "knip": "^5.69.0",
     "npm-run-all": "^4.1.5",
     "prettier": "^3.6.2",
     "rimraf": "^6.1.0",
     "tsx": "^4.20.6",
     "typescript": "^5.9.3",
-    "typescript-eslint": "^8.46.2",
-    "vitest": "^4.0.5"
+    "typescript-eslint": "^8.46.4",
+    "vitest": "^4.0.8"
   },
   "keywords": [
     "github-action",
