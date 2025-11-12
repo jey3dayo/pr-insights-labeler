@@ -7,7 +7,8 @@ import { minimatch } from 'minimatch';
 import { ok, Result } from 'neverthrow';
 
 import { allCIPassed, anyCIFailed } from './ci-status.js';
-import { COMPLEXITY_LABELS, RISK_LABELS } from './configs/label-defaults.js';
+import { COMPLEXITY_LABELS, RISK_LABELS, VIOLATION_LABELS } from './configs/label-defaults.js';
+import type { Violations } from './errors/types.js';
 import { t } from './i18n.js';
 import type { LabelDecisions, LabelerConfig, LabelReasoning, PRMetrics } from './labeler-types.js';
 import type { ChangeType, PRContext } from './types.js';
@@ -21,12 +22,14 @@ import { calculateSizeLabel } from './utils/size-label-utils.js';
  *
  * @param metrics - PR metrics (additions, files, complexity)
  * @param config - Labeler configuration
+ * @param violations - Violations detected during file analysis
  * @param prContext - Optional PR context with CI status and commit messages
  * @returns LabelDecisions with labels to add/remove and reasoning
  */
 export function decideLabels(
   metrics: PRMetrics,
   config: LabelerConfig,
+  violations: Violations,
   prContext?: PRContext,
 ): Result<LabelDecisions, never> {
   const reasoning: LabelReasoning[] = [];
@@ -92,6 +95,11 @@ export function decideLabels(
       });
     }
   }
+
+  // 5. Decide violation labels (if violations exist)
+  const violationLabels = decideViolationLabels(violations);
+  labelsToAdd.push(...violationLabels.labels);
+  reasoning.push(...violationLabels.reasoning);
 
   // Determine labels to remove based on namespace policies
   const labelsToRemove = determineLabelsToRemove(labelsToAdd, config.labels.namespace_policies);
@@ -451,4 +459,64 @@ function determineLabelsToRemove(labelsToAdd: string[], policies: Record<string,
   // Return list of namespace patterns to remove
   // The actual removal will be done by comparing with current labels in the applicator
   return Array.from(namespacesToReplace);
+}
+
+/**
+ * Decide violation labels based on detected violations
+ *
+ * @param violations - Violations detected during file analysis
+ * @returns Violation labels and reasoning
+ */
+export function decideViolationLabels(violations: Violations): {
+  labels: string[];
+  reasoning: LabelReasoning[];
+} {
+  const labels: string[] = [];
+  const reasoning: LabelReasoning[] = [];
+
+  // auto/large-files - Individual files too large
+  if (violations.largeFiles.length > 0) {
+    labels.push(VIOLATION_LABELS.largeFiles);
+    reasoning.push({
+      label: VIOLATION_LABELS.largeFiles,
+      reason: t('labels', 'reasoning.largeFiles', { count: violations.largeFiles.length }),
+      category: 'violation',
+      matchedFiles: violations.largeFiles.map(v => v.file),
+    });
+  }
+
+  // auto/too-many-lines - Individual files exceed line limits
+  if (violations.exceedsFileLines.length > 0) {
+    labels.push(VIOLATION_LABELS.tooManyLines);
+    reasoning.push({
+      label: VIOLATION_LABELS.tooManyLines,
+      reason: t('labels', 'reasoning.tooManyLines', { count: violations.exceedsFileLines.length }),
+      category: 'violation',
+      matchedFiles: violations.exceedsFileLines.map(v => v.file),
+    });
+  }
+
+  // auto/excessive-changes - Total additions exceed limit
+  if (violations.exceedsAdditions) {
+    labels.push(VIOLATION_LABELS.excessiveChanges);
+    reasoning.push({
+      label: VIOLATION_LABELS.excessiveChanges,
+      reason: t('labels', 'reasoning.excessiveChanges'),
+      category: 'violation',
+      matchedFiles: [],
+    });
+  }
+
+  // auto/too-many-files - Too many files changed
+  if (violations.exceedsFileCount) {
+    labels.push(VIOLATION_LABELS.tooManyFiles);
+    reasoning.push({
+      label: VIOLATION_LABELS.tooManyFiles,
+      reason: t('labels', 'reasoning.tooManyFiles'),
+      category: 'violation',
+      matchedFiles: [],
+    });
+  }
+
+  return { labels, reasoning };
 }
