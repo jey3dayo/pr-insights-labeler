@@ -16,7 +16,7 @@ exports[`ReportFormatter > Summary Output Snapshots (Multilingual) > should matc
 - Excluded Additions: **180**
 - Total Files Changed: **10**
 - Files Analyzed: **1**
-- Excluded Files: **2**
+- Excluded from Analysis: **2**
 - Binary files skipped: **2**
 - Analysis Time: 2025-10-18 15:30:00 (UTC)
 
@@ -57,10 +57,10 @@ exports[`ReportFormatter > Summary Output Snapshots (Multilingual) > should matc
 
 exports[`ReportFormatter > Summary Output Snapshots (Multilingual) > should match English snapshot > excluded-files-en 1`] = `
 "<details>
-<summary>Excluded Files (2)</summary>
+<summary>Excluded from Analysis (2)</summary>
 
-- node\\_modules/package.json
-- dist/index.js
+- \`node_modules/package.json\`
+- \`dist/index.js\`
 
 </details>
 
@@ -78,7 +78,8 @@ exports[`ReportFormatter > Summary Output Snapshots (Multilingual) > should matc
 `;
 
 exports[`ReportFormatter > Summary Output Snapshots (Multilingual) > should match English snapshot > improvement-actions-en 1`] = `
-"### 💡 Improvement Actions
+"<details open>
+<summary><strong>💡 Improvement Actions</strong></summary>
 
 Here are some ways to reduce your PR size:
 
@@ -96,6 +97,8 @@ Here are some ways to reduce your PR size:
 - Exclude lock files (package-lock.json, yarn.lock) in \`.github/pr-labeler.yml\`
 - Manage build artifacts (dist/, build/) with \`.gitignore\`
 - Consider updating auto-generated code in separate PRs
+
+</details>
 
 "
 `;
@@ -124,7 +127,7 @@ exports[`ReportFormatter > Summary Output Snapshots (Multilingual) > should matc
 - 除外ファイルの追加行数: **180**
 - 変更ファイル数: **10**
 - 解析対象ファイル数: **1**
-- 除外ファイル数: **2**
+- 分析除外ファイル数: **2**
 - バイナリファイルをスキップ: **2**
 - 分析時刻: 2025-10-18 15:30:00 (UTC)
 
@@ -165,10 +168,10 @@ exports[`ReportFormatter > Summary Output Snapshots (Multilingual) > should matc
 
 exports[`ReportFormatter > Summary Output Snapshots (Multilingual) > should match Japanese snapshot > excluded-files-ja 1`] = `
 "<details>
-<summary>除外ファイル (2)</summary>
+<summary>分析除外ファイル (2)</summary>
 
-- node\\_modules/package.json
-- dist/index.js
+- \`node_modules/package.json\`
+- \`dist/index.js\`
 
 </details>
 
@@ -186,7 +189,8 @@ exports[`ReportFormatter > Summary Output Snapshots (Multilingual) > should matc
 `;
 
 exports[`ReportFormatter > Summary Output Snapshots (Multilingual) > should match Japanese snapshot > improvement-actions-ja 1`] = `
-"### 💡 改善アクション
+"<details open>
+<summary><strong>💡 改善アクション</strong></summary>
 
 PRサイズを削減する方法をいくつか紹介します：
 
@@ -204,6 +208,8 @@ PRサイズを削減する方法をいくつか紹介します：
 - \`.github/pr-labeler.yml\`でロックファイル（package-lock.json、yarn.lock）を除外
 - \`.gitignore\`でビルド成果物（dist/、build/）を管理
 - 自動生成コードの更新は別PRで行うことを検討
+
+</details>
 
 "
 `;

@@ -102,7 +102,7 @@ function formatCategoryLabel(item: LabelReasoning): string {
   output += `<summary><strong>${escapeMarkdown(item.label)}</strong> (${files.length} ${files.length === 1 ? 'file' : 'files'})</summary>\n\n`;
 
   for (const file of files) {
-    output += `- \`${escapeMarkdown(file)}\`\n`;
+    output += `- \`${file}\`\n`;
   }
 
   output += '\n</details>\n\n';
@@ -123,7 +123,7 @@ function formatRiskLabel(item: LabelReasoning): string {
   if (files.length > 0) {
     output += `**${t('summary', 'labelFileGroups.affectedFiles')}:**\n`;
     for (const file of files) {
-      output += `- \`${escapeMarkdown(file)}\`\n`;
+      output += `- \`${file}\`\n`;
     }
   }
 
@@ -147,9 +147,9 @@ function formatComplexityLabel(item: LabelReasoning, complexityMetrics?: Complex
     for (const file of files) {
       const fileComplexity = complexityMetrics.files.find(f => f.path === file);
       if (fileComplexity) {
-        output += `- \`${escapeMarkdown(file)}\` (complexity: ${fileComplexity.complexity})\n`;
+        output += `- \`${file}\` (complexity: ${fileComplexity.complexity})\n`;
       } else {
-        output += `- \`${escapeMarkdown(file)}\`\n`;
+        output += `- \`${file}\`\n`;
       }
     }
   }
@@ -184,7 +184,7 @@ function formatSizeLabel(item: LabelReasoning, fileMetrics: FileMetrics[], exclu
       .slice(0, 10);
 
     for (const file of sortedFiles) {
-      output += `- \`${escapeMarkdown(file.path)}\` (+${file.additions}/-${file.deletions})\n`;
+      output += `- \`${file.path}\` (+${file.additions}/-${file.deletions})\n`;
     }
 
     if (files.length > 10) {

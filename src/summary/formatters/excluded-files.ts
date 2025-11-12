@@ -1,5 +1,4 @@
 import { t } from '../../i18n.js';
-import { escapeMarkdown } from './common.js';
 
 /**
  * Format excluded files as a collapsible details block for Summary output.
@@ -13,7 +12,7 @@ export function formatExcludedFiles(files: string[]): string {
   output += `<summary>${t('summary', 'basicMetrics.excludedFilesDetail', { count: files.length })}</summary>\n\n`;
 
   for (const file of files) {
-    output += `- ${escapeMarkdown(file)}\n`;
+    output += `- \`${file}\`\n`;
   }
 
   output += '\n</details>\n\n';
