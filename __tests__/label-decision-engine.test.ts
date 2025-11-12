@@ -5,10 +5,10 @@ import {
   decideCategoryLabelsWithFiles,
   decideComplexityLabel,
   decideLabels,
-  decideRiskLabel,
   decideSizeLabel,
   decideViolationLabels,
 } from '../src/label-decision-engine';
+import { decideRiskLabel } from '../src/label-decisions/risk-evaluator';
 import { DEFAULT_LABELER_CONFIG, type PRMetrics } from '../src/labeler-types';
 import {
   ciCdCategory,
