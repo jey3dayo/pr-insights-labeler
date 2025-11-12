@@ -18,7 +18,7 @@ export function formatFileDetails(files: FileMetrics[], limit?: number): string 
 
   for (const file of displayFiles) {
     const changes = `+${formatNumber(file.additions)}/-${formatNumber(file.deletions)}`;
-    output += `| ${escapeMarkdown(file.path)} | ${formatBytes(file.size)} | ${formatNumber(file.lines)} | ${changes} |\n`;
+    output += `| \`${file.path}\` | ${formatBytes(file.size)} | ${formatNumber(file.lines)} | ${changes} |\n`;
   }
   output += '\n';
 
@@ -56,7 +56,7 @@ export function formatFileAnalysis(violations: Violations, files: FileMetrics[],
       status = `${icon} ${t('summary', 'fileAnalysis.status.sizeExceed', { limit: formatBytes(sizeViolation.limit) })}`;
     }
 
-    output += `| ${escapeMarkdown(file.path)} | ${formatBytes(file.size)} | ${formatNumber(file.lines)} | ${changes} | ${status} |\n`;
+    output += `| \`${file.path}\` | ${formatBytes(file.size)} | ${formatNumber(file.lines)} | ${changes} | ${status} |\n`;
   }
   output += '\n';
 
