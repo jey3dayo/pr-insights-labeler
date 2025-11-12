@@ -4,11 +4,11 @@ Category labels automatically classify Pull Requests based on the types of files
 
 ## Overview
 
-PR Labeler applies category labels by analyzing changed file paths against predefined patterns. Multiple categories can be applied to a single PR if it contains changes spanning different areas (additive labeling policy).
+PR Insights Labeler applies category labels by analyzing changed file paths against predefined patterns. Multiple categories can be applied to a single PR if it contains changes spanning different areas (additive labeling policy).
 
 ## Default Categories
 
-PR Labeler provides 9 default categories:
+PR Insights Labeler provides 9 default categories:
 
 | Label                     | Description                   | Key Patterns                               | Display Name (ja) |
 | ------------------------- | ----------------------------- | ------------------------------------------ | ----------------- |
@@ -352,7 +352,7 @@ categories:
 
 ## Multiple Category Application
 
-PR Labeler uses an **additive labeling policy**. If a PR contains changes matching multiple categories, all applicable category labels are applied.
+PR Insights Labeler uses an **additive labeling policy**. If a PR contains changes matching multiple categories, all applicable category labels are applied.
 
 **Example**:
 

@@ -1,4 +1,4 @@
-name: Test PR Labeler
+name: Test PR Insights Labeler
 
 on:
   pull_request:
@@ -35,7 +35,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Run PR Labeler (Basic)
+      - name: Run PR Insights Labeler (Basic)
         uses: ./
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
@@ -70,7 +70,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Run PR Labeler (Size Labels)
+      - name: Run PR Insights Labeler (Size Labels)
         uses: ./
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
@@ -98,7 +98,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Run PR Labeler (Failure Control)
+      - name: Run PR Insights Labeler (Failure Control)
         uses: ./
         continue-on-error: true
         id: pr-labeler
@@ -116,7 +116,7 @@ jobs:
       - name: Check Failure Control
         if: always()
         run: |
-          echo "PR Labeler exit code: ${{ steps.pr-labeler.outcome }}"
+          echo "PR Insights Labeler exit code: ${{ steps.pr-labeler.outcome }}"
           if [ "${{ steps.pr-labeler.outcome }}" == "failure" ]; then
             echo "✅ Workflow failure control is working as expected"
           else
@@ -138,7 +138,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Run PR Labeler (All Features)
+      - name: Run PR Insights Labeler (All Features)
         uses: ./
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
@@ -184,7 +184,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Run PR Labeler (Minimal)
+      - name: Run PR Insights Labeler (Minimal)
         uses: ./
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}

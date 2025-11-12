@@ -42,12 +42,12 @@ This change aligns with the simplification goals and removes unnecessary configu
 
 #### 受け入れ基準
 
-1. WHEN TypeScriptコンパイラが`ActionInputs`インターフェースを検証する THEN PR Labeler SHALL `auto_create_labels`プロパティを含まない
-2. WHEN TypeScriptコンパイラが`ActionInputs`インターフェースを検証する THEN PR Labeler SHALL `label_color`プロパティを含まない
-3. WHEN TypeScriptコンパイラが`ActionInputs`インターフェースを検証する THEN PR Labeler SHALL `label_description`プロパティを含まない
-4. WHEN TypeScriptコンパイラが`Config`インターフェースを検証する THEN PR Labeler SHALL `autoCreateLabels`プロパティを含まない
-5. WHEN TypeScriptコンパイラが`Config`インターフェースを検証する THEN PR Labeler SHALL `labelColor`プロパティを含まない
-6. WHEN TypeScriptコンパイラが`Config`インターフェースを検証する THEN PR Labeler SHALL `labelDescription`プロパティを含まない
+1. WHEN TypeScriptコンパイラが`ActionInputs`インターフェースを検証する THEN PR Insights Labeler SHALL `auto_create_labels`プロパティを含まない
+2. WHEN TypeScriptコンパイラが`ActionInputs`インターフェースを検証する THEN PR Insights Labeler SHALL `label_color`プロパティを含まない
+3. WHEN TypeScriptコンパイラが`ActionInputs`インターフェースを検証する THEN PR Insights Labeler SHALL `label_description`プロパティを含まない
+4. WHEN TypeScriptコンパイラが`Config`インターフェースを検証する THEN PR Insights Labeler SHALL `autoCreateLabels`プロパティを含まない
+5. WHEN TypeScriptコンパイラが`Config`インターフェースを検証する THEN PR Insights Labeler SHALL `labelColor`プロパティを含まない
+6. WHEN TypeScriptコンパイラが`Config`インターフェースを検証する THEN PR Insights Labeler SHALL `labelDescription`プロパティを含まない
 7. IF 開発者が`ActionInputs`または`Config`型を使用しようとする THEN TypeScriptコンパイラ SHALL 削除されたプロパティへのアクセスに対してコンパイルエラーを出力する
 
 ### 要件3: 入力マッピングロジックの簡素化
@@ -56,10 +56,10 @@ This change aligns with the simplification goals and removes unnecessary configu
 
 #### 受け入れ基準
 
-1. WHEN `input-mapper.ts`の`mapActionInputsToConfig`関数が呼び出される THEN PR Labeler SHALL `auto_create_labels`のパース処理を実行しない
-2. WHEN `input-mapper.ts`の`mapActionInputsToConfig`関数が呼び出される THEN PR Labeler SHALL `label_color`のパース処理を実行しない
-3. WHEN `input-mapper.ts`の`mapActionInputsToConfig`関数が呼び出される THEN PR Labeler SHALL `label_description`のパース処理を実行しない
-4. WHERE `parseBoolean`関数が`auto_create_labels`に対して呼び出されていた箇所 THE PR Labeler SHALL 該当する関数呼び出しを含まない
+1. WHEN `input-mapper.ts`の`mapActionInputsToConfig`関数が呼び出される THEN PR Insights Labeler SHALL `auto_create_labels`のパース処理を実行しない
+2. WHEN `input-mapper.ts`の`mapActionInputsToConfig`関数が呼び出される THEN PR Insights Labeler SHALL `label_color`のパース処理を実行しない
+3. WHEN `input-mapper.ts`の`mapActionInputsToConfig`関数が呼び出される THEN PR Insights Labeler SHALL `label_description`のパース処理を実行しない
+4. WHERE `parseBoolean`関数が`auto_create_labels`に対して呼び出されていた箇所 THE PR Insights Labeler SHALL 該当する関数呼び出しを含まない
 5. IF `mapActionInputsToConfig`が正常に完了する THEN 返される`Config`オブジェクト SHALL `autoCreateLabels`, `labelColor`, `labelDescription`プロパティを含まない
 
 ### 要件4: ラベル適用ロジックの固定化
@@ -68,15 +68,15 @@ This change aligns with the simplification goals and removes unnecessary configu
 
 #### 受け入れ基準
 
-1. WHEN `label-applicator.ts`の`applyDirectoryLabels`関数が呼び出される THEN PR Labeler SHALL 常に`autoCreate: true`でラベル作成を試みる
-2. WHEN ラベルが存在せず作成が必要な場合 THEN PR Labeler SHALL 固定色`cccccc`を使用してラベルを作成する
-3. WHEN ラベルが存在せず作成が必要な場合 THEN PR Labeler SHALL 空文字列`""`を説明として使用してラベルを作成する
-4. WHERE `ApplyOptions`インターフェースが使用されている箇所 THE PR Labeler SHALL `autoCreate`プロパティを削除し、常に`true`として動作する
-5. WHERE `ApplyOptions`インターフェースが使用されている箇所 THE PR Labeler SHALL `labelColor`プロパティを削除し、固定値`cccccc`を使用する
-6. WHERE `ApplyOptions`インターフェースが使用されている箇所 THE PR Labeler SHALL `labelDescription`プロパティを削除し、固定値`""`を使用する
-7. IF `createMissingLabels`関数が呼び出される THEN PR Labeler SHALL `options`パラメータなしで固定値のみを使用してラベルを作成する
-8. WHEN ラベル作成が成功する THEN PR Labeler SHALL `core.info`でラベル作成の成功をログ出力する
-9. IF ラベル作成が権限不足やレート制限で失敗する THEN PR Labeler SHALL エラー情報を`ApplyResult`の`failed`配列に記録し、処理を継続する
+1. WHEN `label-applicator.ts`の`applyDirectoryLabels`関数が呼び出される THEN PR Insights Labeler SHALL 常に`autoCreate: true`でラベル作成を試みる
+2. WHEN ラベルが存在せず作成が必要な場合 THEN PR Insights Labeler SHALL 固定色`cccccc`を使用してラベルを作成する
+3. WHEN ラベルが存在せず作成が必要な場合 THEN PR Insights Labeler SHALL 空文字列`""`を説明として使用してラベルを作成する
+4. WHERE `ApplyOptions`インターフェースが使用されている箇所 THE PR Insights Labeler SHALL `autoCreate`プロパティを削除し、常に`true`として動作する
+5. WHERE `ApplyOptions`インターフェースが使用されている箇所 THE PR Insights Labeler SHALL `labelColor`プロパティを削除し、固定値`cccccc`を使用する
+6. WHERE `ApplyOptions`インターフェースが使用されている箇所 THE PR Insights Labeler SHALL `labelDescription`プロパティを削除し、固定値`""`を使用する
+7. IF `createMissingLabels`関数が呼び出される THEN PR Insights Labeler SHALL `options`パラメータなしで固定値のみを使用してラベルを作成する
+8. WHEN ラベル作成が成功する THEN PR Insights Labeler SHALL `core.info`でラベル作成の成功をログ出力する
+9. IF ラベル作成が権限不足やレート制限で失敗する THEN PR Insights Labeler SHALL エラー情報を`ApplyResult`の`failed`配列に記録し、処理を継続する
 
 ### 要件5: テストコードの更新
 
@@ -84,12 +84,12 @@ This change aligns with the simplification goals and removes unnecessary configu
 
 #### 受け入れ基準
 
-1. WHEN `input-mapper.test.ts`が実行される THEN PR Labeler SHALL 削除された3つの入力パラメータに関するテストケースを含まない
-2. WHEN `label-applicator.test.ts`が実行される THEN PR Labeler SHALL `autoCreate: false`を使用するテストケースを含まない
-3. WHEN `label-applicator.test.ts`の新しいテストが実行される THEN PR Labeler SHALL ラベルが存在しない場合に固定値`cccccc`と`""`で自動作成されることを検証する
-4. WHEN 統合テスト（`integration.test.ts`）が実行される THEN PR Labeler SHALL `auto_create_labels`パラメータを使用しないDirectory-Based Labelingのシナリオを検証する
-5. IF テストスイート全体が実行される THEN PR Labeler SHALL すべてのテストがエラーなく成功する
-6. WHERE モックオブジェクトで`ApplyOptions`を使用している箇所 THE PR Labeler SHALL 削除されたプロパティ（`autoCreate`, `labelColor`, `labelDescription`）を含まない
+1. WHEN `input-mapper.test.ts`が実行される THEN PR Insights Labeler SHALL 削除された3つの入力パラメータに関するテストケースを含まない
+2. WHEN `label-applicator.test.ts`が実行される THEN PR Insights Labeler SHALL `autoCreate: false`を使用するテストケースを含まない
+3. WHEN `label-applicator.test.ts`の新しいテストが実行される THEN PR Insights Labeler SHALL ラベルが存在しない場合に固定値`cccccc`と`""`で自動作成されることを検証する
+4. WHEN 統合テスト（`integration.test.ts`）が実行される THEN PR Insights Labeler SHALL `auto_create_labels`パラメータを使用しないDirectory-Based Labelingのシナリオを検証する
+5. IF テストスイート全体が実行される THEN PR Insights Labeler SHALL すべてのテストがエラーなく成功する
+6. WHERE モックオブジェクトで`ApplyOptions`を使用している箇所 THE PR Insights Labeler SHALL 削除されたプロパティ（`autoCreate`, `labelColor`, `labelDescription`）を含まない
 
 ### 要件6: ドキュメントの更新
 
@@ -97,9 +97,9 @@ This change aligns with the simplification goals and removes unnecessary configu
 
 #### 受け入れ基準
 
-1. WHEN ユーザーが`README.md`のDirectory-Based Labelingセクションを読む THEN PR Labeler SHALL `auto_create_labels`入力パラメータの説明を含まない
-2. WHEN ユーザーが`README.md`のDirectory-Based Labelingセクションを読む THEN PR Labeler SHALL `label_color`入力パラメータの説明を含まない
-3. WHEN ユーザーが`README.md`のDirectory-Based Labelingセクションを読む THEN PR Labeler SHALL `label_description`入力パラメータの説明を含まない
+1. WHEN ユーザーが`README.md`のDirectory-Based Labelingセクションを読む THEN PR Insights Labeler SHALL `auto_create_labels`入力パラメータの説明を含まない
+2. WHEN ユーザーが`README.md`のDirectory-Based Labelingセクションを読む THEN PR Insights Labeler SHALL `label_color`入力パラメータの説明を含まない
+3. WHEN ユーザーが`README.md`のDirectory-Based Labelingセクションを読む THEN PR Insights Labeler SHALL `label_description`入力パラメータの説明を含まない
 4. WHEN ユーザーがDirectory-Based Labelingの動作説明を読む THEN ドキュメント SHALL ラベルが存在しない場合に自動的に作成されることを明記する
 5. WHEN ユーザーがデフォルト値の説明を読む THEN ドキュメント SHALL ラベル色が`cccccc`、説明が空文字列であることを明記する
 6. WHERE 既存のワークフロー例が`auto_create_labels`を使用している箇所 THE ドキュメント SHALL 該当パラメータを削除した更新版のワークフロー例を提供する
@@ -111,11 +111,11 @@ This change aligns with the simplification goals and removes unnecessary configu
 
 #### 受け入れ基準
 
-1. IF 既存のワークフローが`auto_create_labels: true`を指定している THEN PR Labeler SHALL エラーを出さずに動作を継続し、常にラベルを自動作成する
-2. IF 既存のワークフローが`auto_create_labels: false`を指定している THEN PR Labeler SHALL エラーを出さずに動作を継続し、常にラベルを自動作成する（`false`の指定は無視される）
-3. IF 既存のワークフローが`label_color`や`label_description`を指定している THEN PR Labeler SHALL エラーを出さずに動作を継続し、固定値（color: `cccccc`, description: `""`）を使用する
-4. WHEN ワークフローが削除された入力パラメータ（`auto_create_labels`/`label_color`/`label_description`）を指定している THEN GitHub Actionsプラットフォーム SHALL 未知入力の警告を出す可能性があるが、PR Labeler SHALL エラーを出さずに実行を継続し、ラベル自動作成を常に有効として動作する
-5. WHERE ユーザーが新しいバージョンにアップグレードする THE PR Labeler SHALL 既存のワークフローファイルを変更しなくても正常に動作する
+1. IF 既存のワークフローが`auto_create_labels: true`を指定している THEN PR Insights Labeler SHALL エラーを出さずに動作を継続し、常にラベルを自動作成する
+2. IF 既存のワークフローが`auto_create_labels: false`を指定している THEN PR Insights Labeler SHALL エラーを出さずに動作を継続し、常にラベルを自動作成する（`false`の指定は無視される）
+3. IF 既存のワークフローが`label_color`や`label_description`を指定している THEN PR Insights Labeler SHALL エラーを出さずに動作を継続し、固定値（color: `cccccc`, description: `""`）を使用する
+4. WHEN ワークフローが削除された入力パラメータ（`auto_create_labels`/`label_color`/`label_description`）を指定している THEN GitHub Actionsプラットフォーム SHALL 未知入力の警告を出す可能性があるが、PR Insights Labeler SHALL エラーを出さずに実行を継続し、ラベル自動作成を常に有効として動作する
+5. WHERE ユーザーが新しいバージョンにアップグレードする THE PR Insights Labeler SHALL 既存のワークフローファイルを変更しなくても正常に動作する
 
 ### 要件8: エラーハンドリングの維持
 
@@ -123,8 +123,8 @@ This change aligns with the simplification goals and removes unnecessary configu
 
 #### 受け入れ基準
 
-1. WHEN `applyDirectoryLabels`関数がエラーに遭遇する THEN PR Labeler SHALL `Result<ApplyResult, Error>`型でエラーを返す
-2. IF ラベル作成がGitHub API権限不足で失敗する THEN PR Labeler SHALL `PermissionError`型のエラーを返す
-3. IF ラベル作成がレート制限で失敗する THEN PR Labeler SHALL `RateLimitError`型のエラーを返す
-4. WHEN 部分的な失敗（一部ラベル作成成功、一部失敗）が発生する THEN PR Labeler SHALL `ApplyResult`の`applied`と`failed`配列に適切に記録する
-5. WHERE エラーハンドリングロジックが存在する箇所 THE PR Labeler SHALL 削除されたパラメータに関連する分岐処理を含まない
+1. WHEN `applyDirectoryLabels`関数がエラーに遭遇する THEN PR Insights Labeler SHALL `Result<ApplyResult, Error>`型でエラーを返す
+2. IF ラベル作成がGitHub API権限不足で失敗する THEN PR Insights Labeler SHALL `PermissionError`型のエラーを返す
+3. IF ラベル作成がレート制限で失敗する THEN PR Insights Labeler SHALL `RateLimitError`型のエラーを返す
+4. WHEN 部分的な失敗（一部ラベル作成成功、一部失敗）が発生する THEN PR Insights Labeler SHALL `ApplyResult`の`applied`と`failed`配列に適切に記録する
+5. WHERE エラーハンドリングロジックが存在する箇所 THE PR Insights Labeler SHALL 削除されたパラメータに関連する分岐処理を含まない

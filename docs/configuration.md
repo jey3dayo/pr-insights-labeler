@@ -1,6 +1,6 @@
 # Configuration Guide
 
-Complete reference for all input parameters, output variables, and configuration options for PR Labeler.
+Complete reference for all input parameters, output variables, and configuration options for PR Insights Labeler.
 
 ## Table of Contents
 
@@ -421,7 +421,7 @@ The following files are automatically excluded from analysis:
 
 ## YAML Config File
 
-You can customize PR Labeler behavior by creating `.github/pr-labeler.yml`.
+You can customize PR Insights Labeler behavior by creating `.github/pr-labeler.yml`.
 
 ### File Structure
 
@@ -511,7 +511,7 @@ Label display names are determined by the following priority:
 
 ### Configuration Without File
 
-PR Labeler works immediately with default settings even without `.github/pr-labeler.yml`.
+PR Insights Labeler works immediately with default settings even without `.github/pr-labeler.yml`.
 
 ---
 

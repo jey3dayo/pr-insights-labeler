@@ -1,6 +1,6 @@
 # API仕様書
 
-PR Labelerの詳細なAPI仕様書です。
+PR Insights Labelerの詳細なAPI仕様書です。
 
 ## 📥 Inputs
 
@@ -90,7 +90,7 @@ PR Labelerの詳細なAPI仕様書です。
 - **型**: `string` (boolean)
 - **必須**: ❌
 - **デフォルト**: `"true"`
-- **説明**: 内部パラメータ（PR Labeler のサイズラベルが自動的に適用されます）
+- **説明**: 内部パラメータ（PR Insights Labeler のサイズラベルが自動的に適用されます）
 - **使用例**:
 
   ```yaml

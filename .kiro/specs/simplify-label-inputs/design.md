@@ -2,14 +2,14 @@
 
 ## 概要
 
-本機能は、PR Labelerの入力パラメータ設計を簡素化し、ユーザー混乱を削減することを目的とします。具体的には、冗長な`apply_labels`パラメータを完全削除し、複雑度分析機能をデフォルトOFFに変更し、複雑度閾値をより実用的な値に緩和します。
+本機能は、PR Insights Labelerの入力パラメータ設計を簡素化し、ユーザー混乱を削減することを目的とします。具体的には、冗長な`apply_labels`パラメータを完全削除し、複雑度分析機能をデフォルトOFFに変更し、複雑度閾値をより実用的な値に緩和します。
 
 **目的**: 既存ユーザーと新規ユーザーの両方に対して、より直感的で実用的なパラメータ設計を提供する
 
 **対象ユーザー**:
 
-- PR Labelerを導入するプロジェクトのメンテナー
-- 既存のPR Labeler設定を最適化したいユーザー
+- PR Insights Labelerを導入するプロジェクトのメンテナー
+- 既存のPR Insights Labeler設定を最適化したいユーザー
 
 **影響範囲**:
 
@@ -301,7 +301,7 @@ complexity_thresholds: core.getInput('complexity_thresholds') || '{"medium": 15,
 export interface Config {
   // ... 他のプロパティ
   applyLabels: boolean; // ← 削除対象
-  // PR Labeler - Selective Label Enabling
+  // PR Insights Labeler - Selective Label Enabling
   sizeEnabled: boolean;
   complexityEnabled: boolean; // デフォルト値が "true" → "false" に変更
   categoryEnabled: boolean;
@@ -317,7 +317,7 @@ export interface Config {
 export interface Config {
   // ... 他のプロパティ
   // applyLabels: boolean; ← 削除
-  // PR Labeler - Selective Label Enabling
+  // PR Insights Labeler - Selective Label Enabling
   sizeEnabled: boolean;
   complexityEnabled: boolean; // action.ymlでデフォルト "false"
   categoryEnabled: boolean;

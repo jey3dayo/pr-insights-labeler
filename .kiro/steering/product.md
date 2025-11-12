@@ -1,10 +1,10 @@
-# Product Overview - PR Labeler
+# Product Overview - PR Insights Labeler
 
-> updated_at: 2024-11-24
+> updated_at: 2025-11-12T08:47:09Z
 
 ## Product Description
 
-PR Labeler（旧: PR Metrics Action）は、GitHubのPull Requestのサイズと品質を自動的にチェックし、インテリジェントなラベル付けとコメント投稿を行うGitHub Actionです。大規模なPRを早期に検出し、複雑度分析、カテゴリ分類、リスク判定により、レビュープロセスの効率化とコード品質の向上を支援します。
+PR Insights Labeler（旧: PR Labeler）は、GitHubのPull Requestのサイズと品質を自動的にチェックし、インテリジェントなラベル付けとコメント投稿を行うGitHub Actionです。大規模なPRを早期に検出し、複雑度分析、カテゴリ分類、リスク判定により、レビュープロセスの効率化とコード品質の向上を支援します。
 
 ## Core Features
 
@@ -29,7 +29,7 @@ PR Labeler（旧: PR Metrics Action）は、GitHubのPull Requestのサイズと
 - カスタマイズ可能な閾値設定（JSON形式）
 - ラベルの自動削除機能（制限クリア時）
 
-**🆕 PR Labeler機能（インテリジェントラベリング）**:
+**🆕 PR Insights Labeler機能（インテリジェントラベリング）**:
 
 - **サイズベース**: PR追加行数に基づく4段階ラベル（size/small, size/medium, size/large, size/xlarge）
 - **複雑度ベース**: ESLint標準complexityルールによる循環的複雑度分析

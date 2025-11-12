@@ -2,13 +2,13 @@
 
 ## 概要
 
-コード複雑度分析機能は、PR内の変更ファイルに対してESLint標準のcomplexityルールを統合し、循環的複雑度（Cyclomatic Complexity）を自動計算する拡張機能である。既存のPR Labeler機能のバックエンドとして動作し、複雑度メトリクスの計算からGitHub Actions Summary出力までを提供する。
+コード複雑度分析機能は、PR内の変更ファイルに対してESLint標準のcomplexityルールを統合し、循環的複雑度（Cyclomatic Complexity）を自動計算する拡張機能である。既存のPR Insights Labeler機能のバックエンドとして動作し、複雑度メトリクスの計算からGitHub Actions Summary出力までを提供する。
 
 **目的**: PR変更ファイルの複雑度を定量的に評価し、複雑なコードを早期検知して保守性向上とレビュープロセス効率化を実現する。
 
 **ユーザー**: 開発者、テックリード、品質保証担当者は、PRレビュー、リファクタリング判断、品質管理のワークフローでこれを利用する。
 
-**影響**: 既存のPR Labelerアーキテクチャに新しい複雑度計算層（Complexity Analyzer）を追加する拡張であり、既存のメトリクス計算フロー、ラベル判定エンジン、Actions Summary生成を活用する。
+**影響**: 既存のPR Insights Labelerアーキテクチャに新しい複雑度計算層（Complexity Analyzer）を追加する拡張であり、既存のメトリクス計算フロー、ラベル判定エンジン、Actions Summary生成を活用する。
 
 ### ゴール
 
@@ -29,7 +29,7 @@
 
 ### 既存アーキテクチャ分析
 
-本機能はPR Labelerの拡張として設計され、以下の既存パターンとドメイン境界を継承する：
+本機能はPR Insights Labelerの拡張として設計され、以下の既存パターンとドメイン境界を継承する：
 
 **継承する既存パターン**:
 
@@ -52,7 +52,7 @@
 
 **GitHub API統合の権限要件**:
 
-複雑度メトリクスに基づくラベル付与は、既存のPR Labeler機能と同じGitHub API権限を必要とする：
+複雑度メトリクスに基づくラベル付与は、既存のPR Insights Labeler機能と同じGitHub API権限を必要とする：
 
 - **必要なPermissions**: `issues: write`または`pull-requests: write`
   - PRラベルの追加・削除には`issues: write`権限が必須
@@ -108,7 +108,7 @@ graph TB
 
 **アーキテクチャ統合の理由**:
 
-- **既存フロー活用**: PR Labelerの設定読み込み → ファイル取得 → メトリクス計算 → ラベル付与 → Summary出力のフローに複雑度計算を挿入
+- **既存フロー活用**: PR Insights Labelerの設定読み込み → ファイル取得 → メトリクス計算 → ラベル付与 → Summary出力のフローに複雑度計算を挿入
 - **最小限の変更**: 新規モジュールは`complexity-analyzer.ts`のみ追加、既存モジュールの変更は型定義拡張（PRMetrics.complexity）のみ
 - **既存テスト資産**: pattern-matcher、config-loaderのテストケースを再利用
 
@@ -423,7 +423,7 @@ flowchart TD
 | 1.1-1.13 | 循環的複雑度計算    | ComplexityAnalyzer           | analyzeFile()                      | シーケンス図   |
 | 2.1-2.9  | PR全体の集計        | ComplexityAnalyzer           | analyzeFiles(), aggregateMetrics() | シーケンス図   |
 | 3.1-3.8  | 設定ベース制御      | Config Loader (既存)         | loadConfig()                       | -              |
-| 4.1-4.9  | PR Labeler統合      | Label Decision Engine (既存) | decideComplexityLabel()            | シーケンス図   |
+| 4.1-4.9  | PR Insights Labeler統合      | Label Decision Engine (既存) | decideComplexityLabel()            | シーケンス図   |
 | 5.1-5.12 | Actions Summary出力 | Actions Summary Generator    | generateComplexitySummary()        | シーケンス図   |
 | 6.1-6.12 | エラーハンドリング  | すべてのコンポーネント       | Result<T, E>                       | エラーフロー図 |
 | 7.1-7.5  | 後方互換性          | Config Loader (既存)         | enable_complexity_analysis入力     | -              |
@@ -657,7 +657,7 @@ function normalizePath(filePath: string): string {
  * ファイルのフィルタリングは以下の順序で適用される：
  *
  * 1. additionalExcludePatterns: 設定ファイルのcomplexity.excludeで指定された除外パターン（デフォルト除外パターンを含む）
- * 2. pattern-matcher: GitHubのPR差分からファイルリストを取得する際の除外パターン（既存のPR Labeler機能）
+ * 2. pattern-matcher: GitHubのPR差分からファイルリストを取得する際の除外パターン（既存のPR Insights Labeler機能）
  * 3. complexity.extensions: 複雑度計算対象の拡張子フィルタ（デフォルト: [.ts, .tsx, .js, .jsx]）
  *
  * この順序により、最も広範な除外（additionalExcludePatterns）から最も狭い対象絞り込み（extensions）へと段階的にフィルタリングされる。
@@ -965,7 +965,7 @@ function generateComplexitySummary(
 
 ### データ契約と統合
 
-**API Data Transfer**: PR Labelerの既存PRMetrics型を拡張
+**API Data Transfer**: PR Insights Labelerの既存PRMetrics型を拡張
 
 ```typescript
 /**

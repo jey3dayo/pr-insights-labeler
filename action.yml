@@ -1,5 +1,5 @@
-name: "PR Labeler"
-description: "Intelligent PR labeling with file size checks, automatic categorization, and risk assessment"
+name: "PR Insights Labeler"
+description: "Comprehensive PR insights with intelligent size, category, and risk labeling for GitHub Actions"
 author: "jey3dayo"
 branding:
   icon: "file-text"
@@ -33,7 +33,7 @@ inputs:
     required: false
     default: "true"
 
-  # PR Labeler - ラベル種別の選択的有効化
+  # PR Insights Labeler - ラベル種別の選択的有効化
   size_enabled:
     description: "Enable size labels (size/small, size/medium, size/large, size/xlarge, size/xxlarge)"
     required: false
