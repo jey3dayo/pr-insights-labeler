@@ -5,6 +5,13 @@ This template defines the standard format for PR Insights Labeler release notes.
 ## Standard Format
 
 ```markdown
+## ⚠️ Breaking Changes (if applicable)
+
+- Breaking change description (#PR)
+  - **Migration Guide**: Step-by-step instructions for existing users
+  - **Affected**: Which features are impacted
+  - **Action Required**: What users need to do
+
 ## 🚀 What's New
 
 ### ✨ Added
@@ -29,12 +36,36 @@ This template defines the standard format for PR Insights Labeler release notes.
 - ✅ 0 TypeScript type errors
 - ✅ Build successful
 
+## 👥 Contributors
+
+This release was made possible by:
+- @contributor1
+- @contributor2
+
 ## 🔗 Full Changelog
 
 **Full Changelog**: https://github.com/jey3dayo/pr-insights-labeler/compare/v[PREVIOUS]...v[CURRENT]
 ```
 
 ## Section Guidelines
+
+### ⚠️ Breaking Changes
+
+**Critical changes that may affect existing users.**
+
+Include this section when:
+
+- API changes that break backward compatibility
+- Configuration format changes
+- Deprecated features removed
+- Behavior changes that require user action
+
+**Required information:**
+
+- Clear description of what changed
+- Migration guide with step-by-step instructions
+- Which features/workflows are affected
+- Action required from users
 
 ### 🚀 What's New
 
@@ -56,23 +87,33 @@ Automated quality assurance results. Include:
 - Type checking status
 - Build status
 
+### 👥 Contributors
+
+List of contributors for this release. Automatically generated from git commits.
+
+**Auto-generated content:**
+
+- Extracted using `git shortlog -s -n`
+- Ordered by number of commits (descending)
+- GitHub usernames with @ prefix
+
 ### 🔗 Full Changelog
 
 Link to GitHub's compare view showing all commits between releases.
 
 ## Emoji Guide
 
-| Emoji | Meaning    | Usage                |
-| ----- | ---------- | -------------------- |
-| 🚀    | What's New | Main changes section |
-| ✨    | Added      | New features         |
-| 🔄    | Changed    | Modifications        |
-| 🐛    | Fixed      | Bug fixes            |
-| 🗑️    | Removed    | Deprecated features  |
-| 📊    | Metrics    | Quality metrics      |
-| 🔗    | Links      | External references  |
-| ⚠️    | Warning    | Breaking changes     |
-| 🎯    | Focus      | Key highlights       |
+| Emoji | Meaning          | Usage                         |
+| ----- | ---------------- | ----------------------------- |
+| ⚠️    | Breaking Changes | Critical compatibility issues |
+| 🚀    | What's New       | Main changes section          |
+| ✨    | Added            | New features                  |
+| 🔄    | Changed          | Modifications                 |
+| 🐛    | Fixed            | Bug fixes                     |
+| 🗑️    | Removed          | Deprecated features           |
+| 📊    | Metrics          | Quality metrics               |
+| 🔗    | Links            | External references           |
+| 🎯    | Focus            | Key highlights                |
 
 ## Writing Tips
 
@@ -86,12 +127,22 @@ Link to GitHub's compare view showing all commits between releases.
 ❌ "Refactored config transformer"
 ✅ "Simplified configuration validation with better error messages"
 
-### 3. Link to PRs (Optional)
+### 3. Link to PRs (Required)
+
+**Always include PR references for traceability:**
 
 ```markdown
 - Enhanced risk assessment documentation (#84)
 - Fixed undefined CI status error (#79)
+- Add snapshot exclusion patterns (#90)
 ```
+
+**Why PR links are required:**
+
+- Enables users to see the full context of changes
+- Provides access to discussions and decisions
+- Helps with troubleshooting and understanding impact
+- Automatically extracted by `scripts/release.sh` from commit messages
 
 ### 4. Highlight Breaking Changes
 

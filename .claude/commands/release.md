@@ -10,6 +10,11 @@ GitHub Actionプロジェクトの新バージョンリリースを自動化す�
 - **タグ自動管理**: vX.Y.Z と vメジャーバージョンタグの自動作成・更新
 - **GitHub Release作成**: リリースノートの自動生成
 - **ロールバック対応**: エラー時の自動ロールバック
+- **⚡ 新機能 ⚡**
+  - **Breaking Changes自動検出**: `BREAKING CHANGE:` フッターや `feat!:` 記法から自動検出
+  - **PR番号自動抽出**: コミットメッセージから `(#123)` 形式のPR番号を自動抽出
+  - **Contributors自動生成**: git shortlogからコントリビューター一覧を自動生成
+  - **テストカウント改善**: より堅牢なテスト結果抽出とエラーハンドリング
 
 ## 使用方法
 
@@ -126,11 +131,23 @@ gh release create vX.Y.Z \
   --notes "CHANGELOG.mdから抽出したリリースノート"
 ```
 
-**リリースノート内容:**
+**リリースノート内容（自動生成）:**
 
-- CHANGELOG.md の該当バージョンセクション
-- Breaking Changesがあれば強調表示
-- コントリビューター情報（該当する場合）
+- **⚠️ Breaking Changes** (検出された場合)
+  - `BREAKING CHANGE:` フッターから自動抽出
+  - `feat!:`, `fix!:` 記法から自動検出
+- **🚀 What's New**
+  - ✨ Added: `feat:` コミット + 自動PR番号抽出
+  - 🔄 Changed: `chore:`, `docs:`, `style:` コミット + 自動PR番号抽出
+  - 🐛 Fixed: `fix:` コミット + 自動PR番号抽出
+- **📊 Quality Metrics**
+  - テスト数（改善された抽出ロジック + エラーハンドリング）
+  - Lint/TypeCheck/Build ステータス
+- **👥 Contributors**
+  - git shortlogから自動生成
+  - コミット数順にソート
+- **🔗 Full Changelog**
+  - GitHub比較URL
 
 ## 🛡️ エラーハンドリング
 
