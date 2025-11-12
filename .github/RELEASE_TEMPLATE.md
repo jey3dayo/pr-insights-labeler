@@ -1,6 +1,6 @@
 # Release Notes Template
 
-This template defines the standard format for pr-labeler release notes. It is automatically used by `scripts/release.sh` when creating new releases.
+This template defines the standard format for PR Insights Labeler release notes. It is automatically used by `scripts/release.sh` when creating new releases.
 
 ## Standard Format
 

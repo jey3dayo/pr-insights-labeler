@@ -1,6 +1,6 @@
 {
   // Markdownlint-cli2 設定ファイル
-  // pr-labeler プロジェクト用
+  // PR Insights Labeler プロジェクト用
   "config": {
     // デフォルトルールを有効化
     "default": true,
