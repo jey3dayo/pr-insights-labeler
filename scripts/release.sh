@@ -99,7 +99,7 @@ generate_changelog() {
 
     # Extract PR number if exists
     local pr_num
-    pr_num=$(echo "$msg" | grep -oP '\(#\d+\)' || echo "")
+    pr_num=$(echo "$msg" | sed -n 's/.*(#\([0-9][0-9]*\)).*/\(#\1\)/p')
 
     case $msg in
       feat:*|feat\(*)
@@ -299,7 +299,7 @@ create_release() {
   # Generate full release notes following .github/RELEASE_TEMPLATE.md format
   local test_count
   # Try to extract test count with improved pattern matching
-  test_count=$(pnpm test:vitest 2>&1 | grep -oP '\d+(?= passed)' | head -1)
+  test_count=$(pnpm test:vitest 2>&1 | awk '/passed/ {for(i=1;i<=NF;i++) if($(i+1)=="passed") {print $i; exit}}')
   # Fallback to descriptive message if extraction fails
   test_count=${test_count:-"N/A (check failed)"}
 
