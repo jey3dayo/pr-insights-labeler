@@ -2,9 +2,9 @@
 
 ## Overview
 
-この機能は、PR Labelerに多言語対応（i18n: internationalization）を導入し、GitHub Actions Summary、エラーメッセージ、ログメッセージ、PRコメントを英語と日本語で提供します。現在の英語のみの出力を多言語化することで、日本語ユーザーの利用体験を向上させ、グローバルな採用を促進します。
+この機能は、PR Insights Labelerに多言語対応（i18n: internationalization）を導入し、GitHub Actions Summary、エラーメッセージ、ログメッセージ、PRコメントを英語と日本語で提供します。現在の英語のみの出力を多言語化することで、日本語ユーザーの利用体験を向上させ、グローバルな採用を促進します。
 
-**目的**: PR Labelerのすべてのユーザー向けテキストを多言語化し、言語選択の柔軟性を提供します。
+**目的**: PR Insights Labelerのすべてのユーザー向けテキストを多言語化し、言語選択の柔軟性を提供します。
 
 **対象ユーザー**: 日本語を優先する開発チームおよび将来的に他言語を必要とするグローバルチームが、環境変数または設定ファイルで言語を指定して利用します。
 
@@ -30,7 +30,7 @@
 
 ### Existing Architecture Analysis
 
-PR Labelerは、GitHub Actionとして動作する単一プロセスのTypeScriptアプリケーションです。@vercel/nccでバンドルされた`dist/index.js`が実行エントリーポイントであり、以下の主要モジュールで構成されています：
+PR Insights Labelerは、GitHub Actionとして動作する単一プロセスのTypeScriptアプリケーションです。@vercel/nccでバンドルされた`dist/index.js`が実行エントリーポイントであり、以下の主要モジュールで構成されています：
 
 **出力関連モジュール**（i18n統合対象）:
 
@@ -862,7 +862,7 @@ declare module 'i18next' {
 ```json
 {
   "initialization": {
-    "starting": "Initializing PR Labeler...",
+    "starting": "Initializing PR Insights Labeler...",
     "languageDetected": "Detected language: {{language}}",
     "i18nInitialized": "i18n system initialized successfully",
     "configLoaded": "Configuration loaded from: {{path}}"

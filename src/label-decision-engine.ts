@@ -1,5 +1,5 @@
 /**
- * Label Decision Engine for PR Labeler
+ * Label Decision Engine for PR Insights Labeler
  * Determines which labels to apply based on PR metrics and configuration
  */
 

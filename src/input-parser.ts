@@ -36,13 +36,13 @@ export interface ParsedInputs {
   prAdditionsLimit: number;
   prFilesLimit: number;
 
-  // PR Labeler - 有効化フラグ（boolean 型）
+  // PR Insights Labeler - 有効化フラグ（boolean 型）
   sizeEnabled: boolean;
   complexityEnabled: boolean;
   categoryEnabled: boolean;
   riskEnabled: boolean;
 
-  // PR Labeler - 閾値（型安全なオブジェクト）
+  // PR Insights Labeler - 閾値（型安全なオブジェクト）
   sizeThresholdsV2: { small: number; medium: number; large: number; xlarge: number };
   complexityThresholdsV2: { medium: number; high: number };
 
@@ -116,7 +116,7 @@ export function parseActionInputs(): Result<ParsedInputs, ConfigurationError | P
     return err(createConfigurationError('pr_files_limit', prFilesLimitStr, 'PR files limit must be a number'));
   }
 
-  // Parse PR Labeler enabled flags (strict validation)
+  // Parse PR Insights Labeler enabled flags (strict validation)
   const sizeEnabledResult = parseBooleanStrict(core.getInput('size_enabled'));
   if (sizeEnabledResult.isErr()) {
     return err(sizeEnabledResult.error);
@@ -137,7 +137,7 @@ export function parseActionInputs(): Result<ParsedInputs, ConfigurationError | P
     return err(riskEnabledResult.error);
   }
 
-  // Parse PR Labeler thresholds
+  // Parse PR Insights Labeler thresholds
   const sizeThresholdsV2Result = parseSizeThresholdsV2(core.getInput('size_thresholds'));
   if (sizeThresholdsV2Result.isErr()) {
     return err(sizeThresholdsV2Result.error);

@@ -1,14 +1,14 @@
-# PR Labeler
+# PR Insights Labeler
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0+-blue.svg)](https://www.typescriptlang.org/)
 ![Test Coverage](https://img.shields.io/badge/Coverage-93%25-green.svg)
 
-**Intelligent PR analysis and labeling for GitHub Actions** - Automatically categorize, size, and assess risk of your pull requests.
+**Comprehensive PR insights and labeling for GitHub Actions** - Automatically categorize, size, and assess risk of your pull requests.
 
 🇬🇧 [English](README.md) | 🇯🇵 [日本語](README.ja.md)
 
-## ✨ Why PR Labeler?
+## ✨ Why PR Insights Labeler?
 
 Streamline your PR review process with intelligent automation:
 
@@ -38,7 +38,7 @@ Get started in 2 minutes:
 Add `.github/workflows/pr-labeler.yml`:
 
 ```yaml
-name: PR Labeler
+name: PR Insights Labeler
 
 on:
   pull_request:

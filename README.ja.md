@@ -1,14 +1,14 @@
-# PR Labeler
+# PR Insights Labeler
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0+-blue.svg)](https://www.typescriptlang.org/)
 ![Test Coverage](https://img.shields.io/badge/Coverage-93%25-green.svg)
 
-**GitHub Actions用のインテリジェントなPR分析・ラベリングツール** - プルリクエストを自動的に分類、サイズ判定、リスク評価します。
+**GitHub Actions用の包括的なPRインサイト＆ラベリングツール** - プルリクエストを自動的に分類、サイズ判定、リスク評価します。
 
 🇯🇵 [日本語](README.ja.md) | 🇬🇧 [English](README.md)
 
-## ✨ PR Labelerを選ぶ理由
+## ✨ PR Insights Labelerを選ぶ理由
 
 インテリジェントな自動化でPRレビュープロセスを効率化:
 
@@ -38,7 +38,7 @@
 `.github/workflows/pr-labeler.yml` を追加:
 
 ```yaml
-name: PR Labeler
+name: PR Insights Labeler
 
 on:
   pull_request:

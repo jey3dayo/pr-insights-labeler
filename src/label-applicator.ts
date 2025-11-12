@@ -1,5 +1,5 @@
 /**
- * Label Applicator for PR Labeler
+ * Label Applicator for PR Insights Labeler
  * Applies label decisions to GitHub PRs with idempotency guarantee
  */
 

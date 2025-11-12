@@ -1,6 +1,6 @@
 # Advanced Usage Guide
 
-Real-world examples and advanced configurations for PR Labeler.
+Real-world examples and advanced configurations for PR Insights Labeler.
 
 ## Table of Contents
 
@@ -9,7 +9,7 @@ Real-world examples and advanced configurations for PR Labeler.
 - [Strict Mode](#strict-mode)
 - [Summary Only Mode](#summary-only-mode)
 - [Selective Label Enabling](#selective-label-enabling)
-- [PR Labeler YAML Configuration](#pr-labeler-yaml-configuration)
+- [PR Insights Labeler YAML Configuration](#pr-labeler-yaml-configuration)
 - [Directory-Based Labeling](#directory-based-labeling)
 - [Multi-language Support](#multi-language-support)
 
@@ -62,7 +62,7 @@ jobs:
 
 ## Conditional Execution
 
-Run PR Labeler only when specific files or paths change.
+Run PR Insights Labeler only when specific files or paths change.
 
 ### Skip Specific Files
 
@@ -93,7 +93,7 @@ jobs:
 
 ### Skip by Label
 
-Skip PR Labeler if specific labels are present:
+Skip PR Insights Labeler if specific labels are present:
 
 ```yaml
 name: PR Check
@@ -296,9 +296,9 @@ By default, all label types (size, complexity, category, risk) are enabled:
 - `*_enabled`: Enable/disable each label type
 - `*_thresholds`: Customize thresholds for size and complexity labels
 
-## PR Labeler YAML Configuration
+## PR Insights Labeler YAML Configuration
 
-Customize PR Labeler behavior by creating `.github/pr-labeler.yml`.
+Customize PR Insights Labeler behavior by creating `.github/pr-labeler.yml`.
 
 ### Complete Example
 
@@ -413,7 +413,7 @@ runtime:
 
 ### Configuration Without File
 
-PR Labeler works immediately with default settings even without `.github/pr-labeler.yml`.
+PR Insights Labeler works immediately with default settings even without `.github/pr-labeler.yml`.
 
 ### Display Name Priority
 
@@ -582,7 +582,7 @@ For `src/api/users.ts`:
 
 ## Multi-language Support
 
-PR Labeler supports English and Japanese output for GitHub Actions Summary, error messages, logs, and PR comments.
+PR Insights Labeler supports English and Japanese output for GitHub Actions Summary, error messages, logs, and PR comments.
 
 ### Language Configuration Methods
 

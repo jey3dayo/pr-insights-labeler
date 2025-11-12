@@ -1,8 +1,8 @@
-# 技術設計書: PR Labeler
+# 技術設計書: PR Insights Labeler
 
 ## 概要
 
-PR Labelerは、PRのメトリクス分析に基づいて自動的にラベルを付与するGitHub Actionである。既存のpr-labelerで計算されたメトリクス（サイズ、複雑度、リスク、カテゴリ）を活用し、GitHub Actions labelerでは実現できないインテリジェントなラベル付けを提供する。
+PR Insights Labelerは、PRのメトリクス分析に基づいて自動的にラベルを付与するGitHub Actionである。既存のpr-labelerで計算されたメトリクス（サイズ、複雑度、リスク、カテゴリ）を活用し、GitHub Actions labelerでは実現できないインテリジェントなラベル付けを提供する。
 
 **目的**: 本機能は、PRの特性を可視化し、レビュープロセスの効率化と品質管理の自動化を開発者、テックリード、プロジェクトマネージャーに提供する。
 
@@ -58,7 +58,7 @@ graph TB
         A[GitHub Event: PR opened/synchronize/reopened]
     end
 
-    subgraph "PR Labeler Action"
+    subgraph "PR Insights Labeler Action"
         B[Input Mapper]
         C[Configuration Loader]
         D[File Analysis Engine]
@@ -966,7 +966,7 @@ interface SummaryGeneratorService {
 **Summaryフォーマット例**:
 
 ```markdown
-## 📊 PR Labeler Summary
+## 📊 PR Insights Labeler Summary
 
 ### ラベル変更
 

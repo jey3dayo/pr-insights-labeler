@@ -1,7 +1,7 @@
 /* c8 ignore start */
 
 /**
- * Type definitions for PR Labeler functionality
+ * Type definitions for PR Insights Labeler functionality
  * These types support intelligent label assignment based on PR metrics
  */
 

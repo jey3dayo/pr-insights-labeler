@@ -71,12 +71,12 @@
 
 #### 受入基準
 
-1. WHEN ユーザーが `size_enabled: "false"` を設定する THEN PR Labeler はサイズラベル（size/small, size/medium, size/large, size/xlarge）を付与しない
-2. WHEN ユーザーが `complexity_enabled: "false"` を設定する THEN PR Labeler は複雑度ラベル（complexity/medium, complexity/high）を付与しない
-3. WHEN ユーザーが `category_enabled: "false"` を設定する THEN PR Labeler はカテゴリラベル（category/tests, category/docs等）を付与しない
-4. WHEN ユーザーが `risk_enabled: "false"` を設定する THEN PR Labeler はリスクラベル（risk/high, risk/medium）を付与しない
-5. WHEN ユーザーがラベル種別のenabledパラメータを省略する THEN PR Labeler は当該ラベル種別をデフォルトで有効（true）として扱う
-6. WHEN すべてのラベル種別が無効化されている THEN PR Labeler はラベル分析のみを実行し、GitHub Actions Summaryにメトリクスを出力する
+1. WHEN ユーザーが `size_enabled: "false"` を設定する THEN PR Insights Labeler はサイズラベル（size/small, size/medium, size/large, size/xlarge）を付与しない
+2. WHEN ユーザーが `complexity_enabled: "false"` を設定する THEN PR Insights Labeler は複雑度ラベル（complexity/medium, complexity/high）を付与しない
+3. WHEN ユーザーが `category_enabled: "false"` を設定する THEN PR Insights Labeler はカテゴリラベル（category/tests, category/docs等）を付与しない
+4. WHEN ユーザーが `risk_enabled: "false"` を設定する THEN PR Insights Labeler はリスクラベル（risk/high, risk/medium）を付与しない
+5. WHEN ユーザーがラベル種別のenabledパラメータを省略する THEN PR Insights Labeler は当該ラベル種別をデフォルトで有効（true）として扱う
+6. WHEN すべてのラベル種別が無効化されている THEN PR Insights Labeler はラベル分析のみを実行し、GitHub Actions Summaryにメトリクスを出力する
 
 ### Requirement 2: Input命名規則の統一化
 
@@ -84,8 +84,8 @@
 
 #### 受入基準
 
-1. WHEN ユーザーがサイズラベル設定を行う THEN PR Labeler は `size_enabled` と `size_thresholds` の統一された命名規則でパラメータを受け付ける
-2. WHEN ユーザーが複雑度ラベル設定を行う THEN PR Labeler は `complexity_enabled` と `complexity_thresholds` の統一された命名規則でパラメータを受け付ける
+1. WHEN ユーザーがサイズラベル設定を行う THEN PR Insights Labeler は `size_enabled` と `size_thresholds` の統一された命名規則でパラメータを受け付ける
+2. WHEN ユーザーが複雑度ラベル設定を行う THEN PR Insights Labeler は `complexity_enabled` と `complexity_thresholds` の統一された命名規則でパラメータを受け付ける
 3. WHEN action.yml が読み込まれる THEN すべてのenabledパラメータ（size_enabled, complexity_enabled, category_enabled, risk_enabled）のデフォルト値は "true" である
 4. WHEN すべてのラベル種別の命名規則を確認する THEN `*_enabled` と `*_thresholds` のパターンで一貫性がある
 
@@ -95,13 +95,13 @@
 
 #### 受入基準
 
-1. WHEN ユーザーが `size_thresholds` をJSON形式で指定する THEN PR Labeler は指定された閾値（small/medium/large）でサイズラベルを判定する
-2. WHEN ユーザーが `complexity_thresholds` をJSON形式で指定する THEN PR Labeler は指定された閾値（medium/high）で複雑度ラベルを判定する
-3. IF ユーザーが閾値パラメータを省略する THEN PR Labeler はデフォルト閾値を使用する
+1. WHEN ユーザーが `size_thresholds` をJSON形式で指定する THEN PR Insights Labeler は指定された閾値（small/medium/large）でサイズラベルを判定する
+2. WHEN ユーザーが `complexity_thresholds` をJSON形式で指定する THEN PR Insights Labeler は指定された閾値（medium/high）で複雑度ラベルを判定する
+3. IF ユーザーが閾値パラメータを省略する THEN PR Insights Labeler はデフォルト閾値を使用する
    - サイズ: `{"small": 100, "medium": 500, "large": 1000}`
    - 複雑度: `{"medium": 10, "high": 20}`
-4. WHEN ユーザーが不正なJSON形式の閾値を指定する THEN PR Labeler はエラーメッセージを出力し、GitHub Actionを失敗させる
-5. WHEN ユーザーが閾値として負の数や0を指定する THEN PR Labeler はバリデーションエラーを出力し、GitHub Actionを失敗させる
+4. WHEN ユーザーが不正なJSON形式の閾値を指定する THEN PR Insights Labeler はエラーメッセージを出力し、GitHub Actionを失敗させる
+5. WHEN ユーザーが閾値として負の数や0を指定する THEN PR Insights Labeler はバリデーションエラーを出力し、GitHub Actionを失敗させる
 
 ### Requirement 4: 型定義とデータフローの更新
 
@@ -174,8 +174,8 @@
 
 #### 受入基準
 
-1. WHEN ユーザーが enabled パラメータに "true" または "false" 以外の値を設定する THEN PR Labeler は明確なエラーメッセージを出力し、GitHub Action を失敗させる
-2. WHEN ユーザーが thresholds パラメータに不正なJSON形式を設定する THEN PR Labeler は JSON パースエラーを出力し、GitHub Action を失敗させる
-3. WHEN ユーザーが thresholds パラメータで閾値の順序が不正（small > medium等）な場合 THEN PR Labeler はバリデーションエラーを出力し、GitHub Action を失敗させる
+1. WHEN ユーザーが enabled パラメータに "true" または "false" 以外の値を設定する THEN PR Insights Labeler は明確なエラーメッセージを出力し、GitHub Action を失敗させる
+2. WHEN ユーザーが thresholds パラメータに不正なJSON形式を設定する THEN PR Insights Labeler は JSON パースエラーを出力し、GitHub Action を失敗させる
+3. WHEN ユーザーが thresholds パラメータで閾値の順序が不正（small > medium等）な場合 THEN PR Insights Labeler はバリデーションエラーを出力し、GitHub Action を失敗させる
 4. WHEN バリデーションエラーが発生する THEN エラーメッセージには問題の詳細（どのパラメータが不正か、期待される形式）が含まれる
 5. WHEN エラーが発生する THEN GitHub Actions Summary にエラー詳細が表示され、デバッグが容易である

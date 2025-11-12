@@ -2,7 +2,7 @@
 
 ## 概要
 
-Configuration Layer Pattern の実装により、PR Labeler の設定管理を統一し、保守性とテスト容易性を向上させます。
+Configuration Layer Pattern の実装により、PR Insights Labeler の設定管理を統一し、保守性とテスト容易性を向上させます。
 
 ## 実装タスク
 

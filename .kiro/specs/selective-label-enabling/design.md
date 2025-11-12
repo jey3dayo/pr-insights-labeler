@@ -70,19 +70,19 @@
 ### ラベル判定ロジックの変更
 
 - **v0.x**: `label-manager.ts`の`applySizeLabels`ロジック（additions + files）
-- **v1**: `label-decision-engine.ts`のPR Labelerロジック（additionsのみ）に統一
+- **v1**: `label-decision-engine.ts`のPR Insights Labelerロジック（additionsのみ）に統一
 
 ## 既存サイズ機能との衝突と方針決定
 
 ### 問題点
 
 - **既存機能**: `label-manager.ts` が S/M/L/XL/XXL ラベルを `apply_size_labels` と `size_label_thresholds`（additions + files）で制御
-- **新機能**: PR Labeler が size/small〜xlarge を `size_enabled` と `size_thresholds`（additions のみ）で制御
+- **新機能**: PR Insights Labeler が size/small〜xlarge を `size_enabled` と `size_thresholds`（additions のみ）で制御
 - **衝突**: 入力・閾値スキーマが異なり、混在すると誤設定の温床になる
 
 ### 採用方針
 
-**方式A: v0.x のサイズ機能を廃止し、PR Labeler に一本化**（採用）
+**方式A: v0.x のサイズ機能を廃止し、PR Insights Labeler に一本化**（採用）
 
 - **理由**: 命名統一の目的と一貫性を保つ
 - **影響**:
@@ -93,7 +93,7 @@
 ### 実装方針
 
 - `label-manager.ts` の `applySizeLabels` ロジックを完全削除
-- PR Labeler の `size/small〜xlarge` ラベルに統一
+- PR Insights Labeler の `size/small〜xlarge` ラベルに統一
 - 削除された `apply_size_labels`/`size_label_thresholds` inputs を action.yml から削除
 
 ## 変更設計（ハイライト）

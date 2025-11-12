@@ -2,7 +2,7 @@
 
 ## イントロダクション
 
-PR Labelerは、PRのメトリクス分析に基づいて自動的にラベルを付与するGitHub Actionです。既存のpr-labelerで計算されたメトリクス（サイズ、複雑度、リスク）を活用し、GitHub Actions labelerでは実現できないインテリジェントなラベル付けを提供します。
+PR Insights Labelerは、PRのメトリクス分析に基づいて自動的にラベルを付与するGitHub Actionです。既存のpr-labelerで計算されたメトリクス（サイズ、複雑度、リスク）を活用し、GitHub Actions labelerでは実現できないインテリジェントなラベル付けを提供します。
 
 ### ビジネス価値
 
@@ -25,12 +25,12 @@ PR Labelerは、PRのメトリクス分析に基づいて自動的にラベル�
 
 #### Acceptance Criteria
 
-1. WHEN PRの追加行数が100行未満 THEN PR Labelerアクション SHALL `size/small` ラベルを付与する
-2. WHEN PRの追加行数が100行以上500行未満 THEN PR Labelerアクション SHALL `size/medium` ラベルを付与する
-3. WHEN PRの追加行数が500行以上1000行未満 THEN PR Labelerアクション SHALL `size/large` ラベルを付与する
-4. WHEN PRの追加行数が1000行以上 THEN PR Labelerアクション SHALL `size/xlarge` ラベルを付与する
-5. WHEN PRのサイズが変更された THEN PR Labelerアクション SHALL 古いサイズラベルを削除し、新しいラベルを付与する
-6. WHERE 設定ファイルでサイズ閾値がカスタマイズされている THEN PR Labelerアクション SHALL 設定された閾値に基づいてラベルを付与する
+1. WHEN PRの追加行数が100行未満 THEN PR Insights Labelerアクション SHALL `size/small` ラベルを付与する
+2. WHEN PRの追加行数が100行以上500行未満 THEN PR Insights Labelerアクション SHALL `size/medium` ラベルを付与する
+3. WHEN PRの追加行数が500行以上1000行未満 THEN PR Insights Labelerアクション SHALL `size/large` ラベルを付与する
+4. WHEN PRの追加行数が1000行以上 THEN PR Insights Labelerアクション SHALL `size/xlarge` ラベルを付与する
+5. WHEN PRのサイズが変更された THEN PR Insights Labelerアクション SHALL 古いサイズラベルを削除し、新しいラベルを付与する
+6. WHERE 設定ファイルでサイズ閾値がカスタマイズされている THEN PR Insights Labelerアクション SHALL 設定された閾値に基づいてラベルを付与する
 
 #### 仕様補足（サイズ）
 
@@ -45,11 +45,11 @@ PR Labelerは、PRのメトリクス分析に基づいて自動的にラベル�
 
 #### Acceptance Criteria
 
-1. WHEN PRに含まれるファイルの循環的複雑度が閾値を超過 THEN PR Labelerアクション SHALL `complexity/high` ラベルを付与する
-2. WHEN PRに含まれるファイルの循環的複雑度が一定範囲内 THEN PR Labelerアクション SHALL `complexity/medium` ラベルを付与する
-3. WHEN PRに含まれるファイルの循環的複雑度が低い THEN PR Labelerアクション SHALL 複雑度ラベルを付与しない
-4. WHERE 設定ファイルで複雑度閾値が指定されている THEN PR Labelerアクション SHALL 設定された閾値に基づいて複雑度を判定する
-5. WHEN 複雑度計算対象の拡張子が設定されている THEN PR Labelerアクション SHALL 指定された拡張子のファイルのみを複雑度分析対象とする
+1. WHEN PRに含まれるファイルの循環的複雑度が閾値を超過 THEN PR Insights Labelerアクション SHALL `complexity/high` ラベルを付与する
+2. WHEN PRに含まれるファイルの循環的複雑度が一定範囲内 THEN PR Insights Labelerアクション SHALL `complexity/medium` ラベルを付与する
+3. WHEN PRに含まれるファイルの循環的複雑度が低い THEN PR Insights Labelerアクション SHALL 複雑度ラベルを付与しない
+4. WHERE 設定ファイルで複雑度閾値が指定されている THEN PR Insights Labelerアクション SHALL 設定された閾値に基づいて複雑度を判定する
+5. WHEN 複雑度計算対象の拡張子が設定されている THEN PR Insights Labelerアクション SHALL 指定された拡張子のファイルのみを複雑度分析対象とする
 
 #### 仕様補足（複雑度）
 
@@ -65,13 +65,13 @@ PR Labelerは、PRのメトリクス分析に基づいて自動的にラベル�
 
 #### Acceptance Criteria
 
-1. WHEN PRが `src/components/` 配下のファイルを変更 THEN PR Labelerアクション SHALL `category/components` ラベルを付与する
-2. WHEN PRが `.github/workflows/` 配下のファイルを変更 THEN PR Labelerアクション SHALL `category/ci-cd` ラベルを付与する
-3. WHEN PRが `docs/` 配下のファイルを変更 THEN PR Labelerアクション SHALL `category/documentation` ラベルを付与する
-4. WHEN PRが `__tests__/` または `*.test.ts` ファイルを変更 THEN PR Labelerアクション SHALL `category/tests` ラベルを付与する
-5. WHERE 設定ファイルでカスタムカテゴリパターンが定義されている THEN PR Labelerアクション SHALL 定義されたパターンに基づいてカテゴリラベルを付与する
-6. WHEN PRが複数のカテゴリに該当する THEN PR Labelerアクション SHALL 該当するすべてのカテゴリラベルを付与する
-7. WHEN カテゴリパターンがminimatch形式で指定されている THEN PR Labelerアクション SHALL minimatchライブラリを使用してパターンマッチングを実行する
+1. WHEN PRが `src/components/` 配下のファイルを変更 THEN PR Insights Labelerアクション SHALL `category/components` ラベルを付与する
+2. WHEN PRが `.github/workflows/` 配下のファイルを変更 THEN PR Insights Labelerアクション SHALL `category/ci-cd` ラベルを付与する
+3. WHEN PRが `docs/` 配下のファイルを変更 THEN PR Insights Labelerアクション SHALL `category/documentation` ラベルを付与する
+4. WHEN PRが `__tests__/` または `*.test.ts` ファイルを変更 THEN PR Insights Labelerアクション SHALL `category/tests` ラベルを付与する
+5. WHERE 設定ファイルでカスタムカテゴリパターンが定義されている THEN PR Insights Labelerアクション SHALL 定義されたパターンに基づいてカテゴリラベルを付与する
+6. WHEN PRが複数のカテゴリに該当する THEN PR Insights Labelerアクション SHALL 該当するすべてのカテゴリラベルを付与する
+7. WHEN カテゴリパターンがminimatch形式で指定されている THEN PR Insights Labelerアクション SHALL minimatchライブラリを使用してパターンマッチングを実行する
 
 #### 仕様補足（カテゴリ）
 
@@ -85,12 +85,12 @@ PR Labelerは、PRのメトリクス分析に基づいて自動的にラベル�
 
 #### Acceptance Criteria
 
-1. WHEN PRがテストファイルなしでコア機能ファイル（`src/` 配下）を変更 THEN PR Labelerアクション SHALL `risk/high` ラベルを付与する
-2. WHEN PRが既存の公開API（exportされた関数・クラス）を変更 AND テストカバレッジが閾値未満 THEN PR Labelerアクション SHALL `risk/high` ラベルを付与する
-3. WHEN PRが既存の公開APIを変更 AND テストカバレッジが十分 THEN PR Labelerアクション SHALL `risk/medium` ラベルを付与する
-4. WHEN PRが設定ファイル（`.github/workflows/`, `package.json`, `tsconfig.json`）を変更 THEN PR Labelerアクション SHALL `risk/medium` ラベルを付与する
-5. WHERE 設定ファイルでリスク判定ルールがカスタマイズされている THEN PR Labelerアクション SHALL 設定されたルールに基づいてリスクを判定する
-6. WHEN PRがドキュメントのみを変更 THEN PR Labelerアクション SHALL リスクラベルを付与しない
+1. WHEN PRがテストファイルなしでコア機能ファイル（`src/` 配下）を変更 THEN PR Insights Labelerアクション SHALL `risk/high` ラベルを付与する
+2. WHEN PRが既存の公開API（exportされた関数・クラス）を変更 AND テストカバレッジが閾値未満 THEN PR Insights Labelerアクション SHALL `risk/high` ラベルを付与する
+3. WHEN PRが既存の公開APIを変更 AND テストカバレッジが十分 THEN PR Insights Labelerアクション SHALL `risk/medium` ラベルを付与する
+4. WHEN PRが設定ファイル（`.github/workflows/`, `package.json`, `tsconfig.json`）を変更 THEN PR Insights Labelerアクション SHALL `risk/medium` ラベルを付与する
+5. WHERE 設定ファイルでリスク判定ルールがカスタマイズされている THEN PR Insights Labelerアクション SHALL 設定されたルールに基づいてリスクを判定する
+6. WHEN PRがドキュメントのみを変更 THEN PR Insights Labelerアクション SHALL リスクラベルを付与しない
 
 #### 仕様補足（リスク）
 
@@ -105,14 +105,14 @@ PR Labelerは、PRのメトリクス分析に基づいて自動的にラベル�
 
 #### Acceptance Criteria
 
-1. WHEN リポジトリに `.github/pr-labeler.yml` ファイルが存在する THEN PR Labelerアクション SHALL 設定ファイルを読み込んで適用する
-2. IF `.github/pr-labeler.yml` ファイルが存在しない THEN PR Labelerアクション SHALL デフォルト設定を使用する
-3. WHERE 設定ファイルでサイズ閾値が定義されている THEN PR Labelerアクション SHALL 定義された閾値（small/medium/large/xlarge）を使用する
-4. WHERE 設定ファイルで複雑度閾値が定義されている THEN PR Labelerアクション SHALL 定義された閾値（medium/high）を使用する
-5. WHERE 設定ファイルでカテゴリパターンが定義されている THEN PR Labelerアクション SHALL 定義されたパターンとラベル名を使用する
-6. WHERE 設定ファイルでリスク判定ルールが定義されている THEN PR Labelerアクション SHALL 定義されたルールを使用する
-7. WHEN 設定ファイルのフォーマットが不正 THEN PR Labelerアクション SHALL エラーメッセージを出力し、デフォルト設定にフォールバックする
-8. WHEN 設定ファイルで無効な閾値（負の数、非数値）が指定されている THEN PR Labelerアクション SHALL バリデーションエラーを返す
+1. WHEN リポジトリに `.github/pr-labeler.yml` ファイルが存在する THEN PR Insights Labelerアクション SHALL 設定ファイルを読み込んで適用する
+2. IF `.github/pr-labeler.yml` ファイルが存在しない THEN PR Insights Labelerアクション SHALL デフォルト設定を使用する
+3. WHERE 設定ファイルでサイズ閾値が定義されている THEN PR Insights Labelerアクション SHALL 定義された閾値（small/medium/large/xlarge）を使用する
+4. WHERE 設定ファイルで複雑度閾値が定義されている THEN PR Insights Labelerアクション SHALL 定義された閾値（medium/high）を使用する
+5. WHERE 設定ファイルでカテゴリパターンが定義されている THEN PR Insights Labelerアクション SHALL 定義されたパターンとラベル名を使用する
+6. WHERE 設定ファイルでリスク判定ルールが定義されている THEN PR Insights Labelerアクション SHALL 定義されたルールを使用する
+7. WHEN 設定ファイルのフォーマットが不正 THEN PR Insights Labelerアクション SHALL エラーメッセージを出力し、デフォルト設定にフォールバックする
+8. WHEN 設定ファイルで無効な閾値（負の数、非数値）が指定されている THEN PR Insights Labelerアクション SHALL バリデーションエラーを返す
 
 #### 設定スキーマ（例）
 
@@ -160,11 +160,11 @@ runtime:
 
 ### Requirement 6: GitHub Actions統合とエラーハンドリング
 
-**Objective:** As a CI/CD管理者, I want PR Labelerが堅牢なエラーハンドリングでGitHub Actionsと統合されること, so that ワークフローが安定して動作し、問題発生時に適切なフィードバックが得られる
+**Objective:** As a CI/CD管理者, I want PR Insights Labelerが堅牢なエラーハンドリングでGitHub Actionsと統合されること, so that ワークフローが安定して動作し、問題発生時に適切なフィードバックが得られる
 
 #### Acceptance Criteria
 
-1. WHEN PR Labelerアクションが実行される THEN アクション SHALL GitHub Actions入力パラメータから設定を取得する
+1. WHEN PR Insights Labelerアクションが実行される THEN アクション SHALL GitHub Actions入力パラメータから設定を取得する
 2. WHEN GitHub APIへのリクエストが失敗 THEN アクション SHALL neverthrowの`Result<T, E>`型でエラーを返す
 3. WHEN 設定ファイルのパースが失敗 THEN アクション SHALL エラー詳細をActions Summaryに出力し、`core.setFailed()`を呼び出す
 4. WHEN ラベル付与操作が成功 THEN アクション SHALL 付与されたラベルのリストをActions Outputに設定する

@@ -2,7 +2,7 @@
 
 ## Introduction
 
-PR Labelerの多言語対応（i18n）機能を実装します。現在、すべての出力メッセージとドキュメントが英語のみで提供されており、日本語を含む他言語のユーザーにとって利用しづらい状況です。この機能により、GitHub Actions Summaryの出力、エラーメッセージ、ログメッセージ、ドキュメントを多言語化し、グローバルなユーザーベースに対応します。
+PR Insights Labelerの多言語対応（i18n）機能を実装します。現在、すべての出力メッセージとドキュメントが英語のみで提供されており、日本語を含む他言語のユーザーにとって利用しづらい状況です。この機能により、GitHub Actions Summaryの出力、エラーメッセージ、ログメッセージ、ドキュメントを多言語化し、グローバルなユーザーベースに対応します。
 
 **ビジネス価値**:
 
@@ -125,76 +125,76 @@ labels:
 
 ### Requirement 1: i18nシステム基盤
 
-**Objective:** As a PR Labeler developer, I want a robust i18n system foundation, so that all user-facing text can be consistently translated across the application
+**Objective:** As a PR Insights Labeler developer, I want a robust i18n system foundation, so that all user-facing text can be consistently translated across the application
 
 #### Acceptance Criteria
 
-1. WHEN PR Labeler initializes THEN PR Labeler SHALL use i18next library for internationalization management
-2. WHEN PR Labeler initializes THEN PR Labeler SHALL load translation resources for the selected language (English or Japanese)
-3. WHEN determining the language THEN PR Labeler SHALL follow this priority order: (1) `LANGUAGE` or `LANG` environment variable, (2) `language` field in pr-labeler.yml, (3) default to English
-4. IF a translation key is missing in the selected language THEN PR Labeler SHALL fall back to the English translation
-5. IF an invalid language code is specified THEN PR Labeler SHALL log a warning AND fall back to the next priority level
-6. WHEN loading translation resources fails THEN PR Labeler SHALL log a warning AND continue with English fallback
-7. WHERE translation resources are stored THE PR Labeler SHALL organize them in `src/locales/{lang}/{namespace}.json` structure (e.g., `src/locales/en/summary.json`)
-8. WHEN organizing translations THEN PR Labeler SHALL use the following namespaces: `summary`, `errors`, `labels`, `logs`, `common`
-9. WHERE translation keys are defined THE PR Labeler SHALL use dot-separated lowerCamel format (e.g., `summary.overview.title`)
+1. WHEN PR Insights Labeler initializes THEN PR Insights Labeler SHALL use i18next library for internationalization management
+2. WHEN PR Insights Labeler initializes THEN PR Insights Labeler SHALL load translation resources for the selected language (English or Japanese)
+3. WHEN determining the language THEN PR Insights Labeler SHALL follow this priority order: (1) `LANGUAGE` or `LANG` environment variable, (2) `language` field in pr-labeler.yml, (3) default to English
+4. IF a translation key is missing in the selected language THEN PR Insights Labeler SHALL fall back to the English translation
+5. IF an invalid language code is specified THEN PR Insights Labeler SHALL log a warning AND fall back to the next priority level
+6. WHEN loading translation resources fails THEN PR Insights Labeler SHALL log a warning AND continue with English fallback
+7. WHERE translation resources are stored THE PR Insights Labeler SHALL organize them in `src/locales/{lang}/{namespace}.json` structure (e.g., `src/locales/en/summary.json`)
+8. WHEN organizing translations THEN PR Insights Labeler SHALL use the following namespaces: `summary`, `errors`, `labels`, `logs`, `common`
+9. WHERE translation keys are defined THE PR Insights Labeler SHALL use dot-separated lowerCamel format (e.g., `summary.overview.title`)
 
 ### Requirement 2: 出力メッセージの多言語化
 
-**Objective:** As a PR Labeler user, I want all output messages in my preferred language, so that I can understand the analysis results without language barriers
+**Objective:** As a PR Insights Labeler user, I want all output messages in my preferred language, so that I can understand the analysis results without language barriers
 
 #### Acceptance Criteria
 
-1. WHEN generating GitHub Actions Summary THEN PR Labeler SHALL translate all section headers, labels, and descriptions
-2. WHEN generating PR comments THEN PR Labeler SHALL translate all comment content including violation messages and recommendations
-3. WHEN logging informational messages THEN PR Labeler SHALL translate all log messages to the selected language
-4. WHEN reporting errors THEN PR Labeler SHALL translate all error messages while preserving technical details (file names, line numbers, etc.)
-5. WHEN applying labels THEN PR Labeler SHALL translate label descriptions in the GitHub Actions Summary
-6. WHEN displaying numeric values THEN PR Labeler SHALL use `Intl.NumberFormat` with locale-appropriate formatting (e.g., "1,000" for both English and Japanese)
-7. WHEN displaying file sizes THEN PR Labeler SHALL use binary units (base 1024) with format "100 KB" and units B/KB/MB/GB
-8. WHERE technical terms appear (file names, paths, error codes) THE PR Labeler SHALL keep them in their original form without translation
+1. WHEN generating GitHub Actions Summary THEN PR Insights Labeler SHALL translate all section headers, labels, and descriptions
+2. WHEN generating PR comments THEN PR Insights Labeler SHALL translate all comment content including violation messages and recommendations
+3. WHEN logging informational messages THEN PR Insights Labeler SHALL translate all log messages to the selected language
+4. WHEN reporting errors THEN PR Insights Labeler SHALL translate all error messages while preserving technical details (file names, line numbers, etc.)
+5. WHEN applying labels THEN PR Insights Labeler SHALL translate label descriptions in the GitHub Actions Summary
+6. WHEN displaying numeric values THEN PR Insights Labeler SHALL use `Intl.NumberFormat` with locale-appropriate formatting (e.g., "1,000" for both English and Japanese)
+7. WHEN displaying file sizes THEN PR Insights Labeler SHALL use binary units (base 1024) with format "100 KB" and units B/KB/MB/GB
+8. WHERE technical terms appear (file names, paths, error codes) THE PR Insights Labeler SHALL keep them in their original form without translation
 
 ### Requirement 3: 設定ファイルの多言語対応
 
-**Objective:** As a PR Labeler administrator, I want to customize label names and categories in multiple languages, so that my team can use the tool in their native language
+**Objective:** As a PR Insights Labeler administrator, I want to customize label names and categories in multiple languages, so that my team can use the tool in their native language
 
 #### Acceptance Criteria
 
-1. WHEN loading pr-labeler.yml configuration THEN PR Labeler SHALL support `display_name` field with multi-language definitions (e.g., `display_name: { en: "Size: Small", ja: "サイズ: 小" }`)
-2. WHEN applying labels to GitHub THEN PR Labeler SHALL use the English `name` field as the actual label name (e.g., "size/small")
-3. WHEN displaying labels in Summary or comments THEN PR Labeler SHALL use the localized `display_name` from the selected language
-4. IF a `display_name` is not defined for the selected language THEN PR Labeler SHALL fall back to the English `display_name`
-5. IF `display_name` is not provided at all THEN PR Labeler SHALL use the `name` field as display text
-6. WHEN custom translations are provided in configuration THEN PR Labeler SHALL merge them with built-in translations
-7. WHERE label configuration is defined THE PR Labeler SHALL maintain backward compatibility with existing English-only `name` configurations
+1. WHEN loading pr-labeler.yml configuration THEN PR Insights Labeler SHALL support `display_name` field with multi-language definitions (e.g., `display_name: { en: "Size: Small", ja: "サイズ: 小" }`)
+2. WHEN applying labels to GitHub THEN PR Insights Labeler SHALL use the English `name` field as the actual label name (e.g., "size/small")
+3. WHEN displaying labels in Summary or comments THEN PR Insights Labeler SHALL use the localized `display_name` from the selected language
+4. IF a `display_name` is not defined for the selected language THEN PR Insights Labeler SHALL fall back to the English `display_name`
+5. IF `display_name` is not provided at all THEN PR Insights Labeler SHALL use the `name` field as display text
+6. WHEN custom translations are provided in configuration THEN PR Insights Labeler SHALL merge them with built-in translations
+7. WHERE label configuration is defined THE PR Insights Labeler SHALL maintain backward compatibility with existing English-only `name` configurations
 
 ### Requirement 4: 後方互換性とマイグレーション
 
-**Objective:** As an existing PR Labeler user, I want my current configuration to continue working without changes, so that I can adopt i18n support gradually
+**Objective:** As an existing PR Insights Labeler user, I want my current configuration to continue working without changes, so that I can adopt i18n support gradually
 
 #### Acceptance Criteria
 
-1. WHEN using existing English-only configuration THEN PR Labeler SHALL continue to work without any modifications
-2. WHEN no language-specific configuration is provided THEN PR Labeler SHALL use default English messages
-3. IF configuration contains only English strings THEN PR Labeler SHALL treat them as English translations
-4. WHEN migrating to multi-language configuration THEN PR Labeler SHALL support both old and new configuration formats
-5. WHERE existing label names are used THE PR Labeler SHALL maintain backward compatibility with English-only label names
+1. WHEN using existing English-only configuration THEN PR Insights Labeler SHALL continue to work without any modifications
+2. WHEN no language-specific configuration is provided THEN PR Insights Labeler SHALL use default English messages
+3. IF configuration contains only English strings THEN PR Insights Labeler SHALL treat them as English translations
+4. WHEN migrating to multi-language configuration THEN PR Insights Labeler SHALL support both old and new configuration formats
+5. WHERE existing label names are used THE PR Insights Labeler SHALL maintain backward compatibility with English-only label names
 
 ### Requirement 5: 開発者体験とメンテナンス性
 
-**Objective:** As a PR Labeler contributor, I want an easy-to-maintain translation system, so that adding new translations and maintaining existing ones is straightforward
+**Objective:** As a PR Insights Labeler contributor, I want an easy-to-maintain translation system, so that adding new translations and maintaining existing ones is straightforward
 
 #### Acceptance Criteria
 
 1. WHEN adding a new translatable string THEN developers SHALL use a type-safe translation key system with TypeScript types
-2. WHEN building the project THEN PR Labeler SHALL run `scripts/generate-i18n-types.ts` to generate type definitions from translation JSON files
+2. WHEN building the project THEN PR Insights Labeler SHALL run `scripts/generate-i18n-types.ts` to generate type definitions from translation JSON files
 3. WHEN a translation key is used in code THEN TypeScript SHALL provide compile-time validation of the key existence and namespace
 4. WHEN adding translations THEN developers SHALL organize them by namespace (`summary`, `errors`, `labels`, `logs`, `common`) in `src/locales/{lang}/{namespace}.json`
 5. WHERE translations are stored THE system SHALL use JSON format for easy editing and validation
-6. WHEN running CI tests THEN PR Labeler SHALL validate that all translation keys have entries in all supported languages
+6. WHEN running CI tests THEN PR Insights Labeler SHALL validate that all translation keys have entries in all supported languages
 7. WHEN a translation key is missing in any language THEN the test suite SHALL fail with a clear error message indicating the missing key and language
 8. IF new language support is added THEN the system SHALL require minimal code changes (only adding new translation JSON files)
-9. WHERE translation keys are referenced THE PR Labeler SHALL provide editor auto-completion for translation keys and namespaces
+9. WHERE translation keys are referenced THE PR Insights Labeler SHALL provide editor auto-completion for translation keys and namespaces
 
 ## Technical Constraints
 

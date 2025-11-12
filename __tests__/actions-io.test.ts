@@ -132,7 +132,7 @@ describe('GitHub Actions I/O', () => {
       expect(inputs.pr_additions_limit).toBe('5000');
       expect(inputs.pr_files_limit).toBe('50');
       expect(inputs.auto_remove_labels).toBe('true');
-      // PR Labeler - Selective Label Enabling
+      // PR Insights Labeler - Selective Label Enabling
       expect(inputs.size_enabled).toBe('true');
       expect(inputs.size_thresholds).toBe('{"small": 100, "medium": 500, "large": 1000}');
       expect(inputs.complexity_enabled).toBe('false');
@@ -173,7 +173,7 @@ describe('GitHub Actions I/O', () => {
       expect(inputs.pr_additions_limit).toBe('10000');
       expect(inputs.pr_files_limit).toBe('100');
       expect(inputs.auto_remove_labels).toBe('false');
-      // PR Labeler - Selective Label Enabling (expect defaults)
+      // PR Insights Labeler - Selective Label Enabling (expect defaults)
       expect(inputs.size_enabled).toBe('true');
       expect(inputs.complexity_enabled).toBe('false');
       expect(inputs.category_enabled).toBe('true');
@@ -469,7 +469,7 @@ describe('GitHub Actions I/O', () => {
 
         logInfoI18n('initialization.starting');
 
-        expect(spy).toHaveBeenCalledWith('Starting PR Labeler');
+        expect(spy).toHaveBeenCalledWith('Starting PR Insights Labeler');
       });
 
       it('should translate log message in Japanese', () => {
@@ -478,7 +478,7 @@ describe('GitHub Actions I/O', () => {
 
         logInfoI18n('initialization.starting');
 
-        expect(spy).toHaveBeenCalledWith('PR Labelerを開始します');
+        expect(spy).toHaveBeenCalledWith('PR Insights Labelerを開始します');
       });
 
       it('should interpolate variables in English', () => {

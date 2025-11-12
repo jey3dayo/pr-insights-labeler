@@ -33,7 +33,7 @@ vi.mock('../src/i18n.js', () => ({
   t: vi.fn((_ns: string, key: string) => key),
 }));
 
-describe('PR Labeler', () => {
+describe('PR Insights Labeler', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     vi.mocked(initializeAction).mockReset();

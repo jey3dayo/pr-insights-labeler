@@ -1,5 +1,5 @@
 /**
- * Default configuration for PR Labeler
+ * Default configuration for PR Insights Labeler
  */
 
 import type { AnalysisOptions, LabelerConfig } from '../types/config.js';

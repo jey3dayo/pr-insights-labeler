@@ -1,6 +1,6 @@
 # Troubleshooting Guide
 
-Common issues and solutions for PR Labeler.
+Common issues and solutions for PR Insights Labeler.
 
 ## Table of Contents
 
@@ -106,11 +106,11 @@ Verify that GitHub Actions has write permissions in repository settings:
 
 ### Problem
 
-PR Labeler runs successfully but labels are not applied to the PR.
+PR Insights Labeler runs successfully but labels are not applied to the PR.
 
 ### Cause
 
-Labels must exist in the repository before PR Labeler can apply them. GitHub does not automatically create labels.
+Labels must exist in the repository before PR Insights Labeler can apply them. GitHub does not automatically create labels.
 
 ### Solutions
 
@@ -160,7 +160,7 @@ labels:
   create_missing: true  # Auto-create missing labels
 
 # Optional: Customize label colors and descriptions
-# (currently not supported for PR Labeler labels, but available for Directory-Based Labeling)
+# (currently not supported for PR Insights Labeler labels, but available for Directory-Based Labeling)
 ```
 
 #### Option 3: Auto-Create Labels with Directory-Based Labeling
@@ -190,7 +190,7 @@ After creating labels, check:
 
 ### Problem
 
-PR Labeler does not run on draft PRs.
+PR Insights Labeler does not run on draft PRs.
 
 ### Cause
 
@@ -308,16 +308,16 @@ Add problematic files to exclusion patterns:
 
 ### Problem
 
-The file count reported by PR Labeler differs from the file count shown in the GitHub PR UI.
+The file count reported by PR Insights Labeler differs from the file count shown in the GitHub PR UI.
 
 **Example:**
 
 - GitHub PR UI: "15 files changed"
-- PR Labeler Summary: "10 files analyzed"
+- PR Insights Labeler Summary: "10 files analyzed"
 
 ### Cause
 
-PR Labeler automatically excludes certain files by default:
+PR Insights Labeler automatically excludes certain files by default:
 
 - Lock files (`package-lock.json`, `yarn.lock`, etc.)
 - Dependencies (`node_modules/**`, `vendor/**`, etc.)
@@ -369,7 +369,7 @@ Excluded from Analysis:
 
 ### Problem
 
-GitHub Actions Summary is not displaying PR Labeler output.
+GitHub Actions Summary is not displaying PR Insights Labeler output.
 
 ### Cause
 
@@ -456,7 +456,7 @@ actionlint .github/workflows/*.yml
 
 ### Test Locally
 
-Test PR Labeler behavior locally:
+Test PR Insights Labeler behavior locally:
 
 ```bash
 # Clone the repository
@@ -512,7 +512,7 @@ Please include:
 2. **Error Message**: Complete error output from workflow logs
 3. **Expected Behavior**: What you expected to happen
 4. **Actual Behavior**: What actually happened
-5. **PR Labeler Version**: Action version (e.g., `v1.2.3`)
+5. **PR Insights Labeler Version**: Action version (e.g., `v1.2.3`)
 6. **Repository Context**: Public/private, fork PR, etc.
 
 ---

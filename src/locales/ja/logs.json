@@ -1,6 +1,6 @@
 {
   "initialization": {
-    "starting": "PR Labelerを開始します",
+    "starting": "PR Insights Labelerを開始します",
     "gettingInputs": "アクション入力を取得中...",
     "analyzingPr": "PR #{{prNumber}} を分析中（{{owner}}/{{repo}}）",
     "i18nInitializing": "i18nを初期化中（言語: {{language}}）",
@@ -26,13 +26,13 @@
     "complexityFailed": "コード複雑度の解析に失敗しました: {{message}}"
   },
   "labels": {
-    "loading": "PR Labeler設定を読み込み中...",
+    "loading": "PR Insights Labeler設定を読み込み中...",
     "loadedCustom": ".github/pr-labeler.ymlからカスタム設定を読み込みました",
     "merging": "アクション入力とラベラー設定をマージ中...",
     "decidingLabels": "PRメトリクスに基づいてラベルを決定中...",
     "labelsToAdd": "追加するラベル: {{labels}}",
     "labelsToRemove": "削除するラベル: {{labels}}",
-    "applying": "PR Labelerの決定を適用中...",
+    "applying": "PR Insights Labelerの決定を適用中...",
     "applied": "適用完了: +{{added}}ラベル, -{{removed}}ラベル",
     "applyFailed": "ラベル適用に失敗しました: {{message}}",
     "apiCalls": "API呼び出し数: {{count}}",
@@ -87,8 +87,8 @@
     "allChecksPassed": "すべてのチェックが合格しました！"
   },
   "completion": {
-    "success": "PR Labelerが正常に完了しました",
-    "skippedDraft": "PR Labelerが完了しました（ドラフトPRをスキップ）",
+    "success": "PR Insights Labelerが正常に完了しました",
+    "skippedDraft": "PR Insights Labelerが完了しました（ドラフトPRをスキップ）",
     "failed": "アクションが失敗しました: {{message}}",
     "failedViolations": "PRに違反があり、fail_on_violationが有効です"
   },

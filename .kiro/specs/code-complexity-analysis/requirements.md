@@ -2,7 +2,7 @@
 
 ## はじめに
 
-コード複雑度分析機能は、PR内の変更ファイルに対してESLint標準complexityルールを使用し、循環的複雑度（Cyclomatic Complexity）を自動計算する機能である。この機能により、開発者とレビュアーは、コードの複雑性を可視化し、保守性やテスト容易性の低下を早期に検知できる。PR Labeler機能で既に定義された複雑度ベースのラベル付け（complexity/medium、complexity/high）のバックエンドとして動作し、GitHub Actions Summaryでの詳細レポート出力も提供する。
+コード複雑度分析機能は、PR内の変更ファイルに対してESLint標準complexityルールを使用し、循環的複雑度（Cyclomatic Complexity）を自動計算する機能である。この機能により、開発者とレビュアーは、コードの複雑性を可視化し、保守性やテスト容易性の低下を早期に検知できる。PR Insights Labeler機能で既に定義された複雑度ベースのラベル付け（complexity/medium、complexity/high）のバックエンドとして動作し、GitHub Actions Summaryでの詳細レポート出力も提供する。
 
 ## 要件
 
@@ -77,7 +77,7 @@ interface FunctionComplexity {
 7. WHEN 拡張子フィルタと除外パターンが両方設定されている場合 THEN システムは、まず拡張子でフィルタリングし、その後に除外パターンを適用するものとする（除外パターンの優先度が高い）
 8. WHEN 設定ファイルが存在しない場合 THEN システムは、デフォルト設定（enabled: true、metric: cyclomatic、medium: 15、high: 30、extensions: [.ts, .tsx, .js, .jsx]、デフォルト除外パターン有効）を適用するものとする
 
-### 要件4: PR Labeler統合
+### 要件4: PR Insights Labeler統合
 
 **目的:** 開発者として、複雑度分析の結果を自動的にPRラベルに反映させ、レビュアーに複雑性の情報を視覚的に提供したい。これにより、レビュープロセスの効率化と品質向上を実現する。
 
@@ -136,8 +136,8 @@ interface FunctionComplexity {
 
 1. WHEN action.ymlに新しいenable_complexity_analysis入力が追加された場合 THEN デフォルト値はfalseとし、既存ユーザーの動作を変更しないものとする
 2. WHEN 複雑度分析が無効な場合 THEN システムは、PRMetrics.complexityをundefinedとして扱い、複雑度関連のラベル付与とサマリー出力をスキップするものとする
-3. WHEN PR Labelerの設定ファイルが存在しない場合 THEN システムは、action.ymlのenable_complexity_analysis入力のみを参照し、デフォルト設定で複雑度計算を実行するものとする
-4. IF PR Labelerの設定ファイルが存在する場合 THEN システムは、設定ファイルのcomplexity.enabledフラグを優先し、action.yml入力を無視するものとする
+3. WHEN PR Insights Labelerの設定ファイルが存在しない場合 THEN システムは、action.ymlのenable_complexity_analysis入力のみを参照し、デフォルト設定で複雑度計算を実行するものとする
+4. IF PR Insights Labelerの設定ファイルが存在する場合 THEN システムは、設定ファイルのcomplexity.enabledフラグを優先し、action.yml入力を無視するものとする
 5. WHEN v1.2.0から既存ユーザーがアップグレードした場合 THEN システムは、既存のワークフロー定義を変更せずに動作し、複雑度機能は明示的に有効化した場合のみ動作するものとする
 
 ### 要件8: テスト方針と品質保証
