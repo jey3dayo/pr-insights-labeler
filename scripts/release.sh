@@ -230,7 +230,7 @@ $changelog_content
 
 ## 🔗 Full Changelog
 
-**Full Changelog**: https://github.com/jey3dayo/pr-labeler/compare/v${prev_version}...v${new_version}
+**Full Changelog**: https://github.com/jey3dayo/pr-insights-labeler/compare/v${prev_version}...v${new_version}
 EOF
 )
 
@@ -280,7 +280,7 @@ $changelog_content"
     --title "v${new_version}" \
     --notes "$release_notes"
 
-  success "GitHub release created: https://github.com/jey3dayo/pr-labeler/releases/tag/v${new_version}"
+  success "GitHub release created: https://github.com/jey3dayo/pr-insights-labeler/releases/tag/v${new_version}"
 }
 
 # Main
@@ -358,7 +358,7 @@ main() {
 if [[ "${1:-}" == "--help" ]] || [[ "${1:-}" == "-h" ]]; then
   echo "Usage: $0"
   echo ""
-  echo "Interactive release script for pr-labeler"
+  echo "Interactive release script for PR Insights Labeler"
   echo ""
   echo "This script will:"
   echo "  1. Check for uncommitted changes"

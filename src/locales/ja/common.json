@@ -5,6 +5,6 @@
     "analysisErrors": "分析エラー",
     "filesNotAnalyzed": "一部のファイルを分析できませんでした:",
     "andMore": "...他{{count}}件",
-    "footer": "[PR Insights Labeler](https://github.com/jey3dayo/pr-labeler)により生成"
+    "footer": "[PR Insights Labeler](https://github.com/jey3dayo/pr-insights-labeler)により生成"
   }
 }

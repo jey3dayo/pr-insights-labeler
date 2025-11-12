@@ -18,7 +18,7 @@ Kiro-style Spec Driven Development implementation using claude code slash comman
 ### Active Specifications
 
 - `actions-summary-output`: GitHub Actions Summary出力機能 - PR分析結果をActions Summaryに表示
-- `pr-labeler`: PRに対する自動ラベル付与機能
+- `pr-insights-labeler`: PRに対する自動ラベル付与機能（PR Insights Labeler）
 - `code-complexity-analysis`: コード複雑度分析機能 - ESLint標準complexityルールによるPR内のコード複雑度評価
 - `expand-default-category-labels`: デフォルトカテゴリラベル拡張機能 - config/spec/dependencies等の新カテゴリ追加
 - `selective-label-enabling`: ラベル種別の選択的有効化機能 - size/complexity/category/riskを個別にON/OFF可能にし、input設計を統一

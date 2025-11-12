@@ -1,6 +1,6 @@
 # Release Notes Template
 
-This template defines the standard format for pr-labeler release notes. It is automatically used by `scripts/release.sh` when creating new releases.
+This template defines the standard format for PR Insights Labeler release notes. It is automatically used by `scripts/release.sh` when creating new releases.
 
 ## Standard Format
 
@@ -31,7 +31,7 @@ This template defines the standard format for pr-labeler release notes. It is au
 
 ## 🔗 Full Changelog
 
-**Full Changelog**: https://github.com/jey3dayo/pr-labeler/compare/v[PREVIOUS]...v[CURRENT]
+**Full Changelog**: https://github.com/jey3dayo/pr-insights-labeler/compare/v[PREVIOUS]...v[CURRENT]
 ```
 
 ## Section Guidelines
@@ -104,7 +104,7 @@ Link to GitHub's compare view showing all commits between releases.
 
 ## Example Release Notes
 
-See [v1.5.0](https://github.com/jey3dayo/pr-labeler/releases/tag/v1.5.0) for a complete example following this template.
+See [v1.5.0](https://github.com/jey3dayo/pr-insights-labeler/releases/tag/v1.5.0) for a complete example following this template.
 
 ## Automation
 
