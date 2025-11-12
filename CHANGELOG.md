@@ -7,10 +7,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.8.0] - 2025-11-12
 
-### Changed
+### ✨ Added
 
-- プロダクト名を「PR Insights Labeler」に改名し、GitHub Actions Marketplaceやドキュメント全体の表記を統一
-- 既存の入力パラメータやラベル命名規則を変更せず、後方互換性を維持したままブランド更新を実施
+- enhance release command and repository migration improvements (#98)
+- add snapshot files to default exclusion patterns (#90)
+- improve i18n message clarity and formatting consistency (#89)
+
+### 🔄 Changed
+
+- reset version to 1.7.0 for release testing
+- rename project to PR Insights Labeler and release v1.8.0 (#97)
+- 依存関係とpnpmの最新パッチバージョンへの更新 (#96)
+- rename project to PR Insights Labeler and release v1.8.0 (#93)
+
+### 🐛 Fixed
+
+- サマリーテーブルのファイルパス表示をバッククォートで囲む (#95)
+- integrate violation labels into decision engine (#91)
+
+### Other Changes
+
+- refactor: リスク評価ロジックの抽出と違反ラベルの統合 (#92)
 
 ## [1.7.0] - 2025-11-12
 
