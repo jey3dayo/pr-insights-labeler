@@ -1,0 +1,22 @@
+{
+  "feature_name": "rename-to-pr-insights-labeler",
+  "created_at": "2025-11-12T00:00:00.000Z",
+  "updated_at": "2025-11-12T08:14:04Z",
+  "language": "ja",
+  "phase": "tasks-generated",
+  "approvals": {
+    "requirements": {
+      "generated": true,
+      "approved": true
+    },
+    "design": {
+      "generated": true,
+      "approved": true
+    },
+    "tasks": {
+      "generated": true,
+      "approved": false
+    }
+  },
+  "ready_for_implementation": false
+}
