@@ -11,8 +11,8 @@ import { err, ok, type Result } from 'neverthrow';
 import type { ConfigurationError, ParseError } from './errors/index.js';
 import { createConfigurationError } from './errors/index.js';
 import {
-  normalizeActionInputStrings,
   type ActionInputStrings,
+  normalizeActionInputStrings,
   type NormalizedActionInputs,
 } from './input/input-normalizer.js';
 

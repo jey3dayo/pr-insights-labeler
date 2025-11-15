@@ -231,7 +231,10 @@ export function parseComplexityThresholdsV2(value: string): Result<{ medium: num
 
     if (parsed.medium >= parsed.high) {
       return err(
-        createParseError(value, `complexity.thresholds.medium (${parsed.medium}) must be less than high (${parsed.high})`),
+        createParseError(
+          value,
+          `complexity.thresholds.medium (${parsed.medium}) must be less than high (${parsed.high})`,
+        ),
       );
     }
 

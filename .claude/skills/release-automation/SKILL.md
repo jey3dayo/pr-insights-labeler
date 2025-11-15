@@ -43,9 +43,11 @@ Before starting the release:
    Must be on `main` branch.
 
 3. **Pull latest changes**
+
    ```bash
    git pull origin main
    ```
+
    Sync with remote repository.
 
 ### 2. Automated Release Script
@@ -145,6 +147,7 @@ The script automatically detects breaking changes from git commits:
   ```
 
 - **! notation** (feat!, fix!, etc.)
+
   ```
   feat!: change default configuration format
   ```
@@ -210,12 +213,12 @@ gh release create v1.8.1 \
 
 The script follows Conventional Commits for changelog categorization:
 
-| Commit Prefix               | Category      | Example                      |
-| --------------------------- | ------------- | ---------------------------- |
-| `feat:`, `feat(*)`          | ✨ Added      | `feat: add new label type`   |
-| `fix:`, `fix(*)`            | 🐛 Fixed      | `fix: resolve parsing error` |
-| `chore:`, `docs:`, `style:` | 🔄 Changed    | `chore: update dependencies` |
-| Other                       | Other Changes | `improve performance`        |
+| Commit Prefix | Category | Example |
+| ------------- | -------- | ------- |
+| `feat:`, `feat(*)` | ✨ Added | `feat: add new label type` |
+| `fix:`, `fix(*)` | 🐛 Fixed | `fix: resolve parsing error` |
+| `chore:`, `docs:`, `style:` | 🔄 Changed | `chore: update dependencies` |
+| Other | Other Changes | `improve performance` |
 
 **PR number extraction**: Automatically extracts `(#123)` from commit messages.
 
