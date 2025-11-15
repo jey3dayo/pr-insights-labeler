@@ -1,0 +1,1 @@
+../../../../../.github/RELEASE_TEMPLATE.md
