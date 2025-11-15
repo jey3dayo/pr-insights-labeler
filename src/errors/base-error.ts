@@ -55,4 +55,4 @@ BaseErrorImplementation.prototype = Object.create(Error.prototype, {
   },
 });
 
-export const BaseError = BaseErrorImplementation as BaseErrorConstructor & { prototype: BaseError };
+export const BaseError = BaseErrorImplementation as unknown as BaseErrorConstructor & { prototype: BaseError };

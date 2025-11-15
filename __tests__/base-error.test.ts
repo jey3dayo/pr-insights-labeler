@@ -12,19 +12,32 @@ const baseErrorCtor = BaseError as BaseErrorCtor;
 type TestErrorInstance = BaseError;
 type TestErrorCtor = new (message: string, errorLevel?: ErrorLevel) => TestErrorInstance;
 
-const TestErrorImpl = function TestErrorImpl(message: string, errorLevel: ErrorLevel = 'warning'): TestErrorInstance {
-  return Reflect.construct(baseErrorCtor, [message, errorLevel], TestErrorImpl) as TestErrorInstance;
-};
+function createTestErrorCtor(): TestErrorCtor {
+  const displayName = 'TestError';
+  function TestError(message: string, errorLevel: ErrorLevel = 'warning'): TestErrorInstance {
+    const base = Reflect.construct(baseErrorCtor, [message, errorLevel], TestError) as TestErrorInstance;
+    Object.defineProperty(base, 'name', {
+      value: displayName,
+      configurable: true,
+      enumerable: false,
+      writable: false,
+    });
+    return base;
+  }
 
-(TestErrorImpl as unknown as { prototype: TestErrorInstance }).prototype = Object.create(baseErrorCtor.prototype, {
-  constructor: {
-    value: TestErrorImpl,
-    writable: true,
-    configurable: true,
-  },
-});
+  Object.setPrototypeOf(TestError, baseErrorCtor);
+  (TestError as unknown as { prototype: TestErrorInstance }).prototype = Object.create(baseErrorCtor.prototype, {
+    constructor: {
+      value: TestError,
+      writable: true,
+      configurable: true,
+    },
+  });
 
-const TestError = TestErrorImpl as TestErrorCtor;
+  return TestError as TestErrorCtor;
+}
+
+const TestError = createTestErrorCtor();
 
 describe('BaseError', () => {
   describe('constructor', () => {
@@ -101,33 +114,49 @@ describe('BaseError', () => {
       type CustomAppErrorInstance = BaseError & { code: string };
       type CustomAppErrorCtor = new (message: string, code: string, errorLevel?: ErrorLevel) => CustomAppErrorInstance;
 
-      const CustomAppErrorImpl = function CustomAppErrorImpl(
-        message: string,
-        code: string,
-        errorLevel: ErrorLevel = 'warning',
-      ): CustomAppErrorInstance {
-        const base = Reflect.construct(baseErrorCtor, [message, errorLevel], CustomAppErrorImpl) as CustomAppErrorInstance;
-        Object.defineProperty(base, 'code', {
-          value: code,
-          enumerable: true,
-          configurable: true,
-          writable: false,
-        });
-        return base;
-      };
-
-      (CustomAppErrorImpl as unknown as { prototype: CustomAppErrorInstance }).prototype = Object.create(
-        baseErrorCtor.prototype,
-        {
-          constructor: {
-            value: CustomAppErrorImpl,
-            writable: true,
+      function createCustomAppErrorCtor(): CustomAppErrorCtor {
+        const displayName = 'CustomAppError';
+        function CustomAppError(
+          message: string,
+          code: string,
+          errorLevel: ErrorLevel = 'warning',
+        ): CustomAppErrorInstance {
+          const base = Reflect.construct(
+            baseErrorCtor,
+            [message, errorLevel],
+            CustomAppError,
+          ) as CustomAppErrorInstance;
+          Object.defineProperty(base, 'code', {
+            value: code,
+            enumerable: true,
             configurable: true,
-          },
-        },
-      );
+            writable: false,
+          });
+          Object.defineProperty(base, 'name', {
+            value: displayName,
+            configurable: true,
+            enumerable: false,
+            writable: false,
+          });
+          return base;
+        }
 
-      const CustomAppError = CustomAppErrorImpl as CustomAppErrorCtor;
+        Object.setPrototypeOf(CustomAppError, baseErrorCtor);
+        (CustomAppError as unknown as { prototype: CustomAppErrorInstance }).prototype = Object.create(
+          baseErrorCtor.prototype,
+          {
+            constructor: {
+              value: CustomAppError,
+              writable: true,
+              configurable: true,
+            },
+          },
+        );
+
+        return CustomAppError as CustomAppErrorCtor;
+      }
+
+      const CustomAppError = createCustomAppErrorCtor();
 
       const error = new CustomAppError('Custom error', 'ERR_CUSTOM', 'info');
 

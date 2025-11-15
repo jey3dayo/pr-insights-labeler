@@ -55,31 +55,35 @@ describe('ensureError', () => {
     type CustomErrorInstance = Error & { code: string };
     type CustomErrorCtor = new (message: string) => CustomErrorInstance;
 
-    const CustomErrorImpl = function CustomErrorImpl(message: string): CustomErrorInstance {
-      const error = new Error(message);
-      Object.setPrototypeOf(error, CustomErrorImpl.prototype);
-      Object.defineProperty(error, 'code', {
-        value: 'CUSTOM',
-        configurable: true,
-        enumerable: true,
-        writable: true,
-      });
-      error.name = 'CustomError';
-      if (Error.captureStackTrace) {
-        Error.captureStackTrace(error, CustomErrorImpl);
+    function createCustomErrorCtor(): CustomErrorCtor {
+      function CustomError(message: string): CustomErrorInstance {
+        const error = new Error(message);
+        Object.setPrototypeOf(error, CustomError.prototype);
+        Object.defineProperty(error, 'code', {
+          value: 'CUSTOM',
+          configurable: true,
+          enumerable: true,
+          writable: true,
+        });
+        error.name = 'CustomError';
+        if (Error.captureStackTrace) {
+          Error.captureStackTrace(error, CustomError);
+        }
+        return error as CustomErrorInstance;
       }
-      return error as CustomErrorInstance;
-    };
 
-    (CustomErrorImpl as unknown as { prototype: CustomErrorInstance }).prototype = Object.create(Error.prototype, {
-      constructor: {
-        value: CustomErrorImpl,
-        writable: true,
-        configurable: true,
-      },
-    });
+      (CustomError as unknown as { prototype: CustomErrorInstance }).prototype = Object.create(Error.prototype, {
+        constructor: {
+          value: CustomError,
+          writable: true,
+          configurable: true,
+        },
+      });
 
-    const CustomError = CustomErrorImpl as CustomErrorCtor;
+      return CustomError as CustomErrorCtor;
+    }
+
+    const CustomError = createCustomErrorCtor();
 
     it('should return matching custom Error instance as-is', () => {
       const error = new CustomError('Custom error');
