@@ -4,13 +4,13 @@ This guide summarizes how PR Insights Labeler assigns each label family. Use it 
 
 ## Label Families
 
-| Family | Label Prefix | What It Explains |
-| ------ | ------------ | ---------------- |
-| Size | `size/*` | Additions-based PR size labels |
-| Category | `category/*` | Path-based classification of changed files |
-| Risk | `risk/*` | Safety assessment based on CI state and change intent |
-| Complexity | `complexity/*` | ESLint cyclomatic complexity evaluation |
-| Policy Violations | `auto/*` | Workflow limit breaches (file count/size/etc.) |
+| Family            | Label Prefix   | What It Explains                                      |
+| ----------------- | -------------- | ----------------------------------------------------- |
+| Size              | `size/*`       | Additions-based PR size labels                        |
+| Category          | `category/*`   | Path-based classification of changed files            |
+| Risk              | `risk/*`       | Safety assessment based on CI state and change intent |
+| Complexity        | `complexity/*` | ESLint cyclomatic complexity evaluation               |
+| Policy Violations | `auto/*`       | Workflow limit breaches (file count/size/etc.)        |
 
 All families can be individually enabled via workflow inputs (see `size_enabled`, `category_enabled`, `risk_enabled`, `complexity_enabled`). Labels are additive—multiple families can trigger simultaneously.
 

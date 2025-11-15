@@ -83,6 +83,7 @@ pnpm build       # ビルド成功確認
      --title "docs: <変更内容>" \\
      --fill
    ```
+
 3. **GitHub Actions ワークフローの完了を待機**
 4. **重要: すべてのCIチェックが成功するまで待つ**
    - ✅ Code Quality
