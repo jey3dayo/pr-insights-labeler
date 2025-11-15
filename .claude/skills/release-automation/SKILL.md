@@ -34,7 +34,7 @@ git status
 
 Ensure no uncommitted changes exist.
 
-2. **Verify current branch**
+1. **Verify current branch**
 
 ```bash
 git branch --show-current
@@ -42,7 +42,7 @@ git branch --show-current
 
 Must be on `main` branch.
 
-3. **Pull latest changes**
+1. **Pull latest changes**
 
 ```bash
 git pull origin main
@@ -140,28 +140,17 @@ The script automatically detects breaking changes from git commits:
 
 - **BREAKING CHANGE: footer** (Conventional Commits)
 
-```
-feat: new API endpoint
+  ```
+  feat: new API endpoint
 
-BREAKING CHANGE: Removed deprecated /old-endpoint
-```
+  BREAKING CHANGE: Removed deprecated /old-endpoint
+  ```
 
 - **! notation** (feat!, fix!, etc.)
-<<<<<<< HEAD
-
-```
-feat!: change default configuration format
-```
-||||||| 0ae1e04
-  ```
-  feat!: change default configuration format
-  ```
-=======
 
   ```
   feat!: change default configuration format
   ```
->>>>>>> b81c090b2a161e797c545af3cdd032f15f9c1116
 
 When detected, breaking changes are prominently displayed at the top of release notes.
 
@@ -170,6 +159,8 @@ When detected, breaking changes are prominently displayed at the top of release 
 If automated script cannot be used, follow these steps:
 
 ### Step 1: Version Update
+
+Run the following commands to bump the version:
 
 ```bash
 # Update package.json version
