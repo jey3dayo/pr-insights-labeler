@@ -7,6 +7,18 @@
 import * as core from '@actions/core';
 import { err, errAsync, ok, okAsync, type Result, type ResultAsync } from 'neverthrow';
 
+function handleTransformerResult<TConfig, TError>(
+  transformResult: Result<{ config: TConfig; warnings: string[] }, TError>,
+): Result<TConfig, TError> {
+  if (transformResult.isErr()) {
+    return err(transformResult.error);
+  }
+
+  const { config: validatedConfig, warnings } = transformResult.value;
+  warnings.forEach(message => core.warning(message));
+  return ok(validatedConfig);
+}
+
 /**
  * 汎用的な設定バリデーション関数（同期版）
  * パーサー関数を実行し、エラーチェック、警告処理を行う
@@ -21,14 +33,7 @@ export function validateConfigWithTransformer<TConfig, TError>(
   config: unknown,
   transformer: (config: unknown) => Result<{ config: TConfig; warnings: string[] }, TError>,
 ): Result<TConfig, TError> {
-  const transformResult = transformer(config);
-  if (transformResult.isErr()) {
-    return err(transformResult.error);
-  }
-
-  const { config: validatedConfig, warnings } = transformResult.value;
-  warnings.forEach(message => core.warning(message));
-  return ok(validatedConfig);
+  return handleTransformerResult(transformer(config));
 }
 
 /**
@@ -45,12 +50,10 @@ export function validateConfigWithTransformerAsync<TConfig, TError>(
   config: unknown,
   transformer: (config: unknown) => Result<{ config: TConfig; warnings: string[] }, TError>,
 ): ResultAsync<TConfig, TError> {
-  const transformResult = transformer(config);
-  if (transformResult.isErr()) {
-    return errAsync(transformResult.error);
+  const processed = handleTransformerResult(transformer(config));
+  if (processed.isErr()) {
+    return errAsync(processed.error);
   }
 
-  const { config: validatedConfig, warnings } = transformResult.value;
-  warnings.forEach(message => core.warning(message));
-  return okAsync(validatedConfig);
+  return okAsync(processed.value);
 }
