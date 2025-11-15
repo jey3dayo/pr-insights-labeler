@@ -27,6 +27,80 @@ const COMPLEXITY_FIELD = KNOWN_FIELD_NAMES.COMPLEXITY;
 const CATEGORIES_FIELD = KNOWN_FIELD_NAMES.CATEGORIES;
 const RISK_FIELD = KNOWN_FIELD_NAMES.RISK;
 
+type ThresholdKey<T extends Record<string, number>> = keyof T & string;
+
+interface ThresholdKeySpec<T extends Record<string, number>> {
+  key: ThresholdKey<T>;
+  path: string;
+}
+
+interface ThresholdComparisonSpec<T extends Record<string, number>> {
+  smaller: ThresholdKey<T>;
+  larger: ThresholdKey<T>;
+  errorField: string;
+  createMessage: (params: { smallerValue: number; largerValue: number }) => string;
+}
+
+function validateThresholdGroup<T extends Record<string, number>>(
+  thresholdsRaw: unknown,
+  options: {
+    fieldLabel: string;
+    keys: ThresholdKeySpec<T>[];
+    defaults: T;
+    comparisons: ThresholdComparisonSpec<T>[];
+  },
+): Result<T, ConfigurationError> {
+  if (!isRecord(thresholdsRaw)) {
+    return err(
+      createConfigurationError(options.fieldLabel, thresholdsRaw, `${options.fieldLabel} must be an object`),
+    );
+  }
+
+  const providedValues: Partial<Record<ThresholdKey<T>, number>> = {};
+
+  for (const keySpec of options.keys) {
+    const rawValue = thresholdsRaw[keySpec.key];
+    if (rawValue === undefined) {
+      continue;
+    }
+
+    const validated = validateNumericThreshold(rawValue, keySpec.path, 0, Number.MAX_SAFE_INTEGER, {
+      integerOnly: true,
+    });
+    if (validated.isErr()) {
+      return err(validated.error);
+    }
+
+    providedValues[keySpec.key] = validated.value;
+  }
+
+  const finalValues = {} as Record<ThresholdKey<T>, number>;
+  for (const keySpec of options.keys) {
+    finalValues[keySpec.key] = providedValues[keySpec.key] ?? options.defaults[keySpec.key];
+  }
+
+  for (const comparison of options.comparisons) {
+    const smallerValue = finalValues[comparison.smaller];
+    const largerValue = finalValues[comparison.larger];
+
+    if (smallerValue >= largerValue) {
+      const context = {
+        [comparison.smaller]: smallerValue,
+        [comparison.larger]: largerValue,
+      };
+      return err(
+        createConfigurationError(
+          comparison.errorField,
+          context,
+          comparison.createMessage({ smallerValue, largerValue }),
+        ),
+      );
+    }
+  }
+
+  return ok(finalValues as T);
+}
+
 export function parseLanguageField(
   rawLanguage: unknown,
 ): Result<LabelerConfig['language'] | undefined, ConfigurationError> {
@@ -88,95 +162,43 @@ export function parseSizeField(rawSize: unknown): Result<LabelerConfig['size'] |
   }
 
   const thresholdsRaw = rawSize['thresholds'];
-
-  let small: number | undefined;
-  let medium: number | undefined;
-  let large: number | undefined;
-  let xlarge: number | undefined;
-
   if (thresholdsRaw !== undefined) {
-    if (!isRecord(thresholdsRaw)) {
-      return err(createConfigurationError('size.thresholds', thresholdsRaw, 'size.thresholds must be an object'));
-    }
+    const validation = validateThresholdGroup(thresholdsRaw, {
+      fieldLabel: 'size.thresholds',
+      keys: [
+        { key: 'small', path: 'size.thresholds.small' },
+        { key: 'medium', path: 'size.thresholds.medium' },
+        { key: 'large', path: 'size.thresholds.large' },
+        { key: 'xlarge', path: 'size.thresholds.xlarge' },
+      ],
+      defaults: DEFAULT_LABELER_CONFIG.size.thresholds,
+      comparisons: [
+        {
+          smaller: 'small',
+          larger: 'medium',
+          errorField: 'size.thresholds',
+          createMessage: ({ smallerValue, largerValue }) =>
+            `size.thresholds.small (${smallerValue}) must be less than medium (${largerValue})`,
+        },
+        {
+          smaller: 'medium',
+          larger: 'large',
+          errorField: 'size.thresholds',
+          createMessage: ({ smallerValue, largerValue }) =>
+            `size.thresholds.medium (${smallerValue}) must be less than large (${largerValue})`,
+        },
+        {
+          smaller: 'large',
+          larger: 'xlarge',
+          errorField: 'size.thresholds',
+          createMessage: ({ smallerValue, largerValue }) =>
+            `size.thresholds.large (${smallerValue}) must be less than xlarge (${largerValue})`,
+        },
+      ],
+    });
 
-    const smallRaw = thresholdsRaw['small'];
-    const mediumRaw = thresholdsRaw['medium'];
-    const largeRaw = thresholdsRaw['large'];
-    const xlargeRaw = thresholdsRaw['xlarge'];
-
-    if (smallRaw !== undefined) {
-      const validated = validateNumericThreshold(smallRaw, 'size.thresholds.small', 0, Number.MAX_SAFE_INTEGER, {
-        integerOnly: true,
-      });
-      if (validated.isErr()) {
-        return err(validated.error);
-      }
-      small = validated.value;
-    }
-
-    if (mediumRaw !== undefined) {
-      const validated = validateNumericThreshold(mediumRaw, 'size.thresholds.medium', 0, Number.MAX_SAFE_INTEGER, {
-        integerOnly: true,
-      });
-      if (validated.isErr()) {
-        return err(validated.error);
-      }
-      medium = validated.value;
-    }
-
-    if (largeRaw !== undefined) {
-      const validated = validateNumericThreshold(largeRaw, 'size.thresholds.large', 0, Number.MAX_SAFE_INTEGER, {
-        integerOnly: true,
-      });
-      if (validated.isErr()) {
-        return err(validated.error);
-      }
-      large = validated.value;
-    }
-
-    if (xlargeRaw !== undefined) {
-      const validated = validateNumericThreshold(xlargeRaw, 'size.thresholds.xlarge', 0, Number.MAX_SAFE_INTEGER, {
-        integerOnly: true,
-      });
-      if (validated.isErr()) {
-        return err(validated.error);
-      }
-      xlarge = validated.value;
-    }
-
-    const finalSmall = small ?? DEFAULT_LABELER_CONFIG.size.thresholds.small;
-    const finalMedium = medium ?? DEFAULT_LABELER_CONFIG.size.thresholds.medium;
-    const finalLarge = large ?? DEFAULT_LABELER_CONFIG.size.thresholds.large;
-    const finalXLarge = xlarge ?? DEFAULT_LABELER_CONFIG.size.thresholds.xlarge;
-
-    if (finalSmall >= finalMedium) {
-      return err(
-        createConfigurationError(
-          'size.thresholds',
-          { small: finalSmall, medium: finalMedium },
-          `size.thresholds.small (${finalSmall}) must be less than medium (${finalMedium})`,
-        ),
-      );
-    }
-
-    if (finalMedium >= finalLarge) {
-      return err(
-        createConfigurationError(
-          'size.thresholds',
-          { medium: finalMedium, large: finalLarge },
-          `size.thresholds.medium (${finalMedium}) must be less than large (${finalLarge})`,
-        ),
-      );
-    }
-
-    if (finalLarge >= finalXLarge) {
-      return err(
-        createConfigurationError(
-          'size.thresholds',
-          { large: finalLarge, xlarge: finalXLarge },
-          `size.thresholds.large (${finalLarge}) must be less than xlarge (${finalXLarge})`,
-        ),
-      );
+    if (validation.isErr()) {
+      return err(validation.error);
     }
   }
 
@@ -195,56 +217,27 @@ export function parseComplexityField(
   }
 
   const thresholdsRaw = rawComplexity['thresholds'];
-  let medium: number | undefined;
-  let high: number | undefined;
-
   if (thresholdsRaw !== undefined) {
-    if (!isRecord(thresholdsRaw)) {
-      return err(
-        createConfigurationError('complexity.thresholds', thresholdsRaw, 'complexity.thresholds must be an object'),
-      );
-    }
-
-    const mediumRaw = thresholdsRaw['medium'];
-    const highRaw = thresholdsRaw['high'];
-
-    if (mediumRaw !== undefined) {
-      const validated = validateNumericThreshold(
-        mediumRaw,
-        'complexity.thresholds.medium',
-        0,
-        Number.MAX_SAFE_INTEGER,
+    const validation = validateThresholdGroup(thresholdsRaw, {
+      fieldLabel: 'complexity.thresholds',
+      keys: [
+        { key: 'medium', path: 'complexity.thresholds.medium' },
+        { key: 'high', path: 'complexity.thresholds.high' },
+      ],
+      defaults: DEFAULT_LABELER_CONFIG.complexity.thresholds,
+      comparisons: [
         {
-          integerOnly: true,
+          smaller: 'medium',
+          larger: 'high',
+          errorField: 'complexity.thresholds',
+          createMessage: ({ smallerValue, largerValue }) =>
+            `complexity.thresholds.medium (${smallerValue}) must be less than high (${largerValue})`,
         },
-      );
-      if (validated.isErr()) {
-        return err(validated.error);
-      }
-      medium = validated.value;
-    }
+      ],
+    });
 
-    if (highRaw !== undefined) {
-      const validated = validateNumericThreshold(highRaw, 'complexity.thresholds.high', 0, Number.MAX_SAFE_INTEGER, {
-        integerOnly: true,
-      });
-      if (validated.isErr()) {
-        return err(validated.error);
-      }
-      high = validated.value;
-    }
-
-    const finalMedium = medium ?? DEFAULT_LABELER_CONFIG.complexity.thresholds.medium;
-    const finalHigh = high ?? DEFAULT_LABELER_CONFIG.complexity.thresholds.high;
-
-    if (finalMedium >= finalHigh) {
-      return err(
-        createConfigurationError(
-          'complexity.thresholds',
-          { medium: finalMedium, high: finalHigh },
-          `complexity.thresholds.medium (${finalMedium}) must be less than high (${finalHigh})`,
-        ),
-      );
+    if (validation.isErr()) {
+      return err(validation.error);
     }
   }
 
