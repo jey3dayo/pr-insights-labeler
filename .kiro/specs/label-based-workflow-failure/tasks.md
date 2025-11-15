@@ -71,7 +71,7 @@ Label-Based Workflow Failure Control機能の実装タスク。現在の`fail_on
 
 - [x] 4.2 サイズカテゴリ算出関数の実装
   - `calculateSizeCategory`関数を実装（totalAdditions → "size/small" | "size/medium" | ...）
-  - SizeThresholdsV2設定を用いた閾値比較
+  - SizeThresholds設定を用いた閾値比較
   - デフォルト閾値（small: 200, medium: 500, large: 1000, xlarge: 3000）を考慮
   - _Requirements: 4.1, 4.5_
 

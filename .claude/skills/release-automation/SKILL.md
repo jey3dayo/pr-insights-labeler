@@ -34,7 +34,7 @@ git status
 
 Ensure no uncommitted changes exist.
 
-1. **Verify current branch**
+2. **Verify current branch**
 
 ```bash
 git branch --show-current
@@ -42,7 +42,7 @@ git branch --show-current
 
 Must be on `main` branch.
 
-1. **Pull latest changes**
+3. **Pull latest changes**
 
 ```bash
 git pull origin main
@@ -147,10 +147,21 @@ BREAKING CHANGE: Removed deprecated /old-endpoint
 ```
 
 - **! notation** (feat!, fix!, etc.)
+<<<<<<< HEAD
 
 ```
 feat!: change default configuration format
 ```
+||||||| 0ae1e04
+  ```
+  feat!: change default configuration format
+  ```
+=======
+
+  ```
+  feat!: change default configuration format
+  ```
+>>>>>>> b81c090b2a161e797c545af3cdd032f15f9c1116
 
 When detected, breaking changes are prominently displayed at the top of release notes.
 

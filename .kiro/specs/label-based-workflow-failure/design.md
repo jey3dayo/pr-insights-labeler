@@ -492,7 +492,7 @@ interface FailureEvaluationInput {
   metrics: {
     totalAdditions: number;
   };
-  sizeThresholds: SizeThresholdsV2;
+  sizeThresholds: SizeThresholds;
 }
 
 function evaluateFailureConditions(
@@ -646,7 +646,7 @@ function compareSizeThreshold(
 ```typescript
 function calculateSizeCategory(
   totalAdditions: number,
-  thresholds: SizeThresholdsV2
+  thresholds: SizeThresholds
 ): string {
   if (totalAdditions < thresholds.small) return 'size/small';
   if (totalAdditions < thresholds.medium) return 'size/medium';
@@ -820,7 +820,7 @@ export interface FailureEvaluationInput {
   metrics: {
     totalAdditions: number;
   };
-  sizeThresholds: SizeThresholdsV2;
+  sizeThresholds: SizeThresholds;
 }
 ```
 
