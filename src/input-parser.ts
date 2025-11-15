@@ -16,7 +16,7 @@ import {
   parseCommentMode,
   parseComplexityThresholdsV2,
   parseExcludePatterns,
-  parseSizeThresholdsV2,
+  parseSizeThresholds,
 } from './parsers/action-input-parsers.js';
 import { parseSize } from './parsers/size-parser.js';
 
@@ -43,7 +43,7 @@ export interface ParsedInputs {
   riskEnabled: boolean;
 
   // PR Insights Labeler - 閾値（型安全なオブジェクト）
-  sizeThresholdsV2: { small: number; medium: number; large: number; xlarge: number };
+  sizeThresholds: { small: number; medium: number; large: number; xlarge: number };
   complexityThresholdsV2: { medium: number; high: number };
 
   // その他のフィールド
@@ -138,9 +138,9 @@ export function parseActionInputs(): Result<ParsedInputs, ConfigurationError | P
   }
 
   // Parse PR Insights Labeler thresholds
-  const sizeThresholdsV2Result = parseSizeThresholdsV2(core.getInput('size_thresholds'));
-  if (sizeThresholdsV2Result.isErr()) {
-    return err(sizeThresholdsV2Result.error);
+  const sizeThresholdsResult = parseSizeThresholds(core.getInput('size_thresholds'));
+  if (sizeThresholdsResult.isErr()) {
+    return err(sizeThresholdsResult.error);
   }
 
   const complexityThresholdsV2Result = parseComplexityThresholdsV2(core.getInput('complexity_thresholds'));
@@ -195,7 +195,7 @@ export function parseActionInputs(): Result<ParsedInputs, ConfigurationError | P
     prAdditionsLimit,
     prFilesLimit,
     sizeEnabled: sizeEnabledResult.value,
-    sizeThresholdsV2: sizeThresholdsV2Result.value,
+    sizeThresholds: sizeThresholdsResult.value,
     complexityEnabled: complexityEnabledResult.value,
     complexityThresholdsV2: complexityThresholdsV2Result.value,
     categoryEnabled: categoryEnabledResult.value,

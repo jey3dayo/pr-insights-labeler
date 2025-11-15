@@ -31,7 +31,7 @@ export const defaultParsedInputs: ParsedInputs = {
   complexityEnabled: false,
   categoryEnabled: true,
   riskEnabled: true,
-  sizeThresholdsV2: { small: 200, medium: 500, large: 1000, xlarge: 3000 },
+  sizeThresholds: { small: 200, medium: 500, large: 1000, xlarge: 3000 },
   complexityThresholdsV2: { medium: 10, high: 20 },
   autoRemoveLabels: true,
   largeFilesLabel: 'large-files',

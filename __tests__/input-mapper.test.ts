@@ -116,20 +116,11 @@ describe('InputMapper', () => {
 
   describe('parseSizeThresholds', () => {
     it('should parse valid JSON thresholds', () => {
-      const json = JSON.stringify({
-        S: { additions: 100, files: 10 },
-        M: { additions: 500, files: 30 },
-        L: { additions: 1000, files: 50 },
-      });
+      const json = JSON.stringify({ small: 200, medium: 500, large: 1000, xlarge: 3000 });
       const result = parseSizeThresholds(json);
       expect(result.isOk()).toBe(true);
       if (result.isOk()) {
-        expect(result.value.S.additions).toBe(100);
-        expect(result.value.S.files).toBe(10);
-        expect(result.value.M.additions).toBe(500);
-        expect(result.value.M.files).toBe(30);
-        expect(result.value.L.additions).toBe(1000);
-        expect(result.value.L.files).toBe(50);
+        expect(result.value).toEqual({ small: 200, medium: 500, large: 1000, xlarge: 3000 });
       }
     });
 
@@ -138,38 +129,29 @@ describe('InputMapper', () => {
       expect(result.isErr()).toBe(true);
       if (result.isErr()) {
         expect(result.error.type).toBe('ParseError');
-        expect(result.error.message).toContain('Invalid JSON');
       }
     });
 
-    it('should return error for missing required thresholds', () => {
-      const json = JSON.stringify({
-        S: { additions: 100, files: 10 },
-        // Missing M and L
-      });
+    it('should return error when required thresholds are missing', () => {
+      const json = JSON.stringify({ small: 100, medium: 500 });
       const result = parseSizeThresholds(json);
       expect(result.isErr()).toBe(true);
       if (result.isErr()) {
-        expect(result.error.type).toBe('ParseError');
-        expect(result.error.message).toContain('Missing required size thresholds');
+        expect(result.error.message).toContain('Missing or invalid required size thresholds');
       }
     });
 
-    it('should return error for invalid threshold structure', () => {
-      const json = JSON.stringify({
-        S: { additions: 100 }, // Missing files
-        M: { additions: 500, files: 30 },
-        L: { additions: 1000, files: 50 },
-      });
+    it('should return error for non-monotonic thresholds', () => {
+      const json = JSON.stringify({ small: 500, medium: 200, large: 1000, xlarge: 2000 });
       const result = parseSizeThresholds(json);
       expect(result.isErr()).toBe(true);
       if (result.isErr()) {
-        expect(result.error.type).toBe('ParseError');
+        expect(result.error.message).toContain('must be less than');
       }
     });
   });
 
-  describe('parseSizeThresholdsV2', () => {
+  describe('mapActionInputsToConfig - size thresholds', () => {
     it('should return error for invalid JSON', () => {
       const inputs: ActionInputs = {
         github_token: 'test-token',
@@ -389,10 +371,10 @@ describe('InputMapper', () => {
         expect(config.autoRemoveLabels).toBe(true);
         // PR Insights Labeler - Selective Label Enabling
         expect(config.sizeEnabled).toBe(true);
-        expect(config.sizeThresholdsV2.small).toBe(200);
-        expect(config.sizeThresholdsV2.medium).toBe(500);
-        expect(config.sizeThresholdsV2.large).toBe(1000);
-        expect(config.sizeThresholdsV2.xlarge).toBe(3000);
+        expect(config.sizeThresholds.small).toBe(200);
+        expect(config.sizeThresholds.medium).toBe(500);
+        expect(config.sizeThresholds.large).toBe(1000);
+        expect(config.sizeThresholds.xlarge).toBe(3000);
         expect(config.complexityEnabled).toBe(false);
         expect(config.categoryEnabled).toBe(true);
         expect(config.riskEnabled).toBe(true);

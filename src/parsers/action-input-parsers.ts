@@ -6,22 +6,11 @@ import { err, ok, Result } from 'neverthrow';
 
 import type { ConfigurationError, ParseError } from '../errors/index.js';
 import { createConfigurationError, createParseError } from '../errors/index.js';
-import { hasProperty, isObject } from '../utils/type-guards.js';
 
 /**
- * Size threshold configuration (v0.x format: S/M/L with additions + files)
+ * Size threshold configuration (small/medium/large/xlarge with additions only)
  */
 export interface SizeThresholds {
-  S: { additions: number; files: number };
-  M: { additions: number; files: number };
-  L: { additions: number; files: number };
-  // XL is determined when L thresholds are exceeded
-}
-
-/**
- * Size threshold configuration (v2 format: small/medium/large/xlarge with additions only)
- */
-export interface SizeThresholdsV2 {
   small: number;
   medium: number;
   large: number;
@@ -91,77 +80,9 @@ export function parseExcludePatterns(value: string): string[] {
 }
 
 /**
- * Type guard to check if parsed value is a valid SizeThresholds
+ * Parse size thresholds from JSON string (small/medium/large/xlarge with additions only)
  */
-function isSizeThresholds(value: unknown): value is SizeThresholds {
-  if (!isObject(value)) {
-    return false;
-  }
-
-  const sizes = ['S', 'M', 'L'] as const;
-
-  for (const size of sizes) {
-    if (!hasProperty(value, size)) {
-      return false;
-    }
-    const sizeObj = value[size];
-    if (!isObject(sizeObj)) {
-      return false;
-    }
-    if (!hasProperty(sizeObj, 'additions') || !hasProperty(sizeObj, 'files')) {
-      return false;
-    }
-    if (typeof sizeObj.additions !== 'number' || typeof sizeObj.files !== 'number') {
-      return false;
-    }
-  }
-
-  return true;
-}
-
-/**
- * Parse size thresholds from JSON string (v0.x format: S/M/L with additions + files)
- */
-export function parseSizeThresholds(value: string): Result<SizeThresholds, ParseError> {
-  try {
-    const parsed = JSON.parse(value);
-
-    // Validate required fields
-    if (!parsed.S || !parsed.M || !parsed.L) {
-      return err(createParseError(value, 'Missing required size thresholds (S, M, L)'));
-    }
-
-    const sizes = ['S', 'M', 'L'] as const;
-    for (const size of sizes) {
-      if (typeof parsed[size].additions !== 'number' || typeof parsed[size].files !== 'number') {
-        return err(createParseError(value, `Invalid threshold structure for size ${size}`));
-      }
-      if (parsed[size].additions < 0 || parsed[size].files < 0) {
-        return err(createParseError(value, `Threshold values for size ${size} must be non-negative`));
-      }
-    }
-
-    if (parsed.S.additions > parsed.M.additions || parsed.M.additions > parsed.L.additions) {
-      return err(createParseError(value, 'Size thresholds must be monotonic (S ≤ M ≤ L for additions)'));
-    }
-    if (parsed.S.files > parsed.M.files || parsed.M.files > parsed.L.files) {
-      return err(createParseError(value, 'Size thresholds must be monotonic (S ≤ M ≤ L for files)'));
-    }
-
-    if (!isSizeThresholds(parsed)) {
-      return err(createParseError(value, 'Invalid size thresholds structure'));
-    }
-
-    return ok(parsed);
-  } catch (_error) {
-    return err(createParseError(value, 'Invalid JSON for size thresholds'));
-  }
-}
-
-/**
- * Parse size thresholds from JSON string (V2: small/medium/large/xlarge with additions only)
- */
-export function parseSizeThresholdsV2(
+export function parseSizeThresholds(
   value: string,
 ): Result<{ small: number; medium: number; large: number; xlarge: number }, ParseError> {
   try {

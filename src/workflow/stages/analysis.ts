@@ -89,7 +89,7 @@ export function analyzePullRequest(context: InitializationArtifacts): ResultAsyn
       }
 
       labelerConfig.size.enabled = config.sizeEnabled;
-      labelerConfig.size.thresholds = config.sizeThresholdsV2;
+      labelerConfig.size.thresholds = config.sizeThresholds;
       labelerConfig.complexity.enabled = config.complexityEnabled;
       labelerConfig.complexity.thresholds = config.complexityThresholdsV2;
       labelerConfig.categoryLabeling.enabled = config.categoryEnabled;

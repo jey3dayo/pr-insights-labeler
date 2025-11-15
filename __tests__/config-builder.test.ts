@@ -33,7 +33,7 @@ describe('buildCompleteConfig', () => {
       complexityEnabled: false,
       categoryEnabled: true,
       riskEnabled: true,
-      sizeThresholdsV2: { small: 100, medium: 500, large: 1000, xlarge: 2000 },
+      sizeThresholds: { small: 100, medium: 500, large: 1000, xlarge: 2000 },
       complexityThresholdsV2: { medium: 10, high: 20 },
       autoRemoveLabels: true,
       largeFilesLabel: 'auto/large-files',
@@ -123,7 +123,7 @@ describe('buildCompleteConfig', () => {
       expect(config.fileSizeLimit).toBe(102400);
       expect(config.sizeEnabled).toBe(true);
       expect(config.complexityEnabled).toBe(false);
-      expect(config.sizeThresholdsV2).toEqual({ small: 100, medium: 500, large: 1000, xlarge: 2000 });
+      expect(config.sizeThresholds).toEqual({ small: 100, medium: 500, large: 1000, xlarge: 2000 });
       expect(config.skipDraftPr).toBe(true);
       expect(config.commentOnPr).toBe('auto');
     });

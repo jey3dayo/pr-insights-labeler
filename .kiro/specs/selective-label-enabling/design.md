@@ -143,7 +143,7 @@ Label Decisions
    - `config.complexityEnabled` → `labelerConfig.complexity.enabled`
    - `config.categoryEnabled` → `labelerConfig.categoryLabeling.enabled`
    - `config.riskEnabled` → `labelerConfig.risk.enabled`
-   - `config.sizeThresholdsV2` → `labelerConfig.size.thresholds`
+   - `config.sizeThresholds` → `labelerConfig.size.thresholds`
    - `config.complexityThresholdsV2` → `labelerConfig.complexity.thresholds`
 
 4. 判定エンジンの分岐
@@ -206,7 +206,7 @@ export interface Config {
   complexityEnabled: boolean;
   categoryEnabled: boolean;
   riskEnabled: boolean;
-  sizeThresholdsV2: { small: number; medium: number; large: number }; // 新パス
+  sizeThresholds: { small: number; medium: number; large: number }; // 新パス
   complexityThresholdsV2: { medium: number; high: number };
 }
 ```

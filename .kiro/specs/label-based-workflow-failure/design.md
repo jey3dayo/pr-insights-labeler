@@ -761,7 +761,7 @@ const failures = evaluateFailureConditions({
   appliedLabels,
   violations: analysis.violations,
   metrics: analysis.metrics,
-  sizeThresholds: config.sizeThresholdsV2,
+  sizeThresholds: config.sizeThresholds,
 });
 
 if (failures.length > 0) {

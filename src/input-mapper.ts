@@ -14,9 +14,7 @@ import {
   parseComplexityThresholdsV2,
   parseExcludePatterns,
   parseSizeThresholds,
-  parseSizeThresholdsV2,
   type SizeThresholds,
-  type SizeThresholdsV2,
 } from './parsers/action-input-parsers.js';
 import { parseSize } from './parsers/size-parser';
 
@@ -31,7 +29,7 @@ export interface Config {
   autoRemoveLabels: boolean;
   // PR Insights Labeler - Selective Label Enabling
   sizeEnabled: boolean;
-  sizeThresholdsV2: { small: number; medium: number; large: number; xlarge: number };
+  sizeThresholds: SizeThresholds;
   complexityEnabled: boolean;
   complexityThresholdsV2: { medium: number; high: number };
   categoryEnabled: boolean;
@@ -110,9 +108,9 @@ export function mapActionInputsToConfig(inputs: ActionInputs): Result<Config, Co
   }
 
   // Parse PR Insights Labeler thresholds
-  const sizeThresholdsV2Result = parseSizeThresholdsV2(inputs.size_thresholds);
-  if (sizeThresholdsV2Result.isErr()) {
-    return err(sizeThresholdsV2Result.error);
+  const sizeThresholdsResult = parseSizeThresholds(inputs.size_thresholds);
+  if (sizeThresholdsResult.isErr()) {
+    return err(sizeThresholdsResult.error);
   }
 
   const complexityThresholdsV2Result = parseComplexityThresholdsV2(inputs.complexity_thresholds);
@@ -164,7 +162,7 @@ export function mapActionInputsToConfig(inputs: ActionInputs): Result<Config, Co
     autoRemoveLabels: parseBoolean(inputs.auto_remove_labels),
     // PR Insights Labeler - Selective Label Enabling
     sizeEnabled: sizeEnabledResult.value,
-    sizeThresholdsV2: sizeThresholdsV2Result.value,
+    sizeThresholds: sizeThresholdsResult.value,
     complexityEnabled: complexityEnabledResult.value,
     complexityThresholdsV2: complexityThresholdsV2Result.value,
     categoryEnabled: categoryEnabledResult.value,
@@ -201,7 +199,6 @@ export {
   parseComplexityThresholdsV2,
   parseExcludePatterns,
   parseSizeThresholds,
-  parseSizeThresholdsV2,
 };
 
-export type { SizeThresholds, SizeThresholdsV2 };
+export type { SizeThresholds };

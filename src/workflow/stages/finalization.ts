@@ -117,7 +117,7 @@ export function finalizeAction(
           totalAdditions: analysis.metrics.totalAdditions,
           excludedAdditions: analysis.metrics.excludedAdditions,
         },
-        sizeThresholds: config.sizeThresholdsV2,
+        sizeThresholds: config.sizeThresholds,
       });
 
       if (failures.length > 0) {

@@ -77,7 +77,7 @@ export function buildCompleteConfig(
     prAdditionsLimit: parsedInputs.prAdditionsLimit,
     prFilesLimit: parsedInputs.prFilesLimit,
     sizeEnabled: parsedInputs.sizeEnabled,
-    sizeThresholdsV2: parsedInputs.sizeThresholdsV2,
+    sizeThresholds: parsedInputs.sizeThresholds,
     complexityEnabled: parsedInputs.complexityEnabled,
     complexityThresholdsV2: parsedInputs.complexityThresholdsV2,
     categoryEnabled: parsedInputs.categoryEnabled,

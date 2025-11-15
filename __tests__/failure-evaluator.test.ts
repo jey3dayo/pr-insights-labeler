@@ -24,7 +24,7 @@ describe('FailureEvaluator', () => {
     prFilesLimit: 50,
     autoRemoveLabels: true,
     sizeEnabled: true,
-    sizeThresholdsV2: { small: 200, medium: 500, large: 1000, xlarge: 3000 },
+    sizeThresholds: { small: 200, medium: 500, large: 1000, xlarge: 3000 },
     complexityEnabled: false,
     complexityThresholdsV2: { medium: 15, high: 30 },
     categoryEnabled: true,
@@ -64,7 +64,7 @@ describe('FailureEvaluator', () => {
             exceedsFileCount: false,
           },
           metrics: { totalAdditions: 100 },
-          sizeThresholds: config.sizeThresholdsV2,
+          sizeThresholds: config.sizeThresholds,
         };
 
         const failures = evaluateFailureConditions(input);
@@ -95,7 +95,7 @@ describe('FailureEvaluator', () => {
             exceedsFileCount: false,
           },
           metrics: { totalAdditions: 100 },
-          sizeThresholds: config.sizeThresholdsV2,
+          sizeThresholds: config.sizeThresholds,
         };
 
         const failures = evaluateFailureConditions(input);
@@ -117,7 +117,7 @@ describe('FailureEvaluator', () => {
             exceedsFileCount: false,
           },
           metrics: { totalAdditions: 100 },
-          sizeThresholds: config.sizeThresholdsV2,
+          sizeThresholds: config.sizeThresholds,
         };
 
         const failures = evaluateFailureConditions(input);
@@ -148,7 +148,7 @@ describe('FailureEvaluator', () => {
             exceedsFileCount: false,
           },
           metrics: { totalAdditions: 100 },
-          sizeThresholds: config.sizeThresholdsV2,
+          sizeThresholds: config.sizeThresholds,
         };
 
         const failures = evaluateFailureConditions(input);
@@ -188,7 +188,7 @@ describe('FailureEvaluator', () => {
             exceedsFileCount: false,
           },
           metrics: { totalAdditions: 100 },
-          sizeThresholds: config.sizeThresholdsV2,
+          sizeThresholds: config.sizeThresholds,
         };
 
         const failures = evaluateFailureConditions(input);
@@ -221,7 +221,7 @@ describe('FailureEvaluator', () => {
             exceedsFileCount: false,
           },
           metrics: { totalAdditions: 100 },
-          sizeThresholds: config.sizeThresholdsV2,
+          sizeThresholds: config.sizeThresholds,
         };
 
         const failures = evaluateFailureConditions(input);
@@ -244,7 +244,7 @@ describe('FailureEvaluator', () => {
             exceedsFileCount: false,
           },
           metrics: { totalAdditions: 100 },
-          sizeThresholds: config.sizeThresholdsV2,
+          sizeThresholds: config.sizeThresholds,
         };
 
         const failures = evaluateFailureConditions(input);
@@ -266,7 +266,7 @@ describe('FailureEvaluator', () => {
             exceedsFileCount: true,
           },
           metrics: { totalAdditions: 100 },
-          sizeThresholds: config.sizeThresholdsV2,
+          sizeThresholds: config.sizeThresholds,
         };
 
         const failures = evaluateFailureConditions(input);
@@ -288,7 +288,7 @@ describe('FailureEvaluator', () => {
             exceedsFileCount: true,
           },
           metrics: { totalAdditions: 100 },
-          sizeThresholds: config.sizeThresholdsV2,
+          sizeThresholds: config.sizeThresholds,
         };
 
         const failures = evaluateFailureConditions(input);
@@ -311,7 +311,7 @@ describe('FailureEvaluator', () => {
             exceedsFileCount: false,
           },
           metrics: { totalAdditions: 600 },
-          sizeThresholds: config.sizeThresholdsV2,
+          sizeThresholds: config.sizeThresholds,
         };
 
         const failures = evaluateFailureConditions(input);
@@ -335,7 +335,7 @@ describe('FailureEvaluator', () => {
             exceedsFileCount: false,
           },
           metrics: { totalAdditions: 600 }, // large size (500-1000)
-          sizeThresholds: config.sizeThresholdsV2,
+          sizeThresholds: config.sizeThresholds,
         };
 
         const failures = evaluateFailureConditions(input);
@@ -358,7 +358,7 @@ describe('FailureEvaluator', () => {
             exceedsFileCount: false,
           },
           metrics: { totalAdditions: 100 },
-          sizeThresholds: config.sizeThresholdsV2,
+          sizeThresholds: config.sizeThresholds,
         };
 
         const failures = evaluateFailureConditions(input);
@@ -380,7 +380,7 @@ describe('FailureEvaluator', () => {
             exceedsFileCount: false,
           },
           metrics: { totalAdditions: 6000 },
-          sizeThresholds: config.sizeThresholdsV2,
+          sizeThresholds: config.sizeThresholds,
         };
 
         const failures = evaluateFailureConditions(input);
@@ -405,7 +405,7 @@ describe('FailureEvaluator', () => {
             exceedsFileCount: false,
           },
           metrics: { totalAdditions: 100 },
-          sizeThresholds: config.sizeThresholdsV2,
+          sizeThresholds: config.sizeThresholds,
         };
 
         const failures = evaluateFailureConditions(input);
@@ -426,7 +426,7 @@ describe('FailureEvaluator', () => {
             exceedsFileCount: false,
           },
           metrics: { totalAdditions: 10000 },
-          sizeThresholds: config.sizeThresholdsV2,
+          sizeThresholds: config.sizeThresholds,
         };
 
         const failures = evaluateFailureConditions(input);
@@ -460,7 +460,7 @@ describe('FailureEvaluator', () => {
             exceedsFileCount: true,
           },
           metrics: { totalAdditions: 800 },
-          sizeThresholds: config.sizeThresholdsV2,
+          sizeThresholds: config.sizeThresholds,
         };
 
         const failures = evaluateFailureConditions(input);
@@ -505,7 +505,7 @@ describe('FailureEvaluator', () => {
             exceedsFileCount: true,
           },
           metrics: { totalAdditions: 100 },
-          sizeThresholds: config.sizeThresholdsV2,
+          sizeThresholds: config.sizeThresholds,
         };
 
         const failures = evaluateFailureConditions(input);
@@ -541,7 +541,7 @@ describe('FailureEvaluator', () => {
             exceedsFileCount: true,
           },
           metrics: { totalAdditions: 10000 },
-          sizeThresholds: config.sizeThresholdsV2,
+          sizeThresholds: config.sizeThresholds,
         };
 
         const failures = evaluateFailureConditions(input);
@@ -574,7 +574,7 @@ describe('FailureEvaluator', () => {
             exceedsFileCount: true,
           },
           metrics: { totalAdditions: 100 },
-          sizeThresholds: config.sizeThresholdsV2,
+          sizeThresholds: config.sizeThresholds,
         };
 
         const failures = evaluateFailureConditions(input);
@@ -597,7 +597,7 @@ describe('FailureEvaluator', () => {
             exceedsFileCount: false,
           },
           metrics: { totalAdditions: 1500 }, // xlarge size (1000-3000)
-          sizeThresholds: config.sizeThresholdsV2,
+          sizeThresholds: config.sizeThresholds,
         };
 
         const failures = evaluateFailureConditions(input);
@@ -621,7 +621,7 @@ describe('FailureEvaluator', () => {
             exceedsFileCount: false,
           },
           metrics: { totalAdditions: 100 },
-          sizeThresholds: config.sizeThresholdsV2,
+          sizeThresholds: config.sizeThresholds,
         };
 
         const failures = evaluateFailureConditions(input);
@@ -644,7 +644,7 @@ describe('FailureEvaluator', () => {
             exceedsFileCount: false,
           },
           metrics: { totalAdditions: 100 },
-          sizeThresholds: config.sizeThresholdsV2,
+          sizeThresholds: config.sizeThresholds,
         };
 
         const failures = evaluateFailureConditions(input);
@@ -665,7 +665,7 @@ describe('FailureEvaluator', () => {
             exceedsFileCount: false,
           },
           metrics: { totalAdditions: 500 }, // exactly at medium threshold
-          sizeThresholds: config.sizeThresholdsV2,
+          sizeThresholds: config.sizeThresholds,
         };
 
         const failures = evaluateFailureConditions(input);

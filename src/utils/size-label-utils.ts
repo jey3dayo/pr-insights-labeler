@@ -1,18 +1,10 @@
+import type { SizeThresholds } from '../parsers/action-input-parsers.js';
+
 /**
  * Size Label Utilities
  *
  * Common utilities for calculating size category labels based on additions and thresholds
  */
-
-/**
- * Size thresholds configuration type
- */
-export interface SizeThresholds {
-  small: number;
-  medium: number;
-  large: number;
-  xlarge: number;
-}
 
 /**
  * Calculate size category label based on total additions and thresholds

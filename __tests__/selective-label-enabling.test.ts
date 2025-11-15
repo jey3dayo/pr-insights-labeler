@@ -10,7 +10,7 @@ import { DEFAULT_LABELER_CONFIG } from '../src/labeler-types';
 import {
   parseBooleanStrict,
   parseComplexityThresholdsV2,
-  parseSizeThresholdsV2,
+  parseSizeThresholds,
 } from '../src/parsers/action-input-parsers';
 
 describe('Selective Label Enabling - Type Definitions', () => {
@@ -89,10 +89,10 @@ describe('Selective Label Enabling - Input Parsing', () => {
     });
   });
 
-  describe('parseSizeThresholdsV2', () => {
+  describe('parseSizeThresholds', () => {
     it('should parse valid size thresholds', () => {
       const json = '{"small": 200, "medium": 500, "large": 1000, "xlarge": 3000}';
-      const result = parseSizeThresholdsV2(json);
+      const result = parseSizeThresholds(json);
       expect(result.isOk()).toBe(true);
       if (result.isOk()) {
         expect(result.value).toEqual({ small: 200, medium: 500, large: 1000, xlarge: 3000 });
@@ -101,7 +101,7 @@ describe('Selective Label Enabling - Input Parsing', () => {
 
     it('should reject invalid JSON', () => {
       const json = '{invalid json}';
-      const result = parseSizeThresholdsV2(json);
+      const result = parseSizeThresholds(json);
       expect(result.isErr()).toBe(true);
       if (result.isErr()) {
         expect(result.error.type).toBe('ParseError');
@@ -110,19 +110,19 @@ describe('Selective Label Enabling - Input Parsing', () => {
 
     it('should reject missing required fields', () => {
       const json = '{"small": 100}';
-      const result = parseSizeThresholdsV2(json);
+      const result = parseSizeThresholds(json);
       expect(result.isErr()).toBe(true);
     });
 
     it('should reject negative values', () => {
       const json = '{"small": -10, "medium": 500, "large": 1000, "xlarge": 3000}';
-      const result = parseSizeThresholdsV2(json);
+      const result = parseSizeThresholds(json);
       expect(result.isErr()).toBe(true);
     });
 
     it('should reject invalid ordering (small >= medium)', () => {
       const json = '{"small": 500, "medium": 100, "large": 1000, "xlarge": 3000}';
-      const result = parseSizeThresholdsV2(json);
+      const result = parseSizeThresholds(json);
       expect(result.isErr()).toBe(true);
       if (result.isErr()) {
         expect(result.error.message).toContain('small');
@@ -132,13 +132,13 @@ describe('Selective Label Enabling - Input Parsing', () => {
 
     it('should reject invalid ordering (medium >= large)', () => {
       const json = '{"small": 100, "medium": 1000, "large": 500, "xlarge": 3000}';
-      const result = parseSizeThresholdsV2(json);
+      const result = parseSizeThresholds(json);
       expect(result.isErr()).toBe(true);
     });
 
     it('should reject invalid ordering (large >= xlarge)', () => {
       const json = '{"small": 100, "medium": 500, "large": 3000, "xlarge": 1000}';
-      const result = parseSizeThresholdsV2(json);
+      const result = parseSizeThresholds(json);
       expect(result.isErr()).toBe(true);
       if (result.isErr()) {
         expect(result.error.message).toContain('large');
