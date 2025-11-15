@@ -1,13 +1,13 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import type { ActionInputs } from '../src/actions-io';
+import { mapActionInputsToConfig } from '../src/input-mapper';
 import {
-  mapActionInputsToConfig,
   parseBoolean,
   parseCommentMode,
   parseExcludePatterns,
   parseSizeThresholds,
-} from '../src/input-mapper';
+} from '../src/parsers/action-input-parsers';
 
 // Mock @actions/core
 vi.mock('@actions/core');

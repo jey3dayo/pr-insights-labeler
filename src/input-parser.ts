@@ -17,7 +17,7 @@ import {
   parseComplexityThresholdsV2,
   parseExcludePatterns,
   parseSizeThresholdsV2,
-} from './input-mapper.js';
+} from './parsers/action-input-parsers.js';
 import { parseSize } from './parsers/size-parser.js';
 
 /**

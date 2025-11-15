@@ -2,7 +2,7 @@
  * Size comparison utilities for PR size threshold evaluation
  */
 
-import type { SizeThresholdsV2 } from './input-mapper.js';
+import type { SizeThresholdsV2 } from './parsers/action-input-parsers.js';
 import { calculateSizeLabel } from './utils/size-label-utils.js';
 
 /**

@@ -5,7 +5,7 @@
 
 import { describe, expect, it } from 'vitest';
 
-import { parseBooleanStrict, parseComplexityThresholdsV2, parseSizeThresholdsV2 } from '../src/input-mapper';
+import { parseBooleanStrict, parseComplexityThresholdsV2, parseSizeThresholdsV2 } from '../src/parsers/action-input-parsers';
 import type { LabelerConfig } from '../src/labeler-types';
 import { DEFAULT_LABELER_CONFIG } from '../src/labeler-types';
 
