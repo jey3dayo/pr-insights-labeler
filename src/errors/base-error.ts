@@ -1,5 +1,5 @@
 /**
- * Base Error class and ErrorLevel type
+ * Base Error constructor and ErrorLevel type
  * Following action-cache pattern for unified error handling
  */
 
@@ -11,21 +11,48 @@
 export type ErrorLevel = 'warning' | 'info';
 
 /**
- * Base Error class with errorLevel support
- * All application errors that need custom error levels should extend this class
+ * Base Error interface with errorLevel support
  */
-export abstract class BaseError extends Error {
+export interface BaseError extends Error {
   readonly errorLevel: ErrorLevel;
-
-  constructor(message: string, errorLevel: ErrorLevel = 'warning', options?: { cause?: unknown }) {
-    // Preserve native cause when available (ES2022 ErrorOptions)
-    super(message, options);
-    // Ensure instanceof works reliably across targets/bundlers
-    Object.setPrototypeOf(this, new.target.prototype);
-    this.name = new.target.name;
-    this.errorLevel = errorLevel;
-    if (Error.captureStackTrace) {
-      Error.captureStackTrace(this, new.target);
-    }
-  }
 }
+
+type BaseErrorConstructor = new (message: string, errorLevel?: ErrorLevel, options?: { cause?: unknown }) => BaseError;
+
+const BaseErrorImplementation = function BaseErrorImplementation(
+  this: Error,
+  message: string,
+  errorLevel: ErrorLevel = 'warning',
+  options?: { cause?: unknown },
+): BaseError {
+  const actualError = new Error(message, options);
+  const prototype = new.target?.prototype ?? BaseErrorImplementation.prototype;
+  Object.setPrototypeOf(actualError, prototype);
+  Object.defineProperty(actualError, 'name', {
+    value: new.target?.name ?? 'BaseError',
+    configurable: true,
+  });
+
+  if (Error.captureStackTrace) {
+    Error.captureStackTrace(actualError, new.target ?? BaseErrorImplementation);
+  }
+
+  Object.defineProperty(actualError, 'errorLevel', {
+    value: errorLevel,
+    enumerable: true,
+    configurable: false,
+    writable: false,
+  });
+
+  return actualError as BaseError;
+};
+
+BaseErrorImplementation.prototype = Object.create(Error.prototype, {
+  constructor: {
+    value: BaseErrorImplementation,
+    writable: true,
+    configurable: true,
+  },
+});
+
+export const BaseError = BaseErrorImplementation as BaseErrorConstructor & { prototype: BaseError };

@@ -112,216 +112,212 @@ function hasSyntaxError(messages: Linter.LintMessage[]): boolean {
 }
 
 /**
- * Complexity Analyzer Service
- * Calculates cyclomatic complexity for TypeScript/JavaScript files using ESLint
- *
- * Note: This uses class syntax for better organization of related methods.
- * Class syntax is restricted elsewhere in the codebase, but allowed here for this specific use case.
+ * Analyze a single file for complexity
+ * @param filePath - Repository-relative file path
+ * @param options - Analysis options
+ * @returns File complexity or error
  */
-export class ComplexityAnalyzer {
-  /**
-   * Analyze a single file for complexity
-   * @param filePath - Repository-relative file path
-   * @param options - Analysis options
-   * @returns File complexity or error
-   */
-  analyzeFile(
-    filePath: string,
-    options?: Partial<AnalysisOptions>,
-  ): ResultAsync<FileComplexity, ComplexityAnalysisError> {
-    const opts = { ...DEFAULT_ANALYSIS_OPTIONS, ...options };
+function analyzeFile(
+  filePath: string,
+  options?: Partial<AnalysisOptions>,
+): ResultAsync<FileComplexity, ComplexityAnalysisError> {
+  const opts = { ...DEFAULT_ANALYSIS_OPTIONS, ...options };
 
-    return ResultAsync.fromPromise(
-      (async () => {
-        // 1. Check file size (before reading content)
-        try {
-          const stats = await fs.stat(filePath);
-          if (stats.size > opts.maxFileSize) {
-            throw createComplexityAnalysisError('too_large', {
-              filename: filePath,
-              fileSize: stats.size,
-              maxSize: opts.maxFileSize,
-              details: `File ${filePath} exceeds max size (${stats.size} > ${opts.maxFileSize})`,
-            });
-          }
-        } catch (error) {
-          if (isComplexityAnalysisError(error)) {
-            // Re-throw ComplexityAnalysisError
-            throw error;
-          }
-          throw createComplexityAnalysisError('analysis_failed', {
+  return ResultAsync.fromPromise(
+    (async () => {
+      // 1. Check file size (before reading content)
+      try {
+        const stats = await fs.stat(filePath);
+        if (stats.size > opts.maxFileSize) {
+          throw createComplexityAnalysisError('too_large', {
             filename: filePath,
-            details: `Failed to stat file ${filePath}: ${ensureError(error).message}`,
+            fileSize: stats.size,
+            maxSize: opts.maxFileSize,
+            details: `File ${filePath} exceeds max size (${stats.size} > ${opts.maxFileSize})`,
           });
         }
-
-        // 2. Run ESLint complexity rule
-        const hasTsconfig = hasTsconfigJson();
-        if (!hasTsconfig) {
-          core.warning('tsconfig.json not found. Using default parser options for complexity analysis.');
+      } catch (error) {
+        if (isComplexityAnalysisError(error)) {
+          // Re-throw ComplexityAnalysisError
+          throw error;
         }
+        throw createComplexityAnalysisError('analysis_failed', {
+          filename: filePath,
+          details: `Failed to stat file ${filePath}: ${ensureError(error).message}`,
+        });
+      }
 
-        const eslint = createESLintInstance(hasTsconfig);
+      // 2. Run ESLint complexity rule
+      const hasTsconfig = hasTsconfigJson();
+      if (!hasTsconfig) {
+        core.warning('tsconfig.json not found. Using default parser options for complexity analysis.');
+      }
 
-        const results = await eslint.lintFiles([filePath]);
+      const eslint = createESLintInstance(hasTsconfig);
 
-        if (!results || results.length === 0) {
-          throw createComplexityAnalysisError('analysis_failed', {
-            filename: filePath,
-            details: `No ESLint results for ${filePath}`,
-          });
-        }
+      const results = await eslint.lintFiles([filePath]);
 
-        const result = results[0];
-        if (!result) {
-          throw createComplexityAnalysisError('analysis_failed', {
-            filename: filePath,
-            details: `Empty ESLint result for ${filePath}`,
-          });
-        }
+      if (!results || results.length === 0) {
+        throw createComplexityAnalysisError('analysis_failed', {
+          filename: filePath,
+          details: `No ESLint results for ${filePath}`,
+        });
+      }
 
-        // Check for syntax errors
-        const syntaxError = hasSyntaxError(result.messages);
-        if (syntaxError) {
-          core.debug(`Syntax error in ${filePath}, treating as complexity 0`);
-          return {
-            path: filePath,
-            complexity: 0,
-            functions: [],
-            isSyntaxError: true,
-          };
-        }
+      const result = results[0];
+      if (!result) {
+        throw createComplexityAnalysisError('analysis_failed', {
+          filename: filePath,
+          details: `Empty ESLint result for ${filePath}`,
+        });
+      }
 
-        // Parse complexity from messages
-        const functions = result.messages
-          .filter(m => m.ruleId === 'complexity')
-          .map(parseComplexityMessage)
-          .filter((f): f is FunctionComplexity => f !== null);
-
-        // Calculate total file complexity (sum of all functions)
-        const totalComplexity = functions.reduce((sum, f) => sum + f.complexity, 0);
-
+      // Check for syntax errors
+      const syntaxError = hasSyntaxError(result.messages);
+      if (syntaxError) {
+        core.debug(`Syntax error in ${filePath}, treating as complexity 0`);
         return {
           path: filePath,
-          complexity: totalComplexity,
-          functions,
-          isSyntaxError: false,
+          complexity: 0,
+          functions: [],
+          isSyntaxError: true,
         };
-      })(),
-      (error): ComplexityAnalysisError => {
-        // Error is already a ComplexityAnalysisError
-        if (isComplexityAnalysisError(error)) {
-          return error;
-        }
+      }
 
-        // Convert unknown errors
-        return createComplexityAnalysisError('analysis_failed', {
-          filename: filePath,
-          details: `Failed to analyze ${filePath}: ${ensureError(error).message}`,
-        });
-      },
-    );
-  }
+      // Parse complexity from messages
+      const functions = result.messages
+        .filter(m => m.ruleId === 'complexity')
+        .map(parseComplexityMessage)
+        .filter((f): f is FunctionComplexity => f !== null);
 
-  /**
-   * Analyze multiple files in parallel and aggregate metrics
-   * @param filePaths - List of file paths to analyze
-   * @param options - Analysis options
-   * @returns PR-wide complexity metrics or error
-   */
-  analyzeFiles(
-    filePaths: string[],
-    options?: Partial<AnalysisOptions>,
-  ): ResultAsync<ComplexityMetrics, ComplexityAnalysisError> {
-    const opts = { ...DEFAULT_ANALYSIS_OPTIONS, ...options };
-    const startTime = Date.now();
+      // Calculate total file complexity (sum of all functions)
+      const totalComplexity = functions.reduce((sum, f) => sum + f.complexity, 0);
 
-    return ResultAsync.fromPromise(
-      (async () => {
-        const successful: FileComplexity[] = [];
-        const skippedFiles: SkippedFile[] = [];
+      return {
+        path: filePath,
+        complexity: totalComplexity,
+        functions,
+        isSyntaxError: false,
+      };
+    })(),
+    (error): ComplexityAnalysisError => {
+      // Error is already a ComplexityAnalysisError
+      if (isComplexityAnalysisError(error)) {
+        return error;
+      }
 
-        // p-limitで並列度制御
-        const raw = Number.isFinite(opts.concurrency as number) ? (opts.concurrency as number) : 8;
-        const concurrency = Math.max(1, Math.min(raw, 8));
-        const limit = pLimit(concurrency);
-
-        core.info(`Analyzing ${filePaths.length} files with concurrency ${concurrency}`);
-
-        // 各ファイルの解析を並列実行
-        const promises = filePaths.map(filePath =>
-          limit(async () => {
-            const result = await this.analyzeFile(filePath, opts);
-
-            if (result.isOk()) {
-              return { status: 'fulfilled' as const, value: result.value };
-            } else {
-              return {
-                status: 'rejected' as const,
-                reason: result.error,
-              };
-            }
-          }),
-        );
-
-        const results = await Promise.all(promises);
-
-        // 成功/失敗を分類
-        for (const result of results) {
-          if (result.status === 'fulfilled') {
-            successful.push(result.value);
-          } else {
-            const error = result.reason;
-            const skipped: SkippedFile = {
-              path: error.filename || 'unknown',
-              reason: error.reason,
-            };
-            if (error.details) {
-              skipped.details = error.details;
-            }
-            skippedFiles.push(skipped);
-          }
-        }
-
-        // 実行時間測定
-        const elapsedTime = Date.now() - startTime;
-        core.info(`Complexity analysis completed: ${successful.length} files, ${elapsedTime}ms`);
-
-        if (elapsedTime > 10000) {
-          core.warning(`Complexity analysis took ${elapsedTime}ms (target: <5000ms for 100 files)`);
-        }
-
-        // 集計
-        const baseMetrics = aggregateMetrics(successful);
-
-        if (!baseMetrics) {
-          throw createComplexityAnalysisError('general', {
-            details: `No files could be analyzed. Analyzed: ${successful.length}, Skipped: ${skippedFiles.length}`,
-          });
-        }
-
-        // 完全なComplexityMetricsを構築
-        const hasTsconfig = hasTsconfigJson();
-        const completeMetrics: ComplexityMetrics = {
-          ...baseMetrics,
-          skippedFiles,
-          truncated: false, // 呼び出し元で設定
-          hasTsconfig,
-        };
-
-        return completeMetrics;
-      })(),
-      (error): ComplexityAnalysisError => {
-        if (isComplexityAnalysisError(error)) {
-          return error;
-        }
-        return createComplexityAnalysisError('general', {
-          details: `Failed to analyze files: ${ensureError(error).message}`,
-        });
-      },
-    );
-  }
+      // Convert unknown errors
+      return createComplexityAnalysisError('analysis_failed', {
+        filename: filePath,
+        details: `Failed to analyze ${filePath}: ${ensureError(error).message}`,
+      });
+    },
+  );
 }
+
+/**
+ * Analyze multiple files in parallel and aggregate metrics
+ * @param filePaths - List of file paths to analyze
+ * @param options - Analysis options
+ * @returns PR-wide complexity metrics or error
+ */
+function analyzeFiles(
+  filePaths: string[],
+  options?: Partial<AnalysisOptions>,
+): ResultAsync<ComplexityMetrics, ComplexityAnalysisError> {
+  const opts = { ...DEFAULT_ANALYSIS_OPTIONS, ...options };
+  const startTime = Date.now();
+
+  return ResultAsync.fromPromise(
+    (async () => {
+      const successful: FileComplexity[] = [];
+      const skippedFiles: SkippedFile[] = [];
+
+      // p-limitで並列度制御
+      const raw = Number.isFinite(opts.concurrency as number) ? (opts.concurrency as number) : 8;
+      const concurrency = Math.max(1, Math.min(raw, 8));
+      const limit = pLimit(concurrency);
+
+      core.info(`Analyzing ${filePaths.length} files with concurrency ${concurrency}`);
+
+      // 各ファイルの解析を並列実行
+      const promises = filePaths.map(filePath =>
+        limit(async () => {
+          const result = await analyzeFile(filePath, opts);
+
+          if (result.isOk()) {
+            return { status: 'fulfilled' as const, value: result.value };
+          } else {
+            return {
+              status: 'rejected' as const,
+              reason: result.error,
+            };
+          }
+        }),
+      );
+
+      const results = await Promise.all(promises);
+
+      // 成功/失敗を分類
+      for (const result of results) {
+        if (result.status === 'fulfilled') {
+          successful.push(result.value);
+        } else {
+          const error = result.reason;
+          const skipped: SkippedFile = {
+            path: error.filename || 'unknown',
+            reason: error.reason,
+          };
+          if (error.details) {
+            skipped.details = error.details;
+          }
+          skippedFiles.push(skipped);
+        }
+      }
+
+      // 実行時間測定
+      const elapsedTime = Date.now() - startTime;
+      core.info(`Complexity analysis completed: ${successful.length} files, ${elapsedTime}ms`);
+
+      if (elapsedTime > 10000) {
+        core.warning(`Complexity analysis took ${elapsedTime}ms (target: <5000ms for 100 files)`);
+      }
+
+      // 集計
+      const baseMetrics = aggregateMetrics(successful);
+
+      if (!baseMetrics) {
+        throw createComplexityAnalysisError('general', {
+          details: `No files could be analyzed. Analyzed: ${successful.length}, Skipped: ${skippedFiles.length}`,
+        });
+      }
+
+      // 完全なComplexityMetricsを構築
+      const hasTsconfig = hasTsconfigJson();
+      const completeMetrics: ComplexityMetrics = {
+        ...baseMetrics,
+        skippedFiles,
+        truncated: false, // 呼び出し元で設定
+        hasTsconfig,
+      };
+
+      return completeMetrics;
+    })(),
+    (error): ComplexityAnalysisError => {
+      if (isComplexityAnalysisError(error)) {
+        return error;
+      }
+      return createComplexityAnalysisError('general', {
+        details: `Failed to analyze files: ${ensureError(error).message}`,
+      });
+    },
+  );
+}
+
+export type ComplexityAnalyzer = {
+  analyzeFile: typeof analyzeFile;
+  analyzeFiles: typeof analyzeFiles;
+};
 
 /**
  * Aggregate complexity metrics from file results
@@ -368,5 +364,8 @@ export function aggregateMetrics(
  * Create a new ComplexityAnalyzer instance
  */
 export function createComplexityAnalyzer(): ComplexityAnalyzer {
-  return new ComplexityAnalyzer();
+  return {
+    analyzeFile: (filePath, options) => analyzeFile(filePath, options),
+    analyzeFiles: (filePaths, options) => analyzeFiles(filePaths, options),
+  };
 }

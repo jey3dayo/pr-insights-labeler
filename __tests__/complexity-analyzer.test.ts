@@ -6,12 +6,12 @@ import * as path from 'node:path';
 
 import { describe, expect, it } from 'vitest';
 
-import { aggregateMetrics, ComplexityAnalyzer } from '../src/complexity-analyzer.js';
+import { aggregateMetrics, createComplexityAnalyzer } from '../src/complexity-analyzer.js';
 import type { FileComplexity } from '../src/labeler-types.js';
 
 describe('ComplexityAnalyzer', () => {
   describe('analyzeFile', () => {
-    const analyzer = new ComplexityAnalyzer();
+    const analyzer = createComplexityAnalyzer();
     const fixturesDir = path.join(__dirname, 'fixtures');
 
     it('should analyze a valid TypeScript file', async () => {
@@ -61,7 +61,7 @@ describe('ComplexityAnalyzer', () => {
   });
 
   describe('analyzeFiles', () => {
-    const analyzer = new ComplexityAnalyzer();
+    const analyzer = createComplexityAnalyzer();
     const fixturesDir = path.join(__dirname, 'fixtures');
 
     it('should analyze multiple files in parallel', async () => {

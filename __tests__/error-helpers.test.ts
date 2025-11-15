@@ -52,14 +52,34 @@ describe('ensureError', () => {
   });
 
   describe('Custom Error class conversion', () => {
-    class CustomError extends Error {
-      code: string;
-      constructor(message: string) {
-        super(message);
-        this.name = 'CustomError';
-        this.code = 'CUSTOM';
+    type CustomErrorInstance = Error & { code: string };
+    type CustomErrorCtor = new (message: string) => CustomErrorInstance;
+
+    const CustomErrorImpl = function CustomErrorImpl(message: string): CustomErrorInstance {
+      const error = new Error(message);
+      Object.setPrototypeOf(error, CustomErrorImpl.prototype);
+      Object.defineProperty(error, 'code', {
+        value: 'CUSTOM',
+        configurable: true,
+        enumerable: true,
+        writable: true,
+      });
+      error.name = 'CustomError';
+      if (Error.captureStackTrace) {
+        Error.captureStackTrace(error, CustomErrorImpl);
       }
-    }
+      return error as CustomErrorInstance;
+    };
+
+    (CustomErrorImpl as unknown as { prototype: CustomErrorInstance }).prototype = Object.create(Error.prototype, {
+      constructor: {
+        value: CustomErrorImpl,
+        writable: true,
+        configurable: true,
+      },
+    });
+
+    const CustomError = CustomErrorImpl as CustomErrorCtor;
 
     it('should return matching custom Error instance as-is', () => {
       const error = new CustomError('Custom error');
