@@ -282,15 +282,15 @@ flowchart LR
 
 ## Requirements Traceability
 
-| Requirement | Requirement Summary                       | Components                                                             | Implementation Details                                                                      |
+| Requirement | Requirement Summary | Components | Implementation Details |
 | ----------- | ----------------------------------------- | ---------------------------------------------------------------------- | ------------------------------------------------------------------------------------------- |
-| 1.1-1.8     | README.md simplification & quick-start    | README.md rewrite                                                      | 200-300 lines, quick-start section with copy-paste workflow, permissions guide, docs/ links |
-| 2.1-2.4     | README.md structure design                | README.md sections                                                     | Title, badges, features (3-5), quick-start, permissions, docs links, contribution, license  |
-| 3.1-3.7     | Detailed documentation separation         | docs/configuration.md, docs/advanced-usage.md, docs/troubleshooting.md | Parameter tables, copy-paste examples, problem-solution format                              |
-| 4.1-4.5     | Multi-language support                    | README.md (English), README.ja.md (optional)                           | English-first, separate translation file, sync guidelines                                   |
-| 5.1-5.5     | Information preservation & link integrity | Migration validation                                                   | All content migrated, anchor preservation, link validation                                  |
-| 6.1-6.6     | Documentation quality & maintainability   | All documentation files                                                | Clear heading structure, syntax highlighting, metadata, table formatting                    |
-| 7.1-7.5     | Best practices application                | README.md pattern                                                      | Reference actions/checkout, docker/build-push-action, parameter tables, relevant badges     |
+| 1.1-1.8 | README.md simplification & quick-start | README.md rewrite | 200-300 lines, quick-start section with copy-paste workflow, permissions guide, docs/ links |
+| 2.1-2.4 | README.md structure design | README.md sections | Title, badges, features (3-5), quick-start, permissions, docs links, contribution, license |
+| 3.1-3.7 | Detailed documentation separation | docs/configuration.md, docs/advanced-usage.md, docs/troubleshooting.md | Parameter tables, copy-paste examples, problem-solution format |
+| 4.1-4.5 | Multi-language support | README.md (English), README.ja.md (optional) | English-first, separate translation file, sync guidelines |
+| 5.1-5.5 | Information preservation & link integrity | Migration validation | All content migrated, anchor preservation, link validation |
+| 6.1-6.6 | Documentation quality & maintainability | All documentation files | Clear heading structure, syntax highlighting, metadata, table formatting |
+| 7.1-7.5 | Best practices application | README.md pattern | Reference actions/checkout, docker/build-push-action, parameter tables, relevant badges |
 
 ## Components and Interfaces
 
@@ -486,7 +486,7 @@ Brief introduction to configuration system
 
 ### Basic Limits
 | Parameter | Required | Default | Description | Example |
-|-----------|----------|---------|-------------|---------|
+| ----------- | ---------- | --------- | ------------- | --------- |
 | file_size_limit | No | 100KB | ... | `200KB` |
 | ... | ... | ... | ... | ... |
 
@@ -795,13 +795,13 @@ For advanced usage examples, see [Advanced Usage Guide](docs/advanced-usage.md).
 
 Based on README.md analysis, preserve these high-traffic anchors:
 
-| Japanese Anchor   | English Anchor      | Redirect Destination              |
+| Japanese Anchor | English Anchor | Redirect Destination |
 | ----------------- | ------------------- | --------------------------------- |
-| `#入力パラメータ` | `#input-parameters` | docs/configuration.md             |
-| `#使用方法`       | `#usage`            | Quick Start section (in README)   |
-| `#高度な使用例`   | `#advanced-usage`   | docs/advanced-usage.md            |
-| `#必要な権限`     | `#permissions`      | Permissions section (in README)   |
-| `#自動適用ラベル` | `#labels`           | docs/configuration.md#auto-labels |
+| `#入力パラメータ` | `#input-parameters` | docs/configuration.md |
+| `#使用方法` | `#usage` | Quick Start section (in README) |
+| `#高度な使用例` | `#advanced-usage` | docs/advanced-usage.md |
+| `#必要な権限` | `#permissions` | Permissions section (in README) |
+| `#自動適用ラベル` | `#labels` | docs/configuration.md#auto-labels |
 
 **4. Migration Notice Section**
 
@@ -980,21 +980,21 @@ For users who prefer the old comprehensive README:
 
 ### Current README.md → New Structure Mapping
 
-| Current Section           | Lines   | New Location             | Notes                         |
+| Current Section | Lines | New Location | Notes |
 | ------------------------- | ------- | ------------------------ | ----------------------------- |
-| Title & Badges            | 1-8     | README.md (Header)       | Keep, update badge list       |
-| 🚀 機能                   | 9-102   | README.md (Features)     | Simplify to 3-5 bullet points |
-| 📋 使用方法               | 104-216 | README.md (Quick Start)  | Extract minimal example       |
-| 📋 使用方法               | 218-274 | docs/advanced-usage.md   | Move i18n examples            |
-| 🔧 入力パラメータ         | 276-377 | docs/configuration.md    | All parameters as tables      |
-| 📊 GitHub Actions Summary | 412-437 | docs/configuration.md    | Move to config doc            |
-| 📤 出力変数               | 439-450 | docs/configuration.md    | Move to config doc            |
-| 🏷️ 自動適用ラベル         | 452-484 | README.md (Features)     | Summarize, link to config     |
-| 🔒 必要な権限             | 486-495 | README.md (Permissions)  | Keep in quick-start area      |
-| 📝 高度な使用例           | 497-691 | docs/advanced-usage.md   | All examples with full code   |
-| 🎯 デフォルト除外パターン | 698-711 | docs/configuration.md    | Move to config doc            |
-| 🤝 コントリビューション   | 713-715 | README.md (Contributing) | Keep, simplify                |
-| 📄 ライセンス             | 717-719 | README.md (License)      | Keep                          |
+| Title & Badges | 1-8 | README.md (Header) | Keep, update badge list |
+| 🚀 機能 | 9-102 | README.md (Features) | Simplify to 3-5 bullet points |
+| 📋 使用方法 | 104-216 | README.md (Quick Start) | Extract minimal example |
+| 📋 使用方法 | 218-274 | docs/advanced-usage.md | Move i18n examples |
+| 🔧 入力パラメータ | 276-377 | docs/configuration.md | All parameters as tables |
+| 📊 GitHub Actions Summary | 412-437 | docs/configuration.md | Move to config doc |
+| 📤 出力変数 | 439-450 | docs/configuration.md | Move to config doc |
+| 🏷️ 自動適用ラベル | 452-484 | README.md (Features) | Summarize, link to config |
+| 🔒 必要な権限 | 486-495 | README.md (Permissions) | Keep in quick-start area |
+| 📝 高度な使用例 | 497-691 | docs/advanced-usage.md | All examples with full code |
+| 🎯 デフォルト除外パターン | 698-711 | docs/configuration.md | Move to config doc |
+| 🤝 コントリビューション | 713-715 | README.md (Contributing) | Keep, simplify |
+| 📄 ライセンス | 717-719 | README.md (License) | Keep |
 
 ### New Content to Create
 

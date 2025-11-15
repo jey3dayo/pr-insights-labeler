@@ -101,17 +101,17 @@ pr-labeler/
 
 ## 📊 現在のドキュメント一覧
 
-| ファイル名                       | タグ                                                                      | 概要                       | ステータス  |
+| ファイル名 | タグ | 概要 | ステータス |
 | -------------------------------- | ------------------------------------------------------------------------- | -------------------------- | ----------- |
-| README.md                        | `category/documentation`, `audience/user`                                 | プロジェクト概要・使用方法 | 作成予定    |
-| CLAUDE.md                        | `category/documentation`, `audience/developer`, `environment/development` | Claude Code協働ガイド      | ✅ 作成済   |
-| docs/documentation-guidelines.md | `category/documentation`, `audience/developer`                            | ドキュメント管理体系       | ✅ 作成済   |
-| docs/api-reference.md            | `category/api`, `audience/developer`                                      | GitHub API使用方法         | 📝 計画中   |
-| docs/configuration.md            | `category/action`, `audience/user`                                        | Action設定ガイド           | 📝 計画中   |
-| docs/troubleshooting.md          | `category/operations`, `audience/user`, `audience/developer`              | 問題解決ガイド             | 📝 計画中   |
-| .specify/spec.md                 | `category/cc-sdd`, `audience/developer`                                   | 機能仕様書                 | ⏳ 随時更新 |
-| .specify/plan.md                 | `category/cc-sdd`, `audience/developer`                                   | 実装計画書                 | ⏳ 随時更新 |
-| .specify/tasks.md                | `category/cc-sdd`, `audience/developer`                                   | タスク管理                 | ⏳ 随時更新 |
+| README.md | `category/documentation`, `audience/user` | プロジェクト概要・使用方法 | 作成予定 |
+| CLAUDE.md | `category/documentation`, `audience/developer`, `environment/development` | Claude Code協働ガイド | ✅ 作成済 |
+| docs/documentation-guidelines.md | `category/documentation`, `audience/developer` | ドキュメント管理体系 | ✅ 作成済 |
+| docs/api-reference.md | `category/api`, `audience/developer` | GitHub API使用方法 | 📝 計画中 |
+| docs/configuration.md | `category/action`, `audience/user` | Action設定ガイド | 📝 計画中 |
+| docs/troubleshooting.md | `category/operations`, `audience/user`, `audience/developer` | 問題解決ガイド | 📝 計画中 |
+| .specify/spec.md | `category/cc-sdd`, `audience/developer` | 機能仕様書 | ⏳ 随時更新 |
+| .specify/plan.md | `category/cc-sdd`, `audience/developer` | 実装計画書 | ⏳ 随時更新 |
+| .specify/tasks.md | `category/cc-sdd`, `audience/developer` | タスク管理 | ⏳ 随時更新 |
 
 ### ステータス凡例
 

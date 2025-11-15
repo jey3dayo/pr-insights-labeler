@@ -120,10 +120,10 @@ graph TB
 
 **新規導入ライブラリ**:
 
-| ライブラリ                   | バージョン | 用途             | 選定理由                                                  |
+| ライブラリ | バージョン | 用途 | 選定理由 |
 | ---------------------------- | ---------- | ---------------- | --------------------------------------------------------- |
-| `ESLint標準complexityルール` | 最新       | 循環的複雑度計算 | ESLintベースで型安全、TypeScript AST解析対応、MIT license |
-| `js-yaml`                    | 4.1.0      | YAML設定パース   | デファクトスタンダード、型定義完備                        |
+| `ESLint標準complexityルール` | 最新 | 循環的複雑度計算 | ESLintベースで型安全、TypeScript AST解析対応、MIT license |
+| `js-yaml` | 4.1.0 | YAML設定パース | デファクトスタンダード、型定義完備 |
 
 **技術選定の補足調査**:
 
@@ -355,17 +355,17 @@ flowchart TB
 
 ## 要件トレーサビリティ
 
-| 要件     | 要件概要                                        | コンポーネント                                       | インターフェース                                                                                                                    | フロー                          |
+| 要件 | 要件概要 | コンポーネント | インターフェース | フロー |
 | -------- | ----------------------------------------------- | ---------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- | ------------------------------- |
-| 1.1-1.6  | サイズベースラベル（small/medium/large/xlarge） | Label Decision Engine                                | `decideSizeLabel(additions: number, thresholds: SizeThresholds): string`                                                            | ラベル付与フロー（ステップ6）   |
-| 2.1-2.5  | 複雑度ベースラベル（medium/high）               | Complexity Analyzer, Label Decision Engine           | `analyzeComplexity(files: string[]): Result<ComplexityMetrics, Error>`, `decideComplexityLabel(complexity: number): string \| null` | ラベル付与フロー（ステップ5-6） |
-| 3.1-3.7  | カテゴリベースラベル（components/ci-cd等）      | Label Decision Engine, Pattern Matcher               | `decideCategoryLabels(files: string[], patterns: CategoryPattern[]): string[]`                                                      | ラベル付与フロー（ステップ6）   |
-| 4.1-4.6  | リスクベースラベル（high/medium）               | Label Decision Engine                                | `decideRiskLabel(files: string[], hasTests: boolean, config: RiskConfig): string \| null`                                           | ラベル付与フロー（ステップ6）   |
-| 5.1-5.8  | YAML設定のカスタマイズ                          | Configuration Loader                                 | `loadConfig(repoPath: string, token: string): ResultAsync<LabelerConfig, Error>`                                                    | ラベル付与フロー（ステップ2-3） |
-| 6.1-6.8  | GitHub Actions統合とエラーハンドリング          | Action Main, Label Applicator, Summary Generator     | `main(): Promise<void>`, `applyLabels(...): ResultAsync<LabelUpdate, Error>`                                                        | 全体フロー                      |
-| 7.1-7.7  | コアロジック再利用と型安全性                    | File Analyzer（既存モジュール再利用）                | `analyzeFiles(...)`, `isExcluded(...)`, `Result<T, E>`                                                                              | ラベル付与フロー（ステップ4）   |
-| 8.1-8.10 | テスト要件（90%カバレッジ）                     | 全コンポーネント（ユニット・統合テスト）             | -                                                                                                                                   | -                               |
-| 9.1-9.5  | 非機能要件（冪等性・性能・運用）                | Label Applicator（冪等性）、API Rate Limiter（性能） | -                                                                                                                                   | エラーハンドリングフロー        |
+| 1.1-1.6 | サイズベースラベル（small/medium/large/xlarge） | Label Decision Engine | `decideSizeLabel(additions: number, thresholds: SizeThresholds): string` | ラベル付与フロー（ステップ6） |
+| 2.1-2.5 | 複雑度ベースラベル（medium/high） | Complexity Analyzer, Label Decision Engine | `analyzeComplexity(files: string[]): Result<ComplexityMetrics, Error>`, `decideComplexityLabel(complexity: number): string \| null` | ラベル付与フロー（ステップ5-6） |
+| 3.1-3.7 | カテゴリベースラベル（components/ci-cd等） | Label Decision Engine, Pattern Matcher | `decideCategoryLabels(files: string[], patterns: CategoryPattern[]): string[]` | ラベル付与フロー（ステップ6） |
+| 4.1-4.6 | リスクベースラベル（high/medium） | Label Decision Engine | `decideRiskLabel(files: string[], hasTests: boolean, config: RiskConfig): string \| null` | ラベル付与フロー（ステップ6） |
+| 5.1-5.8 | YAML設定のカスタマイズ | Configuration Loader | `loadConfig(repoPath: string, token: string): ResultAsync<LabelerConfig, Error>` | ラベル付与フロー（ステップ2-3） |
+| 6.1-6.8 | GitHub Actions統合とエラーハンドリング | Action Main, Label Applicator, Summary Generator | `main(): Promise<void>`, `applyLabels(...): ResultAsync<LabelUpdate, Error>` | 全体フロー |
+| 7.1-7.7 | コアロジック再利用と型安全性 | File Analyzer（既存モジュール再利用） | `analyzeFiles(...)`, `isExcluded(...)`, `Result<T, E>` | ラベル付与フロー（ステップ4） |
+| 8.1-8.10 | テスト要件（90%カバレッジ） | 全コンポーネント（ユニット・統合テスト） | - | - |
+| 9.1-9.5 | 非機能要件（冪等性・性能・運用） | Label Applicator（冪等性）、API Rate Limiter（性能） | - | エラーハンドリングフロー |
 
 ## コンポーネントとインターフェース
 
@@ -977,7 +977,7 @@ interface SummaryGeneratorService {
 ### メトリクス
 
 | 項目 | 値 |
-|-----|---|
+| ----- | --- |
 | 総追加行数 | 1,234 行 |
 | 変更ファイル数 | 45 ファイル |
 | 除外ファイル数 | 12 ファイル |
@@ -1105,20 +1105,20 @@ LabelDecisions (1) ---references---> (0..*) LabelReasoning
 
 **属性と型**:
 
-| エンティティ   | 属性           | 型               | 制約                            |
+| エンティティ | 属性 | 型 | 制約 |
 | -------------- | -------------- | ---------------- | ------------------------------- |
-| LabelerConfig  | size           | SizeConfig       | 必須                            |
-| LabelerConfig  | complexity     | ComplexityConfig | 必須                            |
-| LabelerConfig  | categories     | CategoryConfig[] | 0個以上                         |
-| LabelerConfig  | risk           | RiskConfig       | 必須                            |
-| FileMetrics    | filename       | string           | 一意キー                        |
-| FileMetrics    | size           | number           | >= 0                            |
-| FileMetrics    | lines          | number           | >= 0                            |
-| FileMetrics    | additions      | number           | >= 0                            |
-| FileComplexity | filename       | string           | 一意キー                        |
-| FileComplexity | complexity     | number           | >= 0                            |
-| LabelDecisions | labelsToAdd    | string[]         | 重複なし                        |
-| LabelDecisions | labelsToRemove | string[]         | 重複なし、labelsToAddと交差なし |
+| LabelerConfig | size | SizeConfig | 必須 |
+| LabelerConfig | complexity | ComplexityConfig | 必須 |
+| LabelerConfig | categories | CategoryConfig[] | 0個以上 |
+| LabelerConfig | risk | RiskConfig | 必須 |
+| FileMetrics | filename | string | 一意キー |
+| FileMetrics | size | number | >= 0 |
+| FileMetrics | lines | number | >= 0 |
+| FileMetrics | additions | number | >= 0 |
+| FileComplexity | filename | string | 一意キー |
+| FileComplexity | complexity | number | >= 0 |
+| LabelDecisions | labelsToAdd | string[] | 重複なし |
+| LabelDecisions | labelsToRemove | string[] | 重複なし、labelsToAddと交差なし |
 
 **参照整合性ルール**:
 
@@ -1229,15 +1229,15 @@ interface FileSystemError {
 
 **リカバリーメカニズム**:
 
-| エラー型                               | リカバリー戦略                                       | 理由                           |
+| エラー型 | リカバリー戦略 | 理由 |
 | -------------------------------------- | ---------------------------------------------------- | ------------------------------ |
-| ConfigurationError                     | デフォルト設定へフォールバック                       | 設定ファイルなしでも動作すべき |
-| GitHubAPIError (404: 設定ファイル)     | デフォルト設定を使用                                 | 設定ファイルはオプショナル     |
-| GitHubAPIError (403: 権限不足)         | ラベル操作をスキップし、Summaryに警告出力            | フォークPRでは書き込み権限なし |
-| GitHubAPIError (429: レート制限)       | 指数バックオフでリトライ（最大3回）                  | 一時的な制限                   |
-| ComplexityAnalysisError (個別ファイル) | 警告ログして該当ファイルをスキップ、他ファイルは継続 | 部分的な失敗を許容             |
-| ComplexityAnalysisError (全ファイル)   | 複雑度ラベルなしで継続                               | 複雑度は補完的機能             |
-| FileSystemError                        | エラー終了（critical）                               | ファイルシステム不整合は致命的 |
+| ConfigurationError | デフォルト設定へフォールバック | 設定ファイルなしでも動作すべき |
+| GitHubAPIError (404: 設定ファイル) | デフォルト設定を使用 | 設定ファイルはオプショナル |
+| GitHubAPIError (403: 権限不足) | ラベル操作をスキップし、Summaryに警告出力 | フォークPRでは書き込み権限なし |
+| GitHubAPIError (429: レート制限) | 指数バックオフでリトライ（最大3回） | 一時的な制限 |
+| ComplexityAnalysisError (個別ファイル) | 警告ログして該当ファイルをスキップ、他ファイルは継続 | 部分的な失敗を許容 |
+| ComplexityAnalysisError (全ファイル) | 複雑度ラベルなしで継続 | 複雑度は補完的機能 |
+| FileSystemError | エラー終了（critical） | ファイルシステム不整合は致命的 |
 
 ### エラーカテゴリと応答
 
@@ -1518,13 +1518,13 @@ function sanitizeLabelerConfig(config: unknown): Result<LabelerConfig, Configura
 
 ### ターゲットメトリクスと測定戦略
 
-| メトリクス                           | 目標値      | 測定方法                               |
+| メトリクス | 目標値 | 測定方法 |
 | ------------------------------------ | ----------- | -------------------------------------- |
-| 総実行時間（小規模PR < 50ファイル）  | < 30秒      | GitHub Actionsログのタイムスタンプ差分 |
-| 総実行時間（大規模PR > 200ファイル） | < 120秒     | 同上                                   |
-| GitHub API呼び出し数                 | < 50回/実行 | カウンター変数で集計、Summary出力      |
-| メモリ使用量ピーク                   | < 512MB     | `process.memoryUsage().heapUsed`       |
-| 複雑度計算時間（単一ファイル）       | < 500ms     | `console.time()`/`console.timeEnd()`   |
+| 総実行時間（小規模PR < 50ファイル） | < 30秒 | GitHub Actionsログのタイムスタンプ差分 |
+| 総実行時間（大規模PR > 200ファイル） | < 120秒 | 同上 |
+| GitHub API呼び出し数 | < 50回/実行 | カウンター変数で集計、Summary出力 |
+| メモリ使用量ピーク | < 512MB | `process.memoryUsage().heapUsed` |
+| 複雑度計算時間（単一ファイル） | < 500ms | `console.time()`/`console.timeEnd()` |
 
 ### スケーリングアプローチ
 

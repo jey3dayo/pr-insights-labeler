@@ -78,15 +78,15 @@ graph TB
 
 ## 要件トレーサビリティ
 
-| 要件    | 要件概要                          | コンポーネント                            | インターフェース                                  | 実装ファイル                                                                          |
+| 要件 | 要件概要 | コンポーネント | インターフェース | 実装ファイル |
 | ------- | --------------------------------- | ----------------------------------------- | ------------------------------------------------- | ------------------------------------------------------------------------------------- |
-| 1.1     | action.ymlから`apply_labels`削除  | Input Definition                          | `action.yml` inputs                               | `action.yml`                                                                          |
+| 1.1 | action.ymlから`apply_labels`削除 | Input Definition | `action.yml` inputs | `action.yml` |
 | 1.2-1.6 | `applyLabels`プロパティ・参照削除 | Input Mapper, Label Applicator, Main Flow | `Config`, `mapActionInputsToConfig`, メインフロー | `src/input-mapper.ts`, `src/label-applicator.ts`, `src/index.ts`, `src/actions-io.ts` |
-| 2.1-2.2 | 複雑度機能デフォルトOFF           | Input Definition, Input Mapper            | `action.yml`, `Config`                            | `action.yml`, `src/input-mapper.ts`                                                   |
-| 3.1-3.3 | 複雑度閾値緩和                    | Input Definition, Input Mapper            | `action.yml`, `parseComplexityThresholdsV2`       | `action.yml`, `src/input-mapper.ts`, `src/actions-io.ts`                              |
-| 4.1-4.5 | テスト更新                        | Test Suite                                | `__tests__/*.test.ts`                             | `__tests__/input-mapper.test.ts`, `__tests__/label-applicator.test.ts`, 他            |
-| 5.1-5.7 | ドキュメント更新                  | Documentation                             | README, docs, CHANGELOG                           | `README.md`, `docs/configuration.md`, `CHANGELOG.md`                                  |
-| 6.1-6.6 | 既存機能保全                      | All Components                            | 個別`*_enabled`フラグ                             | 全ソースコード                                                                        |
+| 2.1-2.2 | 複雑度機能デフォルトOFF | Input Definition, Input Mapper | `action.yml`, `Config` | `action.yml`, `src/input-mapper.ts` |
+| 3.1-3.3 | 複雑度閾値緩和 | Input Definition, Input Mapper | `action.yml`, `parseComplexityThresholdsV2` | `action.yml`, `src/input-mapper.ts`, `src/actions-io.ts` |
+| 4.1-4.5 | テスト更新 | Test Suite | `__tests__/*.test.ts` | `__tests__/input-mapper.test.ts`, `__tests__/label-applicator.test.ts`, 他 |
+| 5.1-5.7 | ドキュメント更新 | Documentation | README, docs, CHANGELOG | `README.md`, `docs/configuration.md`, `CHANGELOG.md` |
+| 6.1-6.6 | 既存機能保全 | All Components | 個別`*_enabled`フラグ | 全ソースコード |
 
 ## コンポーネントと設計
 
