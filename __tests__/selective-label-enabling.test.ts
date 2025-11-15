@@ -5,9 +5,13 @@
 
 import { describe, expect, it } from 'vitest';
 
-import { parseBooleanStrict, parseComplexityThresholdsV2, parseSizeThresholdsV2 } from '../src/parsers/action-input-parsers';
 import type { LabelerConfig } from '../src/labeler-types';
 import { DEFAULT_LABELER_CONFIG } from '../src/labeler-types';
+import {
+  parseBooleanStrict,
+  parseComplexityThresholdsV2,
+  parseSizeThresholdsV2,
+} from '../src/parsers/action-input-parsers';
 
 describe('Selective Label Enabling - Type Definitions', () => {
   describe('LabelerConfig type structure', () => {

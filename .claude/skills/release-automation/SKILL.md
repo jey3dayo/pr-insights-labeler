@@ -28,25 +28,27 @@ Before starting the release:
 
 1. **Check working tree status**
 
-   ```bash
-   git status
-   ```
+```bash
+git status
+```
 
-   Ensure no uncommitted changes exist.
+Ensure no uncommitted changes exist.
 
-2. **Verify current branch**
+1. **Verify current branch**
 
-   ```bash
-   git branch --show-current
-   ```
+```bash
+git branch --show-current
+```
 
-   Must be on `main` branch.
+Must be on `main` branch.
 
-3. **Pull latest changes**
-   ```bash
-   git pull origin main
-   ```
-   Sync with remote repository.
+1. **Pull latest changes**
+
+```bash
+git pull origin main
+```
+
+Sync with remote repository.
 
 ### 2. Automated Release Script
 
@@ -138,16 +140,17 @@ The script automatically detects breaking changes from git commits:
 
 - **BREAKING CHANGE: footer** (Conventional Commits)
 
-  ```
-  feat: new API endpoint
+```
+feat: new API endpoint
 
-  BREAKING CHANGE: Removed deprecated /old-endpoint
-  ```
+BREAKING CHANGE: Removed deprecated /old-endpoint
+```
 
 - **! notation** (feat!, fix!, etc.)
-  ```
-  feat!: change default configuration format
-  ```
+
+```
+feat!: change default configuration format
+```
 
 When detected, breaking changes are prominently displayed at the top of release notes.
 
@@ -210,12 +213,12 @@ gh release create v1.8.1 \
 
 The script follows Conventional Commits for changelog categorization:
 
-| Commit Prefix               | Category      | Example                      |
-| --------------------------- | ------------- | ---------------------------- |
-| `feat:`, `feat(*)`          | ✨ Added      | `feat: add new label type`   |
-| `fix:`, `fix(*)`            | 🐛 Fixed      | `fix: resolve parsing error` |
-| `chore:`, `docs:`, `style:` | 🔄 Changed    | `chore: update dependencies` |
-| Other                       | Other Changes | `improve performance`        |
+| Commit Prefix | Category | Example |
+| ------------- | -------- | ------- |
+| `feat:`, `feat(*)` | ✨ Added | `feat: add new label type` |
+| `fix:`, `fix(*)` | 🐛 Fixed | `fix: resolve parsing error` |
+| `chore:`, `docs:`, `style:` | 🔄 Changed | `chore: update dependencies` |
+| Other | Other Changes | `improve performance` |
 
 **PR number extraction**: Automatically extracts `(#123)` from commit messages.
 
