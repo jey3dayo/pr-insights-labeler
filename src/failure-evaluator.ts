@@ -4,7 +4,8 @@
 
 import type { ViolationDetail } from './errors/index.js';
 import { t } from './i18n.js';
-import type { Config, SizeThresholdsV2 } from './input-mapper.js';
+import type { Config } from './input-mapper.js';
+import type { SizeThresholds } from './parsers/action-input-parsers.js';
 import { calculateSizeCategory, compareSizeThreshold } from './size-comparison.js';
 
 /**
@@ -23,7 +24,7 @@ export interface FailureEvaluationInput {
     totalAdditions: number;
     excludedAdditions: number;
   };
-  sizeThresholds: SizeThresholdsV2;
+  sizeThresholds: SizeThresholds;
 }
 
 /**

@@ -13,6 +13,11 @@ module.exports = tseslint.config(
   // TypeScript ESLint推奨設定
   ...tseslint.configs.recommended,
 
+  // Ignore generated artifacts
+  {
+    ignores: ['dist/**'],
+  },
+
   // Prettier設定（フォーマット競合を無効化）
   prettierConfig,
 

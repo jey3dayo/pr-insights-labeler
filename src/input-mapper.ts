@@ -8,7 +8,7 @@ import type { ActionInputs } from './actions-io';
 import type { ConfigurationError, ParseError } from './errors/index.js';
 import { normalizeActionInputStrings, type NormalizedActionInputs } from './input/input-normalizer.js';
 
-export type { SizeThresholds, SizeThresholdsV2 } from './input/input-normalizer.js';
+export type { SizeThresholds } from './input/input-normalizer.js';
 export {
   parseBoolean,
   parseBooleanStrict,
@@ -16,7 +16,6 @@ export {
   parseComplexityThresholdsV2,
   parseExcludePatterns,
   parseSizeThresholds,
-  parseSizeThresholdsV2,
 } from './input/input-normalizer.js';
 
 /**

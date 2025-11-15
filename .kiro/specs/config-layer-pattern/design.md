@@ -183,7 +183,7 @@ export interface ParsedInputs {
   riskEnabled: boolean;
 
   // PR Insights Labeler - 閾値（型安全なオブジェクト）
-  sizeThresholdsV2: SizeThresholds;
+  sizeThresholds: SizeThresholds;
   complexityThresholdsV2: ComplexityThresholds;
 
   // その他のフィールド
@@ -227,7 +227,7 @@ export function parseActionInputs(): Result<ParsedInputs, ConfigurationError | P
   }
 
   // Size thresholds (JSON parse + monotonicity validation)
-  const sizeThresholdsResult = parseSizeThresholdsV2(
+  const sizeThresholdsResult = parseSizeThresholds(
     core.getInput('size_thresholds') || '{"small": 100, "medium": 500, "large": 1000}'
   );
   if (sizeThresholdsResult.isErr()) {
@@ -241,7 +241,7 @@ export function parseActionInputs(): Result<ParsedInputs, ConfigurationError | P
     githubToken,
     fileSizeLimit: fileSizeLimitResult.value,
     sizeEnabled: sizeEnabledResult.value,
-    sizeThresholdsV2: sizeThresholdsResult.value,
+    sizeThresholds: sizeThresholdsResult.value,
     // ... 他のフィールド
   });
 }
@@ -324,7 +324,7 @@ export function buildCompleteConfig(
 
     // ParsedInputs から型安全に取得（P0修正: 既にパース済み）
     sizeEnabled: parsedInputs.sizeEnabled,
-    sizeThresholdsV2: parsedInputs.sizeThresholdsV2,
+    sizeThresholds: parsedInputs.sizeThresholds,
     complexityEnabled: parsedInputs.complexityEnabled,
     complexityThresholdsV2: parsedInputs.complexityThresholdsV2,
     categoryEnabled: parsedInputs.categoryEnabled,
@@ -384,7 +384,7 @@ export interface CompleteConfig {
   // 既存の Config インターフェースの全フィールド
   // (src/input-mapper.ts の Config interface を継承)
   sizeEnabled: boolean;
-  sizeThresholdsV2: SizeThresholds;
+  sizeThresholds: SizeThresholds;
   complexityEnabled: boolean;
   complexityThresholdsV2: ComplexityThresholds;
   categoryEnabled: boolean;
@@ -566,7 +566,7 @@ export interface ParsedInputs {
   riskEnabled: boolean;
 
   /** PR Insights Labeler - 閾値（型安全なオブジェクト） */
-  sizeThresholdsV2: SizeThresholds;
+  sizeThresholds: SizeThresholds;
   complexityThresholdsV2: ComplexityThresholds;
 
   // ... 他のフィールド
@@ -586,7 +586,7 @@ export interface CompleteConfig {
 
   // 既存の Config インターフェースの全フィールドを含む
   sizeEnabled: boolean;
-  sizeThresholdsV2: SizeThresholds;
+  sizeThresholds: SizeThresholds;
   complexityEnabled: boolean;
   complexityThresholdsV2: ComplexityThresholds;
   categoryEnabled: boolean;

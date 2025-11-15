@@ -2,7 +2,7 @@
  * Size comparison utilities for PR size threshold evaluation
  */
 
-import type { SizeThresholdsV2 } from './input-mapper.js';
+import type { SizeThresholds } from './parsers/action-input-parsers.js';
 import { calculateSizeLabel } from './utils/size-label-utils.js';
 
 /**
@@ -68,6 +68,6 @@ export function compareSizeThreshold(appliedSize: string, threshold: string): bo
  * calculateSizeCategory(150, { small: 200, medium: 500, large: 1000, xlarge: 3000 }) // "size/small"
  * calculateSizeCategory(600, { small: 200, medium: 500, large: 1000, xlarge: 3000 }) // "size/medium"
  */
-export function calculateSizeCategory(totalAdditions: number, thresholds: SizeThresholdsV2): string {
+export function calculateSizeCategory(totalAdditions: number, thresholds: SizeThresholds): string {
   return calculateSizeLabel(totalAdditions, thresholds);
 }

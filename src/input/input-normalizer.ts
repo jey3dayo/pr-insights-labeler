@@ -4,21 +4,11 @@ import type { ActionInputs } from '../actions-io';
 import type { ConfigurationError, ParseError } from '../errors/index.js';
 import { createConfigurationError, createParseError } from '../errors/index.js';
 import { parseSize } from '../parsers/size-parser.js';
-import { hasProperty, isObject } from '../utils/type-guards.js';
 
 /**
- * Size threshold configuration (v0.x format: S/M/L with additions + files)
+ * Size threshold configuration (small/medium/large/xlarge with additions only)
  */
 export interface SizeThresholds {
-  S: { additions: number; files: number };
-  M: { additions: number; files: number };
-  L: { additions: number; files: number };
-}
-
-/**
- * Size threshold configuration (v2 format: small/medium/large/xlarge with additions only)
- */
-export interface SizeThresholdsV2 {
   small: number;
   medium: number;
   large: number;
@@ -35,7 +25,7 @@ export interface NormalizedActionInputs {
   prFilesLimit: number;
   autoRemoveLabels: boolean;
   sizeEnabled: boolean;
-  sizeThresholdsV2: SizeThresholdsV2;
+  sizeThresholds: SizeThresholds;
   complexityEnabled: boolean;
   complexityThresholdsV2: { medium: number; high: number };
   categoryEnabled: boolean;
@@ -117,68 +107,7 @@ export function parseExcludePatterns(value: string): string[] {
   return [...new Set(patterns)];
 }
 
-function isSizeThresholds(value: unknown): value is SizeThresholds {
-  if (!isObject(value)) {
-    return false;
-  }
-
-  const sizes = ['S', 'M', 'L'] as const;
-
-  for (const size of sizes) {
-    if (!hasProperty(value, size)) {
-      return false;
-    }
-    const sizeObj = value[size];
-    if (!isObject(sizeObj)) {
-      return false;
-    }
-    if (!hasProperty(sizeObj, 'additions') || !hasProperty(sizeObj, 'files')) {
-      return false;
-    }
-    if (typeof sizeObj.additions !== 'number' || typeof sizeObj.files !== 'number') {
-      return false;
-    }
-  }
-
-  return true;
-}
-
 export function parseSizeThresholds(value: string): Result<SizeThresholds, ParseError> {
-  try {
-    const parsed = JSON.parse(value);
-
-    if (!parsed.S || !parsed.M || !parsed.L) {
-      return err(createParseError(value, 'Missing required size thresholds (S, M, L)'));
-    }
-
-    const sizes = ['S', 'M', 'L'] as const;
-    for (const size of sizes) {
-      if (typeof parsed[size].additions !== 'number' || typeof parsed[size].files !== 'number') {
-        return err(createParseError(value, `Invalid threshold structure for size ${size}`));
-      }
-      if (parsed[size].additions < 0 || parsed[size].files < 0) {
-        return err(createParseError(value, `Threshold values for size ${size} must be non-negative`));
-      }
-    }
-
-    if (parsed.S.additions > parsed.M.additions || parsed.M.additions > parsed.L.additions) {
-      return err(createParseError(value, 'Size thresholds must be monotonic (S ≤ M ≤ L for additions)'));
-    }
-    if (parsed.S.files > parsed.M.files || parsed.M.files > parsed.L.files) {
-      return err(createParseError(value, 'Size thresholds must be monotonic (S ≤ M ≤ L for files)'));
-    }
-
-    if (!isSizeThresholds(parsed)) {
-      return err(createParseError(value, 'Invalid size thresholds structure'));
-    }
-
-    return ok(parsed);
-  } catch (_error) {
-    return err(createParseError(value, 'Invalid JSON for size thresholds'));
-  }
-}
-
-export function parseSizeThresholdsV2(value: string): Result<SizeThresholdsV2, ParseError> {
   try {
     const parsed = JSON.parse(value);
 
@@ -294,9 +223,9 @@ export function normalizeActionInputStrings(
     return err(riskEnabledResult.error);
   }
 
-  const sizeThresholdsV2Result = parseSizeThresholdsV2(inputs.size_thresholds);
-  if (sizeThresholdsV2Result.isErr()) {
-    return err(sizeThresholdsV2Result.error);
+  const sizeThresholdsResult = parseSizeThresholds(inputs.size_thresholds);
+  if (sizeThresholdsResult.isErr()) {
+    return err(sizeThresholdsResult.error);
   }
 
   const complexityThresholdsV2Result = parseComplexityThresholdsV2(inputs.complexity_thresholds);
@@ -346,7 +275,7 @@ export function normalizeActionInputStrings(
     prFilesLimit,
     autoRemoveLabels: parseBoolean(inputs.auto_remove_labels),
     sizeEnabled: sizeEnabledResult.value,
-    sizeThresholdsV2: sizeThresholdsV2Result.value,
+    sizeThresholds: sizeThresholdsResult.value,
     complexityEnabled: complexityEnabledResult.value,
     complexityThresholdsV2: complexityThresholdsV2Result.value,
     categoryEnabled: categoryEnabledResult.value,

@@ -28,27 +28,27 @@ Before starting the release:
 
 1. **Check working tree status**
 
-   ```bash
-   git status
-   ```
+```bash
+git status
+```
 
-   Ensure no uncommitted changes exist.
+Ensure no uncommitted changes exist.
 
-2. **Verify current branch**
+1. **Verify current branch**
 
-   ```bash
-   git branch --show-current
-   ```
+```bash
+git branch --show-current
+```
 
-   Must be on `main` branch.
+Must be on `main` branch.
 
-3. **Pull latest changes**
+1. **Pull latest changes**
 
-   ```bash
-   git pull origin main
-   ```
+```bash
+git pull origin main
+```
 
-   Sync with remote repository.
+Sync with remote repository.
 
 ### 2. Automated Release Script
 
@@ -159,6 +159,8 @@ When detected, breaking changes are prominently displayed at the top of release 
 If automated script cannot be used, follow these steps:
 
 ### Step 1: Version Update
+
+Run the following commands to bump the version:
 
 ```bash
 # Update package.json version
