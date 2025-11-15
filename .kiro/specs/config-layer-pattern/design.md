@@ -664,14 +664,14 @@ LanguageCode: 'ja'
 
 ### 6.2 Test Cases
 
-| Action Input | Labeler Config | Environment | Expected | Source                         |
+| Action Input | Labeler Config | Environment | Expected | Source |
 | ------------ | -------------- | ----------- | -------- | ------------------------------ |
-| `undefined`  | `undefined`    | `undefined` | `'en'`   | default                        |
-| `undefined`  | `undefined`    | `'ja'`      | `'ja'`   | environment                    |
-| `undefined`  | `'ja'`         | `'en'`      | `'ja'`   | labeler-config                 |
-| `'en'`       | `'ja'`         | `'ja'`      | `'en'`   | action-input                   |
-| `'ja-JP'`    | `'en'`         | `'en'`      | `'ja'`   | action-input (normalized)      |
-| `'fr'`       | `'en'`         | `'en'`      | `'en'`   | action-input (normalized/warn) |
+| `undefined` | `undefined` | `undefined` | `'en'` | default |
+| `undefined` | `undefined` | `'ja'` | `'ja'` | environment |
+| `undefined` | `'ja'` | `'en'` | `'ja'` | labeler-config |
+| `'en'` | `'ja'` | `'ja'` | `'en'` | action-input |
+| `'ja-JP'` | `'en'` | `'en'` | `'ja'` | action-input (normalized) |
+| `'fr'` | `'en'` | `'en'` | `'en'` | action-input (normalized/warn) |
 
 ## 7. Migration Strategy
 
@@ -911,18 +911,18 @@ describe('Configuration Integration', () => {
 
 ### 10.1 Technical Risks
 
-| Risk               | Impact | Mitigation                                |
+| Risk | Impact | Mitigation |
 | ------------------ | ------ | ----------------------------------------- |
-| テストの破壊       | High   | 段階的な移行、既存テストを先に更新        |
-| 型エラー           | Medium | strict mode でコンパイル、段階的な修正    |
-| パフォーマンス低下 | Low    | 設定構築は1回のみ、オーバーヘッド無視可能 |
+| テストの破壊 | High | 段階的な移行、既存テストを先に更新 |
+| 型エラー | Medium | strict mode でコンパイル、段階的な修正 |
+| パフォーマンス低下 | Low | 設定構築は1回のみ、オーバーヘッド無視可能 |
 
 ### 10.2 Integration Risks
 
-| Risk                   | Impact | Mitigation                      |
+| Risk | Impact | Mitigation |
 | ---------------------- | ------ | ------------------------------- |
-| LabelerConfig との統合 | Medium | 既存の loadConfig() を再利用    |
-| 既存機能への影響       | Low    | CompleteConfig は Config の拡張 |
+| LabelerConfig との統合 | Medium | 既存の loadConfig() を再利用 |
+| 既存機能への影響 | Low | CompleteConfig は Config の拡張 |
 
 ## 11. Open Questions
 

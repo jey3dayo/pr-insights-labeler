@@ -189,18 +189,18 @@ flowchart LR
 
 ## Requirements Traceability
 
-| Requirement | Requirement Summary      | Components                            | Interfaces                                                         | Flows                        |
+| Requirement | Requirement Summary | Components | Interfaces | Flows |
 | ----------- | ------------------------ | ------------------------------------- | ------------------------------------------------------------------ | ---------------------------- |
-| 1.1-1.3     | 新規input定義            | ActionInputs, Config, action.yml      | `fail_on_large_files`, `fail_on_too_many_files`, `fail_on_pr_size` | Input処理フロー              |
-| 1.4-1.5     | 互換モード維持           | mapActionInputsToConfig               | `fail_on_violation` (deprecated)                                   | 互換モード処理フロー         |
-| 2.1-2.3     | Input検証とマッピング    | mapActionInputsToConfig, parseBoolean | Config型定義                                                       | Input → Config変換           |
-| 2.4         | size_enabled依存チェック | mapActionInputsToConfig               | ConfigurationError                                                 | バリデーションフロー         |
-| 3.1         | ラベル一覧取得           | getCurrentPRLabels                    | Octokit API                                                        | 失敗判定フロー（Sequence図） |
-| 3.2-3.4     | 失敗条件評価             | evaluateFailureConditions             | ラベル + violations → failures                                     | 失敗判定のデータフロー       |
-| 3.5         | 失敗メッセージ結合       | evaluateFailureConditions             | `failures.join(', ')`                                              | 失敗判定フロー               |
-| 3.8         | ラベル非依存動作         | evaluateFailureConditions             | violations fallback                                                | 失敗判定のデータフロー       |
-| 4.1-4.5     | サイズ閾値比較           | compareSizeThreshold                  | SIZE_ORDER定義                                                     | サイズ比較ロジック           |
-| 5.1-5.4     | i18n対応                 | logWarningI18n, t('failures', ...)    | `src/locales/{lang}/logs.json`                                     | ログ出力フロー               |
+| 1.1-1.3 | 新規input定義 | ActionInputs, Config, action.yml | `fail_on_large_files`, `fail_on_too_many_files`, `fail_on_pr_size` | Input処理フロー |
+| 1.4-1.5 | 互換モード維持 | mapActionInputsToConfig | `fail_on_violation` (deprecated) | 互換モード処理フロー |
+| 2.1-2.3 | Input検証とマッピング | mapActionInputsToConfig, parseBoolean | Config型定義 | Input → Config変換 |
+| 2.4 | size_enabled依存チェック | mapActionInputsToConfig | ConfigurationError | バリデーションフロー |
+| 3.1 | ラベル一覧取得 | getCurrentPRLabels | Octokit API | 失敗判定フロー（Sequence図） |
+| 3.2-3.4 | 失敗条件評価 | evaluateFailureConditions | ラベル + violations → failures | 失敗判定のデータフロー |
+| 3.5 | 失敗メッセージ結合 | evaluateFailureConditions | `failures.join(', ')` | 失敗判定フロー |
+| 3.8 | ラベル非依存動作 | evaluateFailureConditions | violations fallback | 失敗判定のデータフロー |
+| 4.1-4.5 | サイズ閾値比較 | compareSizeThreshold | SIZE_ORDER定義 | サイズ比較ロジック |
+| 5.1-5.4 | i18n対応 | logWarningI18n, t('failures', ...) | `src/locales/{lang}/logs.json` | ログ出力フロー |
 
 ## Components and Interfaces
 

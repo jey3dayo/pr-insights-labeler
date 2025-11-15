@@ -103,17 +103,17 @@ Link to GitHub's compare view showing all commits between releases.
 
 ## Emoji Guide
 
-| Emoji | Meaning          | Usage                         |
+| Emoji | Meaning | Usage |
 | ----- | ---------------- | ----------------------------- |
-| ⚠️    | Breaking Changes | Critical compatibility issues |
-| 🚀    | What's New       | Main changes section          |
-| ✨    | Added            | New features                  |
-| 🔄    | Changed          | Modifications                 |
-| 🐛    | Fixed            | Bug fixes                     |
-| 🗑️    | Removed          | Deprecated features           |
-| 📊    | Metrics          | Quality metrics               |
-| 🔗    | Links            | External references           |
-| 🎯    | Focus            | Key highlights                |
+| ⚠️ | Breaking Changes | Critical compatibility issues |
+| 🚀 | What's New | Main changes section |
+| ✨ | Added | New features |
+| 🔄 | Changed | Modifications |
+| 🐛 | Fixed | Bug fixes |
+| 🗑️ | Removed | Deprecated features |
+| 📊 | Metrics | Quality metrics |
+| 🔗 | Links | External references |
+| 🎯 | Focus | Key highlights |
 
 ## Writing Tips
 

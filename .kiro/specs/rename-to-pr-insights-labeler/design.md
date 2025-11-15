@@ -70,7 +70,7 @@
 ## Requirements Traceability
 
 | Requirement | 要件概要 | 対象ファイル | 実現方法 |
-|-------------|---------|-------------|---------|
+| ------------- | --------- | ------------- | --------- |
 | 1 | プロダクト名の統一的更新 | action.yml, package.json, README.md, README.ja.md, CHANGELOG.md, .kiro/steering/*.md, docs/*, src/*, src/locales/**/*.json, .github/workflows/*.yml | テキスト置換：「PR Labeler」→「PR Insights Labeler」（i18nメッセージ、ワークフローjob名を含む完全統一） |
 | 2 | バージョン管理とリリース準備 | package.json, CHANGELOG.md, dist/ | バージョン更新（1.7.1→1.8.0）、CHANGELOG追記、pnpm buildでdist/再生成 |
 | 3 | GitHub Actions Marketplace更新 | action.yml | name・descriptionフィールド更新、branding維持 |

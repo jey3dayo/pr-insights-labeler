@@ -213,15 +213,15 @@ flowchart TD
 
 ## Requirements Traceability
 
-| 要件    | 要件概要               | コンポーネント   | インターフェース           | フロー                   |
-| ------- | ---------------------- | ---------------- | -------------------------- | ------------------------ |
-| 1.1-1.5 | 基本メトリクス表示     | report-formatter | formatBasicMetrics()       | Summary出力フロー        |
-| 2.1-2.5 | 違反情報表示           | report-formatter | formatViolations()         | Summary出力フロー        |
-| 3.1-3.6 | ファイル詳細表示       | report-formatter | formatFileDetails()        | Summary出力フロー        |
-| 4.1-4.6 | マークダウン整形       | report-formatter | 各種format関数             | Summary出力フロー        |
-| 5.1-5.4 | GitHub Actions API統合 | actions-io       | writeSummaryWithAnalysis() | Summary出力フロー        |
-| 6.1-6.5 | 既存機能互換性         | index.ts         | run()                      | エラーハンドリングフロー |
-| 7.1-7.4 | 設定可能性             | actions-io       | writeSummaryWithAnalysis() | Summary出力フロー        |
+| 要件 | 要件概要 | コンポーネント | インターフェース | フロー |
+| ---- | -------- | ------------- | ---------------- | ------ |
+| 1.1-1.5 | 基本メトリクス表示 | report-formatter | formatBasicMetrics() | Summary出力フロー |
+| 2.1-2.5 | 違反情報表示 | report-formatter | formatViolations() | Summary出力フロー |
+| 3.1-3.6 | ファイル詳細表示 | report-formatter | formatFileDetails() | Summary出力フロー |
+| 4.1-4.6 | マークダウン整形 | report-formatter | 各種format関数 | Summary出力フロー |
+| 5.1-5.4 | GitHub Actions API統合 | actions-io | writeSummaryWithAnalysis() | Summary出力フロー |
+| 6.1-6.5 | 既存機能互換性 | index.ts | run() | エラーハンドリングフロー |
+| 7.1-7.4 | 設定可能性 | actions-io | writeSummaryWithAnalysis() | Summary出力フロー |
 
 ## Components and Interfaces
 

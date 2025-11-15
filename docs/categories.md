@@ -10,17 +10,17 @@ PR Insights Labeler applies category labels by analyzing changed file paths agai
 
 PR Insights Labeler provides 9 default categories:
 
-| Label                     | Description                   | Key Patterns                               | Display Name (ja) |
+| Label | Description | Key Patterns | Display Name (ja) |
 | ------------------------- | ----------------------------- | ------------------------------------------ | ----------------- |
-| `category/tests`          | Test files and test utilities | `**/*.test.ts`, `__tests__/**`             | テスト            |
-| `category/ci-cd`          | CI/CD workflow files          | `.github/workflows/**`                     | CI/CD             |
-| `category/documentation`  | Documentation files           | `docs/**`, `**/*.md`                       | ドキュメント      |
-| `category/config`         | Configuration files           | `*.config.js`, `tsconfig.json`             | 設定              |
-| `category/spec`           | Specification documents       | `.kiro/**`, `.specify/**`                  | 仕様              |
-| `category/dependencies`   | Dependency management files   | `package.json`, lock files                 | 依存関係          |
-| `category/feature`        | New feature implementations   | `src/features/**`, `src/components/**`     | 新機能            |
-| `category/infrastructure` | Infrastructure and DevOps     | `.github/**`, `Dockerfile`, `terraform/**` | インフラ          |
-| `category/security`       | Security-related changes      | `**/auth*/**`, `.env*`, `secrets/**`       | セキュリティ      |
+| `category/tests` | Test files and test utilities | `**/*.test.ts`, `__tests__/**` | テスト |
+| `category/ci-cd` | CI/CD workflow files | `.github/workflows/**` | CI/CD |
+| `category/documentation` | Documentation files | `docs/**`, `**/*.md` | ドキュメント |
+| `category/config` | Configuration files | `*.config.js`, `tsconfig.json` | 設定 |
+| `category/spec` | Specification documents | `.kiro/**`, `.specify/**` | 仕様 |
+| `category/dependencies` | Dependency management files | `package.json`, lock files | 依存関係 |
+| `category/feature` | New feature implementations | `src/features/**`, `src/components/**` | 新機能 |
+| `category/infrastructure` | Infrastructure and DevOps | `.github/**`, `Dockerfile`, `terraform/**` | インフラ |
+| `category/security` | Security-related changes | `**/auth*/**`, `.env*`, `secrets/**` | セキュリティ |
 
 ## Category Details
 

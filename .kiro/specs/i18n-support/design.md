@@ -354,20 +354,20 @@ flowchart TD
 
 ## Requirements Traceability
 
-| Requirement | Summary                | Components                                             | Interfaces                       | Flows               |
+| Requirement | Summary | Components | Interfaces | Flows |
 | ----------- | ---------------------- | ------------------------------------------------------ | -------------------------------- | ------------------- |
-| 1.1         | i18next採用            | i18n.ts                                                | initializeI18n()                 | Initialization Flow |
-| 1.2         | 翻訳リソース読み込み   | i18n.ts, locales/                                      | loadResources()                  | Initialization Flow |
-| 1.3         | 言語決定優先順位       | i18n.ts                                                | determineLanguage()              | Initialization Flow |
-| 1.4         | 英語フォールバック     | i18next                                                | t() with fallbackLng             | Resolution Flow     |
-| 1.7         | ディレクトリ構成       | locales/{lang}/{ns}.json                               | -                                | -                   |
-| 1.8         | 名前空間整理           | summary/errors/labels/logs/common                      | -                                | -                   |
-| 1.9         | キー命名規則           | locales/\*.json                                        | lowerCamel dot-separated         | -                   |
-| 2.1-2.5     | 出力メッセージ翻訳     | report-formatter.ts, actions-io.ts, comment-manager.ts | t(namespace:key)                 | -                   |
-| 2.6-2.7     | ロケール表記           | utils/formatting.ts                                    | formatNumber(), formatFileSize() | -                   |
-| 3.1-3.7     | 設定ファイル多言語対応 | config-loader.ts, label-decision-engine.ts             | getDisplayName()                 | -                   |
-| 4.1-4.5     | 後方互換性             | 全既存モジュール                                       | デフォルト英語, フォールバック   | -                   |
-| 5.1-5.9     | 開発者体験             | scripts/generate-i18n-types.ts, types/i18n.ts          | TranslationKeys, Namespace       | -                   |
+| 1.1 | i18next採用 | i18n.ts | initializeI18n() | Initialization Flow |
+| 1.2 | 翻訳リソース読み込み | i18n.ts, locales/ | loadResources() | Initialization Flow |
+| 1.3 | 言語決定優先順位 | i18n.ts | determineLanguage() | Initialization Flow |
+| 1.4 | 英語フォールバック | i18next | t() with fallbackLng | Resolution Flow |
+| 1.7 | ディレクトリ構成 | locales/{lang}/{ns}.json | - | - |
+| 1.8 | 名前空間整理 | summary/errors/labels/logs/common | - | - |
+| 1.9 | キー命名規則 | locales/\*.json | lowerCamel dot-separated | - |
+| 2.1-2.5 | 出力メッセージ翻訳 | report-formatter.ts, actions-io.ts, comment-manager.ts | t(namespace:key) | - |
+| 2.6-2.7 | ロケール表記 | utils/formatting.ts | formatNumber(), formatFileSize() | - |
+| 3.1-3.7 | 設定ファイル多言語対応 | config-loader.ts, label-decision-engine.ts | getDisplayName() | - |
+| 4.1-4.5 | 後方互換性 | 全既存モジュール | デフォルト英語, フォールバック | - |
+| 5.1-5.9 | 開発者体験 | scripts/generate-i18n-types.ts, types/i18n.ts | TranslationKeys, Namespace | - |
 
 ## Components and Interfaces
 
