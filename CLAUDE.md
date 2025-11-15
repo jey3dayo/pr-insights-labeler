@@ -73,7 +73,17 @@ pnpm build       # ビルド成功確認
 #### 2. プッシュとCI確認
 
 1. フィーチャーブランチにプッシュ
-2. PRを作成（`/create-pr` コマンドが使用可能）
+2. PRを作成（`/create-pr` または `gh pr create --base main --head <branch> --template ".github/pull_request_template.md" --fill` を推奨。`--template` で PR テンプレートを適用し、`--fill` で直近コミットからタイトル/本文を下書き）
+
+   ```bash
+   gh pr create \\
+     --base main \\
+     --head "$(git branch --show-current)" \\
+     --template ".github/pull_request_template.md" \\
+     --title "docs: <変更内容>" \\
+     --fill
+   ```
+
 3. **GitHub Actions ワークフローの完了を待機**
 4. **重要: すべてのCIチェックが成功するまで待つ**
    - ✅ Code Quality

@@ -86,6 +86,7 @@ Need deeper guidance? Check these guides:
 
 - 📖 [Configuration Guide](docs/configuration.md) - All input parameters and thresholds
 - 🔧 [Advanced Usage](docs/advanced-usage.md) - Fork PRs, strict mode, custom workflows
+- 🏷️ [Labeling Rules Quick Reference](docs/labeling-rules.md) - Snapshot of how each label is applied
 
 ## 🔒 Permissions
 
