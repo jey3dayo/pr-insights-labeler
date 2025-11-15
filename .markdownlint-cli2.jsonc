@@ -81,6 +81,7 @@
     "**/.git/**",
     "**/_*.md", // アンダースコアで始まるmarkdownファイルを除外
     "**/.codex/**",
-    "**/.kiro/settings/**"
+    "**/.kiro/settings/**",
+    "**/.serena/**"
   ]
 }
