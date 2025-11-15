@@ -129,15 +129,15 @@ graph TB
 
 ## 要件トレーサビリティ
 
-| 要件     | 要件概要                  | コンポーネント         | インターフェース                 | 実現方法                               |
+| 要件 | 要件概要 | コンポーネント | インターフェース | 実現方法 |
 | -------- | ------------------------- | ---------------------- | -------------------------------- | -------------------------------------- |
-| 1.1-1.10 | category/config追加       | DEFAULT_LABELER_CONFIG | CategoryConfig[]                 | 16パターンの追加                       |
-| 2.1-2.4  | category/spec追加         | DEFAULT_LABELER_CONFIG | CategoryConfig[]                 | 4パターンの追加                        |
-| 3.1-3.14 | category/dependencies追加 | DEFAULT_LABELER_CONFIG | CategoryConfig[]                 | 15パターンの追加（5言語対応）          |
-| 4.1      | category/components削除   | DEFAULT_LABELER_CONFIG | CategoryConfig[]                 | componentsエントリの削除               |
-| 5.1-5.4  | 加法的適用                | label-decision-engine  | namespace_policies               | 既存の`"category/*": "additive"`を維持 |
-| 6.1-6.4  | パターンマッチング正確性  | label-decision-engine  | decideCategoryLabels + minimatch | 既存ロジック維持（変更なし）           |
-| 7.1-7.4  | 後方互換性                | DEFAULT_LABELER_CONFIG | CategoryConfig[]                 | tests/ci-cd/documentationパターン維持  |
+| 1.1-1.10 | category/config追加 | DEFAULT_LABELER_CONFIG | CategoryConfig[] | 16パターンの追加 |
+| 2.1-2.4 | category/spec追加 | DEFAULT_LABELER_CONFIG | CategoryConfig[] | 4パターンの追加 |
+| 3.1-3.14 | category/dependencies追加 | DEFAULT_LABELER_CONFIG | CategoryConfig[] | 15パターンの追加（5言語対応） |
+| 4.1 | category/components削除 | DEFAULT_LABELER_CONFIG | CategoryConfig[] | componentsエントリの削除 |
+| 5.1-5.4 | 加法的適用 | label-decision-engine | namespace_policies | 既存の`"category/*": "additive"`を維持 |
+| 6.1-6.4 | パターンマッチング正確性 | label-decision-engine | decideCategoryLabels + minimatch | 既存ロジック維持（変更なし） |
+| 7.1-7.4 | 後方互換性 | DEFAULT_LABELER_CONFIG | CategoryConfig[] | tests/ci-cd/documentationパターン維持 |
 
 ## コンポーネントとインターフェース
 

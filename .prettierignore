@@ -41,6 +41,11 @@ yarn.lock
 # Markdown (selectively format)
 *.min.js
 *.min.css
+.github/RELEASE_TEMPLATE.md
+README.ja.md
+docs/categories.md
+docs/configuration.md
+docs/documentation-guidelines.md
 
 # Other
 licenses.txt

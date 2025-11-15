@@ -22,13 +22,13 @@ Complete reference for all input parameters, output variables, and configuration
 
 ### Basic Limits
 
-| Parameter            | Required | Default | Description                                                           |
+| Parameter | Required | Default | Description |
 | -------------------- | -------- | ------- | --------------------------------------------------------------------- |
-| `github_token`       | ✅       | -       | GitHub token for API access (`${{ secrets.GITHUB_TOKEN }}`)           |
-| `file_size_limit`    | ❌       | `100KB` | Maximum file size (e.g., `100KB`, `1.5MB`, `500000`)                  |
-| `file_lines_limit`   | ❌       | `500`   | Maximum lines per file (current file total lines, not diff additions) |
-| `pr_additions_limit` | ❌       | `5000`  | Maximum added lines for entire PR (diff-based)                        |
-| `pr_files_limit`     | ❌       | `50`    | Maximum number of files in PR (excluding removed files)               |
+| `github_token` | ✅ | - | GitHub token for API access (`${{ secrets.GITHUB_TOKEN }}`) |
+| `file_size_limit` | ❌ | `100KB` | Maximum file size (e.g., `100KB`, `1.5MB`, `500000`) |
+| `file_lines_limit` | ❌ | `500` | Maximum lines per file (current file total lines, not diff additions) |
+| `pr_additions_limit` | ❌ | `5000` | Maximum added lines for entire PR (diff-based) |
+| `pr_files_limit` | ❌ | `50` | Maximum number of files in PR (excluding removed files) |
 
 **Examples:**
 
@@ -44,13 +44,13 @@ Complete reference for all input parameters, output variables, and configuration
 
 ### Label Settings
 
-| Parameter                 | Required | Default                  | Description                                            |
+| Parameter | Required | Default | Description |
 | ------------------------- | -------- | ------------------------ | ------------------------------------------------------ |
-| `auto_remove_labels`      | ❌       | `true`                   | Remove labels when limits are no longer exceeded       |
-| `large_files_label`       | ❌       | `auto/large-files`       | Label for files exceeding size or line limits          |
-| `too_many_files_label`    | ❌       | `auto/too-many-files`    | Label for PRs with too many files                      |
-| `too_many_lines_label`    | ❌       | `auto/too-many-lines`    | Label for files exceeding line count limits            |
-| `excessive_changes_label` | ❌       | `auto/excessive-changes` | Label for PRs with excessive changes (total additions) |
+| `auto_remove_labels` | ❌ | `true` | Remove labels when limits are no longer exceeded |
+| `large_files_label` | ❌ | `auto/large-files` | Label for files exceeding size or line limits |
+| `too_many_files_label` | ❌ | `auto/too-many-files` | Label for PRs with too many files |
+| `too_many_lines_label` | ❌ | `auto/too-many-lines` | Label for files exceeding line count limits |
+| `excessive_changes_label` | ❌ | `auto/excessive-changes` | Label for PRs with excessive changes (total additions) |
 
 **Examples:**
 
@@ -66,14 +66,14 @@ Complete reference for all input parameters, output variables, and configuration
 
 Control which label types are applied (unified naming: `*_enabled` and `*_thresholds`).
 
-| Parameter               | Required | Default                              | Description                                         |
+| Parameter | Required | Default | Description |
 | ----------------------- | -------- | ------------------------------------ | --------------------------------------------------- |
-| `size_enabled`          | ❌       | `true`                               | Enable size labels (size/small, size/medium, etc.)  |
-| `size_thresholds`       | ❌       | `{"small": 200, "medium": 500, ...}` | Size label thresholds (JSON, additions-based)       |
-| `complexity_enabled`    | ❌       | `false`                              | Enable complexity labels (complexity/medium, high)  |
-| `complexity_thresholds` | ❌       | `{"medium": 15, "high": 30}`         | Complexity label thresholds (JSON)                  |
-| `category_enabled`      | ❌       | `true`                               | Enable category labels (category/tests, docs, etc.) |
-| `risk_enabled`          | ❌       | `true`                               | Enable risk labels (risk/high, risk/medium)         |
+| `size_enabled` | ❌ | `true` | Enable size labels (size/small, size/medium, etc.) |
+| `size_thresholds` | ❌ | `{"small": 200, "medium": 500, ...}` | Size label thresholds (JSON, additions-based) |
+| `complexity_enabled` | ❌ | `false` | Enable complexity labels (complexity/medium, high) |
+| `complexity_thresholds` | ❌ | `{"medium": 15, "high": 30}` | Complexity label thresholds (JSON) |
+| `category_enabled` | ❌ | `true` | Enable category labels (category/tests, docs, etc.) |
+| `risk_enabled` | ❌ | `true` | Enable risk labels (risk/high, risk/medium) |
 
 **Examples:**
 
@@ -103,14 +103,14 @@ Control which label types are applied (unified naming: `*_enabled` and `*_thresh
 
 ### Action Settings
 
-| Parameter                | Required | Default | Description                                                                                                       |
+| Parameter | Required | Default | Description |
 | ------------------------ | -------- | ------- | ----------------------------------------------------------------------------------------------------------------- |
-| `skip_draft_pr`          | ❌       | `true`  | Skip check for draft PRs                                                                                          |
-| `comment_on_pr`          | ❌       | `auto`  | Comment on PR (`auto`/`always`/`never`)                                                                           |
-| `enable_summary`         | ❌       | `true`  | Write PR metrics to GitHub Actions Summary                                                                        |
-| `fail_on_large_files`    | ❌       | `""`    | Fail workflow if large files are detected (labeled with `large_files_label` or `too_many_lines_label`)            |
-| `fail_on_too_many_files` | ❌       | `""`    | Fail workflow if too many files are detected (labeled with `too_many_files_label`)                                |
-| `fail_on_pr_size`        | ❌       | `""`    | Fail workflow if PR size exceeds threshold (`small`/`medium`/`large`/`xlarge`/`xxlarge`, empty string to disable) |
+| `skip_draft_pr` | ❌ | `true` | Skip check for draft PRs |
+| `comment_on_pr` | ❌ | `auto` | Comment on PR (`auto`/`always`/`never`) |
+| `enable_summary` | ❌ | `true` | Write PR metrics to GitHub Actions Summary |
+| `fail_on_large_files` | ❌ | `""` | Fail workflow if large files are detected (labeled with `large_files_label` or `too_many_lines_label`) |
+| `fail_on_too_many_files` | ❌ | `""` | Fail workflow if too many files are detected (labeled with `too_many_files_label`) |
+| `fail_on_pr_size` | ❌ | `""` | Fail workflow if PR size exceeds threshold (`small`/`medium`/`large`/`xlarge`/`xxlarge`, empty string to disable) |
 
 **Label-Based Workflow Failure Control:**
 
@@ -146,10 +146,10 @@ These parameters control workflow failures based on applied labels or actual vio
 
 ### Exclusion Settings
 
-| Parameter                     | Required | Default | Description                                                      |
+| Parameter | Required | Default | Description |
 | ----------------------------- | -------- | ------- | ---------------------------------------------------------------- |
-| `additional_exclude_patterns` | ❌       | -       | Additional file patterns to exclude (comma or newline separated) |
-| `use_default_excludes`        | ❌       | `true`  | Use default exclude patterns (node_modules, dist, etc.)          |
+| `additional_exclude_patterns` | ❌ | - | Additional file patterns to exclude (comma or newline separated) |
+| `use_default_excludes` | ❌ | `true` | Use default exclude patterns (node_modules, dist, etc.) |
 
 **Examples:**
 
@@ -165,11 +165,11 @@ These parameters control workflow failures based on applied labels or actual vio
 
 ### Directory-Based Labeling
 
-| Parameter                       | Required | Default                         | Description                                         |
+| Parameter | Required | Default | Description |
 | ------------------------------- | -------- | ------------------------------- | --------------------------------------------------- |
-| `enable_directory_labeling`     | ❌       | `false`                         | Enable Directory-Based Labeling feature             |
-| `directory_labeler_config_path` | ❌       | `.github/directory-labeler.yml` | Path to directory labeler configuration file        |
-| `max_labels`                    | ❌       | `10`                            | Maximum number of labels to apply (0 for unlimited) |
+| `enable_directory_labeling` | ❌ | `false` | Enable Directory-Based Labeling feature |
+| `directory_labeler_config_path` | ❌ | `.github/directory-labeler.yml` | Path to directory labeler configuration file |
+| `max_labels` | ❌ | `10` | Maximum number of labels to apply (0 for unlimited) |
 
 **Example:**
 
@@ -186,9 +186,9 @@ See [Advanced Usage Guide](advanced-usage.md#directory-based-labeling) for `.git
 
 ### Multi-language Support
 
-| Parameter  | Required | Default | Description                                         |
+| Parameter | Required | Default | Description |
 | ---------- | -------- | ------- | --------------------------------------------------- |
-| `language` | ❌       | `en`    | Language for output messages (en, ja, en-US, ja-JP) |
+| `language` | ❌ | `en` | Language for output messages (en, ja, en-US, ja-JP) |
 
 **Example:**
 
@@ -373,16 +373,16 @@ For large PRs (thousands of lines, hundreds of files), consider disabling or lim
 
 ## Output Variables
 
-| Variable             | Type   | Description                               | Example                                               |
+| Variable | Type | Description | Example |
 | -------------------- | ------ | ----------------------------------------- | ----------------------------------------------------- |
-| `large_files`        | string | JSON array of files exceeding limits      | `[{"file":"src/large.ts","actualValue":2000000,...}]` |
-| `pr_additions`       | string | Total lines added in PR (diff-based)      | `"150"`                                               |
-| `pr_files`           | string | Total number of files (excluding removed) | `"10"`                                                |
-| `exceeds_file_size`  | string | Whether any file exceeds size limit       | `"true"` / `"false"`                                  |
-| `exceeds_file_lines` | string | Whether any file exceeds line limit       | `"true"` / `"false"`                                  |
-| `exceeds_additions`  | string | Whether PR exceeds total additions limit  | `"true"` / `"false"`                                  |
-| `exceeds_file_count` | string | Whether PR exceeds file count limit       | `"true"` / `"false"`                                  |
-| `has_violations`     | string | Whether any violation exists              | `"true"` / `"false"`                                  |
+| `large_files` | string | JSON array of files exceeding limits | `[{"file":"src/large.ts","actualValue":2000000,...}]` |
+| `pr_additions` | string | Total lines added in PR (diff-based) | `"150"` |
+| `pr_files` | string | Total number of files (excluding removed) | `"10"` |
+| `exceeds_file_size` | string | Whether any file exceeds size limit | `"true"` / `"false"` |
+| `exceeds_file_lines` | string | Whether any file exceeds line limit | `"true"` / `"false"` |
+| `exceeds_additions` | string | Whether PR exceeds total additions limit | `"true"` / `"false"` |
+| `exceeds_file_count` | string | Whether PR exceeds file count limit | `"true"` / `"false"` |
+| `has_violations` | string | Whether any violation exists | `"true"` / `"false"` |
 
 **Usage Example:**
 
