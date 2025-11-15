@@ -6,10 +6,10 @@ import type { FileAnalysisError, ViolationDetail } from '../errors/index.js';
 import { ensureError } from '../errors/index.js';
 import { getDefaultExcludePatterns, isExcluded } from '../pattern-matcher';
 import type { AnalysisResult, FileMetrics } from '../types/analysis.js';
-import { getFileLineCount } from './line-counter.js';
-import { getFileSize } from './file-size-service.js';
-import type { AnalysisConfig, RepoContext } from './types.js';
 import { isBinaryFile } from './binary-detector.js';
+import { getFileSize } from './file-size-service.js';
+import { getFileLineCount } from './line-counter.js';
+import type { AnalysisConfig, RepoContext } from './types.js';
 
 interface InternalState {
   result: AnalysisResult;
@@ -40,11 +40,7 @@ function createInitialState(files: DiffFile[], config: AnalysisConfig): Internal
   };
 }
 
-function recordViolation(
-  list: ViolationDetail[],
-  violation: ViolationDetail,
-  message: string,
-): void {
+function recordViolation(list: ViolationDetail[], violation: ViolationDetail, message: string): void {
   list.push(violation);
   logWarning(message);
 }
@@ -170,9 +166,7 @@ export async function analyzeFiles(
 
   if (state.result.metrics.totalAdditions > config.maxAddedLines) {
     state.result.violations.exceedsAdditions = true;
-    logWarning(
-      `Total additions ${state.result.metrics.totalAdditions} exceeds limit ${config.maxAddedLines}`,
-    );
+    logWarning(`Total additions ${state.result.metrics.totalAdditions} exceeds limit ${config.maxAddedLines}`);
   }
 
   logInfo(
