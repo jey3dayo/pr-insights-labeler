@@ -27,36 +27,32 @@ const COMPLEXITY_FIELD = KNOWN_FIELD_NAMES.COMPLEXITY;
 const CATEGORIES_FIELD = KNOWN_FIELD_NAMES.CATEGORIES;
 const RISK_FIELD = KNOWN_FIELD_NAMES.RISK;
 
-type ThresholdKey<T extends Record<string, number>> = keyof T & string;
-
-interface ThresholdKeySpec<T extends Record<string, number>> {
-  key: ThresholdKey<T>;
+type ThresholdKeySpec<K extends string> = {
+  key: K;
   path: string;
-}
+};
 
-interface ThresholdComparisonSpec<T extends Record<string, number>> {
-  smaller: ThresholdKey<T>;
-  larger: ThresholdKey<T>;
+interface ThresholdComparisonSpec<K extends string> {
+  smaller: K;
+  larger: K;
   errorField: string;
   createMessage: (params: { smallerValue: number; largerValue: number }) => string;
 }
 
-function validateThresholdGroup<T extends Record<string, number>>(
+function validateThresholdGroup<K extends string>(
   thresholdsRaw: unknown,
   options: {
     fieldLabel: string;
-    keys: ThresholdKeySpec<T>[];
-    defaults: T;
-    comparisons: ThresholdComparisonSpec<T>[];
+    keys: ThresholdKeySpec<K>[];
+    defaults: Record<K, number>;
+    comparisons: ThresholdComparisonSpec<K>[];
   },
-): Result<T, ConfigurationError> {
+): Result<Record<K, number>, ConfigurationError> {
   if (!isRecord(thresholdsRaw)) {
-    return err(
-      createConfigurationError(options.fieldLabel, thresholdsRaw, `${options.fieldLabel} must be an object`),
-    );
+    return err(createConfigurationError(options.fieldLabel, thresholdsRaw, `${options.fieldLabel} must be an object`));
   }
 
-  const providedValues: Partial<Record<ThresholdKey<T>, number>> = {};
+  const providedValues: Partial<Record<K, number>> = {};
 
   for (const keySpec of options.keys) {
     const rawValue = thresholdsRaw[keySpec.key];
@@ -74,9 +70,12 @@ function validateThresholdGroup<T extends Record<string, number>>(
     providedValues[keySpec.key] = validated.value;
   }
 
-  const finalValues = {} as Record<ThresholdKey<T>, number>;
+  const finalValues: Record<K, number> = { ...options.defaults };
   for (const keySpec of options.keys) {
-    finalValues[keySpec.key] = providedValues[keySpec.key] ?? options.defaults[keySpec.key];
+    const providedValue = providedValues[keySpec.key];
+    if (providedValue !== undefined) {
+      finalValues[keySpec.key] = providedValue;
+    }
   }
 
   for (const comparison of options.comparisons) {
@@ -98,7 +97,7 @@ function validateThresholdGroup<T extends Record<string, number>>(
     }
   }
 
-  return ok(finalValues as T);
+  return ok(finalValues);
 }
 
 export function parseLanguageField(
