@@ -1,7 +1,7 @@
-# PR Insights Labeler - Recommended Configuration
+# PR Insights Labeler - Advanced Configuration
 #
-# This is a recommended configuration that includes both basic settings
-# and optional features (commented out). Uncomment optional features as needed.
+# Advanced configuration with optional features for customization.
+# Uncomment sections as needed for your use case.
 
 name: PR Insights Labeler
 
@@ -36,15 +36,13 @@ jobs:
           pr_files_limit: "50" # Maximum changed files
 
           # Label Control (Enable/Disable label types)
-          size_enabled: "true" # Enable size labels (size/small, size/medium, etc.)
-          category_enabled: "true" # Enable category labels (category/tests, category/docs, etc.)
-          risk_enabled: "true" # Enable risk labels (risk/high, risk/medium)
+          size_enabled: "true" # Enable size labels
+          category_enabled: "true" # Enable category labels
+          risk_enabled: "true" # Enable risk labels
           # complexity_enabled: "false" # Enable complexity labels (disabled by default)
 
-          # GitHub Actions Summary
+          # GitHub Actions Summary & Comments
           enable_summary: "true" # Publish metrics to GitHub Actions Summary
-
-          # PR Comments
           comment_on_pr: "auto" # Auto-detect when to comment (auto/always/never)
 
 
@@ -54,19 +52,61 @@ jobs:
           # Uncomment to customize size label thresholds
           # size_thresholds: '{"small": 100, "medium": 300, "large": 700, "xlarge": 2000}'
 
-          # Uncomment to customize complexity thresholds (requires complexity_enabled: "true")
-          # complexity_thresholds: '{"medium": 10, "high": 20}'
+          # Uncomment to enable and customize complexity thresholds
+          # complexity_enabled: "true"
+          # complexity_thresholds: '{"medium": 15, "high": 30}'
+
+          # ============================================
+          # Optional: File Exclusion Patterns
+          # ============================================
+          # Exclude specific files/directories from analysis
+          # Common use cases:
+          # - Generated code (protobuf, graphql, etc.)
+          # - Vendor/third-party code
+          # - Build artifacts
+          # - Test fixtures
+
+          # additional_exclude_patterns: |
+          #   **/*.generated.ts
+          #   **/*.pb.go
+          #   **/*.gen.go
+          #   **/graphql/generated/**
+          #   vendor/**
+          #   third_party/**
+          #   __snapshots__/**
+          #   test/fixtures/**
+
+          # Uncomment to disable default excludes (not recommended)
+          # By default, excludes node_modules, dist, build, etc.
+          # use_default_excludes: "false"
+
+          # ============================================
+          # Optional: Dependency File Handling
+          # ============================================
+          # Lock files and package manifests are excluded by default.
+          # If you want to include them in analysis, add custom patterns.
+
+          # Example: Include package.json changes in size calculation
+          # Note: This is NOT recommended for most projects
+          # use_default_excludes: "false"
+          # additional_exclude_patterns: |
+          #   node_modules/**
+          #   dist/**
+          #   build/**
+          #   # Exclude lock files but include package.json
+          #   package-lock.json
+          #   yarn.lock
+          #   pnpm-lock.yaml
 
           # ============================================
           # Optional: Workflow Quality Gates
           # ============================================
           # Fail workflow if violations are detected
-          # Useful for enforcing code quality standards
 
-          # Uncomment to fail if individual files exceed size/line limits
+          # Uncomment to fail if files exceed size/line limits
           # fail_on_large_files: "true"
 
-          # Uncomment to fail if too many files are changed
+          # Uncomment to fail if too many files changed
           # fail_on_too_many_files: "true"
 
           # Uncomment to fail if PR size exceeds threshold
@@ -77,6 +117,7 @@ jobs:
           # Optional: Label Customization
           # ============================================
           # Customize violation label names
+
           # large_files_label: "violations/large-files"
           # too_many_files_label: "violations/too-many-files"
           # too_many_lines_label: "violations/too-many-lines"
@@ -86,33 +127,10 @@ jobs:
           # auto_remove_labels: "true"
 
           # ============================================
-          # Optional: Directory-Based Labeling
-          # ============================================
-          # Apply custom labels based on file paths using glob patterns
-          # Requires: .github/directory-labeler.yml configuration file
-          # See: https://github.com/jey3dayo/pr-insights-labeler/blob/main/docs/advanced-usage.md#directory-based-labeling
-
-          # enable_directory_labeling: "true"
-          # directory_labeler_config_path: ".github/directory-labeler.yml"
-          # max_labels: "10"  # Maximum number of labels to apply (0 for unlimited)
-
-          # ============================================
-          # Optional: Advanced Exclusion Patterns
-          # ============================================
-          # Add custom patterns to exclude from analysis
-          # additional_exclude_patterns: |
-          #   **/*.generated.ts
-          #   **/*.gen.go
-          #   coverage/**
-          #   **/*.min.js
-
-          # Disable default exclude patterns (not recommended)
-          # use_default_excludes: "false"
-
-          # ============================================
           # Optional: Multi-language Support
           # ============================================
           # Set output language (en/ja)
+
           # language: "en"  # English (default)
           # language: "ja"  # Japanese
 
@@ -120,31 +138,30 @@ jobs:
           # Optional: Skip Draft PRs
           # ============================================
           # Skip labeling for draft PRs
+
           # skip_draft_pr: "true"  # Default: true
 # ============================================
-# Tips and Best Practices
+# Common Configuration Patterns
 # ============================================
 #
-# 1. Start Simple:
-#    Begin with the basic configuration and enable optional features as needed.
+# 1. Exclude Generated Code:
+#    Uncomment additional_exclude_patterns and add patterns for:
+#    - Protobuf: **/*.pb.go, **/*.pb.ts
+#    - GraphQL: **/graphql/generated/**
+#    - OpenAPI: **/openapi/generated/**
 #
-# 2. Customize Thresholds:
-#    Adjust size_thresholds based on your team's PR size preferences.
+# 2. Strict Mode (Mission-Critical Projects):
+#    Uncomment fail_on_large_files, fail_on_too_many_files
+#    Set fail_on_pr_size: "large"
+#    Set comment_on_pr: "always"
 #
-# 3. Enable Quality Gates Gradually:
-#    Start with fail_on_pr_size and add stricter checks over time.
+# 3. Monorepo with Multiple Teams:
+#    Use .github/pr-labeler.yml to configure category labels
+#    based on directory structure (e.g., packages/frontend, packages/backend)
 #
-# 4. Use Directory-Based Labeling:
-#    Create .github/directory-labeler.yml to automatically label PRs by area.
-#
-# 5. Localization:
-#    Set language: "ja" for Japanese output or use LANGUAGE env variable.
-#
-# 6. For Open Source Projects:
-#    Avoid strict quality gates (fail_on_*) to encourage contributions.
-#
-# 7. For Fork PRs:
-#    Use pull_request_target event. See examples/workflows/fork-friendly.yml
+# 4. Open Source Projects:
+#    Keep fail_on_* options disabled to avoid discouraging contributions
+#    Consider using pull_request_target for fork PRs
 #
 # ============================================
 # Related Documentation
@@ -152,4 +169,3 @@ jobs:
 #
 # Configuration Guide: https://github.com/jey3dayo/pr-insights-labeler/blob/main/docs/configuration.md
 # Advanced Usage: https://github.com/jey3dayo/pr-insights-labeler/blob/main/docs/advanced-usage.md
-# Example Workflows: https://github.com/jey3dayo/pr-insights-labeler/tree/main/examples/workflows
