@@ -1,233 +1,170 @@
 # Workflow Examples
 
-This directory contains example workflow configurations for PR Insights Labeler.
+Simple workflow configurations to get started with PR Insights Labeler.
 
 ## Available Examples
 
 ### 1. [basic.yml](basic.yml) - Basic Configuration
 
-**Use Case**: Quick start with minimal configuration
-
-**Features**:
-
-- ✅ All labels enabled (size, category, risk)
-- ✅ Default thresholds
-- ✅ GitHub Actions Summary
-- ✅ Auto-created labels
-
-**Setup**: Copy to `.github/workflows/pr-labeler.yml`
+**Quick start with default settings**
 
 ```bash
 cp examples/workflows/basic.yml .github/workflows/pr-labeler.yml
 ```
 
----
+**What you get:**
 
-### 2. [recommended.yml](recommended.yml) - Recommended Configuration ⭐
+- Size labels (size/small, size/medium, size/large, etc.)
+- Category labels (category/tests, category/docs, category/ci-cd, etc.)
+- Risk labels (risk/high, risk/medium)
+- GitHub Actions Summary with metrics
+- Auto-created labels
 
-**Use Case**: Production-ready configuration with optional features
-
-**Features**:
-
-- ✅ All basic features enabled
-- 💡 Optional features (commented out)
-- 💡 Workflow quality gates (commented out)
-- 💡 Directory-based labeling (commented out)
-- 💡 Multi-language support (commented out)
-- 📝 Detailed inline documentation
-
-**Setup**: Copy and uncomment features as needed
-
-```bash
-cp examples/workflows/recommended.yml .github/workflows/pr-labeler.yml
-# Edit the file and uncomment desired features
-```
-
-**Best For**: Teams that want flexibility and gradual feature adoption
+**Best for:** Most projects that want automatic PR labeling with sensible defaults.
 
 ---
 
-### 3. [strict.yml](strict.yml) - Strict Mode
+### 2. [advanced.yml](advanced.yml) - Advanced Configuration
 
-**Use Case**: Enforce code quality standards
-
-**Features**:
-
-- ✅ Strict size limits
-- ✅ Complexity checks enabled
-- ✅ Workflow fails on violations
-- ✅ Always comment on violations
-- ❌ Not recommended for open source projects
-
-**Setup**:
+**Customizable configuration with optional features**
 
 ```bash
-cp examples/workflows/strict.yml .github/workflows/pr-labeler.yml
+cp examples/workflows/advanced.yml .github/workflows/pr-labeler.yml
 ```
 
-**Best For**: Mission-critical codebases requiring strict review standards
+**Includes commented examples for:**
+
+- **File exclusion patterns** - Exclude generated code, vendor files, test fixtures
+- **Dependency handling** - Custom handling for lock files and package manifests
+- **Custom thresholds** - Adjust size and complexity thresholds
+- **Quality gates** - Fail workflow on violations (strict mode)
+- **Label customization** - Customize violation label names
+- **Multi-language support** - English/Japanese output
+
+**Best for:** Teams that need fine-tuned control over PR analysis behavior.
 
 ---
 
-### 4. [fork-friendly.yml](fork-friendly.yml) - Fork PR Support
+## Quick Setup
 
-**Use Case**: Open source projects accepting external contributions
+1. **Choose a configuration:**
+   - New to PR Insights Labeler? → Start with `basic.yml`
+   - Need customization? → Use `advanced.yml`
 
-**Features**:
+2. **Copy to your repository:**
 
-- ✅ Uses `pull_request_target` event
-- ✅ Secure handling of fork PRs
-- ⚠️ Security considerations documented
-- ✅ Proper checkout configuration
+   ```bash
+   mkdir -p .github/workflows
+   cp examples/workflows/basic.yml .github/workflows/pr-labeler.yml
+   ```
 
-**Setup**:
+3. **Customize (optional):**
+   - Edit `.github/workflows/pr-labeler.yml`
+   - Uncomment features you need
+   - Adjust thresholds and limits
 
-```bash
-cp examples/workflows/fork-friendly.yml .github/workflows/pr-labeler.yml
-```
+4. **Commit and push:**
 
-**Best For**: Public repositories with fork PRs
+   ```bash
+   git add .github/workflows/pr-labeler.yml
+   git commit -m "Add PR Insights Labeler"
+   git push
+   ```
 
-⚠️ **Security Warning**: Review security considerations in the file before using
+## Common Customizations
 
----
+### Exclude Generated Code
 
-### 5. [summary-only.yml](summary-only.yml) - Read-Only Mode
-
-**Use Case**: Analysis without modifying PRs
-
-**Features**:
-
-- ✅ GitHub Actions Summary only
-- ❌ No labels applied
-- ❌ No PR comments
-- ✅ Requires only `contents: read` permission
-
-**Setup**:
-
-```bash
-cp examples/workflows/summary-only.yml .github/workflows/pr-labeler.yml
-```
-
-**Best For**:
-
-- Repositories without write permissions
-- Trial period before enabling full labeling
-- Internal analytics
-
----
-
-## Customization Guide
-
-### Step 1: Choose a Base Configuration
-
-1. **New to PR Insights Labeler?** → Start with `basic.yml`
-2. **Want flexibility?** → Use `recommended.yml`
-3. **Need strict enforcement?** → Use `strict.yml`
-4. **Open source project?** → Use `fork-friendly.yml`
-5. **No write permissions?** → Use `summary-only.yml`
-
-### Step 2: Copy to Your Repository
-
-```bash
-# Create .github/workflows directory if it doesn't exist
-mkdir -p .github/workflows
-
-# Copy your chosen example
-cp examples/workflows/[chosen-example].yml .github/workflows/pr-labeler.yml
-```
-
-### Step 3: Customize Settings
-
-Edit `.github/workflows/pr-labeler.yml` and adjust:
-
-- Size limits (`file_size_limit`, `pr_additions_limit`, etc.)
-- Thresholds (`size_thresholds`, `complexity_thresholds`)
-- Label names (`large_files_label`, etc.)
-- Language (`language: "en"` or `language: "ja"`)
-
-### Step 4: Enable Optional Features
-
-In `recommended.yml`, uncomment features you need:
+Uncomment in `advanced.yml`:
 
 ```yaml
-# Enable complexity checks
+additional_exclude_patterns: |
+  **/*.generated.ts
+  **/*.pb.go
+  **/graphql/generated/**
+```
+
+### Enable Complexity Labels
+
+Uncomment in `advanced.yml`:
+
+```yaml
 complexity_enabled: "true"
 complexity_thresholds: '{"medium": 15, "high": 30}'
-
-# Fail on large PRs
-fail_on_pr_size: "xlarge"
-
-# Enable directory-based labeling
-enable_directory_labeling: "true"
 ```
 
-## Additional Configuration Files
+### Strict Mode (Fail on Violations)
 
-Some features require additional configuration files:
-
-### Directory-Based Labeling
-
-Create `.github/directory-labeler.yml`:
+Uncomment in `advanced.yml`:
 
 ```yaml
-version: 1
-
-rules:
-  - label: 'area:frontend'
-    include:
-      - 'src/components/**'
-      - 'src/pages/**'
-    priority: 20
-
-  - label: 'area:backend'
-    include:
-      - 'src/api/**'
-      - 'src/services/**'
-    priority: 20
-
-namespaces:
-  exclusive: ['area']
-  additive: ['scope']
+fail_on_large_files: "true"
+fail_on_too_many_files: "true"
+fail_on_pr_size: "xlarge"
 ```
 
-See [Advanced Usage - Directory-Based Labeling](../../docs/advanced-usage.md#directory-based-labeling) for details.
+### Japanese Output
 
-### Custom Label Configuration
+Uncomment in `advanced.yml`:
+
+```yaml
+language: "ja"
+```
+
+## Additional Configuration
+
+### Custom Category Labels
 
 Create `.github/pr-labeler.yml`:
 
 ```yaml
-language: en
-
-size:
-  thresholds:
-    small: 100
-    medium: 300
-    large: 700
-    xlarge: 2000
-
 categories:
-  - label: "category/tests"
+  - label: "category/frontend"
     patterns:
-      - "__tests__/**"
-      - "**/*.test.ts"
+      - "src/components/**"
+      - "src/pages/**"
     display_name:
-      en: "Test Files"
-      ja: "テストファイル"
+      en: "Frontend"
+      ja: "フロントエンド"
+
+  - label: "category/backend"
+    patterns:
+      - "src/api/**"
+      - "src/services/**"
+    display_name:
+      en: "Backend"
+      ja: "バックエンド"
 ```
 
-See [Configuration Guide](../../docs/configuration.md#yaml-config-file) for details.
+### Fork PR Support
 
-## Related Documentation
+For open source projects accepting external contributions, use `pull_request_target`:
 
-- [Configuration Guide](../../docs/configuration.md) - Complete input parameters reference
-- [Advanced Usage](../../docs/advanced-usage.md) - Real-world examples and patterns
-- [Troubleshooting](../../docs/troubleshooting.md) - Common issues and solutions
-- [Main README](../../README.md) - Quick start and overview
+```yaml
+on:
+  pull_request_target: # Instead of pull_request
+    types: [opened, synchronize, reopened]
+
+jobs:
+  label:
+    # ... same as basic.yml
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }} # Important!
+      # ... rest of config
+```
+
+⚠️ **Security Note:** `pull_request_target` has access to secrets. Only use for trusted repositories.
+
+## Documentation
+
+- 📖 [Configuration Guide](../../docs/configuration.md) - All parameters and options
+- 🔧 [Advanced Usage](../../docs/advanced-usage.md) - Real-world examples
+- 🐛 [Troubleshooting](../../docs/troubleshooting.md) - Common issues
+- 🏠 [Main README](../../README.md) - Overview and quick start
 
 ## Questions?
 
-- 📖 Check the [documentation](../../docs/)
-- 🐛 Report issues at [GitHub Issues](https://github.com/jey3dayo/pr-insights-labeler/issues)
-- 💬 Ask questions in [Discussions](https://github.com/jey3dayo/pr-insights-labeler/discussions)
+- [GitHub Issues](https://github.com/jey3dayo/pr-insights-labeler/issues)
+- [Discussions](https://github.com/jey3dayo/pr-insights-labeler/discussions)
