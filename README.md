@@ -74,15 +74,19 @@ Once configured, every PR automatically receives:
 
 ### 3. Customize (Optional)
 
-Unlock advanced controls:
+**Ready-to-use examples:**
+
+- 📄 [examples/workflows/basic.yml](examples/workflows/basic.yml) - Default settings (copy and use as-is)
+- ⚙️ [examples/workflows/advanced.yml](examples/workflows/advanced.yml) - Customizable with optional features
+
+**Advanced controls:**
 
 - Selectively enable size, complexity, category, and risk labels per workflow run
-- Auto-create and maintain labels with consistent colors/descriptions
+- Exclude generated code, vendor files, or test fixtures from analysis
 - Fail workflows based on size, file count, additions, or label policy breaches
-- Publish GitHub Actions Summary entries featuring violation tables and best-practice reminders
-- Localize logs, summaries, and comments via `language` input or locale environment variables
+- Localize logs, summaries, and comments via `language` input
 
-Need deeper guidance? Check these guides:
+**Documentation:**
 
 - 📖 [Configuration Guide](docs/configuration.md) - All input parameters and thresholds
 - 🔧 [Advanced Usage](docs/advanced-usage.md) - Fork PRs, strict mode, custom workflows
