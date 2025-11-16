@@ -1,0 +1,65 @@
+# PR Insights Labeler - Summary-Only Mode
+#
+# Read-only analysis mode that publishes metrics to GitHub Actions Summary
+# without applying labels or posting comments.
+# Useful for repositories without write permissions or fork PRs.
+
+name: PR Analysis (Summary Only)
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read # Only reading required
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: jey3dayo/pr-insights-labeler@v1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+
+          # Disable All Labels
+          size_enabled: "false"
+          complexity_enabled: "false"
+          category_enabled: "false"
+          risk_enabled: "false"
+
+          # Disable Comments
+          comment_on_pr: "never"
+
+          # Only Output to Summary
+          enable_summary: "true"
+# What You Get:
+#
+# - GitHub Actions Summary with PR metrics
+# - File size analysis and violations table
+# - Large files list (top 100)
+# - No labels applied
+# - No PR comments
+#
+# When to Use:
+#
+# ✅ Repositories without pull-requests: write permission
+# ✅ Fork PRs where label application is not possible
+# ✅ Internal analytics without affecting PR workflow
+# ✅ Trial period before enabling full labeling
+#
+# Advantages:
+#
+# - No write permissions required
+# - Safe for fork PRs (no security concerns)
+# - Non-intrusive (doesn't modify PRs)
+# - Provides visibility into PR metrics
+#
+# Upgrade Path:
+#
+# Once you're ready to enable labeling:
+# 1. Add pull-requests: write and issues: write permissions
+# 2. Enable label types (size_enabled: "true", etc.)
+# 3. Set comment_on_pr: "auto"
