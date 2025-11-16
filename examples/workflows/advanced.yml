@@ -77,26 +77,8 @@ jobs:
           #   test/fixtures/**
 
           # Uncomment to disable default excludes (not recommended)
-          # By default, excludes node_modules, dist, build, etc.
+          # By default, excludes node_modules, dist, build, lock files, etc.
           # use_default_excludes: "false"
-
-          # ============================================
-          # Optional: Dependency File Handling
-          # ============================================
-          # Lock files and package manifests are excluded by default.
-          # If you want to include them in analysis, add custom patterns.
-
-          # Example: Include package.json changes in size calculation
-          # Note: This is NOT recommended for most projects
-          # use_default_excludes: "false"
-          # additional_exclude_patterns: |
-          #   node_modules/**
-          #   dist/**
-          #   build/**
-          #   # Exclude lock files but include package.json
-          #   package-lock.json
-          #   yarn.lock
-          #   pnpm-lock.yaml
 
           # ============================================
           # Optional: Workflow Quality Gates
@@ -144,24 +126,18 @@ jobs:
 # Common Configuration Patterns
 # ============================================
 #
-# 1. Exclude Generated Code:
-#    Uncomment additional_exclude_patterns and add patterns for:
-#    - Protobuf: **/*.pb.go, **/*.pb.ts
-#    - GraphQL: **/graphql/generated/**
-#    - OpenAPI: **/openapi/generated/**
+# Strict Mode (Mission-Critical Projects):
+#   Uncomment fail_on_large_files, fail_on_too_many_files
+#   Set fail_on_pr_size: "large"
+#   Set comment_on_pr: "always"
 #
-# 2. Strict Mode (Mission-Critical Projects):
-#    Uncomment fail_on_large_files, fail_on_too_many_files
-#    Set fail_on_pr_size: "large"
-#    Set comment_on_pr: "always"
+# Monorepo with Multiple Teams:
+#   Use .github/pr-labeler.yml to configure category labels
+#   based on directory structure (e.g., packages/frontend, packages/backend)
 #
-# 3. Monorepo with Multiple Teams:
-#    Use .github/pr-labeler.yml to configure category labels
-#    based on directory structure (e.g., packages/frontend, packages/backend)
-#
-# 4. Open Source Projects:
-#    Keep fail_on_* options disabled to avoid discouraging contributions
-#    Consider using pull_request_target for fork PRs
+# Open Source Projects:
+#   Keep fail_on_* options disabled to avoid discouraging contributions
+#   Consider using pull_request_target for fork PRs
 #
 # ============================================
 # Related Documentation
