@@ -75,6 +75,7 @@ Once configured, every PR automatically receives:
 ### 3. Customize (Optional)
 
 **Workflow examples:**
+
 - [basic.yml](examples/workflows/basic.yml) - Default settings
 - [advanced.yml](examples/workflows/advanced.yml) - With optional features
 
