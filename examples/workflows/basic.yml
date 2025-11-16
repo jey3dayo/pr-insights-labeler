@@ -1,0 +1,42 @@
+# PR Insights Labeler - Basic Configuration
+#
+# Minimal configuration to get started quickly.
+# All settings use default values.
+
+name: PR Insights Labeler
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  label:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read # Read PR files
+      pull-requests: write # Apply labels
+      issues: write # Post comments
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: jey3dayo/pr-insights-labeler@v1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          # That's it! All other settings use sensible defaults.
+# What you get with default settings:
+#
+# - Size labels: size/small, size/medium, size/large, size/xlarge, size/xxlarge
+# - Category labels: category/tests, category/docs, category/ci-cd, etc.
+# - Risk labels: risk/high, risk/medium (when applicable)
+# - GitHub Actions Summary: Metrics and violation tables
+# - Auto-created labels with default colors
+#
+# Default limits:
+# - File size: 100KB
+# - File lines: 500 lines
+# - PR additions: 5000 lines
+# - PR files: 50 files
+#
+# See recommended.yml for advanced configuration options.

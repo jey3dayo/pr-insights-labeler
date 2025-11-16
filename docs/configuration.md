@@ -58,8 +58,9 @@ Complete reference for all input parameters, output variables, and configuration
 - uses: jey3dayo/pr-labeler@v1
   with:
     auto_remove_labels: "true"
-    large_files_label: "size:violation"
-    too_many_files_label: "pr:too-large"
+    large_files_label: "violations/large-files"
+    too_many_files_label: "violations/too-many-files"
+    excessive_changes_label: "violations/excessive-changes"
 ```
 
 ### Selective Label Enabling
