@@ -74,23 +74,11 @@ Once configured, every PR automatically receives:
 
 ### 3. Customize (Optional)
 
-**Ready-to-use examples:**
+**Workflow examples:**
+- [basic.yml](examples/workflows/basic.yml) - Default settings
+- [advanced.yml](examples/workflows/advanced.yml) - With optional features
 
-- 📄 [examples/workflows/basic.yml](examples/workflows/basic.yml) - Default settings (copy and use as-is)
-- ⚙️ [examples/workflows/advanced.yml](examples/workflows/advanced.yml) - Customizable with optional features
-
-**Advanced controls:**
-
-- Selectively enable size, complexity, category, and risk labels per workflow run
-- Exclude generated code, vendor files, or test fixtures from analysis
-- Fail workflows based on size, file count, additions, or label policy breaches
-- Localize logs, summaries, and comments via `language` input
-
-**Documentation:**
-
-- 📖 [Configuration Guide](docs/configuration.md) - All input parameters and thresholds
-- 🔧 [Advanced Usage](docs/advanced-usage.md) - Fork PRs, strict mode, custom workflows
-- 🏷️ [Labeling Rules Quick Reference](docs/labeling-rules.md) - Snapshot of how each label is applied
+**Docs:** [Configuration](docs/configuration.md) | [Advanced Usage](docs/advanced-usage.md) | [Labeling Rules](docs/labeling-rules.md)
 
 ## 🔒 Permissions
 

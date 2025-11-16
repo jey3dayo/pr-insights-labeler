@@ -74,23 +74,11 @@ jobs:
 
 ### 3. カスタマイズ（オプション）
 
-**すぐに使えるサンプル:**
+**ワークフローサンプル:**
+- [basic.yml](examples/workflows/basic.yml) - デフォルト設定
+- [advanced.yml](examples/workflows/advanced.yml) - オプション機能付き
 
-- 📄 [examples/workflows/basic.yml](examples/workflows/basic.yml) - デフォルト設定（コピーしてそのまま使える）
-- ⚙️ [examples/workflows/advanced.yml](examples/workflows/advanced.yml) - オプション機能付きでカスタマイズ可能
-
-**高度な制御:**
-
-- ラベル種類（サイズ・複雑度・カテゴリ・リスク）をワークフロー単位で個別ON/OFF
-- 生成コード、ベンダーファイル、テストフィクスチャを分析から除外
-- サイズ・ファイル数・追加行数・ラベル結果に基づいてワークフロー失敗を制御
-- `language` inputでログ/コメント/サマリーをローカライズ
-
-**ドキュメント:**
-
-- 📖 [設定ガイド](docs/configuration.md) - 全入力パラメータと閾値設定
-- 🔧 [高度な使用例](docs/advanced-usage.md) - フォークPR、厳格モード、カスタムワークフロー
-- 🏷️ [ラベルルール クイックリファレンス](docs/labeling-rules.ja.md) - 各ラベルの適用条件を一目で確認
+**ドキュメント:** [設定ガイド](docs/configuration.md) | [高度な使用例](docs/advanced-usage.md) | [ラベルルール](docs/labeling-rules.ja.md)
 
 ## 🔒 権限設定
 
