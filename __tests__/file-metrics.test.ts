@@ -173,7 +173,8 @@ describe('FileMetrics', () => {
 
       expect(result.isOk()).toBe(true);
       if (result.isOk()) {
-        expect(result.value).toBe(150);
+        expect(result.value.lines).toBe(150);
+        expect(result.value.isCapped).toBe(false);
       }
       expect(mockExecAsync).toHaveBeenCalledWith('wc', ['-l', 'src/test.ts']);
     });
@@ -208,7 +209,8 @@ describe('FileMetrics', () => {
 
       expect(result.isOk()).toBe(true);
       if (result.isOk()) {
-        expect(result.value).toBe(3);
+        expect(result.value.lines).toBe(3);
+        expect(result.value.isCapped).toBe(false);
       }
     });
 
@@ -238,7 +240,8 @@ describe('FileMetrics', () => {
       expect(result.isOk()).toBe(true);
       if (result.isOk()) {
         // Should stop counting at maxLines
-        expect(result.value).toBe(50000);
+        expect(result.value.lines).toBe(50000);
+        expect(result.value.isCapped).toBe(true);
       }
 
       // Verify stream was closed early

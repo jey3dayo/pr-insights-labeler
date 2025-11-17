@@ -11,10 +11,15 @@ import { createFileAnalysisError, ensureError } from '../errors/index.js';
 
 const execFileAsync = promisify(execFile);
 
+export interface LineCountResult {
+  lines: number;
+  isCapped: boolean;
+}
+
 export async function getFileLineCount(
   filePath: string,
   maxLines?: number,
-): Promise<Result<number, FileAnalysisError>> {
+): Promise<Result<LineCountResult, FileAnalysisError>> {
   logDebug(`Counting lines in file: ${filePath}`);
 
   try {
@@ -24,9 +29,9 @@ export async function getFileLineCount(
       const lines = Number.parseInt(match[1], 10);
       logDebug(`Got line count from wc -l: ${lines}`);
       if (maxLines && lines > maxLines) {
-        return ok(maxLines);
+        return ok({ lines: maxLines, isCapped: true });
       }
-      return ok(lines);
+      return ok({ lines, isCapped: false });
     }
   } catch (error) {
     logDebug(`wc -l failed: ${ensureError(error).message}`);
@@ -48,12 +53,12 @@ export async function getFileLineCount(
         rl.close();
         fileStream.destroy();
         logDebug(`Line count reached max (${maxLines}), early termination`);
-        return ok(maxLines);
+        return ok({ lines: maxLines, isCapped: true });
       }
     }
 
     logDebug(`Got line count from Node.js streaming: ${lineCount}`);
-    return ok(lineCount);
+    return ok({ lines: lineCount, isCapped: false });
   } catch (error) {
     const message = ensureError(error).message;
     return err(createFileAnalysisError(filePath, `Failed to count lines: ${message}`));

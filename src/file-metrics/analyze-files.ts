@@ -58,13 +58,21 @@ async function collectFileMetrics(
     return undefined;
   }
 
-  return {
+  const lineCountResult = lineResult.value;
+
+  const metrics: FileMetrics = {
     path: file.filename,
     size: sizeResult.value,
-    lines: lineResult.value,
+    lines: lineCountResult.lines,
     additions: file.additions,
     deletions: file.deletions,
   };
+
+  if (lineCountResult.isCapped) {
+    metrics.isLineCountCapped = true;
+  }
+
+  return metrics;
 }
 
 async function processFile(

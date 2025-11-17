@@ -20,7 +20,7 @@ function createBaseFileColumns(): FileTableColumn[] {
     },
     {
       header: t('summary', 'fileDetails.lines'),
-      render: file => formatNumber(file.lines),
+      render: file => (file.isLineCountCapped ? `${formatNumber(file.lines)}+` : formatNumber(file.lines)),
     },
     {
       header: t('summary', 'fileDetails.changes'),
