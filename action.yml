@@ -142,7 +142,7 @@ inputs:
 
   # 多言語対応
   language:
-    description: "Language for output messages (en, ja, en-US, ja-JP)"
+    description: "Language for output messages (en, ja, en-US, ja-JP). Fallback order: action input → pr-labeler.yml → LANGUAGE/LANG env → default 'en'"
     required: false
 
   # 認証

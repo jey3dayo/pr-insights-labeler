@@ -27,7 +27,7 @@ Streamline your PR review process with intelligent automation:
 - **🏷️ Auto Label Provisioning**: Automatically create and sync labels with default metadata—no manual setup required
 - **🚦 Workflow Quality Gates**: Enforce policy with `fail_on_pr_size`, `fail_on_large_files`, and `fail_on_too_many_files`
 - **📝 GitHub Actions Summary**: Publish rich PR analytics, large file tables, and improvement suggestions to the Actions Summary page
-- **🌐 Multi-language Output**: Automatically switch between English and Japanese using the `language` input or `LANGUAGE/LANG` environment
+- **🌐 Multi-language Output**: Automatically switch between English and Japanese via the `language` input, `.github/pr-labeler.yml`, or `LANGUAGE/LANG` environment
 
 ## 🚀 Quick Start
 
@@ -58,8 +58,8 @@ jobs:
       - uses: jey3dayo/pr-insights-labeler@v1
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          # Language setting (defaults to English)
-          # language: "ja"  # Uncomment for Japanese output
+          # Optional language override (workflow input has highest priority)
+          # language: "ja"  # Otherwise falls back to pr-labeler.yml → LANGUAGE/LANG → default 'en'
 ```
 
 ### 2. What You Get
@@ -183,8 +183,8 @@ When limits exceeded:
     comment_on_pr: "auto"         # Auto-detect when to comment (auto/always/never)
 
     # Localization
-    language: "en"                # Output language (en/ja)
-    # Fallback: LANGUAGE / LANG env vars are respected when input omitted
+    language: "en"                # Workflow-level override (priority 1)
+    # If omitted: .github/pr-labeler.yml → LANGUAGE/LANG env → default 'en'
 ```
 
 ### Advanced Features

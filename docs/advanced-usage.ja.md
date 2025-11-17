@@ -306,7 +306,7 @@ jobs:
 # .github/pr-labeler.yml
 
 # 言語設定（オプション）
-language: ja  # 'en' または 'ja'（デフォルト: 'en'）
+language: ja  # 'en' または 'ja'。ワークフロー入力が未指定の場合に適用
 
 # サイズラベル設定
 size:
@@ -586,32 +586,24 @@ PR Insights LabelerはGitHub Actions Summary、エラーメッセージ、ログ
 
 ### 言語設定方法
 
-#### 方法1: 環境変数
+ローカライズは優先順位チェーンで解決されます。必要なレイヤーのみ設定してください。
+
+#### 方法1: ワークフロー入力（最優先）
 
 ```yaml
 - uses: jey3dayo/pr-labeler@v1
   with:
     github_token: ${{ secrets.GITHUB_TOKEN }}
-  env:
-    LANGUAGE: ja  # または 'en'（デフォルト: 'en'）
+    language: ja  # このワークフロー実行に対して明示的に上書き
 ```
 
-#### 方法2: 入力パラメータ
+#### 方法2: `.github/pr-labeler.yml`
 
-```yaml
-- uses: jey3dayo/pr-labeler@v1
-  with:
-    github_token: ${{ secrets.GITHUB_TOKEN }}
-    language: ja  # または 'en'（デフォルト: 'en'）
-```
-
-#### 方法3: 設定ファイル
-
-`.github/pr-labeler.yml` を作成:
+リポジトリ共通のデフォルトを定義しつつ、ワークフローからの上書きを許可します。
 
 ```yaml
 # 言語設定（オプション）
-language: ja  # 'en' または 'ja'（デフォルト: 'en'）
+language: ja  # ワークフロー入力が未指定の場合に適用。さらに環境変数/デフォルトへフォールバック
 
 # 多言語表示名を持つカテゴリラベル
 categories:
@@ -632,11 +624,21 @@ categories:
       ja: 'ドキュメント'
 ```
 
+#### 方法3: 環境変数（`LANGUAGE` / `LANG`）
+
+```yaml
+- uses: jey3dayo/pr-labeler@v1
+  with:
+    github_token: ${{ secrets.GITHUB_TOKEN }}
+  env:
+    LANGUAGE: ja  # ワークフロー入力とpr-labeler.ymlが未指定の場合にのみ使用
+```
+
 ### 言語決定の優先順位
 
-1. `LANGUAGE` 環境変数
-2. `LANG` 環境変数
-3. `pr-labeler.yml` の `language` フィールド
+1. ワークフローの `with.language`
+2. `.github/pr-labeler.yml` の `language`
+3. 環境変数 (`LANGUAGE` → `LANG`)
 4. デフォルト: 英語（`en`）
 
 ### 表示名の優先順位
