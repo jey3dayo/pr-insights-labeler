@@ -1,4 +1,5 @@
 import * as github from '@actions/github';
+import { ResultAsync } from 'neverthrow';
 
 import { logDebugI18n, logErrorI18n, logInfoI18n, logWarning, logWarningI18n } from '../../actions-io';
 import { getCIStatus } from '../../ci-status.js';
@@ -13,7 +14,6 @@ import {
   createRateLimitError,
   ensureError,
   extractErrorStatus,
-  ResultAsync,
   toAppError,
 } from '../../errors/index.js';
 import { applyLabels } from '../../label-applicator';

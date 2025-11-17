@@ -1,9 +1,9 @@
-import type { Result } from 'neverthrow';
+import { type Result,ResultAsync } from 'neverthrow';
 
 import { logInfoI18n, logWarningI18n, setActionOutputs } from '../../actions-io';
 import { manageComment } from '../../comment-manager';
 import type { AppError } from '../../errors/index.js';
-import { createViolationError, ResultAsync, toAppError } from '../../errors/index.js';
+import { createViolationError, toAppError } from '../../errors/index.js';
 import { getCurrentPRLabels } from '../../label-manager.js';
 import type { SummaryWriteResult } from '../../summary/summary-writer';
 import { writeSummaryWithAnalysis } from '../../summary/summary-writer';

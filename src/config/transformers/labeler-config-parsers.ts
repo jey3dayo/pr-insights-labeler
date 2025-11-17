@@ -100,6 +100,37 @@ function validateThresholdGroup<K extends string>(
   return ok(finalValues);
 }
 
+function parseThresholdDrivenField<TResult, K extends string>(
+  rawValue: unknown,
+  options: {
+    fieldName: string;
+    thresholds: {
+      fieldLabel: string;
+      keys: ThresholdKeySpec<K>[];
+      defaults: Record<K, number>;
+      comparisons: ThresholdComparisonSpec<K>[];
+    };
+  },
+): Result<TResult | undefined, ConfigurationError> {
+  if (rawValue === undefined) {
+    return ok(undefined);
+  }
+
+  if (!isRecord(rawValue)) {
+    return err(createConfigurationError(options.fieldName, rawValue, `${options.fieldName} must be an object`));
+  }
+
+  const thresholdsRaw = rawValue['thresholds'];
+  if (thresholdsRaw !== undefined) {
+    const validation = validateThresholdGroup(thresholdsRaw, options.thresholds);
+    if (validation.isErr()) {
+      return err(validation.error);
+    }
+  }
+
+  return ok(rawValue as unknown as TResult);
+}
+
 export function parseLanguageField(
   rawLanguage: unknown,
 ): Result<LabelerConfig['language'] | undefined, ConfigurationError> {
@@ -152,17 +183,9 @@ export function parseSummaryField(
 }
 
 export function parseSizeField(rawSize: unknown): Result<LabelerConfig['size'] | undefined, ConfigurationError> {
-  if (rawSize === undefined) {
-    return ok(undefined);
-  }
-
-  if (!isRecord(rawSize)) {
-    return err(createConfigurationError(SIZE_FIELD, rawSize, 'size must be an object'));
-  }
-
-  const thresholdsRaw = rawSize['thresholds'];
-  if (thresholdsRaw !== undefined) {
-    const validation = validateThresholdGroup(thresholdsRaw, {
+  return parseThresholdDrivenField<LabelerConfig['size'], 'small' | 'medium' | 'large' | 'xlarge'>(rawSize, {
+    fieldName: SIZE_FIELD,
+    thresholds: {
       fieldLabel: 'size.thresholds',
       keys: [
         { key: 'small', path: 'size.thresholds.small' },
@@ -194,30 +217,16 @@ export function parseSizeField(rawSize: unknown): Result<LabelerConfig['size'] |
             `size.thresholds.large (${smallerValue}) must be less than xlarge (${largerValue})`,
         },
       ],
-    });
-
-    if (validation.isErr()) {
-      return err(validation.error);
-    }
-  }
-
-  return ok(rawSize as unknown as LabelerConfig['size']);
+    },
+  });
 }
 
 export function parseComplexityField(
   rawComplexity: unknown,
 ): Result<LabelerConfig['complexity'] | undefined, ConfigurationError> {
-  if (rawComplexity === undefined) {
-    return ok(undefined);
-  }
-
-  if (!isRecord(rawComplexity)) {
-    return err(createConfigurationError(COMPLEXITY_FIELD, rawComplexity, 'complexity must be an object'));
-  }
-
-  const thresholdsRaw = rawComplexity['thresholds'];
-  if (thresholdsRaw !== undefined) {
-    const validation = validateThresholdGroup(thresholdsRaw, {
+  return parseThresholdDrivenField<LabelerConfig['complexity'], 'medium' | 'high'>(rawComplexity, {
+    fieldName: COMPLEXITY_FIELD,
+    thresholds: {
       fieldLabel: 'complexity.thresholds',
       keys: [
         { key: 'medium', path: 'complexity.thresholds.medium' },
@@ -233,14 +242,8 @@ export function parseComplexityField(
             `complexity.thresholds.medium (${smallerValue}) must be less than high (${largerValue})`,
         },
       ],
-    });
-
-    if (validation.isErr()) {
-      return err(validation.error);
-    }
-  }
-
-  return ok(rawComplexity as unknown as LabelerConfig['complexity']);
+    },
+  });
 }
 
 export function parseCategoriesField(

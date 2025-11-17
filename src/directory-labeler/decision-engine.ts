@@ -5,8 +5,9 @@
  */
 
 import * as core from '@actions/core';
+import { ok, type Result } from 'neverthrow';
 
-import { createPatternError, ok, type Result } from '../errors/index.js';
+import { createPatternError } from '../errors/index.js';
 import { normalizePath } from '../utils/path-utils.js';
 import { compilePatterns, matchIncludePatterns } from './pattern-matcher.js';
 import { DEFAULT_EXCLUDES, DEFAULT_OPTIONS, type DirectoryLabelerConfig } from './types.js';

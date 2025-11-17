@@ -4,9 +4,10 @@
  */
 
 import type { getOctokit } from '@actions/github';
+import { ResultAsync } from 'neverthrow';
 
 import type { AppError } from './errors/index.js';
-import { createGitHubAPIError, ensureError, extractErrorStatus, ResultAsync } from './errors/index.js';
+import { createGitHubAPIError, ensureError, extractErrorStatus } from './errors/index.js';
 import type { CICheckStatus, CIStatus } from './types';
 import { hasProperty, isNonEmptyString, isObject } from './utils/type-guards.js';
 
