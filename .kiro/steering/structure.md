@@ -1,6 +1,6 @@
 # Project Structure - PR Insights Labeler
 
-> updated_at: 2025-11-12T08:47:09Z
+> updated_at: 2025-11-17T02:48:00Z
 
 ## Root Directory Organization
 
@@ -59,7 +59,7 @@ src/
 ├── index.ts                   # エントリーポイント（main関数）
 ├── types.ts                   # 共通型定義
 ├── input-mapper.ts            # Actions入力パース・検証（選択的ラベル有効化を含む）
-├── file-metrics.ts            # ファイルメトリクス分析
+├── input-parser.ts            # 入力値の正規化とパース
 ├── diff-strategy.ts           # Git差分ベースの分析戦略
 ├── pattern-matcher.ts         # ファイル除外パターンマッチ
 ├── label-manager.ts           # GitHubラベル管理
@@ -72,8 +72,18 @@ src/
 ├── label-decision-engine.ts   # ラベル判定ロジック（サイズ/複雑度/カテゴリ/リスク）
 ├── label-applicator.ts        # ラベル適用と冪等性保証
 ├── complexity-analyzer.ts     # コード複雑度分析（ESLint標準API使用）
+├── input/                     # 入力処理モジュール
+│   └── input-normalizer.ts    # 入力値の正規化処理
 ├── parsers/                   # パーサーモジュール
 │   └── size-parser.ts         # サイズ文字列パース（"100KB" → バイト数）
+├── file-metrics/              # ファイルメトリクス分析モジュール
+│   ├── analyze-files.ts       # ファイル分析オーケストレーション
+│   ├── binary-detector.ts     # バイナリファイル検出
+│   ├── file-size-service.ts   # ファイルサイズ計算
+│   ├── line-counter.ts        # 行数カウント
+│   └── types.ts               # メトリクス型定義
+├── label-decisions/           # ラベル決定ロジックモジュール
+│   └── risk-evaluator.ts      # リスク評価ロジック
 ├── directory-labeler/         # 🆕 Directory-Based Labeling機能
 │   ├── config-loader.ts       # directory-labeler.yml設定読み込み
 │   ├── decision-engine.ts     # パス→ラベルマッピングと優先順位制御
@@ -213,12 +223,17 @@ docs/
 **基本モジュール**:
 
 1. **Input Mapper**: 入力検証のみ（ビジネスロジックなし、選択的ラベル有効化を含む）
-2. **File Metrics**: ファイル分析のみ（API呼び出しなし）
-3. **Diff Strategy**: Git差分収集のみ（分析ロジックなし）
-4. **Pattern Matcher**: パターンマッチのみ（ファイルI/Oなし）
-5. **Label Manager**: ラベル操作のみ（メトリクス計算なし）
-6. **Comment Manager**: コメント操作のみ（レポート生成は委譲）
-7. **Report Formatter**: Markdown生成のみ（GitHub API呼び出しなし）
+2. **Input Normalizer** (`input/`): 入力値の正規化と変換
+3. **File Metrics** (`file-metrics/`): ファイル分析をサブモジュールに分割（API呼び出しなし）
+   - analyze-files: オーケストレーション
+   - binary-detector: バイナリ検出
+   - file-size-service: サイズ計算
+   - line-counter: 行数カウント
+4. **Diff Strategy**: Git差分収集のみ（分析ロジックなし）
+5. **Pattern Matcher**: パターンマッチのみ（ファイルI/Oなし）
+6. **Label Manager**: ラベル操作のみ（メトリクス計算なし）
+7. **Comment Manager**: コメント操作のみ（レポート生成は委譲）
+8. **Report Formatter**: Markdown生成のみ（GitHub API呼び出しなし）
 
 **PR Insights Labelerモジュール**:
 
@@ -226,6 +241,7 @@ docs/
 2. **Label Decision Engine**: メトリクスベースのラベル判定のみ
 3. **Label Applicator**: ラベル適用と冪等性保証のみ
 4. **Config Loader**: YAML設定読み込みとバリデーションのみ
+5. **Risk Evaluator** (`label-decisions/`): リスク評価ロジックの専門化
 
 **Directory-Based Labelerモジュール**:
 

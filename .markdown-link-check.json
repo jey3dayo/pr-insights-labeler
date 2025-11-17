@@ -17,6 +17,9 @@
     },
     {
       "pattern": "^mailto:"
+    },
+    {
+      "pattern": "^https://github\\.com/marketplace/actions/pr-insights-labeler"
     }
   ],
   "replacementPatterns": [
