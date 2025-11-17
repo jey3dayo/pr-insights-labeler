@@ -59,7 +59,3 @@ export { ensureError, extractAggregateError } from './helpers.js';
 
 // Export AppError utilities
 export { formatAppError, toAppError } from './app-error-utils.js';
-
-// Re-export from neverthrow for convenience
-export type { Err, Ok } from 'neverthrow';
-export { err, errAsync, ok, okAsync, Result, ResultAsync } from 'neverthrow';

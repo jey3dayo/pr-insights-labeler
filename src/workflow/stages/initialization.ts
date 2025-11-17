@@ -1,9 +1,11 @@
+import { ResultAsync } from 'neverthrow';
+
 import { getPullRequestContext, logInfoI18n, logWarningI18n } from '../../actions-io';
 import { buildCompleteConfig } from '../../config-builder.js';
 import { getDefaultLabelerConfig, loadConfig } from '../../config-loader';
 import { loadEnvironmentConfig } from '../../environment-loader.js';
 import type { AppError } from '../../errors/index.js';
-import { ResultAsync, toAppError } from '../../errors/index.js';
+import { toAppError } from '../../errors/index.js';
 import { initializeI18n } from '../../i18n.js';
 import { parseActionInputs } from '../../input-parser.js';
 import type { InitializationArtifacts, PullRequestRuntimeContext } from '../types';

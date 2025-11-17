@@ -3,7 +3,6 @@ export {
   hasProperty,
   isBoolean,
   isNonEmptyString,
-  isNonNullable,
   isNumber,
   isObject,
   isRecord,

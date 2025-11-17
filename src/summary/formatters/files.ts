@@ -3,64 +3,91 @@ import { t } from '../../i18n.js';
 import type { FileMetrics } from '../../types/analysis.js';
 import { escapeMarkdown, formatBytes, formatNumber } from './common.js';
 
-export function formatFileDetails(files: FileMetrics[], limit?: number): string {
+interface FileTableColumn {
+  header: string;
+  render: (file: FileMetrics) => string;
+}
+
+function createBaseFileColumns(): FileTableColumn[] {
+  return [
+    {
+      header: t('summary', 'fileDetails.fileName'),
+      render: file => `\`${file.path}\``,
+    },
+    {
+      header: t('summary', 'fileDetails.size'),
+      render: file => formatBytes(file.size),
+    },
+    {
+      header: t('summary', 'fileDetails.lines'),
+      render: file => formatNumber(file.lines),
+    },
+    {
+      header: t('summary', 'fileDetails.changes'),
+      render: file => `+${formatNumber(file.additions)}/-${formatNumber(file.deletions)}`,
+    },
+  ];
+}
+
+function formatFileTable(heading: string, files: FileMetrics[], columns: FileTableColumn[], limit?: number): string {
   if (files.length === 0) {
     return '';
   }
 
-  let output = '';
-  output += `### 📈 ${t('summary', 'fileDetails.topLargeFiles')}\n\n`;
-  output += `| ${t('summary', 'fileDetails.fileName')} | ${t('summary', 'fileDetails.size')} | ${t('summary', 'fileDetails.lines')} | ${t('summary', 'fileDetails.changes')} |\n`;
-  output += '|------|------|-------|----------|\n';
-
   const sortedFiles = [...files].sort((a, b) => b.size - a.size);
   const displayFiles = limit ? sortedFiles.slice(0, limit) : sortedFiles;
 
+  let output = '';
+  output += `${heading}\n\n`;
+  output += `| ${columns.map(column => column.header).join(' | ')} |\n`;
+  output += `|${columns.map(() => '------').join('|')}|\n`;
+
   for (const file of displayFiles) {
-    const changes = `+${formatNumber(file.additions)}/-${formatNumber(file.deletions)}`;
-    output += `| \`${file.path}\` | ${formatBytes(file.size)} | ${formatNumber(file.lines)} | ${changes} |\n`;
+    output += `| ${columns.map(column => column.render(file)).join(' | ')} |\n`;
   }
   output += '\n';
 
   return output;
 }
 
+export function formatFileDetails(files: FileMetrics[], limit?: number): string {
+  return formatFileTable(`### 📈 ${t('summary', 'fileDetails.topLargeFiles')}`, files, createBaseFileColumns(), limit);
+}
+
 export function formatFileAnalysis(violations: Violations, files: FileMetrics[], limit: number = 10): string {
-  if (files.length === 0) {
-    return '';
-  }
-
-  let output = '';
-  output += `### 📊 ${t('summary', 'fileAnalysis.title')}\n\n`;
-  output += `| ${t('summary', 'fileDetails.fileName')} | ${t('summary', 'fileDetails.size')} | ${t('summary', 'fileDetails.lines')} | ${t('summary', 'fileDetails.changes')} | ${t('summary', 'fileDetails.status')} |\n`;
-  output += '|------|------|-------|----------|----------|\n';
-
-  const sortedFiles = [...files].sort((a, b) => b.size - a.size);
-  const displayFiles = limit ? sortedFiles.slice(0, limit) : sortedFiles;
-
   const lineViolationMap = new Map(violations.exceedsFileLines.map(v => [v.file, v]));
   const sizeViolationMap = new Map(violations.largeFiles.map(v => [v.file, v]));
 
-  for (const file of displayFiles) {
-    const changes = `+${formatNumber(file.additions)}/-${formatNumber(file.deletions)}`;
+  const statusColumn: FileTableColumn = {
+    header: t('summary', 'fileDetails.status'),
+    render: file => {
+      const lineViolation = lineViolationMap.get(file.path);
+      const sizeViolation = sizeViolationMap.get(file.path);
 
-    let status = `✅ ${t('summary', 'fileAnalysis.status.ok')}`;
-    const lineViolation = lineViolationMap.get(file.path);
-    const sizeViolation = sizeViolationMap.get(file.path);
+      if (lineViolation) {
+        const icon = lineViolation.severity === 'critical' ? '🚫' : '⚠️';
+        return `${icon} ${t('summary', 'fileAnalysis.status.lineExceed', {
+          limit: formatNumber(lineViolation.limit),
+        })}`;
+      }
 
-    if (lineViolation) {
-      const icon = lineViolation.severity === 'critical' ? '🚫' : '⚠️';
-      status = `${icon} ${t('summary', 'fileAnalysis.status.lineExceed', { limit: formatNumber(lineViolation.limit) })}`;
-    } else if (sizeViolation) {
-      const icon = sizeViolation.severity === 'critical' ? '🚫' : '⚠️';
-      status = `${icon} ${t('summary', 'fileAnalysis.status.sizeExceed', { limit: formatBytes(sizeViolation.limit) })}`;
-    }
+      if (sizeViolation) {
+        const icon = sizeViolation.severity === 'critical' ? '🚫' : '⚠️';
+        return `${icon} ${t('summary', 'fileAnalysis.status.sizeExceed', {
+          limit: formatBytes(sizeViolation.limit),
+        })}`;
+      }
 
-    output += `| \`${file.path}\` | ${formatBytes(file.size)} | ${formatNumber(file.lines)} | ${changes} | ${status} |\n`;
-  }
-  output += '\n';
+      return `✅ ${t('summary', 'fileAnalysis.status.ok')}`;
+    },
+  };
 
-  return output;
+  return formatFileTable(
+    `### 📊 ${t('summary', 'fileAnalysis.title')}`,
+    files,
+    [...createBaseFileColumns(), statusColumn],
+    limit,
+  );
 }
 
 export { escapeMarkdown };

@@ -1,5 +1,5 @@
 /**
- * Base Error class and ErrorLevel type
+ * Base Error constructor and ErrorLevel type
  * Following action-cache pattern for unified error handling
  */
 
@@ -18,9 +18,7 @@ export abstract class BaseError extends Error {
   readonly errorLevel: ErrorLevel;
 
   constructor(message: string, errorLevel: ErrorLevel = 'warning', options?: { cause?: unknown }) {
-    // Preserve native cause when available (ES2022 ErrorOptions)
     super(message, options);
-    // Ensure instanceof works reliably across targets/bundlers
     Object.setPrototypeOf(this, new.target.prototype);
     this.name = new.target.name;
     this.errorLevel = errorLevel;

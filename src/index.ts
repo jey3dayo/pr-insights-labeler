@@ -3,9 +3,11 @@
  * Analyzes pull request files and enforces size limits
  */
 
+import { ResultAsync } from 'neverthrow';
+
 import { logErrorI18n, logInfoI18n, logWarningI18n, setFailed } from './actions-io';
 import type { AppError } from './errors/index.js';
-import { formatAppError, ResultAsync, toAppError } from './errors/index.js';
+import { formatAppError, toAppError } from './errors/index.js';
 import { t } from './i18n.js';
 import { writeSummary } from './summary/summary-writer';
 import { analyzePullRequest, applyLabelsStage, finalizeAction, initializeAction } from './workflow/pipeline';

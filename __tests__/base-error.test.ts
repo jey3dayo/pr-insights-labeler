@@ -6,9 +6,6 @@ import { describe, expect, it } from 'vitest';
 
 import { BaseError, type ErrorLevel } from '../src/errors/base-error.js';
 
-/**
- * Test implementation of BaseError for testing purposes
- */
 class TestError extends BaseError {
   constructor(message: string, errorLevel: ErrorLevel = 'warning') {
     super(message, errorLevel);

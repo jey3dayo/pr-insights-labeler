@@ -6,6 +6,7 @@
 
 import * as core from '@actions/core';
 import * as github from '@actions/github';
+import { err, ok, type Result } from 'neverthrow';
 
 import { DEFAULT_LABEL_COLOR, DEFAULT_LABEL_DESCRIPTION } from '../configs/directory-labeler-defaults.js';
 import {
@@ -13,10 +14,7 @@ import {
   createPermissionError,
   createRateLimitError,
   ensureError,
-  err,
   extractErrorStatus,
-  ok,
-  type Result,
 } from '../errors/index.js';
 import { extractNamespace } from '../utils/namespace-utils.js';
 import { isNumber, isRecord, isString } from '../utils/type-guards.js';

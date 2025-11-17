@@ -54,10 +54,14 @@ describe('ensureError', () => {
   describe('Custom Error class conversion', () => {
     class CustomError extends Error {
       code: string;
+
       constructor(message: string) {
         super(message);
         this.name = 'CustomError';
         this.code = 'CUSTOM';
+        if (Error.captureStackTrace) {
+          Error.captureStackTrace(this, CustomError);
+        }
       }
     }
 

@@ -7,8 +7,9 @@
 import fs from 'node:fs';
 
 import { load as yamlLoad } from 'js-yaml';
+import { err, ok, type Result } from 'neverthrow';
 
-import { createConfigurationError, createFileSystemError, ensureError, err, ok, type Result } from '../errors/index.js';
+import { createConfigurationError, createFileSystemError, ensureError } from '../errors/index.js';
 import { validateConfigWithTransformer } from '../utils/config-validation-utils.js';
 import { parseDirectoryLabelerConfig } from './transformers/config-transformer.js';
 import {

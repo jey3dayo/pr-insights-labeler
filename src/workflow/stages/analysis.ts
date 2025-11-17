@@ -1,10 +1,12 @@
 import * as path from 'node:path';
 
+import { ResultAsync } from 'neverthrow';
+
 import { logDebug, logErrorI18n, logInfo, logInfoI18n, logWarning, logWarningI18n } from '../../actions-io';
 import { createComplexityAnalyzer } from '../../complexity-analyzer';
 import { getDiffFiles } from '../../diff-strategy';
 import type { AppError } from '../../errors/index.js';
-import { ResultAsync, toAppError } from '../../errors/index.js';
+import { toAppError } from '../../errors/index.js';
 import { analyzeFiles } from '../../file-metrics';
 import { t } from '../../i18n.js';
 import type { AnalysisArtifacts, InitializationArtifacts } from '../types';
