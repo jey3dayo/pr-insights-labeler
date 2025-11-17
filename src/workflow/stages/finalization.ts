@@ -1,4 +1,4 @@
-import { type Result,ResultAsync } from 'neverthrow';
+import { type Result, ResultAsync } from 'neverthrow';
 
 import { logInfoI18n, logWarningI18n, setActionOutputs } from '../../actions-io';
 import { manageComment } from '../../comment-manager';
