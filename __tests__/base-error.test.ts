@@ -6,38 +6,11 @@ import { describe, expect, it } from 'vitest';
 
 import { BaseError, type ErrorLevel } from '../src/errors/base-error.js';
 
-type BaseErrorCtor = (new (message: string, errorLevel?: ErrorLevel) => BaseError) & { prototype: BaseError };
-const baseErrorCtor = BaseError as BaseErrorCtor;
-
-type TestErrorInstance = BaseError;
-type TestErrorCtor = new (message: string, errorLevel?: ErrorLevel) => TestErrorInstance;
-
-function createTestErrorCtor(): TestErrorCtor {
-  const displayName = 'TestError';
-  function TestError(message: string, errorLevel: ErrorLevel = 'warning'): TestErrorInstance {
-    const base = Reflect.construct(baseErrorCtor, [message, errorLevel], TestError) as TestErrorInstance;
-    Object.defineProperty(base, 'name', {
-      value: displayName,
-      configurable: true,
-      enumerable: false,
-      writable: false,
-    });
-    return base;
+class TestError extends BaseError {
+  constructor(message: string, errorLevel: ErrorLevel = 'warning') {
+    super(message, errorLevel);
   }
-
-  Object.setPrototypeOf(TestError, baseErrorCtor);
-  (TestError as unknown as { prototype: TestErrorInstance }).prototype = Object.create(baseErrorCtor.prototype, {
-    constructor: {
-      value: TestError,
-      writable: true,
-      configurable: true,
-    },
-  });
-
-  return TestError as TestErrorCtor;
 }
-
-const TestError = createTestErrorCtor();
 
 describe('BaseError', () => {
   describe('constructor', () => {
@@ -111,52 +84,14 @@ describe('BaseError', () => {
 
   describe('inheritance', () => {
     it('should support custom error classes', () => {
-      type CustomAppErrorInstance = BaseError & { code: string };
-      type CustomAppErrorCtor = new (message: string, code: string, errorLevel?: ErrorLevel) => CustomAppErrorInstance;
+      class CustomAppError extends BaseError {
+        readonly code: string;
 
-      function createCustomAppErrorCtor(): CustomAppErrorCtor {
-        const displayName = 'CustomAppError';
-        function CustomAppError(
-          message: string,
-          code: string,
-          errorLevel: ErrorLevel = 'warning',
-        ): CustomAppErrorInstance {
-          const base = Reflect.construct(
-            baseErrorCtor,
-            [message, errorLevel],
-            CustomAppError,
-          ) as CustomAppErrorInstance;
-          Object.defineProperty(base, 'code', {
-            value: code,
-            enumerable: true,
-            configurable: true,
-            writable: false,
-          });
-          Object.defineProperty(base, 'name', {
-            value: displayName,
-            configurable: true,
-            enumerable: false,
-            writable: false,
-          });
-          return base;
+        constructor(message: string, code: string, errorLevel: ErrorLevel = 'warning') {
+          super(message, errorLevel);
+          this.code = code;
         }
-
-        Object.setPrototypeOf(CustomAppError, baseErrorCtor);
-        (CustomAppError as unknown as { prototype: CustomAppErrorInstance }).prototype = Object.create(
-          baseErrorCtor.prototype,
-          {
-            constructor: {
-              value: CustomAppError,
-              writable: true,
-              configurable: true,
-            },
-          },
-        );
-
-        return CustomAppError as CustomAppErrorCtor;
       }
-
-      const CustomAppError = createCustomAppErrorCtor();
 
       const error = new CustomAppError('Custom error', 'ERR_CUSTOM', 'info');
 
