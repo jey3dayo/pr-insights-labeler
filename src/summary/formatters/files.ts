@@ -29,12 +29,7 @@ function createBaseFileColumns(): FileTableColumn[] {
   ];
 }
 
-function formatFileTable(
-  heading: string,
-  files: FileMetrics[],
-  columns: FileTableColumn[],
-  limit?: number,
-): string {
+function formatFileTable(heading: string, files: FileMetrics[], columns: FileTableColumn[], limit?: number): string {
   if (files.length === 0) {
     return '';
   }
