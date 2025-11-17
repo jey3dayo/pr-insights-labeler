@@ -16,7 +16,7 @@ exports[`CommentManager > generateCommentBody > snapshot tests (for refactoring 
 ### 📊 File Analysis
 
 | File Name | Size | Lines | Changes | Status |
-|------|------|-------|----------|----------|
+|------|------|------|------|------|
 | \`src/file1.ts\` | 48.8 KB | 500 | +100/-20 | ✅ OK |
 | \`src/file2.ts\` | 29.3 KB | 300 | +50/-10 | ✅ OK |
 | \`src/file3.ts\` | 19.5 KB | 200 | +30/-5 | ✅ OK |
@@ -92,7 +92,7 @@ exports[`CommentManager > generateCommentBody > snapshot tests (for refactoring 
 ### 📊 File Analysis
 
 | File Name | Size | Lines | Changes | Status |
-|------|------|-------|----------|----------|
+|------|------|------|------|------|
 | \`src/large.ts\` | 1.9 MB | 2,000 | +1,000/-0 | ⚠️ Line Exceed (1,000) |
 | \`src/normal.ts\` | 4.9 KB | 100 | +50/-10 | ✅ OK |
 
