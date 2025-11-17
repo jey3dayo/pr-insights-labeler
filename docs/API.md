@@ -318,13 +318,13 @@ PR Insights Labelerの詳細なAPI仕様書です。
 
 - **型**: `string`
 - **必須**: ❌
-- **デフォルト**: なし（環境変数または `'en'` が使用される）
+- **デフォルト**: なし（優先順位チェーンの最終段で `'en'` を使用）
 - **説明**: 出力メッセージ、エラーメッセージ、ログ、PRコメントの言語設定
 - **サポート言語**: `"en"` (English), `"ja"` (日本語)
 - **優先順位**:
-  1. `LANGUAGE` 環境変数
-  2. `LANG` 環境変数
-  3. `.github/pr-labeler.yml` の `language` フィールド
+  1. GitHub Actions ワークフローの `with.language`
+  2. `.github/pr-labeler.yml` の `language` フィールド
+  3. 環境変数 (`LANGUAGE` → `LANG`)
   4. デフォルト: `'en'` (English)
 - **使用例**:
 
@@ -347,7 +347,7 @@ PR Insights Labelerの詳細なAPI仕様書です。
     with:
       github_token: ${{ secrets.GITHUB_TOKEN }}
     env:
-      LANGUAGE: ja  # 日本語で出力
+      LANGUAGE: ja  # workflow input / pr-labeler.yml 未指定時のフォールバック
   ```
 
 - **動作**:

@@ -306,7 +306,7 @@ Customize PR Insights Labeler behavior by creating `.github/pr-labeler.yml`.
 # .github/pr-labeler.yml
 
 # Language setting (optional)
-language: ja  # 'en' or 'ja' (default: 'en')
+language: ja  # 'en' or 'ja'. Applies when workflow input is omitted
 
 # Size label settings
 size:
@@ -586,32 +586,24 @@ PR Insights Labeler supports English and Japanese output for GitHub Actions Summ
 
 ### Language Configuration Methods
 
-#### Method 1: Environment Variable
+Localization resolves through a priority chain. Configure whichever level fits your workflow:
+
+#### Method 1: Workflow Input (Highest Priority)
 
 ```yaml
 - uses: jey3dayo/pr-labeler@v1
   with:
     github_token: ${{ secrets.GITHUB_TOKEN }}
-  env:
-    LANGUAGE: ja  # or 'en' (default: 'en')
+    language: ja  # Override language explicitly for this workflow run
 ```
 
-#### Method 2: Input Parameter
+#### Method 2: `.github/pr-labeler.yml`
 
-```yaml
-- uses: jey3dayo/pr-labeler@v1
-  with:
-    github_token: ${{ secrets.GITHUB_TOKEN }}
-    language: ja  # or 'en' (default: 'en')
-```
-
-#### Method 3: Configuration File
-
-Create `.github/pr-labeler.yml`:
+Create `.github/pr-labeler.yml` when you want repo-wide defaults that still allow workflow overrides:
 
 ```yaml
 # Language setting (optional)
-language: ja  # 'en' or 'ja' (default: 'en')
+language: ja  # Applied when workflow input is omitted; still falls back to env/default
 
 # Category labels with multilingual display names
 categories:
@@ -632,12 +624,22 @@ categories:
       ja: 'ドキュメント'
 ```
 
+#### Method 3: Environment Variables (`LANGUAGE` / `LANG`)
+
+```yaml
+- uses: jey3dayo/pr-labeler@v1
+  with:
+    github_token: ${{ secrets.GITHUB_TOKEN }}
+  env:
+    LANGUAGE: ja  # Used only if workflow input and config file omit language
+```
+
 ### Language Decision Priority
 
-1. `LANGUAGE` environment variable
-2. `LANG` environment variable
-3. `language` field in `pr-labeler.yml`
-4. Default: English (`en`)
+1. `language` input value passed in the workflow (`with:` block)
+2. `language` field in `.github/pr-labeler.yml`
+3. Environment variables (`LANGUAGE`, or `LANG` if `LANGUAGE` is unset)
+4. Default fallback: English (`en`)
 
 ### Display Name Priority
 

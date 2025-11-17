@@ -189,7 +189,7 @@ See [Advanced Usage Guide](advanced-usage.md#directory-based-labeling) for `.git
 
 | Parameter | Required | Default | Description |
 | ---------- | -------- | ------- | --------------------------------------------------- |
-| `language` | ❌ | `en` | Language for output messages (en, ja, en-US, ja-JP) |
+| `language` | ❌ | `— (see priority)` | Language for output messages (en, ja, en-US, ja-JP). Follows priority chain below |
 
 **Example:**
 
@@ -198,15 +198,15 @@ See [Advanced Usage Guide](advanced-usage.md#directory-based-labeling) for `.git
   with:
     github_token: ${{ secrets.GITHUB_TOKEN }}
   env:
-    LANGUAGE: ja  # or 'en' (default)
+    LANGUAGE: ja  # Step 3 fallback when workflow input & config are omitted
 ```
 
 **Language Decision Priority:**
 
-1. `LANGUAGE` environment variable
-2. `LANG` environment variable
-3. `language` field in `pr-labeler.yml`
-4. Default: English (`en`)
+1. `language` input value passed in the workflow (`with:` block)
+2. `language` field in `.github/pr-labeler.yml`
+3. Environment variables (`LANGUAGE`, or `LANG` if `LANGUAGE` is unset)
+4. Default fallback: English (`en`)
 
 See [Advanced Usage Guide](advanced-usage.md#multi-language-support) for detailed configuration.
 
@@ -430,7 +430,7 @@ You can customize PR Insights Labeler behavior by creating `.github/pr-labeler.y
 # .github/pr-labeler.yml
 
 # Language setting (optional)
-language: ja  # 'en' or 'ja' (default: 'en')
+language: ja  # 'en' or 'ja'. Applies when workflow input is omitted; still falls back to env/default
 
 # Size label settings
 size:

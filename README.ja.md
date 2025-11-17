@@ -27,7 +27,7 @@
 - **🏷️ ラベル自動生成**: ラベルを自動作成してメタデータを同期し、事前準備なしで導入可能
 - **🚦 ワークフロー品質ゲート**: `fail_on_pr_size`, `fail_on_large_files`, `fail_on_too_many_files` でポリシー違反を検知して失敗制御
 - **📝 GitHub Actions Summary**: 大規模ファイル一覧や改善提案をActions Summaryページに集約表示
-- **🌐 多言語出力**: `language` inputや `LANGUAGE/LANG` 環境変数で英語・日本語を自動切り替え
+- **🌐 多言語出力**: `language` input、`.github/pr-labeler.yml`、`LANGUAGE/LANG` 環境変数で英語・日本語を自動切り替え
 
 ## 🚀 クイックスタート
 
@@ -58,8 +58,8 @@ jobs:
       - uses: jey3dayo/pr-insights-labeler@v1
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          # 言語設定（デフォルトは英語）
-          # language: "ja"  # 日本語出力にする場合はコメントを外す
+          # 言語上書き（ワークフロー入力が最優先）
+          # language: "ja"  # 省略時は pr-labeler.yml → LANGUAGE/LANG → デフォルト'en'
 ```
 
 ### 2. 自動適用されるラベル
@@ -183,8 +183,8 @@ PR変更の潜在的な影響と安全性を評価:
     comment_on_pr: "auto"         # コメント投稿方針（auto/always/never）
 
     # ローカライズ
-    language: "ja"                # 出力言語（en/ja）
-    # 入力省略時は LANGUAGE / LANG 環境変数を優先
+    language: "ja"                # ワークフロー単位の最優先オーバーライド
+    # 省略時: .github/pr-labeler.yml → LANGUAGE/LANG 環境変数 → デフォルト'en'
 ```
 
 ### 高度な機能
