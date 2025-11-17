@@ -3,13 +3,6 @@
  */
 
 /**
- * Checks whether a value is non-nullable (not null or undefined)
- */
-export function isNonNullable<T>(value: T): value is NonNullable<T> {
-  return value !== null && value !== undefined;
-}
-
-/**
  * Checks whether a value is a non-null object (excluding arrays)
  */
 export function isObject(value: unknown): value is Record<PropertyKey, unknown> {
