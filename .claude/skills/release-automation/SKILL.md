@@ -128,10 +128,6 @@ This release was made possible by:
 ## 🔗 Full Changelog
 
 **Full Changelog**: https://github.com/jey3dayo/pr-insights-labeler/compare/v[PREVIOUS]...v[CURRENT]
-
----
-
-🤖 Generated with [Claude Code](https://claude.com/claude-code)
 ```
 
 ### 5. Breaking Changes Detection
