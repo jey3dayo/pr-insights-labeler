@@ -75,6 +75,7 @@ jobs:
 ### 3. カスタマイズ（オプション）
 
 **ワークフローサンプル:**
+
 - [basic.yml](examples/workflows/basic.yml) - デフォルト設定
 - [advanced.yml](examples/workflows/advanced.yml) - オプション機能付き
 

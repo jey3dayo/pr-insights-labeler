@@ -1,6 +1,6 @@
 # Technology Stack - PR Insights Labeler
 
-> updated_at: 2025-11-12T08:47:09Z
+> updated_at: 2025-11-17T02:48:00Z
 
 ## Architecture
 
@@ -120,10 +120,10 @@ GitHub Event (PR) → Action Runner → dist/index.js
 
 ### Package Manager
 
-- **Tool**: pnpm 10.19.0
+- **Tool**: pnpm 10.21.0
 - **Lock File**: `pnpm-lock.yaml`
 - **Workspaces**: 非使用（単一パッケージ）
-- 2024-11: packageManagerフィールドでpnpm 10.19.0を固定し、postinstallでi18n型生成スクリプトを走らせる
+- 2024-11: packageManagerフィールドでpnpm 10.21.0を固定し、postinstallでi18n型生成スクリプトを走らせる
 
 ## Core Dependencies
 
@@ -146,7 +146,7 @@ GitHub Event (PR) → Action Runner → dist/index.js
   "neverthrow": "^8.2.0",          // Railway-Oriented Programming
   "p-limit": "3.1.0",              // 🆕 並行処理制御（複雑度分析の並列化）
   "js-yaml": "^4.1.0",             // 🆕 YAML設定パース（PR Insights Labeler / Directory Labeler）
-  "@typescript-eslint/parser": "^8.46.1"  // 🆕 TypeScript AST解析（複雑度分析）
+  "@typescript-eslint/parser": "^8.46.4"  // 🆕 TypeScript AST解析（複雑度分析）
 }
 ```
 

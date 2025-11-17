@@ -1,6 +1,6 @@
 # Product Overview - PR Insights Labeler
 
-> updated_at: 2025-11-12T08:47:09Z
+> updated_at: 2025-11-17T02:48:00Z
 
 ## Product Description
 
