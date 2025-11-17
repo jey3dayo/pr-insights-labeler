@@ -1,1 +1,1 @@
-../../../../../.github/RELEASE_TEMPLATE.md
+../../../../.github/RELEASE_TEMPLATE.md
