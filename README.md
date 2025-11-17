@@ -72,6 +72,12 @@ Once configured, every PR automatically receives:
 - **Complexity labels**: `complexity/high` when ESLint complexity thresholds are exceeded (if enabled)
 - **GitHub Actions Summary**: Consolidated metrics, violation tables, and best-practice reminders directly in CI results
 
+### Sample Label Preview
+
+Here's how the automatically applied labels appear on a pull request (GitHub label screenshot):
+
+![Sample labels applied to a pull request](docs/assets/pr-insights-labeler-sample.png)
+
 ### 3. Customize (Optional)
 
 **Workflow examples:**

@@ -80,26 +80,48 @@ git push origin v1 --force
 
 #### CLI
 
+`NEXT_VERSION` は前述の手順で設定済みとして、比較リンク用に `PREV_VERSION`（直前のタグ）も用意します。
+
 ```bash
+PREV_VERSION="1.8.1"  # 直前の安定版タグ
+
 gh release create "v${NEXT_VERSION}" \
   --title "v${NEXT_VERSION}" \
   --notes "$(cat <<EOF
+## ⚠️ Breaking Changes (if applicable)
+
+- 破壊的変更の説明 (#PR)
+  - **Migration Guide**: 既存ユーザー向け移行手順
+  - **Affected**: 影響範囲
+  - **Action Required**: 必要なアクション
+
 ## 🚀 What's New
 
 ### ✨ Added
-- 新機能の説明
+- 新機能の説明 (#PR)
+
+### 🔄 Changed
+- 仕様変更・リファクタの説明 (#PR)
 
 ### 🐛 Fixed
-- バグフィックスの説明
+- バグ修正の説明 (#PR)
 
 ## 📊 Quality Metrics
-- ✅ All tests passing
+
+- ✅ [テスト数] tests passing (Vitest)
 - ✅ 0 ESLint errors/warnings
 - ✅ 0 TypeScript type errors
 - ✅ Build successful
 
+## 👥 Contributors
+
+This release was made possible by:
+- @contributor1
+- @contributor2
+
 ## 🔗 Full Changelog
-https://github.com/jey3dayo/pr-insights-labeler/compare/v1.8.1...v${NEXT_VERSION}
+
+**Full Changelog**: https://github.com/jey3dayo/pr-insights-labeler/compare/v${PREV_VERSION}...v${NEXT_VERSION}
 EOF
 )"
 ```
