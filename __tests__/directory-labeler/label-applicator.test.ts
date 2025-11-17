@@ -2,23 +2,12 @@
  * Directory-Based Labeler: Label Applicatorのユニットテスト
  */
 
-import { beforeEach, describe, expect, test, vi } from 'vitest';
+import { beforeEach, describe, expect, test } from 'vitest';
 
 import type { LabelDecision } from '../../src/directory-labeler/decision-engine.js';
 import { applyDirectoryLabels, type ApplyResult } from '../../src/directory-labeler/label-applicator.js';
 import { DEFAULT_NAMESPACES, type NamespacePolicy } from '../../src/directory-labeler/types.js';
-
-// Octokitのモック型定義
-interface MockOctokit {
-  rest: {
-    issues: {
-      listLabelsOnIssue: ReturnType<typeof vi.fn>;
-      addLabels: ReturnType<typeof vi.fn>;
-      removeLabel: ReturnType<typeof vi.fn>;
-      createLabel: ReturnType<typeof vi.fn>;
-    };
-  };
-}
+import { createMockOctokit, type MockOctokit } from './mock-octokit';
 
 describe('Directory-Based Labeler: Label Applicator', () => {
   let mockOctokit: MockOctokit;
@@ -33,16 +22,7 @@ describe('Directory-Based Labeler: Label Applicator', () => {
   };
 
   beforeEach(() => {
-    mockOctokit = {
-      rest: {
-        issues: {
-          listLabelsOnIssue: vi.fn(),
-          addLabels: vi.fn(),
-          removeLabel: vi.fn(),
-          createLabel: vi.fn(),
-        },
-      },
-    };
+    mockOctokit = createMockOctokit();
   });
 
   describe('applyDirectoryLabels', () => {

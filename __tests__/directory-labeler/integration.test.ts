@@ -8,24 +8,13 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 
-import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, test } from 'vitest';
 
 import { loadDirectoryLabelerConfig } from '../../src/directory-labeler/config-loader.js';
 import { decideLabelsForFiles } from '../../src/directory-labeler/decision-engine.js';
 import { applyDirectoryLabels } from '../../src/directory-labeler/label-applicator.js';
 import { DEFAULT_NAMESPACES } from '../../src/directory-labeler/types.js';
-
-// Octokitのモック型定義
-interface MockOctokit {
-  rest: {
-    issues: {
-      listLabelsOnIssue: ReturnType<typeof vi.fn>;
-      addLabels: ReturnType<typeof vi.fn>;
-      removeLabel: ReturnType<typeof vi.fn>;
-      createLabel: ReturnType<typeof vi.fn>;
-    };
-  };
-}
+import { createMockOctokit, type MockOctokit } from './mock-octokit';
 
 describe('Directory-Based Labeler: Integration Tests', () => {
   let tempDir: string;
@@ -40,16 +29,7 @@ describe('Directory-Based Labeler: Integration Tests', () => {
     tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'dir-labeler-integration-'));
     configPath = path.join(tempDir, 'directory-labeler.yml');
 
-    mockOctokit = {
-      rest: {
-        issues: {
-          listLabelsOnIssue: vi.fn(),
-          addLabels: vi.fn(),
-          removeLabel: vi.fn(),
-          createLabel: vi.fn(),
-        },
-      },
-    };
+    mockOctokit = createMockOctokit();
   });
 
   afterEach(() => {
