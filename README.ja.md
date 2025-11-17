@@ -72,6 +72,12 @@ jobs:
 - **複雑度ラベル**: ESLint複雑度が閾値を超えた場合に `complexity/high`（有効化時）
 - **GitHub Actions Summary**: CI結果ページにメトリクス・違反一覧・ベストプラクティスを表示
 
+### ラベル表示サンプル
+
+PRに自動適用されるラベルは次のように表示されます（GitHubラベルのスクリーンショット例）：
+
+![PR Insights Labeler によって適用されたラベル例](docs/assets/pr-insights-labeler-sample.png)
+
 ### 3. カスタマイズ（オプション）
 
 **ワークフローサンプル:**

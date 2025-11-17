@@ -547,8 +547,6 @@ PRコメント投稿、GitHub Actions Summary出力の機能は変更なし。�
 ```
 chore: rename product to PR Insights Labeler
 
-🤖 Generated with [Claude Code](https://claude.com/claude-code)
-
 Co-Authored-By: Claude <noreply@anthropic.com>
 ```
 

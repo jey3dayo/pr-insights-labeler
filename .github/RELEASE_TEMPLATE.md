@@ -26,12 +26,12 @@ This template defines the standard format for PR Insights Labeler release notes.
 - Bug fix 1
 - Bug fix 2
 
-### 🗑️ Removed
-- Removed feature 1 (if applicable)
+### 🗑️ Removed (if applicable)
+- Removed feature 1
 
 ## 📊 Quality Metrics
 
-- ✅ [N] tests passing
+- ✅ [N] tests passing (e.g., Vitest: 796 tests)
 - ✅ 0 ESLint errors/warnings
 - ✅ 0 TypeScript type errors
 - ✅ Build successful
@@ -155,7 +155,7 @@ Link to GitHub's compare view showing all commits between releases.
 
 ## Example Release Notes
 
-See [v1.5.0](https://github.com/jey3dayo/pr-insights-labeler/releases/tag/v1.5.0) for a complete example following this template.
+See [v1.8.1](https://github.com/jey3dayo/pr-insights-labeler/releases/tag/v1.8.1) for a complete example following this template.
 
 ## Automation
 
