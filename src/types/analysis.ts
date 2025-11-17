@@ -11,6 +11,7 @@ export interface FileMetrics {
   path: string;
   size: number;
   lines: number;
+  isLineCountCapped?: boolean;
   additions: number;
   deletions: number;
 }
