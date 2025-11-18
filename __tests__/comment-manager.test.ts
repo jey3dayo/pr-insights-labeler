@@ -459,7 +459,7 @@ describe('CommentManager', () => {
       const body = generateCommentBody(analysisResult);
 
       expect(body).toContain('📊 PR Size Check - Large PR Detected');
-      expect(body).toContain('### 📊 Size Summary');
+      expect(body).toContain('### 📊 Violations');
       expect(body).toContain('Total additions exceed limit');
       // Detailed violation tables removed - now shown in unified formatFileAnalysis
       expect(body).not.toContain('### 🚫 Large Files Detected');
