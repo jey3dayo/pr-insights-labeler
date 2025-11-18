@@ -21,7 +21,7 @@
   },
   "violations": {
     "title": "違反",
-    "sizeSummary": "サイズサマリ",
+    "sizeSummary": "違反",
     "allWithinLimits": "すべてのファイルがサイズ制限内です",
     "filesExceedSize": "{{count}}個のファイルがサイズ制限を超過",
     "filesExceedLines": "{{count}}個のファイルが行数制限を超過",

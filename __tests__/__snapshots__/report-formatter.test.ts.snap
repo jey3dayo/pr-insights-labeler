@@ -104,9 +104,9 @@ Here are some ways to reduce your PR size:
 `;
 
 exports[`ReportFormatter > Summary Output Snapshots (Multilingual) > should match English snapshot > violations-en 1`] = `
-"### 📊 Size Summary
+"### 📊 Violations
 
-- **1 file(s) exceed size limit**
+- **1 file(s) exceed size limit** (\`auto/large-files\`)
 
 "
 `;
@@ -215,9 +215,9 @@ PRサイズを削減する方法をいくつか紹介します：
 `;
 
 exports[`ReportFormatter > Summary Output Snapshots (Multilingual) > should match Japanese snapshot > violations-ja 1`] = `
-"### 📊 サイズサマリ
+"### 📊 違反
 
-- **1個のファイルがサイズ制限を超過**
+- **1個のファイルがサイズ制限を超過** (\`auto/large-files\`)
 
 "
 `;
