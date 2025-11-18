@@ -451,7 +451,7 @@ describe('GitHub Actions I/O', () => {
 
       expect(result.isOk()).toBe(true);
       const markdown = mockSummary.addRaw.mock.calls[0][0];
-      expect(markdown).toContain('### 📊 Size Summary');
+      expect(markdown).toContain('### 📊 Violations');
       // Detailed tables removed - now in formatFileAnalysis
       expect(markdown).not.toContain('### 🚫 Large Files Detected');
     });

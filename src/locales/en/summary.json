@@ -21,7 +21,7 @@
   },
   "violations": {
     "title": "Violations",
-    "sizeSummary": "Size Summary",
+    "sizeSummary": "Violations",
     "allWithinLimits": "All files are within size limits",
     "filesExceedSize": "{{count}} file(s) exceed size limit",
     "filesExceedLines": "{{count}} file(s) exceed line limit",

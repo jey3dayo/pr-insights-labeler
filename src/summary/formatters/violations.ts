@@ -30,16 +30,16 @@ export function formatViolations(violations: Violations, options?: FormatViolati
   }
 
   if (violations.largeFiles.length > 0) {
-    output += `- **${t('summary', 'violations.filesExceedSize', { count: violations.largeFiles.length })}**\n`;
+    output += `- **${t('summary', 'violations.filesExceedSize', { count: violations.largeFiles.length })}** (\`auto/large-files\`)\n`;
   }
   if (violations.exceedsFileLines.length > 0) {
-    output += `- **${t('summary', 'violations.filesExceedLines', { count: violations.exceedsFileLines.length })}**\n`;
+    output += `- **${t('summary', 'violations.filesExceedLines', { count: violations.exceedsFileLines.length })}** (\`auto/too-many-lines\`)\n`;
   }
   if (violations.exceedsAdditions) {
-    output += `- **${t('summary', 'violations.totalAdditionsExceed')}**\n`;
+    output += `- **${t('summary', 'violations.totalAdditionsExceed')}** (\`auto/excessive-changes\`)\n`;
   }
   if (violations.exceedsFileCount) {
-    output += `- **${t('summary', 'violations.fileCountExceed')}**\n`;
+    output += `- **${t('summary', 'violations.fileCountExceed')}** (\`auto/too-many-files\`)\n`;
   }
   output += '\n';
 

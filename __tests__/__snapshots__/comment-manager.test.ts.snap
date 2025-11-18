@@ -83,11 +83,11 @@ exports[`CommentManager > generateCommentBody > snapshot tests (for refactoring 
 - Excluded from Analysis: **0**
 - Binary files skipped: **0**
 
-### 📊 Size Summary
+### 📊 Violations
 
-- **1 file(s) exceed size limit**
-- **1 file(s) exceed line limit**
-- **Total additions exceed limit**
+- **1 file(s) exceed size limit** (\`auto/large-files\`)
+- **1 file(s) exceed line limit** (\`auto/too-many-lines\`)
+- **Total additions exceed limit** (\`auto/excessive-changes\`)
 
 ### 📊 File Analysis
 
