@@ -363,6 +363,29 @@ describe('Label Decision Engine', () => {
       expect(decisions.reasoning.find(r => r.category === 'size')).toBeUndefined();
     });
 
+    it('should not add risk/high when test files are excluded from analysis but included in allFiles', () => {
+      // Simulate scenario where test files are excluded from analysis but present in PR
+      const metrics: PRMetrics = {
+        totalAdditions: 10,
+        excludedAdditions: 0,
+        files: [
+          // Only analyzed files (tests excluded)
+          { path: 'src/core.ts', size: 1000, lines: 50, additions: 10, deletions: 5 },
+        ],
+        allFiles: [
+          // All PR files including tests
+          'src/core.ts',
+          '__tests__/core.test.ts', // Test file excluded from analysis
+        ],
+      };
+
+      const result = decideLabels(metrics, config, emptyViolations);
+      const decisions = result._unsafeUnwrap();
+
+      // Should NOT have risk/high because test files exist in allFiles
+      expect(decisions.labelsToAdd).not.toContain('risk/high');
+    });
+
     it('should not add category labels when disabled in config', () => {
       const customConfig = {
         ...config,
