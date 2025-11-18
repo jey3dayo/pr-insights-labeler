@@ -81,7 +81,8 @@ export function decideLabels(
 
   // 4. Decide risk label (if enabled)
   if (config.risk.enabled) {
-    const files = metrics.files.map(f => f.path);
+    // Use allFiles (before exclusion) for risk evaluation to include test files
+    const files = metrics.allFiles;
     const riskLabel = decideRiskLabel(files, config.risk, prContext);
     if (riskLabel) {
       labelsToAdd.push(riskLabel);
