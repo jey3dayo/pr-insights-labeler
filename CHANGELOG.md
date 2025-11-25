@@ -5,6 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.9.3] - 2025-11-25
+
+### ✨ Added
+
+- improve Violations section with label names (#113)
+
+### 🐛 Fixed
+
+- use allFiles for risk evaluation to include test files (#114)
+- display line count as '501+' when capped at limit (#112)
+- correct symlink paths in release-automation skill
+
+### 🔄 Changed
+
+- update pnpm to version 10.23.0
+
 ## [1.8.0] - 2025-11-12
 
 ### ✨ Added
