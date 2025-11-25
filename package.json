@@ -12,7 +12,7 @@
   "engines": {
     "node": ">=20"
   },
-  "packageManager": "pnpm@10.21.0",
+  "packageManager": "pnpm@10.23.0",
   "main": "dist/index.js",
   "scripts": {
     "generate:i18n-types": "tsx scripts/generate-i18n-types.ts",

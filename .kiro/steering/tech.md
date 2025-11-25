@@ -120,10 +120,10 @@ GitHub Event (PR) → Action Runner → dist/index.js
 
 ### Package Manager
 
-- **Tool**: pnpm 10.21.0
+- **Tool**: pnpm 10.23.0
 - **Lock File**: `pnpm-lock.yaml`
 - **Workspaces**: 非使用（単一パッケージ）
-- 2024-11: packageManagerフィールドでpnpm 10.21.0を固定し、postinstallでi18n型生成スクリプトを走らせる
+- 2024-11: packageManagerフィールドでpnpm 10.23.0を固定し、postinstallでi18n型生成スクリプトを走らせる
 
 ## Core Dependencies
 

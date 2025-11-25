@@ -5,7 +5,7 @@ _.path = ['./node_modules/.bin']
 
 [tools]
 node = "22"
-"npm:pnpm" = '10.21.0'
+"npm:pnpm" = '10.23.0'
 fd = 'latest'
 
 [tasks]
