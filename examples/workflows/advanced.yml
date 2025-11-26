@@ -60,12 +60,17 @@ jobs:
           # Optional: File Exclusion Patterns
           # ============================================
           # Exclude specific files/directories from analysis
-          # Common use cases:
-          # - Generated code (protobuf, graphql, etc.)
-          # - Vendor/third-party code
-          # - Build artifacts
-          # - Test fixtures
+          # Use glob patterns to match files. Multiple patterns can be combined.
 
+          # Example 1: Ignore specific large files
+          # Useful when you have known large files that should not trigger violations
+          # additional_exclude_patterns: |
+          #   docs/large-api-spec.json
+          #   assets/generated-data.ts
+          #   config/all-feature-flags.json
+
+          # Example 2: Ignore generated/vendor code
+          # Common for projects with code generation (Protobuf, GraphQL, OpenAPI)
           # additional_exclude_patterns: |
           #   **/*.generated.ts
           #   **/*.pb.go
@@ -73,8 +78,16 @@ jobs:
           #   **/graphql/generated/**
           #   vendor/**
           #   third_party/**
+          #   node_modules/**
+
+          # Example 3: Ignore test fixtures and snapshots
+          # Prevents test data files from affecting PR metrics
+          # additional_exclude_patterns: |
           #   __snapshots__/**
           #   test/fixtures/**
+          #   **/*.fixture.json
+          #   **/*.mock.ts
+          #   **/testdata/**
 
           # Uncomment to disable default excludes (not recommended)
           # By default, excludes node_modules, dist, build, lock files, etc.
@@ -138,6 +151,23 @@ jobs:
 # Open Source Projects:
 #   Keep fail_on_* options disabled to avoid discouraging contributions
 #   Consider using pull_request_target for fork PRs
+#
+# Generated Code Projects (Protobuf, GraphQL, OpenAPI):
+#   additional_exclude_patterns: |
+#     **/*.generated.ts
+#     **/*.pb.go
+#     **/*.gen.go
+#     **/graphql/generated/**
+#     **/openapi/generated/**
+#   Use to prevent auto-generated files from triggering violations
+#
+# Projects with Large Test Fixtures:
+#   additional_exclude_patterns: |
+#     __snapshots__/**
+#     test/fixtures/**
+#     **/*.fixture.json
+#     **/testdata/**
+#   Exclude test data to focus metrics on production code
 #
 # ============================================
 # Related Documentation
