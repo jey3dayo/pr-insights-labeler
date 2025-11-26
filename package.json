@@ -10,7 +10,7 @@
     "url": "https://github.com/jey3dayo/pr-insights-labeler.git"
   },
   "engines": {
-    "node": ">=20"
+    "node": ">=20.19.0 || >=22.13.0"
   },
   "packageManager": "pnpm@10.23.0",
   "main": "dist/index.js",
