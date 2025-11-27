@@ -161,16 +161,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: pnpm/action-setup@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: "22.13.0"
-          cache: "pnpm"
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+      - name: Setup Node.js Environment
+        uses: ./.github/actions/setup-node-env
 
       - name: Restore ESLint cache
         uses: actions/cache@v4
@@ -293,21 +285,15 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node-version: ["22.13.0"]
+        node-version: ["22"]
 
     steps:
       - uses: actions/checkout@v4
 
-      - uses: pnpm/action-setup@v4
-
-      - name: Setup Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v4
+      - name: Setup Node.js Environment
+        uses: ./.github/actions/setup-node-env
         with:
           node-version: ${{ matrix.node-version }}
-          cache: "pnpm"
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
 
       - name: Restore TypeScript cache
         uses: actions/cache@v4
