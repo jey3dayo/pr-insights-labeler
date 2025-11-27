@@ -166,7 +166,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "22"
+          node-version: "22.13.0"
           cache: "pnpm"
 
       - name: Install dependencies
@@ -293,7 +293,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node-version: [22]
+        node-version: ["22.13.0"]
 
     steps:
       - uses: actions/checkout@v4
