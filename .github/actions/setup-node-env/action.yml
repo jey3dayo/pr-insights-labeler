@@ -1,0 +1,38 @@
+name: "Setup Node Environment"
+description: "Complete Node.js environment setup with pnpm and caching"
+
+inputs:
+  node-version:
+    description: "Node.js version to use"
+    required: false
+    default: "22"
+  skip-install:
+    description: "Skip dependency installation"
+    required: false
+    default: "false"
+
+outputs:
+  node-version:
+    description: "Node.js version installed"
+    value: ${{ steps.setup-node.outputs.node-version }}
+  cache-hit:
+    description: "Whether the pnpm cache was restored"
+    value: ${{ steps.setup-node.outputs.cache-hit }}
+
+runs:
+  using: "composite"
+  steps:
+    - name: Setup pnpm
+      uses: pnpm/action-setup@v4
+
+    - name: Setup Node.js
+      id: setup-node
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ inputs.node-version }}
+        cache: "pnpm"
+
+    - name: Install dependencies
+      if: ${{ inputs.skip-install != 'true' }}
+      shell: bash
+      run: pnpm install --frozen-lockfile
