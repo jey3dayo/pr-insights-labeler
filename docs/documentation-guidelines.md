@@ -1,6 +1,6 @@
 # 📚 ドキュメント管理ガイドライン
 
-**最終更新**: 2025-10-22
+**最終更新**: 2025-11-28
 **対象**: 開発者・コントリビューター
 **タグ**: `category/documentation`, `audience/developer`
 
@@ -76,7 +76,7 @@
 ### ディレクトリ構造
 
 ```
-pr-labeler/
+pr-insights-labeler/
 ├── README.md            # プロジェクト概要（ユーザー向け）
 ├── CLAUDE.md           # Claude Code開発ガイド
 ├── docs/
@@ -208,7 +208,7 @@ pr-labeler/
 現在、`docs/` ディレクトリは英語のみですが、将来的に日本語版を追加する場合は以下の構造を使用します：
 
 ```
-pr-labeler/
+pr-insights-labeler/
 ├── README.md            # 英語（エントリーポイント）
 ├── README.ja.md         # 日本語（エントリーポイント）
 ├── docs/
@@ -335,4 +335,4 @@ const example = "code";
 
 ---
 
-**メンテナー**: jey3dayo | **ライセンス**: MIT | **リポジトリ**: [jey3dayo/pr-labeler](https://github.com/jey3dayo/pr-labeler)
+**メンテナー**: jey3dayo | **ライセンス**: MIT | **リポジトリ**: [jey3dayo/pr-insights-labeler](https://github.com/jey3dayo/pr-insights-labeler)

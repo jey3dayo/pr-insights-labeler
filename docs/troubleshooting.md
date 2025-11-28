@@ -56,7 +56,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: jey3dayo/pr-labeler@v1
+      - uses: jey3dayo/pr-insights-labeler@v1
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
 ```
@@ -82,7 +82,7 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.head.sha }}
 
-      - uses: jey3dayo/pr-labeler@v1
+      - uses: jey3dayo/pr-insights-labeler@v1
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
 ```
@@ -168,7 +168,7 @@ labels:
 Directory-Based Labeling automatically creates missing labels (no configuration needed):
 
 ```yaml
-- uses: jey3dayo/pr-labeler@v1
+- uses: jey3dayo/pr-insights-labeler@v1
   with:
     github_token: ${{ secrets.GITHUB_TOKEN }}
     enable_directory_labeling: true  # Labels are auto-created with default color (cccccc)
@@ -201,7 +201,7 @@ By default, `skip_draft_pr` is set to `"true"`, causing the action to skip draft
 Explicitly set `skip_draft_pr` to `"false"`:
 
 ```yaml
-- uses: jey3dayo/pr-labeler@v1
+- uses: jey3dayo/pr-insights-labeler@v1
   with:
     github_token: ${{ secrets.GITHUB_TOKEN }}
     skip_draft_pr: "false"  # Run on draft PRs
@@ -271,7 +271,7 @@ npx eslint src/
 If complexity analysis is not critical, disable it:
 
 ```yaml
-- uses: jey3dayo/pr-labeler@v1
+- uses: jey3dayo/pr-insights-labeler@v1
   with:
     github_token: ${{ secrets.GITHUB_TOKEN }}
     complexity_enabled: "false"  # Disable complexity analysis
@@ -284,7 +284,7 @@ If complexity analysis is not critical, disable it:
 Add problematic files to exclusion patterns:
 
 ```yaml
-- uses: jey3dayo/pr-labeler@v1
+- uses: jey3dayo/pr-insights-labeler@v1
   with:
     github_token: ${{ secrets.GITHUB_TOKEN }}
     additional_exclude_patterns: |
@@ -336,7 +336,7 @@ Review the [Default Exclude Patterns](configuration.md#default-exclude-patterns)
 If you want to analyze all files, disable default exclusions:
 
 ```yaml
-- uses: jey3dayo/pr-labeler@v1
+- uses: jey3dayo/pr-insights-labeler@v1
   with:
     github_token: ${{ secrets.GITHUB_TOKEN }}
     use_default_excludes: "false"  # Analyze all files
@@ -386,7 +386,7 @@ Possible causes:
 Ensure `enable_summary` is set to `"true"` (default):
 
 ```yaml
-- uses: jey3dayo/pr-labeler@v1
+- uses: jey3dayo/pr-insights-labeler@v1
   with:
     github_token: ${{ secrets.GITHUB_TOKEN }}
     enable_summary: "true"  # Enable summary output
@@ -397,7 +397,7 @@ Ensure `enable_summary` is set to `"true"` (default):
 For large PRs, disable summary output:
 
 ```yaml
-- uses: jey3dayo/pr-labeler@v1
+- uses: jey3dayo/pr-insights-labeler@v1
   with:
     github_token: ${{ secrets.GITHUB_TOKEN }}
     enable_summary: "false"  # Disable for large PRs
@@ -423,7 +423,7 @@ Error: Unable to process summary. Size exceeds limit.
 Enable debug logging for detailed output:
 
 ```yaml
-- uses: jey3dayo/pr-labeler@v1
+- uses: jey3dayo/pr-insights-labeler@v1
   with:
     github_token: ${{ secrets.GITHUB_TOKEN }}
   env:
@@ -460,8 +460,8 @@ Test PR Insights Labeler behavior locally:
 
 ```bash
 # Clone the repository
-git clone https://github.com/jey3dayo/pr-labeler.git
-cd pr-labeler
+git clone https://github.com/jey3dayo/pr-insights-labeler.git
+cd pr-insights-labeler
 
 # Install dependencies
 pnpm install
@@ -498,11 +498,11 @@ If you encounter issues not covered in this guide:
 
 Report bugs, request features, or ask questions:
 
-**🐛 Bug Report**: [Create an issue](https://github.com/jey3dayo/pr-labeler/issues/new)
+**🐛 Bug Report**: [Create an issue](https://github.com/jey3dayo/pr-insights-labeler/issues/new)
 
-**✨ Feature Request**: [Create an issue](https://github.com/jey3dayo/pr-labeler/issues/new)
+**✨ Feature Request**: [Create an issue](https://github.com/jey3dayo/pr-insights-labeler/issues/new)
 
-**💬 Questions**: [View existing issues](https://github.com/jey3dayo/pr-labeler/issues)
+**💬 Questions**: [View existing issues](https://github.com/jey3dayo/pr-insights-labeler/issues)
 
 ### Before Reporting
 

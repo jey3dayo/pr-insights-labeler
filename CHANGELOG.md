@@ -151,7 +151,7 @@ README.mdを717行から206行に簡素化し、詳細情報を`docs/`ディレ�
 
 **アーカイブ**:
 
-以前のREADME（730行）は[pre-simplification-readme](https://github.com/jey3dayo/pr-labeler/tree/pre-simplification-readme)タグで参照可能です。
+以前のREADME（730行）は[pre-simplification-readme](https://github.com/jey3dayo/pr-insights-labeler/tree/pre-simplification-readme)タグで参照可能です。
 
 **関連Issue**: #35
 
@@ -374,5 +374,5 @@ PRメトリクス分析に基づいた高度な自動ラベル付け機能を追
 
 ---
 
-[1.0.1]: https://github.com/jey3dayo/pr-labeler/releases/tag/v1.0.1
-[1.0.0]: https://github.com/jey3dayo/pr-labeler/releases/tag/v1.0.0
+[1.0.1]: https://github.com/jey3dayo/pr-insights-labeler/releases/tag/v1.0.1
+[1.0.0]: https://github.com/jey3dayo/pr-insights-labeler/releases/tag/v1.0.0
