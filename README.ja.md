@@ -85,7 +85,7 @@ PRに自動適用されるラベルは次のように表示されます（GitHub
 - [basic.yml](examples/workflows/basic.yml) - デフォルト設定
 - [advanced.yml](examples/workflows/advanced.yml) - オプション機能付き
 
-**ドキュメント:** [設定ガイド](docs/configuration.md) | [高度な使用例](docs/advanced-usage.md) | [ラベルルール](docs/labeling-rules.ja.md)
+**ドキュメント:** [設定ガイド](docs/configuration.md) | [高度な使用例](docs/advanced-usage.ja.md) | [ラベルルール](docs/labeling-rules.ja.md)
 
 ## 🔒 権限設定
 
@@ -98,7 +98,7 @@ permissions:
   issues: write         # PRコメント投稿
 ```
 
-**フォークPR**: `pull_request_target` イベントを使用してください。詳細は [フォークPR対応](docs/advanced-usage.md#fork-pr-handling) を参照。
+**フォークPR**: `pull_request_target` イベントを使用してください。詳細は [フォークPR対応](docs/advanced-usage.ja.md#フォークprの取り扱い) を参照。
 
 ## 🏷️ 適用されるラベル
 
@@ -200,14 +200,14 @@ PR変更の潜在的な影響と安全性を評価:
 - **条件付き実行**: ラベル、ブランチ、パスでチェックをスキップ
 - **カスタム閾値**: すべてのサイズ・複雑度の制限を微調整
 
-👉 **完全なドキュメント**: [設定ガイド](docs/configuration.md) | [高度な使用例](docs/advanced-usage.md)
+👉 **完全なドキュメント**: [設定ガイド](docs/configuration.md) | [高度な使用例](docs/advanced-usage.ja.md)
 
 ## 📚 ドキュメント
 
 | ガイド | 説明 |
 | ------------------------------------------------- | -------------------------- |
 | [設定ガイド](docs/configuration.md) | 全入力・出力・デフォルト値 |
-| [高度な使用例](docs/advanced-usage.md) | 実践的な例とパターン |
+| [高度な使用例](docs/advanced-usage.ja.md) | 実践的な例とパターン |
 | [トラブルシューティング](docs/troubleshooting.md) | よくある問題と解決策 |
 | [APIリファレンス](docs/API.md) | 内部APIドキュメント |
 | [リリースプロセス](docs/release-process.md) | バージョン管理 |

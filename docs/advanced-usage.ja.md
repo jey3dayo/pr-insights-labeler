@@ -49,7 +49,7 @@ jobs:
           # 重要: ベースブランチではなく、PRのコードをチェックアウト
           ref: ${{ github.event.pull_request.head.sha }}
 
-      - uses: jey3dayo/pr-labeler@v1
+      - uses: jey3dayo/pr-insights-labeler@v1
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
 ```
@@ -82,7 +82,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: jey3dayo/pr-labeler@v1
+      - uses: jey3dayo/pr-insights-labeler@v1
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           # 除外する追加パターン
@@ -111,7 +111,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: jey3dayo/pr-labeler@v1
+      - uses: jey3dayo/pr-insights-labeler@v1
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
 ```
@@ -136,7 +136,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: jey3dayo/pr-labeler@v1
+      - uses: jey3dayo/pr-insights-labeler@v1
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
 ```
@@ -166,7 +166,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: jey3dayo/pr-labeler@v1
+      - uses: jey3dayo/pr-insights-labeler@v1
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           file_size_limit: "100KB"
@@ -209,7 +209,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: jey3dayo/pr-labeler@v1
+      - uses: jey3dayo/pr-insights-labeler@v1
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
@@ -241,7 +241,7 @@ jobs:
 デフォルトでは、すべてのラベルタイプ（size、complexity、category、risk）が有効です:
 
 ```yaml
-- uses: jey3dayo/pr-labeler@v1
+- uses: jey3dayo/pr-insights-labeler@v1
   with:
     github_token: ${{ secrets.GITHUB_TOKEN }}
     # すべてのラベルタイプがデフォルトで有効
@@ -251,7 +251,7 @@ jobs:
 
 ```yaml
 # 例1: 複雑度ラベルのみ無効化
-- uses: jey3dayo/pr-labeler@v1
+- uses: jey3dayo/pr-insights-labeler@v1
   with:
     github_token: ${{ secrets.GITHUB_TOKEN }}
     complexity_enabled: "false"
@@ -260,7 +260,7 @@ jobs:
 
 ```yaml
 # 例2: サイズとリスクラベルのみ
-- uses: jey3dayo/pr-labeler@v1
+- uses: jey3dayo/pr-insights-labeler@v1
   with:
     github_token: ${{ secrets.GITHUB_TOKEN }}
     size_enabled: "true"
@@ -272,7 +272,7 @@ jobs:
 ### 選択的有効化とカスタム閾値
 
 ```yaml
-- uses: jey3dayo/pr-labeler@v1
+- uses: jey3dayo/pr-insights-labeler@v1
   with:
     github_token: ${{ secrets.GITHUB_TOKEN }}
 
@@ -317,9 +317,6 @@ size:
     xlarge: 1500   # Extra large PR閾値（デフォルト: 3000）
 
 # カテゴリラベル設定
-
-詳細情報とカスタムカテゴリの例については、[カテゴリガイド](categories.md)を参照してください。
-
 categories:
   # ビルトインカテゴリ（カスタマイズ可能）
   - label: "category/tests"
@@ -411,6 +408,8 @@ runtime:
   fail_on_error: false  # ラベリング失敗時もワークフローを継続
 ```
 
+詳細情報とカスタムカテゴリの例については、[カテゴリガイド](categories.md)を参照してください。
+
 ### ファイルなしでの設定
 
 PR Insights Labelerは `.github/pr-labeler.yml` なしでもデフォルト設定ですぐに動作します。
@@ -434,10 +433,10 @@ Globパターンを使用して、変更されたファイルパスに基づい�
 - **パスベースマッピング**: ディレクトリパターン（glob）からラベルを自動決定
 - **優先度制御**: 優先度、最長マッチ、定義順による柔軟な制御
 - **名前空間ポリシー**: 排他的（replace）/追加的（add）による競合解決
-- **安全な設計**: デフォルトで無効、明示的な有効化が必要
-- **ラベル自動作成**: 不足しているラベルを自動作成するオプション
+- **デフォルトON**: 既定で有効。不要な場合は `enable_directory_labeling: "false"` で無効化
+- **ラベル自動作成**: 不足しているラベルを自動作成
 
-### 機能の有効化
+### 設定例
 
 ```yaml
 name: PR Check
@@ -458,10 +457,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: jey3dayo/pr-labeler@v1
+      - uses: jey3dayo/pr-insights-labeler@v1
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          enable_directory_labeling: true  # 機能を有効化
+          enable_directory_labeling: true  # 既定で有効。不要なら "false" を指定
 ```
 
 ### 設定ファイル
@@ -591,7 +590,7 @@ PR Insights LabelerはGitHub Actions Summary、エラーメッセージ、ログ
 #### 方法1: ワークフロー入力（最優先）
 
 ```yaml
-- uses: jey3dayo/pr-labeler@v1
+- uses: jey3dayo/pr-insights-labeler@v1
   with:
     github_token: ${{ secrets.GITHUB_TOKEN }}
     language: ja  # このワークフロー実行に対して明示的に上書き
@@ -627,7 +626,7 @@ categories:
 #### 方法3: 環境変数（`LANGUAGE` / `LANG`）
 
 ```yaml
-- uses: jey3dayo/pr-labeler@v1
+- uses: jey3dayo/pr-insights-labeler@v1
   with:
     github_token: ${{ secrets.GITHUB_TOKEN }}
   env:

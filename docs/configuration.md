@@ -33,7 +33,7 @@ Complete reference for all input parameters, output variables, and configuration
 **Examples:**
 
 ```yaml
-- uses: jey3dayo/pr-labeler@v1
+- uses: jey3dayo/pr-insights-labeler@v1
   with:
     github_token: ${{ secrets.GITHUB_TOKEN }}
     file_size_limit: "500KB"      # 500 kilobytes
@@ -55,7 +55,7 @@ Complete reference for all input parameters, output variables, and configuration
 **Examples:**
 
 ```yaml
-- uses: jey3dayo/pr-labeler@v1
+- uses: jey3dayo/pr-insights-labeler@v1
   with:
     auto_remove_labels: "true"
     large_files_label: "violations/large-files"
@@ -80,18 +80,18 @@ Control which label types are applied (unified naming: `*_enabled` and `*_thresh
 
 ```yaml
 # Default: All labels enabled
-- uses: jey3dayo/pr-labeler@v1
+- uses: jey3dayo/pr-insights-labeler@v1
   with:
     github_token: ${{ secrets.GITHUB_TOKEN }}
 
 # Disable complexity labels only
-- uses: jey3dayo/pr-labeler@v1
+- uses: jey3dayo/pr-insights-labeler@v1
   with:
     github_token: ${{ secrets.GITHUB_TOKEN }}
     complexity_enabled: "false"
 
 # Custom thresholds with selective enabling
-- uses: jey3dayo/pr-labeler@v1
+- uses: jey3dayo/pr-insights-labeler@v1
   with:
     github_token: ${{ secrets.GITHUB_TOKEN }}
     size_enabled: "true"
@@ -119,23 +119,23 @@ These parameters control workflow failures based on applied labels or actual vio
 
 ```yaml
 # Pattern 1: Strict file size checking
-- uses: jey3dayo/pr-labeler@v1
+- uses: jey3dayo/pr-insights-labeler@v1
   with:
     fail_on_large_files: "true"
 
 # Pattern 2: Strict file count checking
-- uses: jey3dayo/pr-labeler@v1
+- uses: jey3dayo/pr-insights-labeler@v1
   with:
     fail_on_too_many_files: "true"
 
 # Pattern 3: Fail if PR size is "large" or above
-- uses: jey3dayo/pr-labeler@v1
+- uses: jey3dayo/pr-insights-labeler@v1
   with:
     fail_on_pr_size: "large"
     size_enabled: "true"  # fail_on_pr_size requires size_enabled
 
 # Pattern 4: Combined strict mode
-- uses: jey3dayo/pr-labeler@v1
+- uses: jey3dayo/pr-insights-labeler@v1
   with:
     fail_on_large_files: "true"
     fail_on_too_many_files: "true"
@@ -155,7 +155,7 @@ These parameters control workflow failures based on applied labels or actual vio
 **Examples:**
 
 ```yaml
-- uses: jey3dayo/pr-labeler@v1
+- uses: jey3dayo/pr-insights-labeler@v1
   with:
     additional_exclude_patterns: |
       **/*.generated.ts
@@ -168,17 +168,19 @@ These parameters control workflow failures based on applied labels or actual vio
 
 | Parameter | Required | Default | Description |
 | ------------------------------- | -------- | ------------------------------- | --------------------------------------------------- |
-| `enable_directory_labeling` | ❌ | `false` | Enable Directory-Based Labeling feature |
+| `enable_directory_labeling` | ❌ | `true` | Enable Directory-Based Labeling feature |
 | `directory_labeler_config_path` | ❌ | `.github/directory-labeler.yml` | Path to directory labeler configuration file |
 | `max_labels` | ❌ | `10` | Maximum number of labels to apply (0 for unlimited) |
+
+Directory-Based Labeling is enabled by default. Set `enable_directory_labeling: "false"` if you prefer to opt out.
 
 **Example:**
 
 ```yaml
-- uses: jey3dayo/pr-labeler@v1
+- uses: jey3dayo/pr-insights-labeler@v1
   with:
     github_token: ${{ secrets.GITHUB_TOKEN }}
-    enable_directory_labeling: true
+    enable_directory_labeling: true  # Enabled by default; set to "false" to opt out
     directory_labeler_config_path: ".github/directory-labeler.yml"
     max_labels: 5
 ```
@@ -194,7 +196,7 @@ See [Advanced Usage Guide](advanced-usage.md#directory-based-labeling) for `.git
 **Example:**
 
 ```yaml
-- uses: jey3dayo/pr-labeler@v1
+- uses: jey3dayo/pr-insights-labeler@v1
   with:
     github_token: ${{ secrets.GITHUB_TOKEN }}
   env:
@@ -367,7 +369,7 @@ GitHub Actions job summaries have the following limits:
 For large PRs (thousands of lines, hundreds of files), consider disabling or limiting summary output:
 
 ```yaml
-- uses: jey3dayo/pr-labeler@v1
+- uses: jey3dayo/pr-insights-labeler@v1
   with:
     enable_summary: "false"  # Disable summary output
 ```
@@ -388,7 +390,7 @@ For large PRs (thousands of lines, hundreds of files), consider disabling or lim
 **Usage Example:**
 
 ```yaml
-- uses: jey3dayo/pr-labeler@v1
+- uses: jey3dayo/pr-insights-labeler@v1
   id: pr-check
   with:
     github_token: ${{ secrets.GITHUB_TOKEN }}
