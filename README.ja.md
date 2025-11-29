@@ -85,7 +85,7 @@ PRに自動適用されるラベルは次のように表示されます（GitHub
 - [basic.yml](examples/workflows/basic.yml) - デフォルト設定
 - [advanced.yml](examples/workflows/advanced.yml) - オプション機能付き
 
-**ドキュメント:** [設定ガイド](docs/configuration.md) | [高度な使用例](docs/advanced-usage.ja.md) | [ラベルルール](docs/labeling-rules.ja.md)
+**ドキュメント:** [設定ガイド](docs/en/configuration.md) | [高度な使用例](docs/ja/advanced-usage.md) | [ラベルルール](docs/ja/labeling-rules.md)
 
 ## 🔒 権限設定
 
@@ -98,7 +98,7 @@ permissions:
   issues: write         # PRコメント投稿
 ```
 
-**フォークPR**: `pull_request_target` イベントを使用してください。詳細は [フォークPR対応](docs/advanced-usage.ja.md#フォークprの取り扱い) を参照。
+**フォークPR**: `pull_request_target` イベントを使用してください。詳細は [フォークPR対応](docs/ja/advanced-usage.md#フォークprの取り扱い) を参照。
 
 ## 🏷️ 適用されるラベル
 
@@ -128,7 +128,7 @@ permissions:
 | `category/infrastructure` | インフラ | `Dockerfile`, `.github/**` |
 | `category/security` | セキュリティ | `**/auth*/**`, `.env*` |
 
-カテゴリラベルの詳細については[カテゴリガイド](docs/categories.md)を参照してください。
+カテゴリラベルの詳細については[カテゴリガイド](docs/en/categories.md)を参照してください。
 
 ### リスクラベル
 
@@ -147,7 +147,7 @@ PR変更の潜在的な影響と安全性を評価:
 - ドキュメント専用の変更
 - テスト専用の変更
 
-詳細な評価ロジックとFAQは [リスクラベル詳細](docs/configuration.md#risk-labels) を参照してください。
+詳細な評価ロジックとFAQは [リスクラベル詳細](docs/en/configuration.md#risk-labels) を参照してください。
 
 ### 違反ラベル
 
@@ -158,7 +158,7 @@ PR変更の潜在的な影響と安全性を評価:
 - `auto/too-many-lines` - 個別ファイルが設定行数を超過
 - `auto/excessive-changes` - 追加行数合計が閾値を超過
 
-**カスタマイズ**: すべての閾値とラベルは設定可能。詳細は [設定ガイド](docs/configuration.md#label-thresholds-defaults) を参照。
+**カスタマイズ**: すべての閾値とラベルは設定可能。詳細は [設定ガイド](docs/en/configuration.md#label-thresholds-defaults) を参照。
 
 ## ⚙️ 設定
 
@@ -200,17 +200,18 @@ PR変更の潜在的な影響と安全性を評価:
 - **条件付き実行**: ラベル、ブランチ、パスでチェックをスキップ
 - **カスタム閾値**: すべてのサイズ・複雑度の制限を微調整
 
-👉 **完全なドキュメント**: [設定ガイド](docs/configuration.md) | [高度な使用例](docs/advanced-usage.ja.md)
+👉 **完全なドキュメント**: [設定ガイド](docs/en/configuration.md) | [高度な使用例](docs/ja/advanced-usage.md)
 
 ## 📚 ドキュメント
 
 | ガイド | 説明 |
 | ------------------------------------------------- | -------------------------- |
-| [設定ガイド](docs/configuration.md) | 全入力・出力・デフォルト値 |
-| [高度な使用例](docs/advanced-usage.ja.md) | 実践的な例とパターン |
-| [トラブルシューティング](docs/troubleshooting.md) | よくある問題と解決策 |
-| [APIリファレンス](docs/API.md) | 内部APIドキュメント |
-| [リリースプロセス](docs/release-process.md) | バージョン管理 |
+| [ドキュメントインデックス](docs/README.md) | 言語別リンク一覧 |
+| [設定ガイド](docs/en/configuration.md) | 全入力・出力・デフォルト値 |
+| [高度な使用例](docs/ja/advanced-usage.md) | 実践的な例とパターン |
+| [トラブルシューティング](docs/en/troubleshooting.md) | よくある問題と解決策 |
+| [APIリファレンス](docs/ja/API.md) | 内部APIドキュメント |
+| [リリースプロセス](docs/ja/release-process.md) | バージョン管理 |
 
 ## 🤝 コントリビューション
 
@@ -242,7 +243,7 @@ bash scripts/release.sh
 6. gitコミットとタグの作成
 7. originへのプッシュとGitHub Release作成
 
-詳細は [リリースプロセス](docs/release-process.md) を参照してください。
+詳細は [リリースプロセス](docs/ja/release-process.md) を参照してください。
 
 ## 📄 ライセンス
 

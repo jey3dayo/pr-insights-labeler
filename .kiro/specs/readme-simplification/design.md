@@ -68,18 +68,18 @@ graph TB
     README --> Features[Core Features<br/>3-5 bullet points]
     README --> Docs[Documentation Links]
 
-    Docs --> Config[docs/configuration.md<br/>All Input Parameters]
-    Docs --> Advanced[docs/advanced-usage.md<br/>Real-World Examples]
-    Docs --> Trouble[docs/troubleshooting.md<br/>Common Issues]
+    Docs --> Config[docs/en/configuration.md<br/>All Input Parameters]
+    Docs --> Advanced[docs/en/advanced-usage.md<br/>Real-World Examples]
+    Docs --> Trouble[docs/en/troubleshooting.md<br/>Common Issues]
 
     Config --> ConfigDetail[Parameter Tables<br/>Defaults & Examples]
     Advanced --> Examples[Copy-Paste Workflows<br/>Fork PR, Conditional, etc.]
     Trouble --> Solutions[Problem → Cause → Solution]
 
     README --> Existing[Existing Docs]
-    Existing --> API[docs/API.md]
-    Existing --> Release[docs/release-process.md]
-    Existing --> Guidelines[docs/documentation-guidelines.md]
+    Existing --> API[docs/en/API.md]
+    Existing --> Release[docs/en/release-process.md]
+    Existing --> Guidelines[docs/ja/documentation-guidelines.md]
 
     style README fill:#e1f5ff
     style Config fill:#fff4e1
@@ -119,9 +119,9 @@ graph TB
 
 **Selected Approach**: Hub-and-spoke model with three core documentation files:
 
-- `docs/configuration.md`: Comprehensive input parameter reference
-- `docs/advanced-usage.md`: Copy-paste workflow examples for advanced scenarios
-- `docs/troubleshooting.md`: Problem-solution pairs for common issues
+- `docs/en/configuration.md`: Comprehensive input parameter reference
+- `docs/en/advanced-usage.md`: Copy-paste workflow examples for advanced scenarios
+- `docs/en/troubleshooting.md`: Problem-solution pairs for common issues
 
 **Rationale**:
 
@@ -210,9 +210,9 @@ flowchart TD
     Analyze --> CreateStructure[Create New Documentation Structure<br/>README.md + docs/ files]
 
     CreateStructure --> MigrateQuickStart[README.md: Write Quick Start<br/>Copy-paste workflow example]
-    CreateStructure --> MigrateConfig[docs/configuration.md: Extract<br/>All Input Parameters]
-    CreateStructure --> MigrateAdvanced[docs/advanced-usage.md: Extract<br/>Advanced Examples]
-    CreateStructure --> MigrateTrouble[docs/troubleshooting.md: Extract<br/>Common Issues]
+    CreateStructure --> MigrateConfig[docs/en/configuration.md: Extract<br/>All Input Parameters]
+    CreateStructure --> MigrateAdvanced[docs/en/advanced-usage.md: Extract<br/>Advanced Examples]
+    CreateStructure --> MigrateTrouble[docs/en/troubleshooting.md: Extract<br/>Common Issues]
 
     MigrateQuickStart --> AddLinks[README.md: Add Documentation Links]
     MigrateConfig --> ValidateContent{Content Preserved?}
@@ -257,14 +257,14 @@ flowchart LR
     Try --> Success{Works?}
 
     Success -->|Yes| Done[Done]
-    Success -->|No| Trouble[Visit docs/troubleshooting.md]
+    Success -->|No| Trouble[Visit docs/en/troubleshooting.md]
     Trouble --> Solve[Find Solution]
     Solve --> Done
 
     Returning --> Need{What do I need?}
-    Need -->|Parameter Details| Config[Visit docs/configuration.md]
-    Need -->|Advanced Example| Advanced[Visit docs/advanced-usage.md]
-    Need -->|Issue| Trouble2[Visit docs/troubleshooting.md]
+    Need -->|Parameter Details| Config[Visit docs/en/configuration.md]
+    Need -->|Advanced Example| Advanced[Visit docs/en/advanced-usage.md]
+    Need -->|Issue| Trouble2[Visit docs/en/troubleshooting.md]
 
     Config --> Reference[Find Parameter Reference]
     Advanced --> Copy[Copy Workflow Example]
@@ -286,7 +286,7 @@ flowchart LR
 | ----------- | ----------------------------------------- | ---------------------------------------------------------------------- | ------------------------------------------------------------------------------------------- |
 | 1.1-1.8 | README.md simplification & quick-start | README.md rewrite | 200-300 lines, quick-start section with copy-paste workflow, permissions guide, docs/ links |
 | 2.1-2.4 | README.md structure design | README.md sections | Title, badges, features (3-5), quick-start, permissions, docs links, contribution, license |
-| 3.1-3.7 | Detailed documentation separation | docs/configuration.md, docs/advanced-usage.md, docs/troubleshooting.md | Parameter tables, copy-paste examples, problem-solution format |
+| 3.1-3.7 | Detailed documentation separation | docs/en/configuration.md, docs/en/advanced-usage.md, docs/en/troubleshooting.md | Parameter tables, copy-paste examples, problem-solution format |
 | 4.1-4.5 | Multi-language support | README.md (English), README.ja.md (optional) | English-first, separate translation file, sync guidelines |
 | 5.1-5.5 | Information preservation & link integrity | Migration validation | All content migrated, anchor preservation, link validation |
 | 6.1-6.6 | Documentation quality & maintainability | All documentation files | Clear heading structure, syntax highlighting, metadata, table formatting |
@@ -308,7 +308,7 @@ flowchart LR
 **Dependencies**
 
 - **Inbound**: External links from GitHub Actions Marketplace, blog posts, social media
-- **Outbound**: Links to docs/configuration.md, docs/advanced-usage.md, docs/troubleshooting.md, existing docs/
+- **Outbound**: Links to docs/en/configuration.md, docs/en/advanced-usage.md, docs/en/troubleshooting.md, existing docs/
 
 **Contract Definition**
 
@@ -329,11 +329,11 @@ flowchart LR
 - Required permissions
 
 ## 📚 Documentation
-- [Configuration Guide](docs/configuration.md)
-- [Advanced Usage](docs/advanced-usage.md)
-- [Troubleshooting](docs/troubleshooting.md)
-- [API Documentation](docs/API.md)
-- [Release Process](docs/release-process.md)
+- [Configuration Guide](docs/en/configuration.md)
+- [Advanced Usage](docs/en/advanced-usage.md)
+- [Troubleshooting](docs/en/troubleshooting.md)
+- [API Documentation](docs/en/API.md)
+- [Release Process](docs/en/release-process.md)
 
 ## 🤝 Contributing
 ## 📄 License
@@ -388,7 +388,7 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
 ```
 
-**Next Steps**: [Configuration Guide](docs/configuration.md) | [Advanced Usage](docs/advanced-usage.md)
+**Next Steps**: [Configuration Guide](docs/en/configuration.md) | [Advanced Usage](docs/en/advanced-usage.md)
 
 ## 🔒 Required Permissions
 
@@ -398,35 +398,35 @@ jobs:
 
 ## 🔧 Input Parameters
 
-For comprehensive input parameter documentation, see [Configuration Guide](docs/configuration.md).
+For comprehensive input parameter documentation, see [Configuration Guide](docs/en/configuration.md).
 
 **Quick Reference**:
 
-- [Basic Limits](docs/configuration.md#basic-limits)
-- [Label Settings](docs/configuration.md#label-settings)
-- [Selective Label Enabling](docs/configuration.md#selective-label-enabling)
+- [Basic Limits](docs/en/configuration.md#basic-limits)
+- [Label Settings](docs/en/configuration.md#label-settings)
+- [Selective Label Enabling](docs/en/configuration.md#selective-label-enabling)
 
 <!-- Legacy anchor compatibility -->
 
 ## 📝 Advanced Usage
 
-For real-world examples and advanced scenarios, see [Advanced Usage Guide](docs/advanced-usage.md).
+For real-world examples and advanced scenarios, see [Advanced Usage Guide](docs/en/advanced-usage.md).
 
 **Common Scenarios**:
 
-- [Fork PR Support](docs/advanced-usage.md#fork-pr-support)
-- [Conditional Execution](docs/advanced-usage.md#conditional-execution)
-- [Custom Configuration](docs/advanced-usage.md#custom-configuration)
+- [Fork PR Support](docs/en/advanced-usage.md#fork-pr-support)
+- [Conditional Execution](docs/en/advanced-usage.md#conditional-execution)
+- [Custom Configuration](docs/en/advanced-usage.md#custom-configuration)
 
 <!-- Legacy anchor compatibility -->
 
 ## 📚 Documentation
 
-- [Configuration Guide](docs/configuration.md) - All input parameters and defaults
-- [Advanced Usage](docs/advanced-usage.md) - Real-world workflow examples
-- [Troubleshooting](docs/troubleshooting.md) - Common issues and solutions
-- [API Documentation](docs/API.md) - Programmatic usage
-- [Release Process](docs/release-process.md) - Version management
+- [Configuration Guide](docs/en/configuration.md) - All input parameters and defaults
+- [Advanced Usage](docs/en/advanced-usage.md) - Real-world workflow examples
+- [Troubleshooting](docs/en/troubleshooting.md) - Common issues and solutions
+- [API Documentation](docs/en/API.md) - Programmatic usage
+- [Release Process](docs/en/release-process.md) - Version management
 
 ## 🤝 Contributing
 
@@ -458,7 +458,7 @@ MIT License - see [LICENSE](LICENSE) file for details.
 
 **Anchor Compatibility Cost**: 20-25 lines for placeholder sections + HTML anchors, well within 200-300 line target.
 
-#### docs/configuration.md
+#### docs/en/configuration.md
 
 **Responsibility & Boundaries**
 
@@ -469,8 +469,8 @@ MIT License - see [LICENSE](LICENSE) file for details.
 
 **Dependencies**
 
-- **Inbound**: Links from README.md, docs/advanced-usage.md
-- **Outbound**: References to action.yml (source of truth), docs/advanced-usage.md (usage examples)
+- **Inbound**: Links from README.md, docs/en/advanced-usage.md
+- **Outbound**: References to action.yml (source of truth), docs/en/advanced-usage.md (usage examples)
 
 **Contract Definition**
 
@@ -519,7 +519,7 @@ Brief introduction to configuration system
 **Postconditions**: Users can understand and configure all parameters
 **Invariants**: Default values must always match action.yml
 
-#### docs/advanced-usage.md
+#### docs/en/advanced-usage.md
 
 **Responsibility & Boundaries**
 
@@ -530,8 +530,8 @@ Brief introduction to configuration system
 
 **Dependencies**
 
-- **Inbound**: Links from README.md, docs/configuration.md
-- **Outbound**: References to docs/configuration.md (parameter details), docs/troubleshooting.md (if issues arise)
+- **Inbound**: Links from README.md, docs/en/configuration.md
+- **Outbound**: References to docs/en/configuration.md (parameter details), docs/en/troubleshooting.md (if issues arise)
 
 **Contract Definition**
 
@@ -581,7 +581,7 @@ Brief introduction to configuration system
 **Postconditions**: Users can copy-paste examples and adapt to their needs
 **Invariants**: All workflow examples must pass validation (valid YAML, correct syntax)
 
-#### docs/troubleshooting.md
+#### docs/en/troubleshooting.md
 
 **Responsibility & Boundaries**
 
@@ -592,8 +592,8 @@ Brief introduction to configuration system
 
 **Dependencies**
 
-- **Inbound**: Links from README.md, docs/advanced-usage.md
-- **Outbound**: References to docs/configuration.md (parameter fixes), GitHub documentation (permissions)
+- **Inbound**: Links from README.md, docs/en/advanced-usage.md
+- **Outbound**: References to docs/en/configuration.md (parameter fixes), GitHub documentation (permissions)
 
 **Contract Definition**
 
@@ -690,9 +690,9 @@ flowchart TD
     Phase1 --> Prep2[Analyze current README.md sections]
     Phase1 --> Prep3[Map content to new structure]
 
-    Phase2 --> Create1[Create docs/configuration.md]
-    Phase2 --> Create2[Create docs/advanced-usage.md]
-    Phase2 --> Create3[Create docs/troubleshooting.md]
+    Phase2 --> Create1[Create docs/en/configuration.md]
+    Phase2 --> Create2[Create docs/en/advanced-usage.md]
+    Phase2 --> Create3[Create docs/en/troubleshooting.md]
     Phase2 --> Create4[Rewrite README.md]
 
     Phase3 --> Val1[Validate content completeness]
@@ -717,15 +717,15 @@ flowchart TD
 - Analyze current README.md structure (717 lines)
 - Map content to new structure:
   - README.md: Lines 1-150 (overview, quick-start, features)
-  - docs/configuration.md: Lines 276-411 (input parameters, thresholds)
-  - docs/advanced-usage.md: Lines 497-691 (advanced examples, custom config)
-  - docs/troubleshooting.md: New content based on common issues
+  - docs/en/configuration.md: Lines 276-411 (input parameters, thresholds)
+  - docs/en/advanced-usage.md: Lines 497-691 (advanced examples, custom config)
+  - docs/en/troubleshooting.md: New content based on common issues
 
 **Phase 2: Content Creation** (Day 3-5)
 
-- Create docs/configuration.md with all input parameters in table format
-- Create docs/advanced-usage.md with copy-paste workflow examples
-- Create docs/troubleshooting.md with problem-solution pairs
+- Create docs/en/configuration.md with all input parameters in table format
+- Create docs/en/advanced-usage.md with copy-paste workflow examples
+- Create docs/en/troubleshooting.md with problem-solution pairs
 - Rewrite README.md to 200-300 lines with:
   - Title, badges, one-line description
   - Core features (3-5 bullet points)
@@ -769,9 +769,9 @@ Create minimal placeholder sections in README.md that preserve anchor compatibil
 ```markdown
 ## 🔧 Input Parameters
 
-For detailed input parameter documentation, see [Configuration Guide](docs/configuration.md).
+For detailed input parameter documentation, see [Configuration Guide](docs/en/configuration.md).
 
-Quick reference: [Basic Limits](docs/configuration.md#basic-limits) | [Label Settings](docs/configuration.md#label-settings) | [Selective Enabling](docs/configuration.md#selective-label-enabling)
+Quick reference: [Basic Limits](docs/en/configuration.md#basic-limits) | [Label Settings](docs/en/configuration.md#label-settings) | [Selective Enabling](docs/en/configuration.md#selective-label-enabling)
 
 <!-- Legacy anchor compatibility -->
 <a id="入力パラメータ"></a>
@@ -788,7 +788,7 @@ Use HTML comment anchors to maintain backward compatibility without visible cont
 <a id="高度な使用例"></a>
 <a id="advanced-usage"></a>
 
-For advanced usage examples, see [Advanced Usage Guide](docs/advanced-usage.md).
+For advanced usage examples, see [Advanced Usage Guide](docs/en/advanced-usage.md).
 ```
 
 **3. Critical Anchors to Preserve**
@@ -797,11 +797,11 @@ Based on README.md analysis, preserve these high-traffic anchors:
 
 | Japanese Anchor | English Anchor | Redirect Destination |
 | ----------------- | ------------------- | --------------------------------- |
-| `#入力パラメータ` | `#input-parameters` | docs/configuration.md |
+| `#入力パラメータ` | `#input-parameters` | docs/en/configuration.md |
 | `#使用方法` | `#usage` | Quick Start section (in README) |
-| `#高度な使用例` | `#advanced-usage` | docs/advanced-usage.md |
+| `#高度な使用例` | `#advanced-usage` | docs/en/advanced-usage.md |
 | `#必要な権限` | `#permissions` | Permissions section (in README) |
-| `#自動適用ラベル` | `#labels` | docs/configuration.md#auto-labels |
+| `#自動適用ラベル` | `#labels` | docs/en/configuration.md#auto-labels |
 
 **4. Migration Notice Section**
 
@@ -846,8 +846,8 @@ For users who prefer the old comprehensive README:
 
 **Content Validation Checklist**:
 
-- [ ] All input parameters from original README.md present in docs/configuration.md
-- [ ] All advanced examples from original README.md present in docs/advanced-usage.md
+- [ ] All input parameters from original README.md present in docs/en/configuration.md
+- [ ] All advanced examples from original README.md present in docs/en/advanced-usage.md
 - [ ] Quick-start example tested and functional
 - [ ] README.md length between 200-300 lines
 - [ ] No information loss verified by side-by-side comparison
@@ -902,7 +902,7 @@ For users who prefer the old comprehensive README:
 
 - Update simulation (modify one parameter, verify impact)
 - Consistency check (parameter names match across files)
-- Synchronization verification (docs/configuration.md matches action.yml)
+- Synchronization verification (docs/en/configuration.md matches action.yml)
 
 ### Acceptance Criteria
 
@@ -942,14 +942,14 @@ For users who prefer the old comprehensive README:
 
 **Update Patterns**:
 
-- New feature documentation: Add to docs/advanced-usage.md, update quick-start if needed
-- New parameter: Add to docs/configuration.md table, update CHANGELOG.md
-- Bug fix: Update docs/troubleshooting.md if user-facing
+- New feature documentation: Add to docs/en/advanced-usage.md, update quick-start if needed
+- New parameter: Add to docs/en/configuration.md table, update CHANGELOG.md
+- Bug fix: Update docs/en/troubleshooting.md if user-facing
 
 **Synchronization Strategy**:
 
-- Document in documentation-guidelines.md: "When updating action.yml, update docs/configuration.md"
-- Add CI check (future): Validate parameter consistency between action.yml and docs/configuration.md
+- Document in documentation-guidelines.md: "When updating action.yml, update docs/en/configuration.md"
+- Add CI check (future): Validate parameter consistency between action.yml and docs/en/configuration.md
 - Regular audits: Quarterly documentation review for outdated content
 
 ## Security Considerations
@@ -985,20 +985,20 @@ For users who prefer the old comprehensive README:
 | Title & Badges | 1-8 | README.md (Header) | Keep, update badge list |
 | 🚀 機能 | 9-102 | README.md (Features) | Simplify to 3-5 bullet points |
 | 📋 使用方法 | 104-216 | README.md (Quick Start) | Extract minimal example |
-| 📋 使用方法 | 218-274 | docs/advanced-usage.md | Move i18n examples |
-| 🔧 入力パラメータ | 276-377 | docs/configuration.md | All parameters as tables |
-| 📊 GitHub Actions Summary | 412-437 | docs/configuration.md | Move to config doc |
-| 📤 出力変数 | 439-450 | docs/configuration.md | Move to config doc |
+| 📋 使用方法 | 218-274 | docs/en/advanced-usage.md | Move i18n examples |
+| 🔧 入力パラメータ | 276-377 | docs/en/configuration.md | All parameters as tables |
+| 📊 GitHub Actions Summary | 412-437 | docs/en/configuration.md | Move to config doc |
+| 📤 出力変数 | 439-450 | docs/en/configuration.md | Move to config doc |
 | 🏷️ 自動適用ラベル | 452-484 | README.md (Features) | Summarize, link to config |
 | 🔒 必要な権限 | 486-495 | README.md (Permissions) | Keep in quick-start area |
-| 📝 高度な使用例 | 497-691 | docs/advanced-usage.md | All examples with full code |
-| 🎯 デフォルト除外パターン | 698-711 | docs/configuration.md | Move to config doc |
+| 📝 高度な使用例 | 497-691 | docs/en/advanced-usage.md | All examples with full code |
+| 🎯 デフォルト除外パターン | 698-711 | docs/en/configuration.md | Move to config doc |
 | 🤝 コントリビューション | 713-715 | README.md (Contributing) | Keep, simplify |
 | 📄 ライセンス | 717-719 | README.md (License) | Keep |
 
 ### New Content to Create
 
-**docs/troubleshooting.md** (New):
+**docs/en/troubleshooting.md** (New):
 
 - Permission errors
 - Label creation issues

@@ -1,4 +1,10 @@
-# ラベルルール クイックリファレンス
+# 🏷️ ラベルルール クイックリファレンス
+
+**最終更新**: 2025-11-30
+**対象**: 開発者・コントリビューター
+**タグ**: `category/documentation`, `audience/developer`, `audience/contributor`
+
+**言語**: [English](../en/labeling-rules.md) | 日本語
 
 PR Insights Labeler が各ラベル種別をどのように判定するかを簡潔にまとめたドキュメントです。レビュー前に「どのラベルが付くか」を素早く確認できます。
 
@@ -30,7 +36,7 @@ PR Insights Labeler が各ラベル種別をどのように判定するかを簡
 ## カテゴリラベル (`category/*`)
 
 - ファイルパスのグロブマッチで決定。加算方式なので複数カテゴリが同時に付与されます。
-- 既定マッピング（詳細は `docs/categories.md` を参照）:
+- 既定マッピング（詳細は `docs/en/categories.md` を参照）:
   - テスト (`__tests__/**`, `**/*.test.ts(x)`) → `category/tests`
   - CI/CD (`.github/workflows/**`) → `category/ci-cd`
   - ドキュメント (`docs/**`, 仕様を除く `*.md`) → `category/documentation`
@@ -79,6 +85,6 @@ PR Insights Labeler が各ラベル種別をどのように判定するかを簡
 
 ## 参考ドキュメント
 
-- `docs/configuration.md` – 全入力・出力の詳細とカスタマイズ例
-- `docs/categories.md` – カテゴリラベルごとのマッチ条件とケーススタディ
-- `docs/advanced-usage.md` – フォークPR、厳格ルール、ローカライズなどの実践例
+- `docs/en/configuration.md` – 全入力・出力の詳細とカスタマイズ例
+- `docs/en/categories.md` – カテゴリラベルごとのマッチ条件とケーススタディ
+- `docs/en/advanced-usage.md` – フォークPR、厳格ルール、ローカライズなどの実践例

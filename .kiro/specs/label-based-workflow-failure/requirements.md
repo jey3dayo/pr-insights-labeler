@@ -209,7 +209,7 @@ Label-Based Workflow Failure Control機能は、PR Insights Labelerアクショ�
    - 4つのユースケースパターンの例
    - `fail_on_violation`が非推奨になった旨と移行ガイド
 
-3. WHEN `docs/API.md`が更新される THEN Input定義セクションが最新の状態に更新されなければならない
+3. WHEN `docs/en/API.md`が更新される THEN Input定義セクションが最新の状態に更新されなければならない
    - `fail_on_violation`の非推奨化と互換動作を明記
    - 新規input 3つの追加
 

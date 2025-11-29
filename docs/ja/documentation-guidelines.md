@@ -1,6 +1,6 @@
 # 📚 ドキュメント管理ガイドライン
 
-**最終更新**: 2025-11-28
+**最終更新**: 2025-11-30
 **対象**: 開発者・コントリビューター
 **タグ**: `category/documentation`, `audience/developer`
 
@@ -76,15 +76,28 @@
 ### ディレクトリ構造
 
 ```
-pr-insights-labeler/
-├── README.md            # プロジェクト概要（ユーザー向け）
-├── CLAUDE.md           # Claude Code開発ガイド
+pr-labeler/
+├── README.md                # プロジェクト概要（英語）
+├── README.ja.md             # プロジェクト概要（日本語）
 ├── docs/
-│   ├── documentation-guidelines.md  # 本文書
-│   ├── api-reference.md            # API リファレンス（予定）
-│   ├── configuration.md            # 設定ガイド（予定）
-│   ├── troubleshooting.md          # トラブルシューティング（予定）
-│   └── examples/                   # 使用例（予定）
+│   ├── README.md            # 言語別インデックス
+│   ├── assets/              # 共有画像
+│   ├── en/                  # 英語ドキュメント
+│   │   ├── configuration.md
+│   │   ├── advanced-usage.md
+│   │   ├── labeling-rules.md
+│   │   ├── categories.md
+│   │   ├── troubleshooting.md
+│   │   ├── API.md           # 翻訳準備中のスタブ
+│   │   └── release-process.md # 翻訳準備中のスタブ
+│   └── ja/                  # 日本語ドキュメント
+│       ├── advanced-usage.md
+│       ├── labeling-rules.md
+│       ├── API.md
+│       ├── release-process.md
+│       ├── marketplace-release.md
+│       ├── i18n-error-migration-guide.md
+│       └── documentation-guidelines.md
 ├── .claude/
 │   └── commands/       # cc-sddコマンドドキュメント
 └── .specify/
@@ -101,17 +114,29 @@ pr-insights-labeler/
 
 ## 📊 現在のドキュメント一覧
 
-| ファイル名 | タグ | 概要 | ステータス |
-| -------------------------------- | ------------------------------------------------------------------------- | -------------------------- | ----------- |
-| README.md | `category/documentation`, `audience/user` | プロジェクト概要・使用方法 | 作成予定 |
-| CLAUDE.md | `category/documentation`, `audience/developer`, `environment/development` | Claude Code協働ガイド | ✅ 作成済 |
-| docs/documentation-guidelines.md | `category/documentation`, `audience/developer` | ドキュメント管理体系 | ✅ 作成済 |
-| docs/api-reference.md | `category/api`, `audience/developer` | GitHub API使用方法 | 📝 計画中 |
-| docs/configuration.md | `category/action`, `audience/user` | Action設定ガイド | 📝 計画中 |
-| docs/troubleshooting.md | `category/operations`, `audience/user`, `audience/developer` | 問題解決ガイド | 📝 計画中 |
-| .specify/spec.md | `category/cc-sdd`, `audience/developer` | 機能仕様書 | ⏳ 随時更新 |
-| .specify/plan.md | `category/cc-sdd`, `audience/developer` | 実装計画書 | ⏳ 随時更新 |
-| .specify/tasks.md | `category/cc-sdd`, `audience/developer` | タスク管理 | ⏳ 随時更新 |
+| ファイル名 | 言語 | タグ | 概要 | ステータス |
+| ----------------------------------------------- | ---- | ------------------------------------------------------------------------- | ------------------------------------------ | ----------- |
+| README.md | EN | `category/documentation`, `audience/user` | プロジェクト概要・使用方法 | ✅ 作成済 |
+| README.ja.md | JA | `category/documentation`, `audience/user` | プロジェクト概要・使用方法（日本語） | ✅ 作成済 |
+| docs/README.md | EN/JA | `category/documentation`, `audience/user`, `audience/developer` | 言語別インデックス | ✅ 作成済 |
+| CLAUDE.md | EN | `category/documentation`, `audience/developer`, `environment/development` | Claude Code協働ガイド | ✅ 作成済 |
+| docs/en/configuration.md | EN | `category/action`, `audience/user`, `audience/developer` | Action設定ガイド | ✅ 作成済 |
+| docs/en/advanced-usage.md | EN | `category/action`, `audience/developer` | 高度な使用例（英語） | ✅ 作成済 |
+| docs/en/labeling-rules.md | EN | `category/documentation`, `audience/developer`, `audience/contributor` | ラベル判定サマリ（英語） | ✅ 作成済 |
+| docs/en/categories.md | EN | `category/documentation`, `audience/developer`, `audience/maintainer` | カテゴリラベル詳細 | ✅ 作成済 |
+| docs/en/troubleshooting.md | EN | `category/operations`, `audience/user`, `audience/developer` | トラブルシューティング（英語） | ✅ 作成済 |
+| docs/en/API.md | EN | `category/api`, `audience/developer`, `environment/development` | API参照（翻訳準備中スタブ） | 📝 翻訳準備中 |
+| docs/en/release-process.md | EN | `category/deployment`, `audience/maintainer` | リリース手順（翻訳準備中スタブ） | 📝 翻訳準備中 |
+| docs/ja/advanced-usage.md | JA | `category/action`, `audience/developer` | 高度な使用例（日本語） | ✅ 作成済 |
+| docs/ja/labeling-rules.md | JA | `category/documentation`, `audience/developer`, `audience/contributor` | ラベル判定サマリ（日本語） | ✅ 作成済 |
+| docs/ja/API.md | JA | `category/api`, `audience/developer`, `environment/development` | API仕様書 | ✅ 作成済 |
+| docs/ja/release-process.md | JA | `category/deployment`, `audience/maintainer` | リリース手順 | ✅ 作成済 |
+| docs/ja/marketplace-release.md | JA | `category/deployment`, `audience/maintainer`, `environment/production` | Marketplace公開手順 | ✅ 作成済 |
+| docs/ja/i18n-error-migration-guide.md | JA | `category/development`, `audience/developer` | i18n移行ガイド | ✅ 作成済 |
+| docs/ja/documentation-guidelines.md | JA | `category/documentation`, `audience/developer` | ドキュメント管理体系 | ✅ 作成済 |
+| .specify/spec.md | EN | `category/cc-sdd`, `audience/developer` | 機能仕様書 | ⏳ 随時更新 |
+| .specify/plan.md | EN | `category/cc-sdd`, `audience/developer` | 実装計画書 | ⏳ 随時更新 |
+| .specify/tasks.md | EN | `category/cc-sdd`, `audience/developer` | タスク管理 | ⏳ 随時更新 |
 
 ### ステータス凡例
 
@@ -162,7 +187,7 @@ pr-insights-labeler/
 
 **action.yml の inputs セクションを更新した場合**:
 
-1. `docs/configuration.md` の Input Parameters セクションを更新する
+1. `docs/en/configuration.md` の Input Parameters セクションを更新する
 2. 以下の内容を同期させる：
    - パラメータ名
    - 必須/任意の区分
@@ -175,7 +200,7 @@ pr-insights-labeler/
 
 **action.yml の outputs セクションを更新した場合**:
 
-1. `docs/configuration.md` の Output Variables セクションを更新する
+1. `docs/en/configuration.md` の Output Variables セクションを更新する
 2. 変数名、型、説明、例を同期させる
 
 ### 新機能追加時のドキュメント更新要件
@@ -185,56 +210,37 @@ pr-insights-labeler/
 **必須**:
 
 1. **README.md / README.ja.md**: 新機能の概要を Key Features に追加
-2. **docs/configuration.md**: 新規入力パラメータ/出力変数を追加
+2. **docs/en/configuration.md**: 新規入力パラメータ/出力変数を追加
 3. **CHANGELOG.md**: 変更内容を記録
 
 **推奨**:
 
-1. **docs/advanced-usage.md**: 実践的な使用例を追加
-2. **docs/troubleshooting.md**: 想定される問題と解決策を追加
+1. **docs/en/advanced-usage.md**: 実践的な使用例を追加
+2. **docs/en/troubleshooting.md**: 想定される問題と解決策を追加
 3. **action.yml**: description を更新（機能変更の場合）
 
 **チェックリスト**:
 
 - [ ] README.md と README.ja.md を同期更新
-- [ ] action.yml と docs/configuration.md を同期更新
-- [ ] 新機能の使用例を docs/advanced-usage.md に追加
+- [ ] action.yml と docs/en/configuration.md を同期更新
+- [ ] 新機能の使用例を docs/en/advanced-usage.md に追加
 - [ ] トラブルシューティング情報を追加（該当する場合）
 - [ ] CHANGELOG.md に変更を記録
 - [ ] 全ドキュメント内のリンクが正しく動作することを確認
 
-### docs/ の多言語化（将来計画）
+### docs/ の多言語構成
 
-現在、`docs/` ディレクトリは英語のみですが、将来的に日本語版を追加する場合は以下の構造を使用します：
-
-```
-pr-insights-labeler/
-├── README.md            # 英語（エントリーポイント）
-├── README.ja.md         # 日本語（エントリーポイント）
-├── docs/
-│   ├── en/              # 英語ドキュメント
-│   │   ├── configuration.md
-│   │   ├── advanced-usage.md
-│   │   ├── troubleshooting.md
-│   │   ├── API.md
-│   │   └── release-process.md
-│   └── ja/              # 日本語ドキュメント
-│       ├── configuration.md
-│       ├── advanced-usage.md
-│       ├── troubleshooting.md
-│       ├── API.md
-│       └── release-process.md
-```
-
-**移行手順**:
-
-1. `docs/` 配下に `en/` と `ja/` サブディレクトリを作成
-2. 既存の英語ドキュメントを `docs/en/` に移動
-3. 日本語版を `docs/ja/` に作成
-4. README.md と README.ja.md のリンクを更新
-5. 相互リンク（言語切り替えリンク）を各ドキュメントに追加
-
-**注意**: 現在は英語のみのため、`docs/` 直下にドキュメントを配置しています。
+- 英語ドキュメントは `docs/en/`、日本語ドキュメントは `docs/ja/` に配置する
+- 各ドキュメント冒頭に言語リンクを配置する  
+  - 例（英語版）: `**Languages**: English | [日本語](../ja/advanced-usage.md)`  
+  - 例（日本語版）: `**言語**: [English](../en/advanced-usage.md) | 日本語`
+- 新規ドキュメント追加フロー:
+  1. 英語版を `docs/en/` に作成し、メタデータとタグを付与
+  2. 日本語版がある場合は `docs/ja/` に作成し、相互に言語リンクを追加
+  3. 翻訳未完の場合はスタブ（翻訳準備中の旨を明記）を反対言語に配置し、docs/README.md と本一覧を更新
+  4. 共有画像は `docs/assets/` に配置して両言語から参照する
+- README.md / README.ja.md から各言語の主要ドキュメントへリンクする
+- 既存パスからの参照がある場合は、新パスへのリンク更新またはリダイレクト用スタブを置く
 
 ## 📏 ドキュメントサイズ管理
 
@@ -326,6 +332,10 @@ const example = "code";
 
 ## 🔄 更新履歴
 
+- **2025-11-30**: 英語/日本語ディレクトリ構成に再編し、全ドキュメントにメタデータと言語リンクを追加
+  - docs/README.md を追加してインデックス化
+  - docs/en/, docs/ja/ へのファイル移動とスタブ作成を完了
+  - ドキュメント一覧表を言語別に更新
 - **2025-10-22**: README簡素化に伴う多言語ドキュメント管理セクション追加
   - README同期手順追加
   - action.yml同期手順追加

@@ -80,7 +80,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Includes: tests, ci-cd, documentation, config, spec, dependencies, feature, infrastructure, security
   - New conversion function: `convertCategoriesToDirectoryConfig()`
 - **Risk Assessment Documentation**: Comprehensive risk label evaluation guide
-  - Detailed label application rules in `docs/configuration.md`
+  - Detailed label application rules in `docs/en/configuration.md`
   - FAQ section explaining `risk/medium` for config changes
   - Enhanced README.md and README.ja.md with risk criteria
   - Inline code comments in `src/label-decision-engine.ts`
@@ -106,7 +106,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- **Category Documentation**: Add comprehensive category guide (`docs/categories.md`)
+- **Category Documentation**: Add comprehensive category guide (`docs/en/categories.md`)
   - 9 categories overview table with patterns and descriptions
   - Detailed explanation for each category
   - Custom category creation guide with YAML examples
@@ -117,8 +117,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `category/security`: Detect security-related files (`**/auth*/**`, `**/*jwt*.ts`, `.env*`, `secrets/**`, etc.)
 - **Cross-references**: Add links to category guide from existing documentation
   - README.md, README.ja.md: Category labels section
-  - docs/configuration.md: Category configuration section
-  - docs/advanced-usage.md: Custom category section
+  - docs/en/configuration.md: Category configuration section
+  - docs/en/advanced-usage.md: Custom category section
 
 ### Changed
 
@@ -142,12 +142,12 @@ README.mdを717行から206行に簡素化し、詳細情報を`docs/`ディレ�
 - **README.md簡素化**: 730行 → 206行（目標200-300行達成）
 - **README.ja.md追加**: 日本語版READMEを同時リリース
 - **詳細ドキュメント作成**:
-  - `docs/configuration.md`: 全入力パラメータ、出力変数、デフォルト値（440行）
-  - `docs/advanced-usage.md`: 実践的な使用例と高度な設定（670行）
-  - `docs/troubleshooting.md`: よくある問題と解決策（527行）
+  - `docs/en/configuration.md`: 全入力パラメータ、出力変数、デフォルト値（440行）
+  - `docs/en/advanced-usage.md`: 実践的な使用例と高度な設定（670行）
+  - `docs/en/troubleshooting.md`: よくある問題と解決策（527行）
 - **アンカー互換性維持**: 既存のアンカーリンク（日本語・英語・GitHubスラッグ対応）を保持
 - **移行通知**: README冒頭に移行通知とアーカイブリンク追加
-- **ドキュメント同期ガイドライン**: `docs/documentation-guidelines.md`に多言語同期手順を追加
+- **ドキュメント同期ガイドライン**: `docs/ja/documentation-guidelines.md`に多言語同期手順を追加
 
 **アーカイブ**:
 

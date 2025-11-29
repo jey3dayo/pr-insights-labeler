@@ -104,7 +104,7 @@
   - v0.x のパラメータ削除の影響を明記
   - _Requirements: 8.1, 8.2, 8.3_
 
-- [ ] 6.2 docs/API.mdを更新 - SKIPPED（オプショナル）
+- [ ] 6.2 docs/en/API.mdを更新 - SKIPPED（オプショナル）
   - 新しいinputsのAPI仕様を追加
   - v0.x のパラメータの記載を削除
   - _Requirements: レビュー指摘事項_
@@ -176,7 +176,7 @@
 - **タスク3.1**: parseBooleanStrict の実装（厳密バリデーション）
 - **タスク3.4**: Action inputs → LabelerConfig の統合（index.ts）
 - **タスク5.1**: writeSummaryWithAnalysis I/F 拡張
-- **タスク6.2, 6.3**: docs/API.md、CHANGELOG.md の更新
+- **タスク6.2, 6.3**: docs/en/API.md、CHANGELOG.md の更新
 - **タスク7.4, 7.5**: 新機能のテスト追加
 
 ## 完了条件

@@ -1,4 +1,10 @@
-# Advanced Usage Guide
+# 🚀 Advanced Usage Guide
+
+**Last Updated**: 2025-11-30
+**Audience**: Developers, Maintainers
+**Tags**: `category/action`, `audience/developer`, `audience/user`
+
+**Languages**: English | [日本語](../ja/advanced-usage.md)
 
 Real-world examples and advanced configurations for PR Insights Labeler.
 

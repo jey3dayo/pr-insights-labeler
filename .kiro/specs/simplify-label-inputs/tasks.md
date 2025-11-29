@@ -82,7 +82,7 @@
   - クイックスタートセクションを更新し、基本的な使用例を提供
   - _要件: 5.1, 5.2, 5.3_
 
-- [ ] 9.2 docs/configuration.mdのパラメータ一覧を更新
+- [ ] 9.2 docs/en/configuration.mdのパラメータ一覧を更新
   - 入力パラメータテーブルから`apply_labels`を削除
   - `complexity_enabled`のデフォルト値を`"false"`に更新
   - `complexity_thresholds`のデフォルト値を`'{"medium": 15, "high": 30}'`に更新
