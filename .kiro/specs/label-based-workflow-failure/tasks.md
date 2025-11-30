@@ -131,7 +131,7 @@ Label-Based Workflow Failure Control機能の実装タスク。現在の`fail_on
   - `fail_on_violation`が非推奨になった旨と移行ガイドを記載
   - _Requirements: 7.2_
 
-- [ ] 7.2 docs/API.mdの更新
+- [ ] 7.2 docs/en/API.mdの更新
   - Input定義セクションに新規input 3つを追加
   - `fail_on_violation`の非推奨化と互換動作を明記
   - バリデーションルール（`fail_on_pr_size`の有効値、`size_enabled`依存）を記載

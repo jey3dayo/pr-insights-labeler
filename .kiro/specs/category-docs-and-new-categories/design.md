@@ -2,7 +2,7 @@
 
 ## 概要
 
-本機能は、pr-labelerのカテゴリラベル機能を拡張し、情報を一元化したドキュメントを提供する。具体的には、専用ドキュメント`docs/categories.md`を新規作成し、3つの新カテゴリ（`category/feature`, `category/infrastructure`, `category/security`）をデフォルトカテゴリに追加する。
+本機能は、pr-labelerのカテゴリラベル機能を拡張し、情報を一元化したドキュメントを提供する。具体的には、専用ドキュメント`docs/en/categories.md`を新規作成し、3つの新カテゴリ（`category/feature`, `category/infrastructure`, `category/security`）をデフォルトカテゴリに追加する。
 
 **目的:** ドキュメント利用者と開発者に対して、カテゴリ情報の検索性向上とプロジェクトの分類精度向上を提供する。
 
@@ -19,7 +19,7 @@
 
 ### ゴール
 
-- `docs/categories.md`を新規作成し、9種類のカテゴリ情報を一元管理
+- `docs/en/categories.md`を新規作成し、9種類のカテゴリ情報を一元管理
 - 3つの新カテゴリ（feature, infrastructure, security）をデフォルトカテゴリに追加
 - 既存ドキュメント（README.md, configuration.md等）からの相互参照を整備
 - テストカバレッジ93%以上を維持
@@ -59,10 +59,10 @@ pr-labelerは以下のアーキテクチャパターンを採用している：
 
 ```mermaid
 graph TB
-    A[docs/categories.md] -->|ドキュメント参照| B[README.md]
+    A[docs/en/categories.md] -->|ドキュメント参照| B[README.md]
     A -->|ドキュメント参照| C[README.ja.md]
-    A -->|ドキュメント参照| D[docs/configuration.md]
-    A -->|ドキュメント参照| E[docs/advanced-usage.md]
+    A -->|ドキュメント参照| D[docs/en/configuration.md]
+    A -->|ドキュメント参照| E[docs/en/advanced-usage.md]
 
     F[src/configs/categories.ts] -->|型定義| G[src/types/config.ts]
     F -->|テスト| H[__tests__/label-decision-engine.test.ts]
@@ -76,7 +76,7 @@ graph TB
 **アーキテクチャ統合:**
 
 - **既存パターンの保持**: 設定ファイルベースのカテゴリ定義、型安全性、minimatchパターンマッチング
-- **新コンポーネントの根拠**: `docs/categories.md`はカテゴリ情報の一元化、3つの新カテゴリは汎用性と実用性の向上
+- **新コンポーネントの根拠**: `docs/en/categories.md`はカテゴリ情報の一元化、3つの新カテゴリは汎用性と実用性の向上
 - **技術スタックの整合性**: TypeScript、minimatch、Vitest（既存技術の継続使用）
 - **ステアリング準拠**: 単一責任原則、型安全性、Railway-Oriented Programming（既存コードは変更しない）
 
@@ -128,7 +128,7 @@ graph TB
 
 #### 決定2: ドキュメント構造
 
-**決定**: `docs/categories.md`を新規作成し、相互参照リンクを既存ドキュメントに追加
+**決定**: `docs/en/categories.md`を新規作成し、相互参照リンクを既存ドキュメントに追加
 
 **コンテキスト**: カテゴリ情報がREADME、configuration.md、advanced-usage.mdに分散しており、専用ページが必要
 
@@ -138,7 +138,7 @@ graph TB
 2. **configuration.mdに統合**: 設定ガイドに統合
 3. **新規ファイルを作成**: 独立したドキュメント
 
-**選択したアプローチ**: `docs/categories.md`を新規作成
+**選択したアプローチ**: `docs/en/categories.md`を新規作成
 
 **根拠:**
 
@@ -180,7 +180,7 @@ graph TB
 
 ### ドキュメント層
 
-#### docs/categories.md
+#### docs/en/categories.md
 
 **責任と境界:**
 
@@ -191,7 +191,7 @@ graph TB
 
 **依存関係:**
 
-- **インバウンド**: README.md、README.ja.md、docs/configuration.md、docs/advanced-usage.md（相互参照リンク）
+- **インバウンド**: README.md、README.ja.md、docs/en/configuration.md、docs/en/advanced-usage.md（相互参照リンク）
 - **アウトバウンド**: なし
 - **外部**: なし
 
@@ -354,17 +354,17 @@ export const DEFAULT_CATEGORIES: CategoryConfig[] = [
 
 **統合戦略:**
 
-- **変更アプローチ**: カテゴリラベルセクションに`docs/categories.md`への相互参照リンクを追加
+- **変更アプローチ**: カテゴリラベルセクションに`docs/en/categories.md`への相互参照リンクを追加
 - **後方互換性**: 既存の記述を維持し、リンクを追加
 - **移行パス**: N/A（加法的な変更）
 
 **契約定義:**
 
 ```markdown
-詳細は[カテゴリガイド](docs/categories.md)を参照してください。
+詳細は[カテゴリガイド](docs/en/categories.md)を参照してください。
 ```
 
-#### docs/configuration.md
+#### docs/en/configuration.md
 
 **責任と境界:**
 
@@ -375,11 +375,11 @@ export const DEFAULT_CATEGORIES: CategoryConfig[] = [
 
 **統合戦略:**
 
-- **変更アプローチ**: カテゴリ設定セクションに`docs/categories.md`への相互参照リンクを追加
+- **変更アプローチ**: カテゴリ設定セクションに`docs/en/categories.md`への相互参照リンクを追加
 - **後方互換性**: 既存の設定例を維持し、リンクを追加
 - **移行パス**: N/A（加法的な変更）
 
-#### docs/advanced-usage.md
+#### docs/en/advanced-usage.md
 
 **責任と境界:**
 
@@ -390,7 +390,7 @@ export const DEFAULT_CATEGORIES: CategoryConfig[] = [
 
 **統合戦略:**
 
-- **変更アプローチ**: カスタムカテゴリセクションに`docs/categories.md`への相互参照リンクを追加
+- **変更アプローチ**: カスタムカテゴリセクションに`docs/en/categories.md`への相互参照リンクを追加
 - **後方互換性**: 既存のカスタムカテゴリ例を維持し、リンクを追加
 - **移行パス**: N/A（加法的な変更）
 
@@ -454,7 +454,7 @@ export interface DisplayName {
    - **回復**: ESLintエラーを修正
 
 3. **ドキュメントリンク切れ**
-   - **発生条件**: `docs/categories.md`への相互参照リンクが無効
+   - **発生条件**: `docs/en/categories.md`への相互参照リンクが無効
    - **対応**: markdown-link-checkが検出（CIパイプライン）
    - **回復**: リンクパスを修正
 
@@ -573,7 +573,7 @@ describe('Category detection - new categories', () => {
 
 ### ドキュメント品質テスト
 
-**対象: docs/categories.md およびドキュメント相互参照**
+**対象: docs/en/categories.md およびドキュメント相互参照**
 
 **テストケース:**
 
@@ -586,7 +586,7 @@ describe('Category detection - new categories', () => {
    - 期待結果: GitHub Flavored Markdown（GFM）に準拠
 
 3. **相互参照リンク検証テスト**
-   - README.md、README.ja.md、configuration.md、advanced-usage.mdからの`docs/categories.md`へのリンク
+   - README.md、README.ja.md、configuration.md、advanced-usage.mdからの`docs/en/categories.md`へのリンク
    - 期待結果: すべてのリンクが正確
 
 ### カバレッジ目標

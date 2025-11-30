@@ -51,7 +51,7 @@
   - _Requirements: 7.1, 7.2, 7.4_
 
 - [ ] 3. カテゴリ専用ドキュメントを作成
-- [ ] 3.1 docs/categories.mdの基本構造を作成
+- [ ] 3.1 docs/en/categories.mdの基本構造を作成
   - カテゴリラベルの概要セクションを作成
   - デフォルトカテゴリ一覧テーブル（9種類）を作成
   - 各カテゴリごとの詳細説明セクションを作成
@@ -66,16 +66,16 @@
 
 - [ ] 4. 既存ドキュメントからの相互参照を整備
 - [ ] 4.1 README.mdとREADME.ja.mdに相互参照リンクを追加
-  - カテゴリラベルセクション（L115-126付近）にdocs/categories.mdへのリンクを追加
+  - カテゴリラベルセクション（L115-126付近）にdocs/en/categories.mdへのリンクを追加
   - 日本語版READMEには日本語説明付きリンクを追加
   - _Requirements: 4.1, 4.2, 4.5_
 
-- [ ] 4.2 docs/configuration.mdに相互参照リンクを追加
-  - カテゴリ設定セクション（L358付近）にdocs/categories.mdへのリンクを追加
+- [ ] 4.2 docs/en/configuration.mdに相互参照リンクを追加
+  - カテゴリ設定セクション（L358付近）にdocs/en/categories.mdへのリンクを追加
   - _Requirements: 4.3, 4.5_
 
-- [ ] 4.3 docs/advanced-usage.mdに相互参照リンクを追加
-  - カスタムカテゴリセクション（L320付近）にdocs/categories.mdへのリンクを追加
+- [ ] 4.3 docs/en/advanced-usage.mdに相互参照リンクを追加
+  - カスタムカテゴリセクション（L320付近）にdocs/en/categories.mdへのリンクを追加
   - _Requirements: 4.4, 4.5_
 
 - [ ] 5. 品質保証とドキュメント検証
@@ -92,7 +92,7 @@
   - _Requirements: 5.4, 5.5, 5.6_
 
 - [ ] 5.3 ドキュメントリンク検証
-  - markdown-link-checkでdocs/categories.mdのリンク切れがないことを確認
+  - markdown-link-checkでdocs/en/categories.mdのリンク切れがないことを確認
   - README.md、configuration.md、advanced-usage.mdからのリンクが正確であることを確認
   - マークダウン記法がGitHub Flavored Markdown（GFM）に準拠していることを確認
   - _Requirements: 6.1, 6.2, 6.3, 6.4, 6.5_

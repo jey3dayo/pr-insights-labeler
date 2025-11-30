@@ -498,7 +498,7 @@ git push --follow-tags
 # 5. GitHub Release作成
 ```
 
-詳細は`docs/release-process.md`を参照。
+詳細は`docs/en/release-process.md`を参照。
 
 ## Best Practices
 

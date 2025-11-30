@@ -1271,7 +1271,7 @@ flowchart LR
 1. `pr-labeler.yml`に`language`フィールド追加
 2. `LabelConfig`に`display_name`フィールド追加
 3. `config-loader.ts`, `label-decision-engine.ts`に多言語対応
-4. README.md、docs/API.mdに多言語設定例を追加
+4. README.md、docs/en/API.mdに多言語設定例を追加
 5. 既存設定での後方互換性テスト
 
 **検証ポイント**:

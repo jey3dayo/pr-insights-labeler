@@ -4,7 +4,7 @@
 
 pr-labelerは現在6種類のデフォルトカテゴリラベル（tests, ci-cd, documentation, config, spec, dependencies）を提供していますが、カテゴリ情報がREADME、configuration.md、advanced-usage.mdに分散しており、専用のカテゴリ一覧ページが存在しません。また、ASTAプロジェクトで有用性が確認された`category/feature`（新機能）と`category/infrastructure`（インフラ・DevOps）のカテゴリが含まれていません。
 
-本機能では、カテゴリ情報を一元管理する専用ドキュメント`docs/categories.md`を新規作成し、実績のある新カテゴリを追加することで、ユーザーのドキュメント体験を向上させ、プロジェクトの分類精度を高めます。
+本機能では、カテゴリ情報を一元管理する専用ドキュメント`docs/en/categories.md`を新規作成し、実績のある新カテゴリを追加することで、ユーザーのドキュメント体験を向上させ、プロジェクトの分類精度を高めます。
 
 ## 要件
 
@@ -14,7 +14,7 @@ pr-labelerは現在6種類のデフォルトカテゴリラベル（tests, ci-cd
 
 #### 受け入れ基準
 
-1. WHEN ユーザーが`docs/categories.md`にアクセスするとき THEN PR Insights Labelerは9種類のカテゴリ（既存6種類＋新規3種類）の一覧をテーブル形式で表示すること
+1. WHEN ユーザーが`docs/en/categories.md`にアクセスするとき THEN PR Insights Labelerは9種類のカテゴリ（既存6種類＋新規3種類）の一覧をテーブル形式で表示すること
 2. WHEN ユーザーがカテゴリ一覧テーブルを閲覧するとき THEN PR Insights Labelerは各カテゴリに対して以下の情報を提供すること：
    - ラベル名（例: `category/tests`）
    - 検出対象の説明（例: "テストコード"）
@@ -27,7 +27,7 @@ pr-labelerは現在6種類のデフォルトカテゴリラベル（tests, ci-cd
    - 多言語表示名（英語/日本語）
 4. WHEN ユーザーがカスタムカテゴリの作成方法を知りたいとき THEN PR Insights Labelerは`.github/pr-labeler.yml`での定義方法をYAMLコード例付きで提供すること
 5. WHEN ユーザーが複数カテゴリの適用ルールを確認したいとき THEN PR Insights Labelerは加法的（additive）ポリシーの動作説明（複数カテゴリが同時適用される）を提供すること
-6. WHERE `docs/categories.md`内で THE PR Insights Labelerは設定例としてカスタムカテゴリ（例: `category/backend`）のYAML定義を含むこと
+6. WHERE `docs/en/categories.md`内で THE PR Insights Labelerは設定例としてカスタムカテゴリ（例: `category/backend`）のYAML定義を含むこと
 
 ### 要件2: 新カテゴリの実装
 
@@ -90,14 +90,14 @@ pr-labelerは現在6種類のデフォルトカテゴリラベル（tests, ci-cd
 
 ### 要件4: 既存ドキュメントからの相互参照
 
-**目的:** ドキュメント利用者として、既存ドキュメント（README.md, configuration.md等）から`docs/categories.md`へのリンクを辿れるようにし、情報へのアクセシビリティを向上させる
+**目的:** ドキュメント利用者として、既存ドキュメント（README.md, configuration.md等）から`docs/en/categories.md`へのリンクを辿れるようにし、情報へのアクセシビリティを向上させる
 
 #### 受け入れ基準
 
-1. WHEN ユーザーが`README.md`のカテゴリラベルセクション（L115-126付近）を閲覧するとき THEN PR Insights Labelerは`docs/categories.md`への相互参照リンクを提供すること
-2. WHEN ユーザーが`README.ja.md`のカテゴリラベルセクション（L115-126付近）を閲覧するとき THEN PR Insights Labelerは`docs/categories.md`への相互参照リンク（日本語説明付き）を提供すること
-3. WHEN ユーザーが`docs/configuration.md`のカテゴリ設定セクション（L358付近）を閲覧するとき THEN PR Insights Labelerは`docs/categories.md`への相互参照リンクを提供すること
-4. WHEN ユーザーが`docs/advanced-usage.md`のカスタムカテゴリセクション（L320付近）を閲覧するとき THEN PR Insights Labelerは`docs/categories.md`への相互参照リンクを提供すること
+1. WHEN ユーザーが`README.md`のカテゴリラベルセクション（L115-126付近）を閲覧するとき THEN PR Insights Labelerは`docs/en/categories.md`への相互参照リンクを提供すること
+2. WHEN ユーザーが`README.ja.md`のカテゴリラベルセクション（L115-126付近）を閲覧するとき THEN PR Insights Labelerは`docs/en/categories.md`への相互参照リンク（日本語説明付き）を提供すること
+3. WHEN ユーザーが`docs/en/configuration.md`のカテゴリ設定セクション（L358付近）を閲覧するとき THEN PR Insights Labelerは`docs/en/categories.md`への相互参照リンクを提供すること
+4. WHEN ユーザーが`docs/en/advanced-usage.md`のカスタムカテゴリセクション（L320付近）を閲覧するとき THEN PR Insights Labelerは`docs/en/categories.md`への相互参照リンクを提供すること
 5. WHERE 相互参照リンク内で THE PR Insights Labelerは「詳細はカテゴリガイドを参照」のような説明文を含むこと
 
 ### 要件5: テストカバレッジの維持
@@ -126,14 +126,14 @@ pr-labelerは現在6種類のデフォルトカテゴリラベル（tests, ci-cd
 
 ### 要件6: ドキュメント品質の保証
 
-**目的:** ドキュメント利用者として、`docs/categories.md`および相互参照リンクが正常に機能し、リンク切れがないことを保証する
+**目的:** ドキュメント利用者として、`docs/en/categories.md`および相互参照リンクが正常に機能し、リンク切れがないことを保証する
 
 #### 受け入れ基準
 
 1. WHEN ドキュメントがビルドされるとき THEN PR Insights Labelerはmarkdown-link-checkによるリンク検証を実行すること
-2. IF `docs/categories.md`内に外部リンクまたは内部リンクが含まれるとき THEN PR Insights Labelerはすべてのリンクが有効であることを検証すること
-3. WHEN README.md、README.ja.md、configuration.md、advanced-usage.mdから`docs/categories.md`へのリンクが追加されるとき THEN PR Insights Labelerはリンクパスが正確であることを検証すること
-4. WHERE `docs/categories.md`内で THE PR Insights Labelerはマークダウン記法が正しく、GitHub Flavored Markdown（GFM）に準拠していること
+2. IF `docs/en/categories.md`内に外部リンクまたは内部リンクが含まれるとき THEN PR Insights Labelerはすべてのリンクが有効であることを検証すること
+3. WHEN README.md、README.ja.md、configuration.md、advanced-usage.mdから`docs/en/categories.md`へのリンクが追加されるとき THEN PR Insights Labelerはリンクパスが正確であることを検証すること
+4. WHERE `docs/en/categories.md`内で THE PR Insights Labelerはマークダウン記法が正しく、GitHub Flavored Markdown（GFM）に準拠していること
 5. WHEN CIパイプラインが実行されるとき THEN PR Insights LabelerはDocumentation Qualityチェックを成功させること
 
 ### 要件7: 既存機能への影響回避

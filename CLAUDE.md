@@ -27,7 +27,7 @@ Kiro-style Spec Driven Development implementation using claude code slash comman
 - `simplify-label-inputs`: ラベル入力簡素化 - `apply_labels`削除、複雑度デフォルトOFF、閾値緩和
 - `always-auto-create-labels`: ラベル自動作成の常時有効化 - `auto_create_labels`/`label_color`/`label_description` inputs削除、常にラベル自動作成
 - `config-layer-pattern`: Configuration Layerパターン - Config/LabelerConfigの統合、優先順位の明確化、疎結合な設計への移行
-- `category-docs-and-new-categories`: カテゴリドキュメント＋新カテゴリ追加 - docs/categories.md作成、category/feature・category/infrastructure追加
+- `category-docs-and-new-categories`: カテゴリドキュメント＋新カテゴリ追加 - docs/en/categories.md作成、category/feature・category/infrastructure追加
 - Check `.kiro/specs/` for active specifications
 - Use `/kiro:spec-status [feature-name]` to check progress
 
@@ -170,7 +170,7 @@ gh release create v1.0.1 \
   --notes "リリースノート"
 ```
 
-詳細: [docs/release-process.md](docs/release-process.md)
+詳細: [docs/en/release-process.md](docs/en/release-process.md)
 
 ## Development Rules
 
