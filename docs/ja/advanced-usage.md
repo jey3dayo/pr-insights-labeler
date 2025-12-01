@@ -304,131 +304,37 @@ jobs:
 
 ## PR Insights Labeler YAML設定
 
-`.github/pr-labeler.yml` を作成してPR Insights Labelerの動作をカスタマイズします。
-
-### 完全な例
+`.github/pr-labeler.yml` でリポジトリ全体のデフォルトを定義します。完全なスキーマとデフォルト値は [Configuration Guide](configuration.md#yaml-config-file) にあるため、ここでは参照を重複させず代表的な項目だけを示します。
 
 ```yaml
-# .github/pr-labeler.yml
+# .github/pr-labeler.yml (例の抜粋)
+language: ja
 
-# 言語設定（オプション）
-language: ja  # 'en' または 'ja'。ワークフロー入力が未指定の場合に適用
-
-# サイズラベル設定
 size:
   thresholds:
-    small: 50      # Small PR閾値（デフォルト: 200）
-    medium: 200    # Medium PR閾値（デフォルト: 500）
-    large: 500     # Large PR閾値（デフォルト: 1000）
-    xlarge: 1500   # Extra large PR閾値（デフォルト: 3000）
+    small: 50
+    medium: 200
 
-# カテゴリラベル設定
 categories:
-  # ビルトインカテゴリ（カスタマイズ可能）
   - label: "category/tests"
     patterns:
       - "__tests__/**"
       - "**/*.test.ts"
-      - "**/*.test.tsx"
-      - "**/*.spec.ts"
     display_name:
       en: "Test Files"
       ja: "テストファイル"
 
-  - label: "category/ci-cd"
-    patterns:
-      - ".github/workflows/**"
-      - ".github/actions/**"
-    display_name:
-      en: "CI/CD"
-      ja: "CI/CD"
-
-  - label: "category/documentation"
-    patterns:
-      - "docs/**"
-      - "**/*.md"
-      - "**/*.mdx"
-    display_name:
-      en: "Documentation"
-      ja: "ドキュメント"
-
-  - label: "category/config"
-    patterns:
-      - "**/tsconfig*.json"
-      - "**/eslint.config.*"
-      - "**/.prettierrc*"
-    display_name:
-      en: "Configuration"
-      ja: "設定ファイル"
-
-  # カスタムカテゴリ
-  - label: "category/frontend"
-    patterns:
-      - "src/components/**"
-      - "src/pages/**"
-      - "**/*.tsx"
-    display_name:
-      en: "Frontend"
-      ja: "フロントエンド"
-
-  - label: "category/backend"
-    patterns:
-      - "src/api/**"
-      - "src/services/**"
-      - "src/controllers/**"
-    display_name:
-      en: "Backend"
-      ja: "バックエンド"
-
-  - label: "category/database"
-    patterns:
-      - "src/models/**"
-      - "src/migrations/**"
-      - "**/*.sql"
-    display_name:
-      en: "Database"
-      ja: "データベース"
-
-# リスク評価設定
-risk:
-  high_if_no_tests_for_core: true  # テストなしのコア変更は高リスク
-  core_paths:
-    - "src/**"
-    - "lib/**"
-  config_files:
-    - ".github/workflows/**"
-    - "package.json"
-    - "tsconfig.json"
-    - "eslint.config.js"
-
-# ラベル操作設定
 labels:
-  create_missing: true  # 不足しているラベルを自動作成
+  create_missing: true
   namespace_policies:
-    "size/*": replace      # サイズラベルは排他的（1つのみ）
-    "category/*": additive # カテゴリラベルは追加的（複数可）
-    "risk/*": replace      # リスクラベルは排他的
+    "size/*": replace
+    "category/*": additive
 
-# ランタイム設定
 runtime:
-  fail_on_error: false  # ラベリング失敗時もワークフローを継続
+  fail_on_error: false
 ```
 
-詳細情報とカスタムカテゴリの例については、[カテゴリガイド](categories.md)を参照してください。
-
-### ファイルなしでの設定
-
-PR Insights Labelerは `.github/pr-labeler.yml` なしでもデフォルト設定ですぐに動作します。
-
-### 表示名の優先順位
-
-ラベル表示名は以下の優先順位で決定されます:
-
-1. `.github/pr-labeler.yml` の `display_name`（カスタム翻訳）
-2. ビルトイン翻訳リソース（`labels` 名前空間）
-3. ラベル名そのまま
-
-**注意:** GitHub API呼び出しは常に英語のラベル名（`label` フィールド）を使用します。`display_name` はSummary/コメントでの表示にのみ使用されます。
+`.github/pr-labeler.yml` がなくてもデフォルト設定ですぐ動作します。詳細情報とカスタムカテゴリの例は [カテゴリガイド](categories.md) を参照してください。
 
 ## ディレクトリベースのラベリング
 
@@ -591,26 +497,18 @@ PR Insights LabelerはGitHub Actions Summary、エラーメッセージ、ログ
 
 ### 言語設定方法
 
-ローカライズは優先順位チェーンで解決されます。必要なレイヤーのみ設定してください。
-
-#### 方法1: ワークフロー入力（最優先）
+ローカライズの優先順位チェーンは [Configuration Guide](configuration.md#multi-language-support) に記載されています。ワークフローに合うレイヤーを選んで設定してください。
 
 ```yaml
+# ワークフローごとの明示指定（最優先）
 - uses: jey3dayo/pr-insights-labeler@v1
   with:
     github_token: ${{ secrets.GITHUB_TOKEN }}
-    language: ja  # このワークフロー実行に対して明示的に上書き
-```
+    language: ja
 
-#### 方法2: `.github/pr-labeler.yml`
-
-リポジトリ共通のデフォルトを定義しつつ、ワークフローからの上書きを許可します。
-
-```yaml
-# 言語設定（オプション）
-language: ja  # ワークフロー入力が未指定の場合に適用。さらに環境変数/デフォルトへフォールバック
-
-# 多言語表示名を持つカテゴリラベル
+# リポジトリ共通のデフォルトと表示名（ワークフロー入力で上書き可）
+# .github/pr-labeler.yml
+language: ja
 categories:
   - label: 'category/tests'
     patterns:
@@ -620,41 +518,13 @@ categories:
       en: 'Test Files'
       ja: 'テストファイル'
 
-  - label: 'category/documentation'
-    patterns:
-      - 'docs/**'
-      - '**/*.md'
-    display_name:
-      en: 'Documentation'
-      ja: 'ドキュメント'
-```
-
-#### 方法3: 環境変数（`LANGUAGE` / `LANG`）
-
-```yaml
+# 入力/設定ファイルがない場合の環境変数フォールバック
 - uses: jey3dayo/pr-insights-labeler@v1
   with:
     github_token: ${{ secrets.GITHUB_TOKEN }}
   env:
-    LANGUAGE: ja  # ワークフロー入力とpr-labeler.ymlが未指定の場合にのみ使用
+    LANGUAGE: ja
 ```
-
-### 言語決定の優先順位
-
-1. ワークフローの `with.language`
-2. `.github/pr-labeler.yml` の `language`
-3. 環境変数 (`LANGUAGE` → `LANG`)
-4. デフォルト: 英語（`en`）
-
-### 表示名の優先順位
-
-ラベル表示名は以下で決定されます:
-
-1. `.github/pr-labeler.yml` の `display_name`（カスタム翻訳）
-2. ビルトイン翻訳リソース（`labels` 名前空間）
-3. ラベル名そのまま
-
-**注意:** GitHub API呼び出しは常に英語のラベル名（`label` フィールド）を使用します。`display_name` は表示にのみ使用されます。
 
 ### サポート言語
 
