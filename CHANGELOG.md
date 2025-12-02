@@ -5,6 +5,32 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.9.4] - 2025-12-02
+
+### ✨ Added
+
+- add `/add-exclude-files` Claude Code command for automating exclusion pattern management (#122)
+- add 4 configuration files to DEFAULT_EXCLUDES: dependency-cruiser, dockerignore, coderabbit, actionlint (#122)
+
+### 📝 Documentation
+
+- deduplicate advanced usage i18n guidance (#120)
+- refresh bilingual docs (#118)
+- enhance file exclusion examples in advanced.yml
+
+### 🔧 CI/CD
+
+- remove duplicate pr labeler workflow (#121)
+
+### 🐛 Fixed
+
+- Node.js version compatibility with @eslint/compat@2.0.0 (#117, #116)
+
+### 🔄 Changed
+
+- update dependencies and @eslint/compat v2 compatibility (#115)
+- improve DEFAULT_EXCLUDES readability with categorized comments
+
 ## [1.9.3] - 2025-11-25
 
 ### ✨ Added
