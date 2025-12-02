@@ -29,22 +29,39 @@ export const DEFAULT_NAMESPACES: Required<NamespacePolicy> = {
  * combined with user-defined exclusion patterns using logical OR.
  */
 export const DEFAULT_EXCLUDES: readonly string[] = [
+  // IDE and Editor directories
   '.vscode/**',
   '.idea/**',
+
+  // Git hooks and version control
   '.husky/**',
-  'node_modules/**',
   '.git/**',
+
+  // Dependencies
+  'node_modules/**',
+
+  // Lock files (generic pattern)
   '**/*.lock',
-  '**/package-lock.json',
-  '**/pnpm-lock.yaml',
-  '**/yarn.lock',
-  '**/composer.lock',
-  '**/Gemfile.lock',
-  '**/Cargo.lock',
-  '**/poetry.lock',
-  '**/Pipfile.lock',
-  '**/.DS_Store',
-  '**/Thumbs.db',
+
+  // Package manager lock files
+  '**/package-lock.json', // npm
+  '**/pnpm-lock.yaml', // pnpm
+  '**/yarn.lock', // Yarn
+  '**/composer.lock', // PHP Composer
+  '**/Gemfile.lock', // Ruby Bundler
+  '**/Cargo.lock', // Rust
+  '**/poetry.lock', // Python Poetry
+  '**/Pipfile.lock', // Python Pipenv
+
+  // OS-specific files
+  '**/.DS_Store', // macOS
+  '**/Thumbs.db', // Windows
+
+  // Development tool configuration files
+  '**/.dependency-cruiser.js', // Dependency cruiser
+  '**/.dockerignore', // Docker
+  '**/.coderabbit.yaml', // CodeRabbit
+  '**/.github/actionlint.yaml', // actionlint
 ] as const;
 
 /**

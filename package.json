@@ -1,6 +1,6 @@
 {
   "name": "pr-insights-labeler",
-  "version": "1.9.3",
+  "version": "1.9.4",
   "description": "PR Insights Labeler delivers intelligent PR analysis with automated size, category, risk, and complexity labels for GitHub Actions",
   "author": "jey3dayo",
   "license": "MIT",
