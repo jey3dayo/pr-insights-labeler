@@ -304,131 +304,37 @@ By default, all label types (size, complexity, category, risk) are enabled:
 
 ## PR Insights Labeler YAML Configuration
 
-Customize PR Insights Labeler behavior by creating `.github/pr-labeler.yml`.
-
-### Complete Example
+Define repository-wide defaults in `.github/pr-labeler.yml`. The full schema and defaults are documented in the [Configuration Guide](configuration.md#yaml-config-file); below is a slim example that highlights the most common knobs without duplicating the reference.
 
 ```yaml
-# .github/pr-labeler.yml
+# .github/pr-labeler.yml (example subset)
+language: ja
 
-# Language setting (optional)
-language: ja  # 'en' or 'ja'. Applies when workflow input is omitted
-
-# Size label settings
 size:
   thresholds:
-    small: 50      # Small PR threshold (default: 200)
-    medium: 200    # Medium PR threshold (default: 500)
-    large: 500     # Large PR threshold (default: 1000)
-    xlarge: 1500   # Extra large PR threshold (default: 3000)
+    small: 50
+    medium: 200
 
-# Category label settings
 categories:
-  # Built-in categories (customizable)
   - label: "category/tests"
     patterns:
       - "__tests__/**"
       - "**/*.test.ts"
-      - "**/*.test.tsx"
-      - "**/*.spec.ts"
     display_name:
       en: "Test Files"
       ja: "テストファイル"
 
-  - label: "category/ci-cd"
-    patterns:
-      - ".github/workflows/**"
-      - ".github/actions/**"
-    display_name:
-      en: "CI/CD"
-      ja: "CI/CD"
-
-  - label: "category/documentation"
-    patterns:
-      - "docs/**"
-      - "**/*.md"
-      - "**/*.mdx"
-    display_name:
-      en: "Documentation"
-      ja: "ドキュメント"
-
-  - label: "category/config"
-    patterns:
-      - "**/tsconfig*.json"
-      - "**/eslint.config.*"
-      - "**/.prettierrc*"
-    display_name:
-      en: "Configuration"
-      ja: "設定ファイル"
-
-  # Custom categories
-  - label: "category/frontend"
-    patterns:
-      - "src/components/**"
-      - "src/pages/**"
-      - "**/*.tsx"
-    display_name:
-      en: "Frontend"
-      ja: "フロントエンド"
-
-  - label: "category/backend"
-    patterns:
-      - "src/api/**"
-      - "src/services/**"
-      - "src/controllers/**"
-    display_name:
-      en: "Backend"
-      ja: "バックエンド"
-
-  - label: "category/database"
-    patterns:
-      - "src/models/**"
-      - "src/migrations/**"
-      - "**/*.sql"
-    display_name:
-      en: "Database"
-      ja: "データベース"
-
-# Risk assessment settings
-risk:
-  high_if_no_tests_for_core: true  # High risk if core changes without tests
-  core_paths:
-    - "src/**"
-    - "lib/**"
-  config_files:
-    - ".github/workflows/**"
-    - "package.json"
-    - "tsconfig.json"
-    - "eslint.config.js"
-
-# Label operation settings
 labels:
-  create_missing: true  # Auto-create missing labels
+  create_missing: true
   namespace_policies:
-    "size/*": replace      # Size labels are exclusive (only one size label)
-    "category/*": additive # Category labels are additive (multiple allowed)
-    "risk/*": replace      # Risk labels are exclusive
+    "size/*": replace
+    "category/*": additive
 
-# Runtime settings
 runtime:
-  fail_on_error: false  # Continue workflow even if labeling fails
+  fail_on_error: false
 ```
 
-See the [Category Guide](categories.md) for detailed information about default categories and custom category examples.
-
-### Configuration Without File
-
-PR Insights Labeler works immediately with default settings even without `.github/pr-labeler.yml`.
-
-### Display Name Priority
-
-Label display names are determined by the following priority:
-
-1. `display_name` in `.github/pr-labeler.yml` (custom translation)
-2. Built-in translation resources (`labels` namespace)
-3. Label name as-is
-
-**Note:** GitHub API calls always use the English label name (`label` field). `display_name` is used for display only in Summary/Comments.
+PR Insights Labeler also works out of the box without this file. See the [Category Guide](categories.md) for detailed information about default categories and custom category examples.
 
 ## Directory-Based Labeling
 
@@ -591,26 +497,19 @@ PR Insights Labeler supports English and Japanese output for GitHub Actions Summ
 
 ### Language Configuration Methods
 
-Localization resolves through a priority chain. Configure whichever level fits your workflow:
-
-#### Method 1: Workflow Input (Highest Priority)
+Localization resolves through the priority chain described in the [Configuration Guide](configuration.md#multi-language-support). Configure the level that fits your workflow:
 
 ```yaml
+# Override per workflow run (highest priority)
 - uses: jey3dayo/pr-insights-labeler@v1
   with:
     github_token: ${{ secrets.GITHUB_TOKEN }}
-    language: ja  # Override language explicitly for this workflow run
-```
+    language: ja
 
-#### Method 2: `.github/pr-labeler.yml`
-
-Create `.github/pr-labeler.yml` when you want repo-wide defaults that still allow workflow overrides:
-
-```yaml
-# Language setting (optional)
-language: ja  # Applied when workflow input is omitted; still falls back to env/default
-
-# Category labels with multilingual display names
+# Repo-wide default with multilingual display names
+# (still overridden by workflow input)
+# .github/pr-labeler.yml
+language: ja
 categories:
   - label: 'category/tests'
     patterns:
@@ -620,41 +519,13 @@ categories:
       en: 'Test Files'
       ja: 'テストファイル'
 
-  - label: 'category/documentation'
-    patterns:
-      - 'docs/**'
-      - '**/*.md'
-    display_name:
-      en: 'Documentation'
-      ja: 'ドキュメント'
-```
-
-#### Method 3: Environment Variables (`LANGUAGE` / `LANG`)
-
-```yaml
+# Environment fallback when input/config omit language
 - uses: jey3dayo/pr-insights-labeler@v1
   with:
     github_token: ${{ secrets.GITHUB_TOKEN }}
   env:
-    LANGUAGE: ja  # Used only if workflow input and config file omit language
+    LANGUAGE: ja
 ```
-
-### Language Decision Priority
-
-1. `language` input value passed in the workflow (`with:` block)
-2. `language` field in `.github/pr-labeler.yml`
-3. Environment variables (`LANGUAGE`, or `LANG` if `LANGUAGE` is unset)
-4. Default fallback: English (`en`)
-
-### Display Name Priority
-
-Label display names are determined by:
-
-1. `display_name` in `.github/pr-labeler.yml` (custom translation)
-2. Built-in translation resources (`labels` namespace)
-3. Label name as-is
-
-**Note:** GitHub API calls always use the English label name (`label` field). `display_name` is used for display only.
 
 ### Supported Languages
 
