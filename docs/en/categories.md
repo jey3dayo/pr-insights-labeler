@@ -1,4 +1,10 @@
-# Category Labels
+# 🏷️ Category Labels
+
+**Last Updated**: 2025-11-30
+**Audience**: Developers, Maintainers
+**Tags**: `category/documentation`, `audience/developer`, `audience/maintainer`
+
+**Languages**: English | 日本語（準備中）
 
 Category labels automatically classify Pull Requests based on the types of files changed. This helps reviewers quickly understand the nature of changes and apply appropriate review strategies.
 
@@ -109,7 +115,7 @@ PR Insights Labeler provides 9 default categories:
 
 **Example Matches**:
 
-- `docs/configuration.md`
+- `docs/en/configuration.md`
 - `README.md`
 - `CONTRIBUTING.md`
 

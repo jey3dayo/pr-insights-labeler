@@ -239,13 +239,13 @@
     - `LANGUAGE`環境変数の説明と使用例
     - `pr-labeler.yml`の`language`フィールド説明
     - `display_name`設定例（英語・日本語サンプル）
-  - 移行ガイドの作成（docs/i18n-error-migration-guide.md）
+  - 移行ガイドの作成（docs/ja/i18n-error-migration-guide.md）
     - 英語のみ設定から多言語設定への移行手順
     - display_nameの追加方法
     - 後方互換性の説明
   - API.mdに多言語関連APIの説明追加
   - _Requirements: ドキュメント整備（実装完了後のユーザー対応）_
-  - **完了**: README.md、API.md、docs/i18n-error-migration-guide.mdにドキュメント追加完了
+  - **完了**: README.md、API.md、docs/ja/i18n-error-migration-guide.mdにドキュメント追加完了
 
 - [x] 11.4 翻訳品質管理の整備（将来対応）
   - 用語集の作成（docs/i18n-glossary.md）

@@ -324,7 +324,7 @@ dist/
 4. `dist/`をコミット
 5. GitタグプッシュとGitHub Release作成
 
-詳細は`docs/release-process.md`を参照。
+詳細は`docs/en/release-process.md`を参照。
 
 ## Security Considerations
 

@@ -1,4 +1,10 @@
-# Troubleshooting Guide
+# 🐛 Troubleshooting Guide
+
+**Last Updated**: 2025-11-30
+**Audience**: Users, Developers
+**Tags**: `category/operations`, `audience/user`, `audience/developer`
+
+**Languages**: English | 日本語（準備中）
 
 Common issues and solutions for PR Insights Labeler.
 

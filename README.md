@@ -85,7 +85,7 @@ Here's how the automatically applied labels appear on a pull request (GitHub lab
 - [basic.yml](examples/workflows/basic.yml) - Default settings
 - [advanced.yml](examples/workflows/advanced.yml) - With optional features
 
-**Docs:** [Configuration](docs/configuration.md) | [Advanced Usage](docs/advanced-usage.md) | [Labeling Rules](docs/labeling-rules.md)
+**Docs:** [Configuration](docs/en/configuration.md) | [Advanced Usage](docs/en/advanced-usage.md) | [Labeling Rules](docs/en/labeling-rules.md)
 
 ## 🔒 Permissions
 
@@ -98,7 +98,7 @@ permissions:
   issues: write         # Post PR comments
 ```
 
-**Fork PRs**: Use `pull_request_target` event. See [Fork PR Handling](docs/advanced-usage.md#fork-pr-handling).
+**Fork PRs**: Use `pull_request_target` event. See [Fork PR Handling](docs/en/advanced-usage.md#fork-pr-handling).
 
 ## 🏷️ Labels Applied
 
@@ -128,7 +128,7 @@ Automatically detect change types:
 | `category/infrastructure` | Infrastructure | `Dockerfile`, `.github/**` |
 | `category/security`       | Security       | `**/auth*/**`, `.env*`     |
 
-See the [Category Guide](docs/categories.md) for detailed information about category labels.
+See the [Category Guide](docs/en/categories.md) for detailed information about category labels.
 
 ### Risk Labels
 
@@ -147,7 +147,7 @@ Assess the potential impact and safety of PR changes:
 - Documentation-only changes
 - Test-only changes
 
-See [Risk Label Details](docs/configuration.md#risk-labels) for complete evaluation logic and FAQ.
+See [Risk Label Details](docs/en/configuration.md#risk-labels) for complete evaluation logic and FAQ.
 
 ### Violation Labels
 
@@ -158,7 +158,7 @@ When limits exceeded:
 - `auto/too-many-lines` - Individual files exceed configured line limits
 - `auto/excessive-changes` - Total additions exceed configured thresholds
 
-**Customize**: All thresholds and labels configurable. See [Configuration Guide](docs/configuration.md#label-thresholds-defaults).
+**Customize**: All thresholds and labels configurable. See [Configuration Guide](docs/en/configuration.md#label-thresholds-defaults).
 
 ## ⚙️ Configuration
 
@@ -200,17 +200,18 @@ When limits exceeded:
 - **Conditional Execution**: Skip checks by label, branch, or path
 - **Custom Thresholds**: Fine-tune all size and complexity limits
 
-👉 **Full documentation**: [Configuration Guide](docs/configuration.md) | [Advanced Usage](docs/advanced-usage.md)
+👉 **Full documentation**: [Configuration Guide](docs/en/configuration.md) | [Advanced Usage](docs/en/advanced-usage.md)
 
 ## 📚 Documentation
 
-| Guide                                        | Description                       |
-| -------------------------------------------- | --------------------------------- |
-| [Configuration Guide](docs/configuration.md) | All inputs, outputs, and defaults |
-| [Advanced Usage](docs/advanced-usage.md)     | Real-world examples and patterns  |
-| [Troubleshooting](docs/troubleshooting.md)   | Common issues and solutions       |
-| [API Reference](docs/API.md)                 | Internal API documentation        |
-| [Release Process](docs/release-process.md)   | Version management                |
+| Guide                                           | Description                       |
+| ----------------------------------------------- | --------------------------------- |
+| [Documentation Index](docs/README.md)           | Language-organized doc links      |
+| [Configuration Guide](docs/en/configuration.md) | All inputs, outputs, and defaults |
+| [Advanced Usage](docs/en/advanced-usage.md)     | Real-world examples and patterns  |
+| [Troubleshooting](docs/en/troubleshooting.md)   | Common issues and solutions       |
+| [API Reference](docs/en/API.md)                 | Internal API documentation        |
+| [Release Process](docs/en/release-process.md)   | Version management                |
 
 ## 🤝 Contributing
 
@@ -242,7 +243,7 @@ The script will:
 6. Create git commit and tags
 7. Push to origin and create GitHub release
 
-See [Release Process](docs/release-process.md) for details.
+See [Release Process](docs/en/release-process.md) for details.
 
 ## 📄 License
 

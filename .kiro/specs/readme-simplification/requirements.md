@@ -54,13 +54,13 @@ PR Insights Labelerプロジェクトの現在のREADME.mdは717行の詳細な�
 #### 受入基準
 
 1. WHEN 詳細ドキュメントが作成されるとき THEN docs/ディレクトリに以下の最小限のファイルが配置されるものとする
-   - `docs/configuration.md`: 入力パラメータの詳細とデフォルト値
-   - `docs/advanced-usage.md`: 高度な使用例（実行可能なサンプル中心）
-   - `docs/troubleshooting.md`: トラブルシューティングガイド
-2. WHERE docs/configuration.md において、すべての入力パラメータ（file_size_limit、size_enabled等）が表形式で整理され、デフォルト値、説明、実例が記載されるものとする
-3. WHERE docs/advanced-usage.md において、各セクション（フォークからのPR対応、条件付き実行等）が完全に実行可能なworkflowサンプルと共に説明されるものとする
-4. WHERE docs/advanced-usage.md において、ユーザーがコピー＆ペーストで即座に試せる完全なサンプルが各ユースケースごとに提供されるものとする
-5. WHERE docs/troubleshooting.md において、よくある問題（権限エラー、Draft PRスキップ等）が問題→原因→解決策の3ステップで簡潔に記載されるものとする
+   - `docs/en/configuration.md`: 入力パラメータの詳細とデフォルト値
+   - `docs/en/advanced-usage.md`: 高度な使用例（実行可能なサンプル中心）
+   - `docs/en/troubleshooting.md`: トラブルシューティングガイド
+2. WHERE docs/en/configuration.md において、すべての入力パラメータ（file_size_limit、size_enabled等）が表形式で整理され、デフォルト値、説明、実例が記載されるものとする
+3. WHERE docs/en/advanced-usage.md において、各セクション（フォークからのPR対応、条件付き実行等）が完全に実行可能なworkflowサンプルと共に説明されるものとする
+4. WHERE docs/en/advanced-usage.md において、ユーザーがコピー＆ペーストで即座に試せる完全なサンプルが各ユースケースごとに提供されるものとする
+5. WHERE docs/en/troubleshooting.md において、よくある問題（権限エラー、Draft PRスキップ等）が問題→原因→解決策の3ステップで簡潔に記載されるものとする
 6. IF 既存のREADME.mdに記載されている情報が詳細ドキュメントに移動されるとき THEN その情報は完全に保持され、失われないものとする
 7. WHEN docs/内のドキュメントが作成されるとき THEN 各ドキュメントは単独で理解可能であり、過度な相互参照を避けるものとする
 

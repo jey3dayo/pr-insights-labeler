@@ -17,7 +17,7 @@
 - 入力マッピングロジック(`src/input-mapper.ts`)
 - ラベル適用ロジック(`src/index.ts`, `src/label-applicator.ts`)
 - テストコード(`__tests__/`)
-- ドキュメント(`README.md`, `docs/configuration.md`, `CHANGELOG.md`)
+- ドキュメント(`README.md`, `docs/en/configuration.md`, `CHANGELOG.md`)
 
 ### ゴール
 
@@ -85,7 +85,7 @@ graph TB
 | 2.1-2.2 | 複雑度機能デフォルトOFF | Input Definition, Input Mapper | `action.yml`, `Config` | `action.yml`, `src/input-mapper.ts` |
 | 3.1-3.3 | 複雑度閾値緩和 | Input Definition, Input Mapper | `action.yml`, `parseComplexityThresholdsV2` | `action.yml`, `src/input-mapper.ts`, `src/actions-io.ts` |
 | 4.1-4.5 | テスト更新 | Test Suite | `__tests__/*.test.ts` | `__tests__/input-mapper.test.ts`, `__tests__/label-applicator.test.ts`, 他 |
-| 5.1-5.7 | ドキュメント更新 | Documentation | README, docs, CHANGELOG | `README.md`, `docs/configuration.md`, `CHANGELOG.md` |
+| 5.1-5.7 | ドキュメント更新 | Documentation | README, docs, CHANGELOG | `README.md`, `docs/en/configuration.md`, `CHANGELOG.md` |
 | 6.1-6.6 | 既存機能保全 | All Components | 個別`*_enabled`フラグ | 全ソースコード |
 
 ## コンポーネントと設計
@@ -458,7 +458,7 @@ graph LR
 **Phase 5: ドキュメント更新**
 
 - `README.md`から`apply_labels`記載削除
-- `docs/configuration.md`のパラメータテーブル更新
+- `docs/en/configuration.md`のパラメータテーブル更新
 - `CHANGELOG.md`に破壊的変更記録
 
 **Phase 6: 品質チェック**

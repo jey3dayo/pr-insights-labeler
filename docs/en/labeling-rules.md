@@ -1,4 +1,10 @@
-# Labeling Rules Quick Reference
+# 🏷️ Labeling Rules Quick Reference
+
+**Last Updated**: 2025-11-30
+**Audience**: Developers, Contributors
+**Tags**: `category/documentation`, `audience/developer`, `audience/contributor`
+
+**Languages**: English | [日本語](../ja/labeling-rules.md)
 
 This guide summarizes how PR Insights Labeler assigns each label family. Use it as the first place to check what will be applied to a pull request.
 
@@ -28,7 +34,7 @@ All families can be individually enabled via workflow inputs (see `size_enabled`
 ## Category Labels (`category/*`)
 
 - Determined by file path globs. Multiple categories can be set because matching is additive.
-- Default mappings (see `docs/categories.md` for full details):
+- Default mappings (see `docs/en/categories.md` for full details):
   - Tests (`__tests__/**`, `**/*.test.ts(x)`) → `category/tests`
   - CI/CD (`.github/workflows/**`) → `category/ci-cd`
   - Documentation (`docs/**`, `*.md` excluding specs) → `category/documentation`
@@ -46,7 +52,7 @@ All families can be individually enabled via workflow inputs (see `size_enabled`
 - `risk/high` triggers when any CI check fails or when a `feat:*` change touches `src/**` without matching tests (`*.test.ts`, `*.spec.ts`, `__tests__/**`).
 - `risk/medium` triggers for configuration-heavy updates (e.g., `.github/workflows/**`, `package.json`, `tsconfig.json`, or any `config_files` glob).
 - No risk label is applied for `docs:*`, `test:*`, or `refactor:*` changes with passing CI.
-- Configure via the `risk` block in `.github/pr-labeler.yml` (see `docs/configuration.md`).
+- Configure via the `risk` block in `.github/pr-labeler.yml` (see `docs/en/configuration.md`).
 
 ## Complexity Labels (`complexity/*`)
 
@@ -73,6 +79,6 @@ All families can be individually enabled via workflow inputs (see `size_enabled`
 
 ## Where to Go Next
 
-- `docs/configuration.md` – All inputs and label customization knobs.
-- `docs/categories.md` – In-depth explanations and pattern tables for every category label.
-- `docs/advanced-usage.md` – Edge cases (fork PRs, strict policies, localization).
+- `docs/en/configuration.md` – All inputs and label customization knobs.
+- `docs/en/categories.md` – In-depth explanations and pattern tables for every category label.
+- `docs/en/advanced-usage.md` – Edge cases (fork PRs, strict policies, localization).

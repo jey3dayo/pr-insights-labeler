@@ -192,7 +192,7 @@
 
 - [x] 8.2 リリースノートを作成する
   - CHANGELOG.md を作成（v1.0.0 初回リリース）
-  - docs/release-process.md を作成（リリース手順書）
+  - docs/en/release-process.md を作成（リリース手順書）
   - 新機能の説明（GitHub Actions Summary 出力）
   - 既存機能への影響なしを明記
   - マイグレーションガイド（デフォルト有効、無効化方法）

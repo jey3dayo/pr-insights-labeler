@@ -8,7 +8,7 @@
 
 - [ ] 1. 移行準備と現状分析の実施
   - 現在のREADME.mdの構造を分析し、セクションごとの行数と内容を記録する
-  - 各セクションを新しいドキュメント構造（README.md / docs/configuration.md / docs/advanced-usage.md / docs/troubleshooting.md）にマッピングする
+  - 各セクションを新しいドキュメント構造（README.md / docs/en/configuration.md / docs/en/advanced-usage.md / docs/en/troubleshooting.md）にマッピングする
   - 保持すべき重要なアンカーリンクを特定し、リスト化する（日本語・英語両方）
   - アーカイブ用のGitタグ（`pre-simplification-readme`）を作成する
   - _要件: 5.1, 5.2, 5.5_
@@ -85,7 +85,7 @@
 
 - [ ] 5. ドキュメント同期ガイドラインの更新
   - documentation-guidelines.mdまたはCONTRIBUTING.mdに、README.md更新時のREADME.ja.md同期手順を記載する
-  - action.yml更新時のdocs/configuration.md同期手順を記載する
+  - action.yml更新時のdocs/en/configuration.md同期手順を記載する
   - 新機能追加時のドキュメント更新要件を記載する
   - docs/の多言語化時のサブディレクトリ構造（docs/en/, docs/ja/）を記載する
   - _要件: 4.3, 4.5, 6.4_
@@ -93,8 +93,8 @@
 - [ ] 6. バリデーションとテストの実施
 - [ ] 6.1 コンテンツ完全性の検証
   - 元のREADME.mdの全セクション（717行）が新しい構造に完全に移行されたことを確認する
-  - 全入力パラメータがdocs/configuration.mdに存在することを確認する
-  - 全高度な使用例がdocs/advanced-usage.mdに存在することを確認する
+  - 全入力パラメータがdocs/en/configuration.mdに存在することを確認する
+  - 全高度な使用例がdocs/en/advanced-usage.mdに存在することを確認する
   - サイドバイサイド比較を行い、情報の欠損がないことを確認する
   - _要件: 3.6, 5.1, 5.4_
 

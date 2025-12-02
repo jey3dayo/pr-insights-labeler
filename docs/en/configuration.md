@@ -1,4 +1,10 @@
-# Configuration Guide
+# 🔧 Configuration Guide
+
+**Last Updated**: 2025-11-30
+**Audience**: Users, Developers
+**Tags**: `category/action`, `audience/user`, `audience/developer`
+
+**Languages**: English | 日本語（準備中）
 
 Complete reference for all input parameters, output variables, and configuration options for PR Insights Labeler.
 

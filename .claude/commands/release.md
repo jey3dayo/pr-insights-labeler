@@ -475,7 +475,7 @@ gh release create v1.0.2 --title "v1.0.2" --notes "..."
 
 ## 📝 関連ドキュメント
 
-- [docs/release-process.md](../docs/release-process.md) - 手動リリース手順
+- [docs/ja/release-process.md](../docs/ja/release-process.md) - 手動リリース手順
 - [CHANGELOG.md](../CHANGELOG.md) - リリース履歴
 - [Semantic Versioning](https://semver.org/) - バージョニング規約
 

@@ -54,7 +54,7 @@ PR Insights Labelerプロジェクトの現在の入力パラメータ設計は�
 1. WHERE action.ymlの`complexity_thresholds`パラメータにおいて THE デフォルト値が`'{"medium": 15, "high": 30}'`に変更されているものとする(旧: `'{"medium": 10, "high": 20}'`)
 2. WHEN ユーザーが複雑度機能を有効化し、閾値をカスタマイズしないとき THEN 新しいデフォルト閾値(`medium: 15, high: 30`)が適用されるものとする
 3. WHERE src/labeler-types.tsまたは関連ファイルにおいて THE デフォルト複雑度閾値定数が`{ medium: 15, high: 30 }`に更新されているものとする
-4. WHERE docs/configuration.mdにおいて THE 複雑度閾値の推奨値として新しいデフォルト値が記載され、業界標準(21-50が複雑)との整合性が説明されているものとする
+4. WHERE docs/en/configuration.mdにおいて THE 複雑度閾値の推奨値として新しいデフォルト値が記載され、業界標準(21-50が複雑)との整合性が説明されているものとする
 5. IF ユーザーがカスタム閾値を設定する場合 THEN 引き続きJSON形式で自由に設定可能であるものとする
 
 ### 要件4: テストの更新
@@ -78,8 +78,8 @@ PR Insights Labelerプロジェクトの現在の入力パラメータ設計は�
 1. WHERE README.mdにおいて THE `apply_labels`パラメータに関する記載がすべて削除されているものとする
 2. WHERE README.mdのクイックスタートにおいて THE 個別`*_enabled`パラメータの使用方法が明確に記載され、例示されているものとする
 3. WHERE README.mdにおいて THE 複雑度機能がオプション機能であり、デフォルトOFFであることが記載されているものとする
-4. WHERE docs/configuration.mdにおいて THE すべての入力パラメータテーブルから`apply_labels`が削除され、個別制御パラメータのみが記載されているものとする
-5. WHERE docs/configuration.mdにおいて THE 新しい複雑度デフォルト値(`complexity_enabled: "false"`, `complexity_thresholds: {"medium": 15, "high": 30}`)が記載されているものとする
+4. WHERE docs/en/configuration.mdにおいて THE すべての入力パラメータテーブルから`apply_labels`が削除され、個別制御パラメータのみが記載されているものとする
+5. WHERE docs/en/configuration.mdにおいて THE 新しい複雑度デフォルト値(`complexity_enabled: "false"`, `complexity_thresholds: {"medium": 15, "high": 30}`)が記載されているものとする
 6. WHERE CHANGELOG.mdにおいて THE 以下の破壊的変更が明確に記録されているものとする:
    - `apply_labels`パラメータの削除(個別`*_enabled`で代替)
    - `complexity_enabled`のデフォルト値変更(`"true"` → `"false"`)
