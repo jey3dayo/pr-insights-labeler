@@ -47,6 +47,7 @@ export const DEFAULT_EXCLUDES: readonly string[] = [
   '**/package-lock.json', // npm
   '**/pnpm-lock.yaml', // pnpm
   '**/yarn.lock', // Yarn
+  '**/bun.lockb', // Bun
   '**/composer.lock', // PHP Composer
   '**/Gemfile.lock', // Ruby Bundler
   '**/Cargo.lock', // Rust
