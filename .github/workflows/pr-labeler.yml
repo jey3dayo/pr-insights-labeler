@@ -1,0 +1,32 @@
+name: Pull Request Labeler
+
+on:
+  pull_request:
+    types: [opened, edited, synchronize, reopened, ready_for_review]
+
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write # コメント投稿用
+
+jobs:
+  label:
+    name: Label PR
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # 全履歴を取得（diff計算のため）
+
+      - name: Apply PR Insights Labeler
+        uses: jey3dayo/pr-insights-labeler@v1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          file_size_limit: "100KB"
+          file_lines_limit: "500"
+          pr_additions_limit: "5000"
+          pr_files_limit: "50"
+          comment_on_pr: "auto"
+          enable_summary: "true"
