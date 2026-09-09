@@ -42,6 +42,9 @@ export const DEFAULT_EXCLUDES: readonly string[] = [
 
   // Lock files (generic pattern)
   '**/*.lock',
+  '**/*.lock.yaml', // apm, Helm-style compound extension
+  '**/*.lock.json', // NuGet packages.lock.json
+  '**/*.lock.hcl', // Terraform provider lock
 
   // Package manager lock files
   '**/package-lock.json', // npm

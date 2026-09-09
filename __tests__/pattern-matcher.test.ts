@@ -146,6 +146,14 @@ describe('PatternMatcher', () => {
       expect(isExcluded('yarn.lock', defaultPatterns)).toBe(true);
       expect(isExcluded('src/package-lock.json', defaultPatterns)).toBe(true);
 
+      // Lock files with a compound extension (`<name>.lock.<ext>`)
+      expect(isExcluded('apm.lock.yaml', defaultPatterns)).toBe(true);
+      expect(isExcluded('config/apm.lock.yaml', defaultPatterns)).toBe(true);
+      expect(isExcluded('packages.lock.json', defaultPatterns)).toBe(true);
+      expect(isExcluded('.terraform.lock.hcl', defaultPatterns)).toBe(true);
+      expect(isExcluded('go.sum', defaultPatterns)).toBe(true);
+      expect(isExcluded('gradle.lockfile', defaultPatterns)).toBe(true);
+
       // Test node_modules
       expect(isExcluded('node_modules/react/index.js', defaultPatterns)).toBe(true);
       expect(isExcluded('packages/app/node_modules/test.js', defaultPatterns)).toBe(true);

@@ -20,6 +20,16 @@ export const DEFAULT_EXCLUDE_PATTERNS: string[] = [
   'bun.lockb',
   'deno.lock',
   '*.lock',
+  // Lock files with a compound extension (`<name>.lock.<ext>`),
+  // which `*.lock` cannot match
+  '*.lock.yaml', // apm, Helm-style
+  '*.lock.json', // NuGet packages.lock.json
+  '*.lock.hcl', // Terraform provider lock
+  'npm-shrinkwrap.json',
+  'gradle.lockfile',
+  'go.sum',
+  'Package.resolved', // Swift Package Manager
+  'Cartfile.resolved', // Carthage
 
   // Dependencies
   '**/node_modules/**',

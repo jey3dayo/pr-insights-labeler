@@ -416,7 +416,7 @@ For large PRs (thousands of lines, hundreds of files), consider disabling or lim
 
 The following files are automatically excluded from analysis:
 
-- **Lock files**: `package-lock.json`, `yarn.lock`, `pnpm-lock.yaml`, `Cargo.lock`, `Gemfile.lock`, `composer.lock`, `poetry.lock`
+- **Lock files**: `package-lock.json`, `yarn.lock`, `pnpm-lock.yaml`, `Cargo.lock`, `Gemfile.lock`, `composer.lock`, `poetry.lock`, `*.lock`, `*.lock.yaml`, `*.lock.json`, `*.lock.hcl`, `npm-shrinkwrap.json`, `gradle.lockfile`, `go.sum`, `Package.resolved`, `Cartfile.resolved`
 - **Dependencies**: `node_modules/**`, `vendor/**`, `.bundle/**`
 - **Build artifacts**: `dist/**`, `build/**`, `.next/**`, `out/**`, `target/**`
 - **Minified files**: `*.min.js`, `*.min.css`, `*.bundle.js`
