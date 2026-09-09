@@ -135,7 +135,7 @@ export function initializeI18n(language: LanguageCode): Result<void, Configurati
       defaultNS: 'summary',
       resources,
       debug: false, // プロダクションでは無効
-      initImmediate: false, // 即座に初期化（非同期バックエンドを使用しない）
+      initAsync: false, // 即座に初期化（非同期バックエンドを使用しない）
       interpolation: {
         escapeValue: false, // Reactを使用しないため不要
       },
