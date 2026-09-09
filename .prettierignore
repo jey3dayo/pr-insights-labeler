@@ -26,7 +26,6 @@ __tests__/__tests__/
 # Spec-driven metadata
 .claude/
 .codex/
-.serena/
 sessions/
 sessions/**
 
