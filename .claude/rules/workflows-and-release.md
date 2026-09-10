@@ -23,7 +23,7 @@ paths:
 
 - 推奨: `/release <patch|minor|major>` で自動化。  
 - 手動リリース時もセマンティックバージョニングを守り、タグ `vX.Y.Z` とメジャーの可変タグ `vX` を更新する。CHANGELOGを同期し、GitHub Releaseを作成する。
-- Marketplace公開ガイド（docs/ja/marketplace-release.md）の手順は省略せず、権限設定を確認する。
+- Marketplace公開は docs/ja/marketplace-release.md に従う。権限設定の誤りは公開後に外から気付けないため、公開前に確認する。
 
 ## Summary出力
 
