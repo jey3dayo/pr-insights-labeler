@@ -21,6 +21,9 @@ import type { ComplexityMetrics } from '../src/labeler-types';
 // 一時ディレクトリへ fixture ファイルを実在させてから process.chdir() し、afterEach で元の cwd
 // へ戻して削除する（issue #167）。これにより filesAnalyzed が実際に埋まり、複雑度解析ブランチへ
 // 到達する。実 ESLint との契約テストは __tests__/complexity-analyzer.test.ts に隔離済み。
+// fixture が常にローカルへ存在するため getFileSize は第 1 プローブ（fs.stat）で必ず成功する。
+// git ls-tree と GitHub API への fallback は __tests__/file-metrics.test.ts が検証しているので、
+// ここへ到達しない getContent のサイズ応答モックを置かない。
 const FAKE_COMPLEXITY_METRICS: ComplexityMetrics = {
   maxComplexity: 5,
   avgComplexity: 5,
@@ -262,12 +265,6 @@ describe('Integration Tests', () => {
         },
       ]);
 
-      mockOctokit.rest.repos.getContent.mockResolvedValue({
-        data: {
-          size: 50000, // 50KB（制限内）
-        },
-      });
-
       mockOctokit.rest.issues.listLabelsOnIssue.mockResolvedValue({
         data: [],
       });
@@ -331,12 +328,6 @@ describe('Integration Tests', () => {
           status: 'modified',
         },
       ]);
-
-      mockOctokit.rest.repos.getContent.mockResolvedValue({
-        data: {
-          size: 30000, // 30KB
-        },
-      });
 
       mockOctokit.rest.issues.listLabelsOnIssue.mockResolvedValue({
         data: [],
@@ -406,12 +397,6 @@ describe('Integration Tests', () => {
         },
       ]);
 
-      mockOctokit.rest.repos.getContent.mockResolvedValue({
-        data: {
-          size: 30000, // 30KB
-        },
-      });
-
       mockOctokit.rest.issues.listLabelsOnIssue.mockResolvedValue({
         data: [],
       });
@@ -474,12 +459,6 @@ describe('Integration Tests', () => {
           status: 'modified',
         },
       ]);
-
-      mockOctokit.rest.repos.getContent.mockResolvedValue({
-        data: {
-          size: 30000,
-        },
-      });
 
       mockOctokit.rest.issues.listLabelsOnIssue.mockResolvedValue({
         data: [],
@@ -557,9 +536,8 @@ describe('Integration Tests', () => {
         },
       ]);
 
-      // 他のテストが repos.getContent へ設定した mockResolvedValue は vi.clearAllMocks() では
-      // 消えない（実装は残り、呼び出し履歴だけ消える）ため、このテストが期待する
-      // 「設定ファイルなし → デフォルト」の前提を明示的に固定する。
+      // vi.clearAllMocks() は呼び出し履歴だけを消し mock 実装は残すため、このテストが
+      // 依存する「設定ファイルなし → デフォルト」の前提を明示的に固定する。
       mockOctokit.rest.repos.getContent.mockRejectedValue({ status: 404, message: 'Not Found' });
       mockOctokit.rest.issues.listLabelsOnIssue.mockResolvedValue({ data: [] });
       mockOctokit.rest.issues.listComments.mockResolvedValue({ data: [] });
