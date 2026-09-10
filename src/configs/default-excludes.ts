@@ -26,10 +26,29 @@ export const DEFAULT_EXCLUDE_PATTERNS: string[] = [
   '*.lock.json', // NuGet packages.lock.json
   '*.lock.hcl', // Terraform provider lock
   'npm-shrinkwrap.json',
-  'gradle.lockfile',
   'go.sum',
   'Package.resolved', // Swift Package Manager
   'Cartfile.resolved', // Carthage
+  // Gradle dependency locking: per-project `gradle.lockfile`,
+  // `buildscript-gradle.lockfile`, and any custom `lockFile` location
+  '*.lockfile',
+  'pylock.toml', // PEP 751
+  'pylock.*.toml', // PEP 751 named variants
+  'gems.locked', // Bundler when the Gemfile is named `gems.rb`
+  'conda-lock.yml',
+  'cabal.project.freeze', // Haskell Cabal
+  'maven_install.json', // Bazel rules_jvm_external
+
+  // Yarn Berry generated artifacts that are committed by design.
+  // `.yarn/patches`, `.yarn/versions` and `.yarnrc.yml` are hand-authored
+  // and stay in scope.
+  '.pnp.*',
+  '**/.yarn/cache/**',
+  '**/.yarn/unplugged/**',
+  '**/.yarn/install-state.gz',
+  '**/.yarn/releases/**',
+  '**/.yarn/plugins/**',
+  '**/.yarn/sdks/**',
 
   // Dependencies
   '**/node_modules/**',
@@ -107,6 +126,7 @@ export const DEFAULT_EXCLUDE_PATTERNS: string[] = [
   '.claude/**',
   '.codex/**',
   '.kiro/**',
+  '.agents/**',
 
   // Documentation
   'docs/**',

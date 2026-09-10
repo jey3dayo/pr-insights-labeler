@@ -416,7 +416,8 @@ For large PRs (thousands of lines, hundreds of files), consider disabling or lim
 
 The following files are automatically excluded from analysis:
 
-- **Lock files**: `package-lock.json`, `yarn.lock`, `pnpm-lock.yaml`, `Cargo.lock`, `Gemfile.lock`, `composer.lock`, `poetry.lock`, `*.lock`, `*.lock.yaml`, `*.lock.json`, `*.lock.hcl`, `npm-shrinkwrap.json`, `gradle.lockfile`, `go.sum`, `Package.resolved`, `Cartfile.resolved`
+- **Lock files**: `package-lock.json`, `yarn.lock`, `pnpm-lock.yaml`, `Cargo.lock`, `Gemfile.lock`, `composer.lock`, `poetry.lock`, `*.lock`, `*.lock.yaml`, `*.lock.json`, `*.lock.hcl`, `*.lockfile`, `npm-shrinkwrap.json`, `go.sum`, `Package.resolved`, `Cartfile.resolved`, `pylock.toml`, `pylock.*.toml`, `gems.locked`, `conda-lock.yml`, `cabal.project.freeze`, `maven_install.json`
+- **Yarn Berry generated artifacts**: `.pnp.*`, `.yarn/cache/**`, `.yarn/unplugged/**`, `.yarn/install-state.gz`, `.yarn/releases/**`, `.yarn/plugins/**`, `.yarn/sdks/**` (hand-authored `.yarn/patches/**`, `.yarn/versions/**` and `.yarnrc.yml` remain in scope)
 - **Dependencies**: `node_modules/**`, `vendor/**`, `.bundle/**`
 - **Build artifacts**: `dist/**`, `build/**`, `.next/**`, `out/**`, `target/**`
 - **Minified files**: `*.min.js`, `*.min.css`, `*.bundle.js`
@@ -426,7 +427,7 @@ The following files are automatically excluded from analysis:
 - **Generated files**: `*.generated.*`, `*.gen.ts`, `*.gen.go`
 - **Test coverage**: `coverage/**`, `.nyc_output/**`
 - **IDE/Editor**: `.vscode/**`, `.idea/**`
-- **Spec-driven metadata**: `.claude/**`, `.codex/**`, `.kiro/**`
+- **Spec-driven metadata**: `.claude/**`, `.codex/**`, `.kiro/**`, `.agents/**`
 - **Documentation**: `docs/**`, `documentation/**`, `CHANGELOG.md`, `TODO.md`, `todo.txt`, `done.txt`
 
 **Complete list**: See [default-excludes.ts](../../src/configs/default-excludes.ts) for the full default exclude patterns.
