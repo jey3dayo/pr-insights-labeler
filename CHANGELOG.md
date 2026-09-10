@@ -5,6 +5,47 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.15.0] - 2026-09-10
+
+### ⚠️ Breaking Changes
+
+- Under `pull_request_target`, the action now verifies that the checkout at `GITHUB_WORKSPACE` is the PR head SHA recorded in the event payload, and fails before analyzing anything when it is not (#166)
+  - **Affected**: workflows using `pull_request_target` that keep the default base checkout, omit an explicit PR head checkout step, or check out only a subdirectory via `actions/checkout`'s `path` input. The guard runs at the entry point of analysis, so it cannot be avoided by disabling `size_enabled`, `complexity_enabled`, `category_enabled`, `risk_enabled`, `enable_directory_labeling`, or the per-file limit inputs. Only the draft-PR skip runs earlier
+  - **Not affected**: the plain `pull_request` event. `actions/checkout` legitimately checks out the merge commit there, so the guard does not apply
+  - **Why**: file size, line count, and complexity all read the local checkout. With a base checkout they measured the base revision instead of the PR head, producing wrong labels silently. A warning cannot protect correctness, because the GitHub API fallback only covers diff retrieval, not file content
+  - **Action Required**: set `fetch-depth: 0` on the base checkout and add a PR head checkout step before the labeler. Do not put `continue-on-error` on it — a green job that skipped the checkout still measures the base revision
+
+    ```yaml
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Check out the event PR head for analysis
+      env:
+        PR_NUMBER: ${{ github.event.pull_request.number }}
+        HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+      shell: bash
+      run: |
+        git fetch --no-tags origin "refs/pull/${PR_NUMBER}/head"
+        FETCHED_SHA="$(git rev-parse FETCH_HEAD)"
+        if [[ "$FETCHED_SHA" != "$HEAD_SHA" ]]; then
+          echo "PR head changed after this workflow was queued; refusing to analyze a different revision." >&2
+          exit 1
+        fi
+        git checkout --detach "$FETCHED_SHA"
+    ```
+
+- Under `pull_request_target`, `directory_labeler_config_path` is resolved as a repository-relative path against the trusted base ref via the GitHub API. Absolute paths, paths outside the checkout, and files generated earlier in the workflow are no longer usable for that event; place the configuration in the base repository instead. Other events keep reading the local file (#166)
+
+### ✨ Added
+
+- read the directory labeling policy from the trusted base ref under `pull_request_target`, so a fork PR can no longer supply its own `.github/directory-labeler.yml` while metrics are measured from the PR head (#166)
+
+### 🔄 Changed
+
+- share the policy-ref resolution between `.github/pr-labeler.yml` and `.github/directory-labeler.yml` as a pure function, and document the `pull_request_target` checkout procedure with an explicit `FETCH_HEAD` verification (#166)
+- isolate the real-ESLint module graph from the broad integration test, restore the default 5s test timeout, and drop the `hidePassedTests` option that does not exist in Vitest 5 (#168)
+
 ## [1.14.0] - 2026-09-10
 
 ### ✨ Added
@@ -559,6 +600,7 @@ PRメトリクス分析に基づいた高度な自動ラベル付け機能を追
 
 [1.0.1]: https://github.com/jey3dayo/pr-insights-labeler/releases/tag/v1.0.1
 [1.0.0]: https://github.com/jey3dayo/pr-insights-labeler/releases/tag/v1.0.0
+[1.15.0]: https://github.com/jey3dayo/pr-insights-labeler/releases/tag/v1.15.0
 [1.14.0]: https://github.com/jey3dayo/pr-insights-labeler/releases/tag/v1.14.0
 [1.13.0]: https://github.com/jey3dayo/pr-insights-labeler/releases/tag/v1.13.0
 [1.12.0]: https://github.com/jey3dayo/pr-insights-labeler/releases/tag/v1.12.0
