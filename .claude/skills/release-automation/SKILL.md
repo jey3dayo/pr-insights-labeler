@@ -9,15 +9,6 @@ description: Specialized skill for PR Insights Labeler release automation. Autom
 
 Automate the complete release process for PR Insights Labeler, including version bumping, quality validation, changelog generation, and GitHub Release creation with standardized release notes.
 
-## When to Use
-
-Trigger this skill when users request:
-
-- Version releases: "v1.8.1としてリリースして", "release v2.0.0"
-- Semantic version bumps: "patch release", "minor release", "major release"
-- Release operations: "create a release", "bump version", "publish new version"
-- Japanese release requests: "リリースして", "バージョンアップして"
-
 ## Release Workflow
 
 The automated release process follows these steps:
@@ -76,7 +67,7 @@ The script automatically:
 4. Creates git commit and tags (v{version} and v{major})
 5. Pushes to remote and creates GitHub Release
 
-### Release notes follow the standard format defined in `references/RELEASE_TEMPLATE.md`
+Release notes follow the standard format defined in `.github/RELEASE_TEMPLATE.md`.
 
 ### 3. Quality Metrics Collection
 
@@ -91,46 +82,9 @@ These metrics are included in the GitHub Release notes.
 
 ### 4. Release Notes Structure
 
-Release notes are automatically generated following `.github/RELEASE_TEMPLATE.md`:
-
-```markdown
-## ⚠️ Breaking Changes (if applicable)
-- Breaking change description (#PR)
-  - **Migration Guide**: Step-by-step instructions
-  - **Affected**: Which features are impacted
-  - **Action Required**: What users need to do
-
-## 🚀 What's New
-
-### ✨ Added
-- New feature (#PR)
-
-### 🔄 Changed
-- Modified behavior (#PR)
-
-### 🐛 Fixed
-- Bug fix (#PR)
-
-### 🗑️ Removed (if applicable)
-- Removed feature (#PR)
-
-## 📊 Quality Metrics
-
-- ✅ [N] tests passing
-- ✅ 0 ESLint errors/warnings
-- ✅ 0 TypeScript type errors
-- ✅ Build successful
-
-## 👥 Contributors
-
-This release was made possible by:
-- @contributor1
-- @contributor2
-
-## 🔗 Full Changelog
-
-**Full Changelog**: https://github.com/jey3dayo/pr-insights-labeler/compare/v[PREVIOUS]...v[CURRENT]
-```
+Release notes are automatically generated following `.github/RELEASE_TEMPLATE.md`,
+which is the single source of truth for the format. Do not duplicate the template
+here — when manually editing release notes, read `.github/RELEASE_TEMPLATE.md` directly.
 
 ### 5. Breaking Changes Detection
 
@@ -293,14 +247,9 @@ Automated release script implementing the complete workflow. Execute without arg
 - Contributors list generation
 - GitHub Release creation
 
-### references/RELEASE_TEMPLATE.md
+### .github/RELEASE_TEMPLATE.md
 
-Standard release notes template defining the format and structure. The template includes:
-
-- Section guidelines (Breaking Changes, What's New, Quality Metrics, Contributors)
-- Emoji guide for consistent formatting
-- Writing tips for effective release notes
-- PR reference requirements
-- Example release notes
+Standard release notes template defining the format and structure, including
+section guidelines, emoji conventions, and PR reference requirements.
 
 **Load this reference when editing release notes manually** to ensure consistency with project standards.
