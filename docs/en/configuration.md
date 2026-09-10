@@ -418,7 +418,7 @@ For large PRs (thousands of lines, hundreds of files), consider disabling or lim
 
 The following files are automatically excluded from analysis:
 
-- **Lock files**: `package-lock.json`, `yarn.lock`, `pnpm-lock.yaml`, `Cargo.lock`, `Gemfile.lock`, `composer.lock`, `poetry.lock`, `*.lock`, `*.lock.yaml`, `*.lock.json`, `*.lock.hcl`, `*.lockfile`, `npm-shrinkwrap.json`, `go.sum`, `Package.resolved`, `Cartfile.resolved`, `pylock.toml`, `pylock.*.toml`, `gems.locked`, `conda-lock.yml`, `cabal.project.freeze`, `maven_install.json`
+- **Lock files**: `package-lock.json`, `yarn.lock`, `pnpm-lock.yaml`, `Cargo.lock`, `Gemfile.lock`, `composer.lock`, `poetry.lock`, `*.lock`, `*.lock.yaml`, `*.lock.json`, `*.lock.hcl`, `*.lockfile`, `npm-shrinkwrap.json`, `go.sum`, `Package.resolved`, `Cartfile.resolved`, `pylock.toml`, `pylock.+([!.]).toml` (PEP 751 named variants, a single non-dot segment), `gems.locked`, `conda-lock.yml`, `cabal.project.freeze`, `maven_install.json`
 - **Yarn Berry generated artifacts**: `.pnp.*`, `.yarn/cache/**`, `.yarn/unplugged/**`, `.yarn/install-state.gz`, `.yarn/releases/**`, `.yarn/plugins/**`, `.yarn/sdks/**` (hand-authored `.yarn/patches/**`, `.yarn/versions/**` and `.yarnrc.yml` remain in scope)
 - **Dependencies**: `node_modules/**`, `vendor/**`, `.bundle/**`
 - **Build artifacts**: `dist/**`, `build/**`, `.next/**`, `out/**`, `target/**`
