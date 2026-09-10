@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.14.0] - 2026-09-10
+
+### ✨ Added
+
+- exclude additional lock files and package-manager-generated artifacts from size/line analysis by default: Gradle dependency locks (`*.lockfile`, covering `buildscript-gradle.lockfile` and per-configuration locks), PEP 751 `pylock.toml` and its named variants, `gems.locked`, `conda-lock.yml`, `cabal.project.freeze`, `maven_install.json`, and the Yarn Berry artifacts that are committed by design (`.pnp.*`, `.yarn/cache`, `.yarn/releases`, `.yarn/plugins`, `.yarn/sdks`, `.yarn/unplugged`, `.yarn/install-state.gz`). Hand-authored files stay in scope, including `requirements.txt`, `gradle/libs.versions.toml`, `pnpm-workspace.yaml`, `go.mod`, `.yarn/patches` and `.yarnrc.yml`. Agent skill definitions under `.agents/**` are excluded alongside `.claude/**`, `.codex/**` and `.kiro/**`. Opt out with `use_default_excludes: "false"` (#164)
+
+### 🔄 Changed
+
+- migrate `eslint-plugin-import` to `eslint-plugin-import-x` (#162)
+- make the `@v1` released-action check read-only so it cannot rewrite pull-request labels, and correct the pinned-SHA comment to v7.0.1 (#163)
+
 ## [1.13.0] - 2026-09-10
 
 ### ✨ Added
@@ -548,6 +559,7 @@ PRメトリクス分析に基づいた高度な自動ラベル付け機能を追
 
 [1.0.1]: https://github.com/jey3dayo/pr-insights-labeler/releases/tag/v1.0.1
 [1.0.0]: https://github.com/jey3dayo/pr-insights-labeler/releases/tag/v1.0.0
+[1.14.0]: https://github.com/jey3dayo/pr-insights-labeler/releases/tag/v1.14.0
 [1.13.0]: https://github.com/jey3dayo/pr-insights-labeler/releases/tag/v1.13.0
 [1.12.0]: https://github.com/jey3dayo/pr-insights-labeler/releases/tag/v1.12.0
 [1.11.5]: https://github.com/jey3dayo/pr-insights-labeler/releases/tag/v1.11.5
