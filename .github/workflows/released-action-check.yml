@@ -3,9 +3,13 @@
 # quality.yml の self-check は `uses: ./` でブランチのコードを実行するため、
 # リリース済みバンドルの破損はそちらでは検知できない。
 #
-# このジョブは PR の状態を変更しない。ラベル判定を行う入力はすべて false にし、
-# 権限も read のみにして、公開済みバンドルが解析から summary 出力まで
-# 走り切ることだけを確認する。ラベル付与は self-check が担う。
+# このジョブは PR の状態を変更しない。ただし入力の無効化だけでは不十分で、
+# 公開済み @v1 はラベル生成をすべて無効にしても applyLabels を呼び、
+# 決定集合に無い既存の auto/* ラベルを削除しようとする。
+# 実際の防御は permissions の read であり、削除 API は 403 になって
+# 警告として処理される（ジョブは失敗しない）。read 権限を write へ
+# 戻すと PR のラベルが self-check と別に書き換わるので戻さないこと。
+# ラベル付与は self-check が担う。
 name: Released Action Check
 
 on:
@@ -26,7 +30,7 @@ jobs:
     steps:
       # ファイル単位の size/lines 解析は working directory を読むため、
       # checkout が無いと解析が空振りして smoke check として成立しない。
-      # 補助ステップは full commit SHA で固定する（actions/checkout v7.0.0）
+      # 補助ステップは full commit SHA で固定する（actions/checkout v7.0.1）
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           fetch-depth: 0
@@ -38,7 +42,7 @@ jobs:
           comment_on_pr: "never"
           enable_summary: "true"
           language: "ja"
-          # ラベルを書き込む経路をすべて無効化する。
+          # ラベル生成の経路を無効化する（削除試行は上記 read 権限で防ぐ）。
           # 分類ラベル
           size_enabled: "false"
           complexity_enabled: "false"
