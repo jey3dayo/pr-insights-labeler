@@ -42,6 +42,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - count skipped files' additions when the file-count limit truncates analysis (with exclusion patterns applied) and surface the skipped count in the summary (#153)
 - treat a PR with zero labels as a successful fetch instead of a retrieval failure (#149)
 - correct docs claiming complexity labels are enabled by default and fix broken relative links (#147)
+- merge the generated changelog with the hand-written `[Unreleased]` section when cutting a release, so hand-written entries are no longer dropped (#140)
 
 ### 🔄 Changed
 
