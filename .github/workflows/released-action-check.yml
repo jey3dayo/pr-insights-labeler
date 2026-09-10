@@ -2,18 +2,21 @@
 # （リリース時にコミットされた dist/）が動作することを確認する。
 # quality.yml の self-check は `uses: ./` でブランチのコードを実行するため、
 # リリース済みバンドルの破損はそちらでは検知できない。
+#
+# このジョブは PR の状態を変更しない。ラベル判定を行う入力はすべて false にし、
+# 権限も read のみにして、公開済みバンドルが解析から summary 出力まで
+# 走り切ることだけを確認する。ラベル付与は self-check が担う。
 name: Released Action Check
 
 on:
   pull_request:
     branches:
       - main
-  workflow_dispatch:
 
 permissions:
   contents: read
-  pull-requests: write
-  issues: write
+  pull-requests: read
+  issues: read
 
 jobs:
   released-v1:
@@ -22,8 +25,9 @@ jobs:
 
     steps:
       # ファイル単位の size/lines 解析は working directory を読むため、
-      # checkout が無いと解析が空振りして smoke check として成立しない
-      - uses: actions/checkout@v7
+      # checkout が無いと解析が空振りして smoke check として成立しない。
+      # 補助ステップは full commit SHA で固定する（actions/checkout v7.0.0）
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           fetch-depth: 0
 
@@ -31,12 +35,19 @@ jobs:
         uses: jey3dayo/pr-insights-labeler@v1
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          # ラベル付与と comment は self-check が担う。ここでは公開済みバンドルが
-          # 解析からラベル決定まで走り切ることだけを確認する
           comment_on_pr: "never"
           enable_summary: "true"
-          size_enabled: "true"
+          language: "ja"
+          # ラベルを書き込む経路をすべて無効化する。
+          # 分類ラベル
+          size_enabled: "false"
           complexity_enabled: "false"
           category_enabled: "false"
           risk_enabled: "false"
-          language: "ja"
+          # 違反ラベル（既定 true のため明示的に落とす）
+          file_size_limit_enabled: "false"
+          file_lines_limit_enabled: "false"
+          pr_additions_limit_enabled: "false"
+          pr_files_limit_enabled: "false"
+          # ディレクトリベースラベリング（既定 true のため明示的に落とす）
+          enable_directory_labeling: "false"
