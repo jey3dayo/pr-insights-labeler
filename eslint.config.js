@@ -3,8 +3,7 @@ const tseslint = require('typescript-eslint');
 const prettierConfig = require('eslint-config-prettier');
 const simpleImportSort = require('eslint-plugin-simple-import-sort');
 const neverthrow = require('eslint-plugin-neverthrow');
-const { fixupPluginRules } = require('@eslint/compat');
-const importPlugin = require('eslint-plugin-import');
+const importX = require('eslint-plugin-import-x');
 
 module.exports = tseslint.config(
   // ESLint推奨設定
@@ -63,16 +62,12 @@ module.exports = tseslint.config(
       '@typescript-eslint': tseslint.plugin,
       'simple-import-sort': simpleImportSort,
       neverthrow: neverthrow,
-      import: fixupPluginRules(importPlugin),
+      'import-x': importX,
     },
     settings: {
-      'import/resolver': {
-        typescript: {
-          alwaysTryTypes: true,
-          project: ['./tsconfig.json', './tsconfig.test.json'],
-        },
-        node: true,
-      },
+      // パスエイリアスを使っていないため、import-x 同梱の node resolver で足りる。
+      // eslint-import-resolver-typescript は eslint-plugin-import を peer に引き込むので採用しない
+      'import-x/resolver-next': [importX.createNodeResolver({ extensions: ['.ts', '.js', '.json'] })],
     },
     rules: {
       // Import/Export sorting
@@ -80,10 +75,10 @@ module.exports = tseslint.config(
       'simple-import-sort/exports': 'warn',
 
       // Import plugin rules
-      'import/no-cycle': ['warn', { maxDepth: 10 }],
-      'import/no-self-import': 'error',
-      'import/no-useless-path-segments': 'warn',
-      'import/no-duplicates': 'warn',
+      'import-x/no-cycle': ['warn', { maxDepth: 10 }],
+      'import-x/no-self-import': 'error',
+      'import-x/no-useless-path-segments': 'warn',
+      'import-x/no-duplicates': 'warn',
 
       // Neverthrow - allow flexible Result handling patterns
       // OFF: Allows both imperative (if result.isErr()) and functional (.match()) patterns
@@ -188,7 +183,7 @@ module.exports = tseslint.config(
       '@typescript-eslint/explicit-function-return-type': 'off',
       '@typescript-eslint/consistent-type-assertions': 'off',
       'no-console': 'off',
-      'import/no-cycle': 'off',
+      'import-x/no-cycle': 'off',
     },
   },
 
@@ -207,6 +202,7 @@ module.exports = tseslint.config(
       '.dependency-cruiser.js', // dependency-cruiser config (CommonJS)
       'eslint.config.js',
       'scripts/**/*', // Build scripts
+      'tmp/**/*', // gitignore 済みのスクラッチ出力（調査メモ・レポート等）
       'src/types/i18n.d.ts', // Auto-generated i18n types
       '__tests__/fixtures/**/*', // Test fixtures with intentional syntax errors
       '__tests__/__tests__/**/*', // Duplicate test fixtures directory
