@@ -1,5 +1,12 @@
 /**
  * Tests for Complexity Analyzer
+ *
+ * このファイルは実 ESLint（+ @typescript-eslint/parser）を実際に起動して複雑度を解析する。
+ * `createComplexityAnalyzer()` と実 ESLint の間の契約を証明する唯一の場所であり、
+ * 削除・弱化してはならない（`__tests__/integration.test.ts` は同じファクトリをモックに
+ * 差し替えており、実 ESLint の起動確認はこのファイルの責務）。実測では cold cache でも
+ * 1秒未満（fixtures 配下の小さな固定ファイルのみを解析するため）で、`testTimeout` の
+ * グローバル既定を上げる必要はない（issue #161）。
  */
 
 import * as path from 'node:path';

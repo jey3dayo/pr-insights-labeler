@@ -2,9 +2,40 @@ import * as fs from 'node:fs';
 
 import * as core from '@actions/core';
 import * as github from '@actions/github';
+import { okAsync } from 'neverthrow';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { run } from '../src/index';
+import type { ComplexityMetrics } from '../src/labeler-types';
+
+// このテストは run() 全体を通す広い integration テストで、ラベル付与・違反判定・workflow の
+// 成否を検証する場であり、実 ESLint の起動は不要（cold cache で数秒かかり、30s の testTimeout
+// を1テストで大きく消費していた原因）。接合点は createComplexityAnalyzer()（利用元は
+// src/workflow/stages/analysis.ts の1箇所のみ）で、@actions/github と同じ vi.mock の様式で
+// 差し替え、実 ESLint 一式（eslint / @typescript-eslint/parser 等）をこのファイルの
+// モジュールグラフから外す。これがコスト削減の実体で、cold cache 時間の大部分はモジュール
+// import コストであって呼び出しコストではなかった（この integration テストの固定入力ファイル
+// パスは実在しないため、file-metrics 側の解析が成功せず、複雑度解析ブランチ自体は現状の
+// フィクスチャでは到達しない。呼び出しコストの削減ではなくインポートコストの削減であることを
+// 明示するためにここへ記録する）。実 ESLint との契約テストは
+// __tests__/complexity-analyzer.test.ts に隔離済み。
+const FAKE_COMPLEXITY_METRICS: ComplexityMetrics = {
+  maxComplexity: 5,
+  avgComplexity: 5,
+  analyzedFiles: 1,
+  files: [{ path: 'src/file.ts', complexity: 5, functions: [] }],
+  skippedFiles: [],
+  syntaxErrorFiles: [],
+  truncated: false,
+  hasTsconfig: false,
+};
+
+vi.mock('../src/complexity-analyzer', () => ({
+  createComplexityAnalyzer: () => ({
+    analyzeFile: vi.fn(),
+    analyzeFiles: vi.fn(() => okAsync(FAKE_COMPLEXITY_METRICS)),
+  }),
+}));
 
 // GitHub APIモック
 const mockOctokit = {
@@ -112,6 +143,11 @@ describe('Integration Tests', () => {
   });
 
   describe('Basic Integration', () => {
+    // run() 全体を通す最初のテストは、このファイルのモジュールグラフの Vite transform を
+    // 初めて評価するコストを負う。実測で cold cache 単独 3.4〜5.2s、`pnpm test` の
+    // lint 並列実行下（CPU 競合）では既定の 5000ms を超えてタイムアウトし（5035ms、
+    // issue #161）、20 回程度の再実行では 5〜12s の範囲で揺れた。競合下のブレを吸収する
+    // ため観測worst caseに対して十分な余裕を確保して明示 timeout を設定する。
     it('should run successfully with small PR', async () => {
       // 小規模PRのモック設定
       mockOctokit.rest.pulls.listFiles.mockResolvedValue({
@@ -141,7 +177,11 @@ describe('Integration Tests', () => {
 
       // ラベルが適用される
       expect(mockOctokit.rest.issues.addLabels).toHaveBeenCalled();
-    });
+      // `run()` 全体を通すためモジュールグラフが大きく、cold cache では transform が
+      // 支配的になる。静穏な環境で約 5s、CI と同じ `pnpm test`（lint と並列）では
+      // 5〜12s、過負荷時は 20s を超える実測があるため、この 1 本だけ余裕を持たせる。
+      // global の既定は 5s のままにして、他のテストには厳しい予算を残す。
+    }, 30000);
 
     it('should handle Draft PR correctly', async () => {
       // Draft PRに設定

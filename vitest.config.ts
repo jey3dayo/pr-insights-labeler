@@ -5,10 +5,6 @@ export default defineConfig({
     globals: true,
     environment: 'node',
     setupFiles: ['__tests__/vitest.setup.ts'],
-    hidePassedTests: true,
-    // integration テストは実 ESLint を起動して複雑度を解析するため、
-    // cold cache では既定の 5s に収まらない
-    testTimeout: 30000,
     // CI環境での出力抑制
     silent: process.env.CI ? 'passed-only' : false,
     reporters: process.env.CI ? ['dot'] : ['default'],
