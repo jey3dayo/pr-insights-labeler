@@ -1,5 +1,8 @@
 ---
-paths: .claude/**, CLAUDE.md, AGENTS.md
+paths:
+  - ".claude/**"
+  - "CLAUDE.md"
+  - "AGENTS.md"
 ---
 
 # AI Tools & Claude Rules

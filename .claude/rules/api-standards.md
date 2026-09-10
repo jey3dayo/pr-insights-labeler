@@ -1,5 +1,8 @@
 ---
-paths: src/api/**, src/**/*.api.ts, docs/ja/API.md
+paths:
+  - "src/api/**"
+  - "src/**/*.api.ts"
+  - "docs/ja/API.md"
 ---
 
 # API Standards

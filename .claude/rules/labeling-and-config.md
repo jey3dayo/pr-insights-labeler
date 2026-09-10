@@ -1,5 +1,12 @@
 ---
-paths: action.yml, .github/pr-labeler.yml, docs/en/labeling-rules.md, docs/ja/labeling-rules.md, docs/en/categories.md, docs/en/configuration.md, docs/en/advanced-usage.md
+paths:
+  - "action.yml"
+  - ".github/pr-labeler.yml"
+  - "docs/en/labeling-rules.md"
+  - "docs/ja/labeling-rules.md"
+  - "docs/en/categories.md"
+  - "docs/en/configuration.md"
+  - "docs/en/advanced-usage.md"
 ---
 
 # Labeling & Configuration Rules

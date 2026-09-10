@@ -1,5 +1,8 @@
 ---
-paths: docs/**, README.md, README.ja.md
+paths:
+  - "docs/**"
+  - "README.md"
+  - "README.ja.md"
 ---
 
 # Documentation Rules

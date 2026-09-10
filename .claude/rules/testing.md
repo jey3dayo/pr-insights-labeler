@@ -1,5 +1,13 @@
 ---
-paths: __tests__/**, tests/**/*.test.ts, src/**/*.test.ts, src/**/*.test.tsx, lib/**/*.test.ts, lib/**/*.test.tsx, vitest.config.*, tsconfig.test.json
+paths:
+  - "__tests__/**"
+  - "tests/**/*.test.ts"
+  - "src/**/*.test.ts"
+  - "src/**/*.test.tsx"
+  - "lib/**/*.test.ts"
+  - "lib/**/*.test.tsx"
+  - "vitest.config.*"
+  - "tsconfig.test.json"
 ---
 
 # Testing Rules

@@ -1,5 +1,13 @@
 ---
-paths: src/**/*.ts, src/**/*.tsx, lib/**/*.ts, lib/**/*.tsx, scripts/**/*.ts, eslint.config.js, tsconfig*.json, knip.json
+paths:
+  - "src/**/*.ts"
+  - "src/**/*.tsx"
+  - "lib/**/*.ts"
+  - "lib/**/*.tsx"
+  - "scripts/**/*.ts"
+  - "eslint.config.js"
+  - "tsconfig*.json"
+  - "knip.json"
 ---
 
 # Coding Style Rules

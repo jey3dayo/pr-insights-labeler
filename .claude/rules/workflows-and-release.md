@@ -1,5 +1,10 @@
 ---
-paths: .github/workflows/**, action.yml, docs/ja/release-process.md, .claude/commands/release.md, CHANGELOG.md
+paths:
+  - ".github/workflows/**"
+  - "action.yml"
+  - "docs/ja/release-process.md"
+  - ".claude/commands/release.md"
+  - "CHANGELOG.md"
 ---
 
 # Workflows & Release Rules
