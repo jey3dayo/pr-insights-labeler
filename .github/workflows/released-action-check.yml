@@ -1,0 +1,42 @@
+# 公開済みのフローティングタグ @v1 を実際に実行し、利用者が受け取る成果物
+# （リリース時にコミットされた dist/）が動作することを確認する。
+# quality.yml の self-check は `uses: ./` でブランチのコードを実行するため、
+# リリース済みバンドルの破損はそちらでは検知できない。
+name: Released Action Check
+
+on:
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+
+jobs:
+  released-v1:
+    name: Released Action Check (@v1)
+    runs-on: ubuntu-latest
+
+    steps:
+      # ファイル単位の size/lines 解析は working directory を読むため、
+      # checkout が無いと解析が空振りして smoke check として成立しない
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Run PR Insights Labeler from the published @v1 tag
+        uses: jey3dayo/pr-insights-labeler@v1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          # ラベル付与と comment は self-check が担う。ここでは公開済みバンドルが
+          # 解析からラベル決定まで走り切ることだけを確認する
+          comment_on_pr: "never"
+          enable_summary: "true"
+          size_enabled: "true"
+          complexity_enabled: "false"
+          category_enabled: "false"
+          risk_enabled: "false"
+          language: "ja"
