@@ -14,6 +14,7 @@
   },
   "analysis": {
     "gettingDiff": "Getting PR diff files...",
+    "headCheckoutVerified": "pull_request_target: local checkout matches the PR head recorded in the workflow event ({{revision}})",
     "retrievedFiles": "Retrieved {{count}} files using {{strategy}} strategy",
     "analyzingFiles": "Analyzing files...",
     "analysisComplete": "Analysis complete:",

@@ -2,14 +2,49 @@ import * as path from 'node:path';
 
 import { ResultAsync } from 'neverthrow';
 
-import { logDebug, logErrorI18n, logInfo, logInfoI18n, logWarning, logWarningI18n } from '../../actions-io';
+import {
+  getEnvVar,
+  logDebug,
+  logError,
+  logErrorI18n,
+  logInfo,
+  logInfoI18n,
+  logWarning,
+  logWarningI18n,
+} from '../../actions-io';
 import { createComplexityAnalyzer } from '../../complexity-analyzer';
 import { getDiffFiles } from '../../diff-strategy';
 import type { AppError } from '../../errors/index.js';
 import { toAppError } from '../../errors/index.js';
 import { analyzeFiles } from '../../file-metrics';
 import { t } from '../../i18n.js';
+import { verifyHeadCheckout } from '../policy/head-checkout-guard.js';
 import type { AnalysisArtifacts, InitializationArtifacts } from '../types';
+
+/**
+ * Refuse to analyze a tree other than the PR head recorded in the event payload.
+ *
+ * Runs before any diff retrieval or file analysis: the analyzers read the local checkout, so a
+ * checkout that is not the PR head would produce metrics for the wrong tree. See
+ * `../policy/head-checkout-guard.js` for why this is fail-closed and limited to
+ * `pull_request_target`.
+ */
+async function assertLocalCheckoutIsPrHead(headSha: string): Promise<void> {
+  const verification = await verifyHeadCheckout({
+    eventName: getEnvVar('GITHUB_EVENT_NAME'),
+    expectedHeadSha: headSha,
+    workspace: getEnvVar('GITHUB_WORKSPACE'),
+  });
+
+  if (verification.isErr()) {
+    logError(verification.error.message);
+    throw verification.error;
+  }
+
+  if (verification.value.status === 'verified') {
+    logInfoI18n('analysis.headCheckoutVerified', { revision: verification.value.revision });
+  }
+}
 
 /**
  * Analyze diff files and optional complexity metrics
@@ -18,6 +53,8 @@ export function analyzePullRequest(context: InitializationArtifacts): ResultAsyn
   return ResultAsync.fromPromise(
     (async () => {
       const { token, prContext, config, labelerConfig } = context;
+
+      await assertLocalCheckoutIsPrHead(prContext.headSha);
 
       logInfoI18n('analysis.gettingDiff');
       const diffResult = await getDiffFiles(

@@ -38,16 +38,29 @@ Under `pull_request_target`, local diff computation needs both the base and head
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Check out PR head for analysis
+
+      - name: Check out the event PR head for analysis
         env:
           PR_NUMBER: ${{ github.event.pull_request.number }}
           HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        shell: bash
         run: |
-          git fetch --no-tags origin "+refs/pull/${PR_NUMBER}/head:refs/remotes/pull/head"
-          git checkout --detach "$HEAD_SHA"
+          git fetch --no-tags origin "refs/pull/${PR_NUMBER}/head"
+          FETCHED_SHA="$(git rev-parse FETCH_HEAD)"
+          if [[ "$FETCHED_SHA" != "$HEAD_SHA" ]]; then
+            echo "PR head changed after this workflow was queued; refusing to analyze a different revision." >&2
+            exit 1
+          fi
+          git checkout --detach "$FETCHED_SHA"
 ```
 
 The head SHA is passed to `git fetch`/`git checkout`, never to `actions/checkout` itself — `actions/checkout`'s own `pull_request_target` safeguards (such as `allow-unsafe-pr-checkout` in recent releases, which by default refuses to check out a fork head under this event) apply to what you pass to the `checkout` action, not to a plain `git checkout` run afterward. Re-verify this distinction when this project's documented `actions/checkout` version is bumped past v4.
+
+This step only analyzes the head SHA recorded in the `pull_request_target` event payload, never a live ref. `refs/pull/${PR_NUMBER}/head` is mutable: if the PR is updated after this run was queued, the fetched commit will no longer match `HEAD_SHA`, and the step deliberately fails rather than checking out the wrong revision. This is self-healing — the `synchronize` run triggered by that update analyzes the new head.
+
+**Do not put `continue-on-error` on this step.** If the checkout fails but the job continues anyway, analysis runs against the base checkout instead of the PR head — the GitHub API diff fallback still works, but anything that reads local file content (line counts, complexity, and other file-based analysis) is computed from the base revision, not the PR's actual changes.
+
+As a second line of defense, the action itself verifies under `pull_request_target` that the local `HEAD` matches the event's head SHA before analyzing anything; on a mismatch it fails outright instead of producing labels for the wrong revision.
 
 Policy configuration is handled separately from analysis content: whenever the event is `pull_request_target`, both `.github/pr-labeler.yml` and `.github/directory-labeler.yml` are read from the base ref (falling back to the default branch) via the GitHub API, regardless of what the local checkout contains. One consequence: a fork PR that edits either file will not preview its new configuration — the base configuration is applied instead. Under the plain `pull_request` event, `.github/pr-labeler.yml` is read from the head ref via the GitHub API and `.github/directory-labeler.yml` is read from the local checkout, so same-repository PRs can still preview configuration changes.
 
@@ -73,13 +86,20 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Check out PR head for analysis
+
+      - name: Check out the event PR head for analysis
         env:
           PR_NUMBER: ${{ github.event.pull_request.number }}
           HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        shell: bash
         run: |
-          git fetch --no-tags origin "+refs/pull/${PR_NUMBER}/head:refs/remotes/pull/head"
-          git checkout --detach "$HEAD_SHA"
+          git fetch --no-tags origin "refs/pull/${PR_NUMBER}/head"
+          FETCHED_SHA="$(git rev-parse FETCH_HEAD)"
+          if [[ "$FETCHED_SHA" != "$HEAD_SHA" ]]; then
+            echo "PR head changed after this workflow was queued; refusing to analyze a different revision." >&2
+            exit 1
+          fi
+          git checkout --detach "$FETCHED_SHA"
 
       - uses: jey3dayo/pr-insights-labeler@v1
         with:

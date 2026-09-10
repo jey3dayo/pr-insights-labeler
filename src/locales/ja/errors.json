@@ -36,7 +36,10 @@
     "fileAnalysisError": "ファイルの分析に失敗しました: {{file}}",
     "complexityAnalysisError": "複雑度の分析に失敗しました: {{message}}",
     "diffError": "差分の取得に失敗しました: {{message}}",
-    "cacheError": "キャッシュエラー: {{message}}"
+    "cacheError": "キャッシュエラー: {{message}}",
+    "headCheckoutMismatch": "pull_request_target: ローカルの checkout は {{actual}} ですが、workflow イベントが記録した PR head は {{expected}} です。workflow の queue 後に PR が更新されたため、イベントが指す revision とは異なる tree を解析しようとしています。workflow を再実行するか、checkout ステップで PR head の SHA を明示的に fetch して checkout してください。",
+    "headCheckoutUnavailable": "pull_request_target: ローカルの HEAD revision を取得できなかったため（GITHUB_WORKSPACE={{workspace}}）、workflow イベントが記録した PR head {{expected}} と checkout を突き合わせられません。誤った tree の解析を避けるため中断します。",
+    "headCheckoutHeadShaMissing": "pull_request_target: workflow イベントに PR head の SHA が無いため、ローカルの checkout を検証できません。誤った tree の解析を避けるため中断します。"
   },
   "pattern": {
     "invalidPattern": "無効なパターン: {{pattern}}",

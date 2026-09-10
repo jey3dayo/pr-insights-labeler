@@ -38,16 +38,29 @@ PR Insights Labelerの実践的な例と高度な設定です。
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Check out PR head for analysis
+
+      - name: Check out the event PR head for analysis
         env:
           PR_NUMBER: ${{ github.event.pull_request.number }}
           HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        shell: bash
         run: |
-          git fetch --no-tags origin "+refs/pull/${PR_NUMBER}/head:refs/remotes/pull/head"
-          git checkout --detach "$HEAD_SHA"
+          git fetch --no-tags origin "refs/pull/${PR_NUMBER}/head"
+          FETCHED_SHA="$(git rev-parse FETCH_HEAD)"
+          if [[ "$FETCHED_SHA" != "$HEAD_SHA" ]]; then
+            echo "PR head changed after this workflow was queued; refusing to analyze a different revision." >&2
+            exit 1
+          fi
+          git checkout --detach "$FETCHED_SHA"
 ```
 
 head SHAは `git fetch` / `git checkout` に渡され、`actions/checkout` 自体には渡されません。`actions/checkout` 自身が持つ `pull_request_target` 向けの安全対策（近年のリリースにある `allow-unsafe-pr-checkout` など、既定でこのイベント下でのフォークhead checkoutを拒否する仕組み）は `checkout` アクションへ渡す対象に対するものであり、その後の素の `git checkout` には適用されません。このリポジトリが案内する `actions/checkout` のバージョンをv4より先に上げる際は、この違いを再確認してください。
+
+このステップが解析するのは `pull_request_target` イベントのpayloadに記録されたhead SHAだけで、可変refそのものではありません。`refs/pull/${PR_NUMBER}/head` は可変なため、このワークフローがキューに入った後にPRが更新されると、fetchしたcommitは `HEAD_SHA` と一致しなくなります。その場合、このステップは誤ったrevisionをcheckoutせずに意図的に失敗します。更新によって起動する `synchronize` runが新しいheadを解析するため、自然に回復します。
+
+**このステップに `continue-on-error` を付けないでください。** checkoutが失敗してもジョブを続行させると、解析はPR headではなくbaseのcheckoutに対して行われます。GitHub API経由のdiff fallbackは機能しますが、行数・複雑度などローカルのファイル内容を読む解析は、PRの実際の変更ではなくbase revisionを対象に計算されてしまいます。
+
+第二の防御として、このアクション自体も `pull_request_target` の場合、解析前にローカルの `HEAD` がイベントのhead SHAと一致するかを検証します。一致しない場合は誤ったrevisionへラベルを付けるのではなく、アクションが失敗します。
 
 ポリシー設定と解析対象は別に扱われます。イベントが `pull_request_target` の場合、`.github/pr-labeler.yml` と `.github/directory-labeler.yml` はどちらも、ローカルチェックアウトの内容にかかわらずGitHub API経由でベースの参照（取得できない場合はデフォルトブランチ）から読み込まれます。その結果、いずれかのファイルを変更するフォークPRでは新しい設定はプレビューされず、ベース側の設定が適用されます。通常の `pull_request` イベントでは、`.github/pr-labeler.yml` はGitHub API経由でheadの参照から、`.github/directory-labeler.yml` はローカルチェックアウトから読み込まれるため、同一リポジトリのPRでは従来どおり設定変更をプレビューできます。
 
@@ -73,13 +86,20 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Check out PR head for analysis
+
+      - name: Check out the event PR head for analysis
         env:
           PR_NUMBER: ${{ github.event.pull_request.number }}
           HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        shell: bash
         run: |
-          git fetch --no-tags origin "+refs/pull/${PR_NUMBER}/head:refs/remotes/pull/head"
-          git checkout --detach "$HEAD_SHA"
+          git fetch --no-tags origin "refs/pull/${PR_NUMBER}/head"
+          FETCHED_SHA="$(git rev-parse FETCH_HEAD)"
+          if [[ "$FETCHED_SHA" != "$HEAD_SHA" ]]; then
+            echo "PR head changed after this workflow was queued; refusing to analyze a different revision." >&2
+            exit 1
+          fi
+          git checkout --detach "$FETCHED_SHA"
 
       - uses: jey3dayo/pr-insights-labeler@v1
         with:
