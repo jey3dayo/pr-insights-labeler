@@ -14,6 +14,7 @@
   },
   "analysis": {
     "gettingDiff": "PR差分ファイルを取得中...",
+    "headCheckoutVerified": "pull_request_target: ローカルの checkout は workflow イベントが記録した PR head と一致しています（{{revision}}）",
     "retrievedFiles": "{{strategy}}戦略で{{count}}個のファイルを取得しました",
     "analyzingFiles": "ファイルを分析中...",
     "analysisComplete": "分析完了:",
@@ -43,6 +44,7 @@
   },
   "directoryLabeling": {
     "starting": "ディレクトリベースラベリングを開始...",
+    "configFromTrustedRef": "pull_request_target のため、ディレクトリラベリング設定を信頼済みの参照 {{ref}} から読み込みます",
     "configNotFound": "設定ファイルが見つかりません: {{path}}",
     "usingDefaultCategories": "デフォルトカテゴリをフォールバックとして使用します",
     "skipped": "ディレクトリベースラベリングをスキップします",

@@ -1,20 +1,36 @@
 import { err, ok } from 'neverthrow';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { logErrorI18n, logWarningI18n } from '../../src/actions-io';
+import { getEnvVar, logErrorI18n, logWarningI18n } from '../../src/actions-io';
+import type { DiffFile, DiffResult } from '../../src/diff-strategy';
 import { getDiffFiles } from '../../src/diff-strategy';
 import { analyzeFiles } from '../../src/file-metrics';
 import { analyzePullRequest } from '../../src/workflow/stages/analysis';
 import type { InitializationArtifacts } from '../../src/workflow/types';
 
 vi.mock('../../src/actions-io', () => ({
+  getEnvVar: vi.fn(),
   logDebug: vi.fn(),
+  logError: vi.fn(),
   logErrorI18n: vi.fn(),
   logInfo: vi.fn(),
   logInfoI18n: vi.fn(),
   logWarning: vi.fn(),
   logWarningI18n: vi.fn(),
 }));
+
+// Substitute only the `git rev-parse HEAD` call so the guard's real trust decision runs without
+// spawning a process; the stage keeps calling the production `verifyHeadCheckout`.
+const localHeadRevisionMock = vi.fn<(workspace: string | undefined) => Promise<string | undefined>>();
+
+vi.mock('../../src/workflow/policy/head-checkout-guard.js', async importOriginal => {
+  const actual = await importOriginal<typeof import('../../src/workflow/policy/head-checkout-guard')>();
+  return {
+    ...actual,
+    verifyHeadCheckout: (input: Parameters<typeof actual.verifyHeadCheckout>[0]) =>
+      actual.verifyHeadCheckout(input, localHeadRevisionMock),
+  };
+});
 
 vi.mock('../../src/i18n.js', () => ({
   t: (_ns: string, key: string) => key,
@@ -111,7 +127,15 @@ describe('workflow/stages/analysis', () => {
     skipDraft: false,
   };
 
+  const setEnv = (env: Record<string, string | undefined>): void => {
+    vi.mocked(getEnvVar).mockImplementation(key => env[key]);
+  };
+
   beforeEach(() => {
+    vi.mocked(getEnvVar).mockReset();
+    vi.mocked(getEnvVar).mockReturnValue(undefined);
+    localHeadRevisionMock.mockReset();
+    localHeadRevisionMock.mockResolvedValue(undefined);
     getDiffFilesMock.mockReset();
     analyzeFilesMock.mockReset();
     complexityAnalyzeMock.mockReset();
@@ -287,5 +311,70 @@ describe('workflow/stages/analysis', () => {
     expect(result.isErr()).toBe(true);
     expect(result._unsafeUnwrapErr().type).toBe('UnexpectedError');
     expect(logErrorI18n).toHaveBeenCalled();
+  });
+
+  describe('pull_request_target head checkout guard', () => {
+    const HEAD_SHA = 'a'.repeat(40);
+    const OTHER_SHA = 'b'.repeat(40);
+
+    const targetContext = {
+      ...baseContext,
+      prContext: { ...baseContext.prContext, headSha: HEAD_SHA },
+    } satisfies InitializationArtifacts;
+
+    const diffFile: DiffFile = { filename: 'src/app.ts', additions: 10, deletions: 0, status: 'modified' };
+    const diffResult: DiffResult = { files: [diffFile], strategy: 'local-git' };
+
+    it('continues into diff retrieval and file analysis when the local checkout is the PR head', async () => {
+      setEnv({ GITHUB_EVENT_NAME: 'pull_request_target', GITHUB_WORKSPACE: '/workspace' });
+      localHeadRevisionMock.mockResolvedValue(`${HEAD_SHA}\n`);
+      getDiffFilesMock.mockResolvedValue(ok(diffResult));
+      // A distinctive downstream failure proves file analysis was reached rather than short-circuited.
+      analyzeFilesMock.mockResolvedValue(
+        err({ type: 'FileAnalysisError', file: 'src/app.ts', message: 'reached file analysis' }),
+      );
+
+      const result = await analyzePullRequest(targetContext);
+
+      expect(result._unsafeUnwrapErr()).toMatchObject({ type: 'FileAnalysisError', message: 'reached file analysis' });
+    });
+
+    it('fails before diff retrieval and file analysis when the local checkout is not the PR head', async () => {
+      setEnv({ GITHUB_EVENT_NAME: 'pull_request_target', GITHUB_WORKSPACE: '/workspace' });
+      localHeadRevisionMock.mockResolvedValue(OTHER_SHA);
+      // Downstream mocks are deliberately left unconfigured: reaching them would surface as a
+      // different error than the guard's.
+
+      const result = await analyzePullRequest(targetContext);
+
+      expect(result._unsafeUnwrapErr()).toMatchObject({ type: 'ConfigurationError', field: 'head_checkout' });
+      expect(getDiffFilesMock).not.toHaveBeenCalled();
+      expect(analyzeFilesMock).not.toHaveBeenCalled();
+    });
+
+    it('fails closed before analysis when the local HEAD revision cannot be resolved', async () => {
+      setEnv({ GITHUB_EVENT_NAME: 'pull_request_target', GITHUB_WORKSPACE: undefined });
+      localHeadRevisionMock.mockResolvedValue(undefined);
+
+      const result = await analyzePullRequest(targetContext);
+
+      expect(result._unsafeUnwrapErr()).toMatchObject({ type: 'ConfigurationError', field: 'head_checkout' });
+      expect(getDiffFilesMock).not.toHaveBeenCalled();
+      expect(analyzeFilesMock).not.toHaveBeenCalled();
+    });
+
+    it('does not constrain the checkout on plain pull_request, where HEAD is the merge commit', async () => {
+      setEnv({ GITHUB_EVENT_NAME: 'pull_request', GITHUB_WORKSPACE: '/workspace' });
+      localHeadRevisionMock.mockResolvedValue(OTHER_SHA);
+      getDiffFilesMock.mockResolvedValue(ok(diffResult));
+      analyzeFilesMock.mockResolvedValue(
+        err({ type: 'FileAnalysisError', file: 'src/app.ts', message: 'reached file analysis' }),
+      );
+
+      const result = await analyzePullRequest(targetContext);
+
+      expect(result._unsafeUnwrapErr()).toMatchObject({ type: 'FileAnalysisError', message: 'reached file analysis' });
+      expect(localHeadRevisionMock).not.toHaveBeenCalled();
+    });
   });
 });

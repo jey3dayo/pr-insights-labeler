@@ -142,7 +142,7 @@ inputs:
     required: false
     default: "true"
   directory_labeler_config_path:
-    description: "Path to directory labeler configuration file"
+    description: "Path to directory labeler configuration file. Under pull_request_target, resolved as a repository-relative path read from the base ref via the GitHub API."
     required: false
     default: ".github/directory-labeler.yml"
   max_labels:

@@ -14,6 +14,7 @@
   },
   "analysis": {
     "gettingDiff": "Getting PR diff files...",
+    "headCheckoutVerified": "pull_request_target: local checkout matches the PR head recorded in the workflow event ({{revision}})",
     "retrievedFiles": "Retrieved {{count}} files using {{strategy}} strategy",
     "analyzingFiles": "Analyzing files...",
     "analysisComplete": "Analysis complete:",
@@ -43,6 +44,7 @@
   },
   "directoryLabeling": {
     "starting": "Starting Directory-Based Labeling...",
+    "configFromTrustedRef": "pull_request_target detected: loading directory labeling configuration from trusted ref {{ref}}",
     "configNotFound": "Configuration file not found: {{path}}",
     "usingDefaultCategories": "Using default categories as fallback",
     "skipped": "Skipping directory-based labeling",

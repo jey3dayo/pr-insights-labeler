@@ -2,7 +2,7 @@ import { getOctokit } from '@actions/github';
 import { err, errAsync, ok, okAsync } from 'neverthrow';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { logDebugI18n, logErrorI18n, logInfoI18n, logWarning, logWarningI18n } from '../../src/actions-io';
+import { getEnvVar, logDebugI18n, logErrorI18n, logInfoI18n, logWarning, logWarningI18n } from '../../src/actions-io';
 import { getCIStatus } from '../../src/ci-status.js';
 import { loadDirectoryLabelerConfig } from '../../src/directory-labeler/config-loader.js';
 import { decideLabelsForFiles, filterByMaxLabels } from '../../src/directory-labeler/decision-engine.js';
@@ -17,6 +17,7 @@ vi.mock('@actions/github', () => ({
 }));
 
 vi.mock('../../src/actions-io', () => ({
+  getEnvVar: vi.fn(),
   logInfoI18n: vi.fn(),
   logWarningI18n: vi.fn(),
   logDebugI18n: vi.fn(),
@@ -183,6 +184,8 @@ describe('workflow/stages/labeling', () => {
     vi.mocked(logDebugI18n).mockReset();
     vi.mocked(logWarning).mockReset();
     vi.mocked(getCIStatus).mockReturnValue(okAsync(null));
+    // Default to a non-`pull_request_target` event so the local checkout config is used.
+    vi.mocked(getEnvVar).mockReturnValue('pull_request');
     context.config.enableDirectoryLabeling = true;
     context.labelerConfig.runtime.fail_on_error = false;
     vi.mocked(decideLabels).mockReturnValue(ok({ labelsToAdd: [], labelsToRemove: [], reasoning: [] }));
@@ -246,8 +249,12 @@ describe('workflow/stages/labeling', () => {
 
     expect(decideLabels).toHaveBeenCalled();
     expect(applyLabels).toHaveBeenCalled();
-    expect(loadDirectoryLabelerConfig).toHaveBeenCalledWith('.github/labels.yml');
-    expect(applyDirectoryLabels).toHaveBeenCalled();
+    expect(applyDirectoryLabels).toHaveBeenCalledWith(
+      expect.anything(),
+      { repo: { owner: 'octo', repo: 'repo' }, issue: { number: 99 } },
+      [{ label: 'scope/frontend', reason: 'match', priority: 1 }],
+      { exclusive: ['size'], additive: ['scope'] },
+    );
     expect(octokitMock.paginate).toHaveBeenCalled();
     expect(logWarningI18n).toHaveBeenCalledWith('directoryLabeling.rejected', { count: 1 });
   });

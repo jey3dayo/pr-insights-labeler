@@ -8,29 +8,21 @@ import type { AppError } from '../../errors/index.js';
 import { toAppError } from '../../errors/index.js';
 import { initializeI18n } from '../../i18n.js';
 import { parseActionInputs } from '../../input-parser.js';
+import type { PolicyConfigRefResolution } from '../policy/policy-config-ref.js';
+import { resolvePolicyConfigRef } from '../policy/policy-config-ref.js';
 import type { InitializationArtifacts, PullRequestRuntimeContext } from '../types';
 
 /**
- * Resolve the ref used to read the labeler policy file (`.github/pr-labeler.yml`).
- *
- * Under `pull_request_target` the head ref is fork-controlled while the workflow runs with
- * base repository permissions, so reading policy from head would let a PR rewrite its own
- * policy (e.g. disable `runtime.dry_run`, alter risk paths). Policy is therefore read from
- * base, and never falls back to head: an unavailable base SHA falls back to the default
- * branch (no ref).
+ * Report which ref the labeling policy was read from, so the trust boundary is visible in logs.
  */
-function resolvePolicyConfigRef(prContext: PullRequestRuntimeContext): string | undefined {
-  if (getEnvVar('GITHUB_EVENT_NAME') !== 'pull_request_target') {
-    return prContext.headSha;
+function logPolicyConfigRefResolution(resolution: PolicyConfigRefResolution): void {
+  if (resolution.source === 'base') {
+    logInfoI18n('initialization.policyConfigFromBase', { ref: resolution.ref });
+    return;
   }
-
-  if (prContext.baseSha) {
-    logInfoI18n('initialization.policyConfigFromBase', { ref: prContext.baseSha });
-    return prContext.baseSha;
+  if (resolution.source === 'default') {
+    logWarningI18n('initialization.policyConfigBaseShaMissing');
   }
-
-  logWarningI18n('initialization.policyConfigBaseShaMissing');
-  return undefined;
 }
 
 /**
@@ -58,12 +50,9 @@ export function initializeAction(): ResultAsync<InitializationArtifacts, AppErro
       const envConfig = loadEnvironmentConfig();
 
       logInfoI18n('labels.loading');
-      const labelerConfigResult = await loadConfig(
-        token,
-        prContext.owner,
-        prContext.repo,
-        resolvePolicyConfigRef(prContext),
-      );
+      const policyConfigRef = resolvePolicyConfigRef(getEnvVar('GITHUB_EVENT_NAME'), prContext);
+      logPolicyConfigRefResolution(policyConfigRef);
+      const labelerConfigResult = await loadConfig(token, prContext.owner, prContext.repo, policyConfigRef.ref);
       const labelerConfig = labelerConfigResult.unwrapOr(getDefaultLabelerConfig());
 
       const config = buildCompleteConfig(parsedInputs, labelerConfig, envConfig);

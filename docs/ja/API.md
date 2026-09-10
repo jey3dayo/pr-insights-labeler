@@ -808,15 +808,32 @@ jobs:
       issues: write
       contents: read
     steps:
-      # 設定ファイルをベースリポジトリから読み取るため、デフォルトのチェックアウトを維持する
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Check out the event PR head for analysis
+        env:
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        shell: bash
+        run: |
+          git fetch --no-tags origin "refs/pull/${PR_NUMBER}/head"
+          FETCHED_SHA="$(git rev-parse FETCH_HEAD)"
+          if [[ "$FETCHED_SHA" != "$HEAD_SHA" ]]; then
+            echo "PR head changed after this workflow was queued; refusing to analyze a different revision." >&2
+            exit 1
+          fi
+          git checkout --detach "$FETCHED_SHA"
 
       - uses: jey3dayo/pr-insights-labeler@v1
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
 ```
 
-**注意**: `pull_request_target`はフォークからのPRでもベースリポジトリのコンテキストで実行されるため、セキュリティリスクがあります。信頼できるコードのみに使用してください。
+**注意**: `pull_request_target`はフォークからのPRでもベースリポジトリのコンテキストで実行されるため、セキュリティリスクがあります。信頼できるコードのみに使用してください。`.github/pr-labeler.yml` と `.github/directory-labeler.yml` はこのイベントの場合、ローカルチェックアウトの内容にかかわらずGitHub API経由でベースの参照から読み込まれます。
+
+上記のcheckoutステップは、このワークフローがキューに入った後にPRが更新されると意図的に失敗します。解析対象は常にイベントpayloadに記録されたhead SHAのみで、更新後は新たな `synchronize` runが正しいheadを解析します。**このステップに `continue-on-error` を付けないでください。** checkoutの失敗を無視するとbaseのcheckoutのままジョブが続行し、行数・複雑度などローカルファイルを読む解析がPR headではなくbase revisionを対象に計算されてしまいます。第二の防御として、このアクション自体も `pull_request_target` の場合、解析前にローカルの `HEAD` がイベントのhead SHAと一致するかを検証し、一致しなければ失敗します。詳細は[advanced-usage.md](advanced-usage.md#フォークprの取り扱い)を参照してください。
 
 ---
 

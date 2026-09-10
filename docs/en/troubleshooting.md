@@ -83,15 +83,32 @@ jobs:
       contents: read
 
     steps:
-      # Keep the base branch checkout (the default) under pull_request_target
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Check out the event PR head for analysis
+        env:
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        shell: bash
+        run: |
+          git fetch --no-tags origin "refs/pull/${PR_NUMBER}/head"
+          FETCHED_SHA="$(git rev-parse FETCH_HEAD)"
+          if [[ "$FETCHED_SHA" != "$HEAD_SHA" ]]; then
+            echo "PR head changed after this workflow was queued; refusing to analyze a different revision." >&2
+            exit 1
+          fi
+          git checkout --detach "$FETCHED_SHA"
 
       - uses: jey3dayo/pr-insights-labeler@v1
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
 ```
 
-⚠️ **Security Note**: `pull_request_target` runs in the base repository context with write permissions. Only use when necessary, and do not check out `github.event.pull_request.head.sha` — configuration files would then come from the fork PR. See [Fork PR Handling](advanced-usage.md#fork-pr-handling).
+⚠️ **Security Note**: `pull_request_target` runs in the base repository context with write permissions. Only use when necessary. Policy configuration (`.github/pr-labeler.yml`, `.github/directory-labeler.yml`) is always read from the base ref via the GitHub API under this event, regardless of the local checkout. See [Fork PR Handling](advanced-usage.md#fork-pr-handling) for why the PR head is still checked out locally for analysis.
+
+The checkout step above intentionally fails if the PR was updated after the workflow was queued — it only ever analyzes the head SHA recorded in the event payload, and a fresh `synchronize` run picks up the new head. **Do not add `continue-on-error` to this step**: skipping past a failed checkout leaves the job on the base checkout, so local-file analysis (line counts, complexity, etc.) would run against the base revision instead of the PR head. As a second line of defense, the action itself verifies the local `HEAD` against the event's head SHA before analyzing anything under `pull_request_target`, and fails outright on a mismatch. See [Fork PR Handling](advanced-usage.md#fork-pr-handling) for the full explanation.
 
 #### 3. Repository Settings
 

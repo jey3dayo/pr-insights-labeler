@@ -1,13 +1,19 @@
 import * as github from '@actions/github';
+import type { Result } from 'neverthrow';
 import { ResultAsync } from 'neverthrow';
 
-import { logDebugI18n, logErrorI18n, logInfoI18n, logWarning, logWarningI18n } from '../../actions-io';
+import { getEnvVar, logDebugI18n, logErrorI18n, logInfoI18n, logWarning, logWarningI18n } from '../../actions-io';
 import { getCIStatus } from '../../ci-status.js';
 import { DEFAULT_CATEGORIES } from '../../configs/categories.js';
 import { convertCategoriesToDirectoryConfig } from '../../directory-labeler/category-to-directory-config.js';
-import { loadDirectoryLabelerConfig } from '../../directory-labeler/config-loader.js';
+import type { LoadConfigError } from '../../directory-labeler/config-loader.js';
+import {
+  loadDirectoryLabelerConfig,
+  loadDirectoryLabelerConfigFromRepository,
+} from '../../directory-labeler/config-loader.js';
 import { decideLabelsForFiles, filterByMaxLabels } from '../../directory-labeler/decision-engine.js';
 import { applyDirectoryLabels } from '../../directory-labeler/label-applicator.js';
+import type { DirectoryLabelerConfig } from '../../directory-labeler/types.js';
 import type { AppError } from '../../errors/index.js';
 import {
   createGitHubAPIError,
@@ -20,7 +26,35 @@ import { applyLabels } from '../../label-applicator';
 import { decideLabels } from '../../label-decision-engine';
 import type { PRContext } from '../../types';
 import { hasProperty, isNumber, isObject, isRecord, isString } from '../../utils/type-guards.js';
+import type { PolicyConfigRefResolution } from '../policy/policy-config-ref.js';
+import { resolvePolicyConfigRef } from '../policy/policy-config-ref.js';
 import type { AnalysisArtifacts, InitializationArtifacts } from '../types';
+
+/**
+ * Load the directory labeling policy from the ref that is trusted for the current event.
+ *
+ * Under `pull_request_target` the local checkout is the fork-controlled head, so a PR could
+ * otherwise ship its own `directory-labeler.yml` and relabel itself. For that event the policy is
+ * read from the trusted base ref (or the default branch when the base SHA is unavailable) over the
+ * GitHub API, while analyzed file contents keep coming from the local checkout. Other events keep
+ * reading the local file, because `directory_labeler_config_path` is a documented file path and may
+ * point at a generated or out-of-checkout file.
+ */
+function loadDirectoryConfigFromTrustedRef(
+  context: InitializationArtifacts,
+  resolution: Exclude<PolicyConfigRefResolution, { source: 'head' }>,
+): ResultAsync<DirectoryLabelerConfig, LoadConfigError> {
+  const { token, prContext, config } = context;
+
+  logInfoI18n('directoryLabeling.configFromTrustedRef', { ref: resolution.ref ?? 'default branch' });
+  return loadDirectoryLabelerConfigFromRepository({
+    token,
+    owner: prContext.owner,
+    repo: prContext.repo,
+    configPath: config.directoryLabelerConfigPath,
+    ...(resolution.ref ? { ref: resolution.ref } : {}),
+  });
+}
 
 async function enrichContextWithCIStatus(
   octokit: ReturnType<typeof github.getOctokit>,
@@ -70,15 +104,20 @@ async function enrichContextWithCIStatus(
 
 async function processDirectoryLabeling(
   octokit: ReturnType<typeof github.getOctokit>,
-  prContext: InitializationArtifacts['prContext'],
-  config: InitializationArtifacts['config'],
+  context: InitializationArtifacts,
   files: AnalysisArtifacts['files'],
   artifacts: AnalysisArtifacts,
 ): Promise<AnalysisArtifacts> {
-  logInfoI18n('directoryLabeling.starting');
-  const dirConfigResult = loadDirectoryLabelerConfig(config.directoryLabelerConfigPath);
+  const { prContext, config } = context;
 
-  let dirConfig;
+  logInfoI18n('directoryLabeling.starting');
+  const resolution = resolvePolicyConfigRef(getEnvVar('GITHUB_EVENT_NAME'), prContext);
+  const dirConfigResult: Result<DirectoryLabelerConfig, LoadConfigError> =
+    resolution.source === 'head'
+      ? loadDirectoryLabelerConfig(config.directoryLabelerConfigPath)
+      : await loadDirectoryConfigFromTrustedRef(context, resolution);
+
+  let dirConfig: DirectoryLabelerConfig;
   if (dirConfigResult.isErr()) {
     if (dirConfigResult.error.type === 'FileSystemError') {
       logInfoI18n('directoryLabeling.configNotFound', { path: config.directoryLabelerConfigPath });
@@ -231,7 +270,7 @@ export function applyLabelsStage(
         return artifacts;
       }
 
-      return processDirectoryLabeling(octokit, prContext, config, files, artifacts);
+      return processDirectoryLabeling(octokit, context, files, artifacts);
     })(),
     toAppError,
   );
