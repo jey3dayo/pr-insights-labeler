@@ -29,7 +29,7 @@ paths:
   - infrastructure: `.github/**`, `Dockerfile`, `terraform/**`  
   - security: `**/auth*/**`, `.env*`, `secrets/**`
 - risk: CI失敗や設定ファイル変更で`risk/medium`以上、CI失敗やテスト欠如の`feat`系で`risk/high`。
-- complexity: デフォルトOFF（`complexity_enabled`でON）。閾値 medium>=15, high>=30（ESLint complexity）。
+- complexity: デフォルトOFF（`complexity_enabled`でON）。閾値 medium>=15, high>=30（`action.yml`の`complexity_thresholds`既定値。cyclomatic complexityで計測）。
 - policy violations (`auto/*`): `auto/large-files`, `auto/too-many-files`, `auto/too-many-lines`, `auto/excessive-changes` など。`fail_on_*`でワークフロー失敗制御可。
 
 ## 入力とデフォルト

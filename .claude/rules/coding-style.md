@@ -31,7 +31,7 @@ paths:
 
 ## 複雑度とラベル連動
 
-- ESLint complexityルールのデフォルト閾値: medium=15, high=30。これを超える場合は分割や早期returnで簡素化。
+- complexityラベルの既定閾値（`action.yml`の`complexity_thresholds`）: medium=15, high=30。計測は`src/complexity-analyzer.ts`がESLintのcomplexityルールを実行時に注入して行う（`eslint.config.js`には定義しない）。これを超える場合は分割や早期returnで簡素化。
 - PRのsize/complexityラベルは自動付与されるため、複雑化しそうな変更は事前に関数分割を検討する。
 
 ## ディレクトリと命名
