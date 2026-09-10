@@ -43,6 +43,7 @@
   },
   "directoryLabeling": {
     "starting": "Starting Directory-Based Labeling...",
+    "configFromTrustedRef": "pull_request_target detected: loading directory labeling configuration from trusted ref {{ref}}",
     "configNotFound": "Configuration file not found: {{path}}",
     "usingDefaultCategories": "Using default categories as fallback",
     "skipped": "Skipping directory-based labeling",

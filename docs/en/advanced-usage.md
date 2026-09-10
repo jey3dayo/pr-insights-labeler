@@ -27,14 +27,29 @@ When handling PRs from forks, permissions are restricted. Use the `pull_request_
 ⚠️ **Important**: `pull_request_target` runs in the context of the base repository, granting write permissions. Only use this event when necessary and ensure you understand the security implications.
 
 - **Risk**: Malicious code in fork PRs could access secrets
-- **Mitigation**: This action only reads files and applies labels; it does not execute code from PRs
+- **Mitigation**: This action reads the PR head as data to compute metrics — file size via `fs.stat`, line count via `wc -l`, complexity via ESLint run with `overrideConfigFile: true` and this action's own embedded parser and rules (it never loads the repository's own ESLint config) — and applies labels; no step in the example workflows executes PR scripts, package hooks, or PR-supplied configuration
 - **Best Practice**: Review fork PRs before approving workflows
 
-#### Check out the base branch, not the PR head
+#### Check out the base repository, then the PR head for analysis
 
-Under `pull_request_target`, check out the **base** branch (the `actions/checkout` default). Checking out `github.event.pull_request.head.sha` would let a fork PR supply its own `.github/directory-labeler.yml` (the directory labeling config, which is read from the local checkout), so the PR could choose its own labeling policy while the workflow runs with base repository write permissions.
+Under `pull_request_target`, local diff computation needs both the base and head commits — and the merge-base between them — in the checked-out object database. The default `actions/checkout@v4` (`fetch-depth: 1`) does not have this history, and `fetch-depth: 0` only guarantees the full history of the **checkout's own remote**: with the base repository as origin (the safe default), that still excludes the fork's head commit, which lives outside any branch ref. So the fork head must be fetched explicitly. When the required history isn't available, this action falls back to computing the diff via the GitHub API instead of failing outright.
 
-For the same reason, `.github/pr-labeler.yml` is read from the base ref (falling back to the default branch) whenever the event is `pull_request_target`. One consequence: a fork PR that edits `.github/pr-labeler.yml` will not preview its new configuration — the base configuration is applied instead. Under the plain `pull_request` event the head configuration is still used, so same-repository PRs can preview configuration changes.
+```yaml
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Check out PR head for analysis
+        env:
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          git fetch --no-tags origin "+refs/pull/${PR_NUMBER}/head:refs/remotes/pull/head"
+          git checkout --detach "$HEAD_SHA"
+```
+
+The head SHA is passed to `git fetch`/`git checkout`, never to `actions/checkout` itself — `actions/checkout`'s own `pull_request_target` safeguards (such as `allow-unsafe-pr-checkout` in recent releases, which by default refuses to check out a fork head under this event) apply to what you pass to the `checkout` action, not to a plain `git checkout` run afterward. Re-verify this distinction when this project's documented `actions/checkout` version is bumped past v4.
+
+Policy configuration is handled separately from analysis content: whenever the event is `pull_request_target`, both `.github/pr-labeler.yml` and `.github/directory-labeler.yml` are read from the base ref (falling back to the default branch) via the GitHub API, regardless of what the local checkout contains. One consequence: a fork PR that edits either file will not preview its new configuration — the base configuration is applied instead. Under the plain `pull_request` event, `.github/pr-labeler.yml` is read from the head ref via the GitHub API and `.github/directory-labeler.yml` is read from the local checkout, so same-repository PRs can still preview configuration changes.
 
 ### Example Configuration
 
@@ -55,9 +70,16 @@ jobs:
       contents: read        # File reading
 
     steps:
-      # IMPORTANT: keep the base branch checkout (the default) so configuration
-      # files come from the base repository, not from the fork PR
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Check out PR head for analysis
+        env:
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          git fetch --no-tags origin "+refs/pull/${PR_NUMBER}/head:refs/remotes/pull/head"
+          git checkout --detach "$HEAD_SHA"
 
       - uses: jey3dayo/pr-insights-labeler@v1
         with:

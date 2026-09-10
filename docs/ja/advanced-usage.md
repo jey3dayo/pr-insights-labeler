@@ -27,14 +27,29 @@ PR Insights Labelerの実践的な例と高度な設定です。
 ⚠️ **重要**: `pull_request_target` はベースリポジトリのコンテキストで実行され、書き込み権限が付与されます。このイベントは必要な場合にのみ使用し、セキュリティへの影響を理解した上で使用してください。
 
 - **リスク**: フォークPR内の悪意あるコードがシークレットにアクセスする可能性
-- **緩和策**: このアクションはファイルの読み取りとラベルの適用のみを行い、PRからのコードは実行しません
+- **緩和策**: このアクションはPR headをデータとして読み取ってメトリクスを計算するだけです（ファイルサイズは `fs.stat`、行数は `wc -l`、複雑度は `overrideConfigFile: true` とこのアクション内蔵の parser / rule によるESLint実行で計算し、リポジトリ自体のESLint設定は読み込みません）。サンプルワークフローのどのステップも、PRのスクリプト・package hooks・PR側の設定ファイルを実行しません
 - **ベストプラクティス**: ワークフローを承認する前にフォークPRをレビュー
 
-#### PRのheadではなくベースブランチをチェックアウトする
+#### ベースリポジトリをチェックアウトしたうえで、解析用にPR headをチェックアウトする
 
-`pull_request_target` では **ベース** ブランチ（`actions/checkout` のデフォルト）をチェックアウトしてください。`github.event.pull_request.head.sha` をチェックアウトすると、ローカルチェックアウトから読み込まれる `.github/directory-labeler.yml`（ディレクトリラベリング設定）をフォークPRが差し替えられるため、ベースリポジトリの書き込み権限で動くワークフローに対してPR側がラベリングポリシーを決められてしまいます。
+`pull_request_target` では、ローカルでのdiff計算にbaseとheadの両方のcommit、およびその間のmerge-baseまでの履歴がオブジェクトDBに必要です。`actions/checkout@v4` のデフォルト（`fetch-depth: 1`）にはこの履歴がなく、`fetch-depth: 0` も「チェックアウト元のremoteの全履歴」しか保証しません。ベースリポジトリをoriginとする安全な既定構成でも、フォークのhead commitは通常のbranch refの外にあるため取得されないままです。そのためフォークPRではhead commitを明示的にfetchする必要があります。必要な履歴が揃わない場合、このアクションは失敗するのではなくGitHub API経由でのdiff取得にフォールバックします。
 
-同じ理由で、イベントが `pull_request_target` の場合、`.github/pr-labeler.yml` はベースの参照（取得できない場合はデフォルトブランチ）から読み込まれます。その結果、`.github/pr-labeler.yml` を変更するフォークPRでは新しい設定はプレビューされず、ベース側の設定が適用されます。通常の `pull_request` イベントでは従来どおり head 側の設定を使うため、同一リポジトリのPRでは設定変更をプレビューできます。
+```yaml
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Check out PR head for analysis
+        env:
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          git fetch --no-tags origin "+refs/pull/${PR_NUMBER}/head:refs/remotes/pull/head"
+          git checkout --detach "$HEAD_SHA"
+```
+
+head SHAは `git fetch` / `git checkout` に渡され、`actions/checkout` 自体には渡されません。`actions/checkout` 自身が持つ `pull_request_target` 向けの安全対策（近年のリリースにある `allow-unsafe-pr-checkout` など、既定でこのイベント下でのフォークhead checkoutを拒否する仕組み）は `checkout` アクションへ渡す対象に対するものであり、その後の素の `git checkout` には適用されません。このリポジトリが案内する `actions/checkout` のバージョンをv4より先に上げる際は、この違いを再確認してください。
+
+ポリシー設定と解析対象は別に扱われます。イベントが `pull_request_target` の場合、`.github/pr-labeler.yml` と `.github/directory-labeler.yml` はどちらも、ローカルチェックアウトの内容にかかわらずGitHub API経由でベースの参照（取得できない場合はデフォルトブランチ）から読み込まれます。その結果、いずれかのファイルを変更するフォークPRでは新しい設定はプレビューされず、ベース側の設定が適用されます。通常の `pull_request` イベントでは、`.github/pr-labeler.yml` はGitHub API経由でheadの参照から、`.github/directory-labeler.yml` はローカルチェックアウトから読み込まれるため、同一リポジトリのPRでは従来どおり設定変更をプレビューできます。
 
 ### 設定例
 
@@ -55,9 +70,16 @@ jobs:
       contents: read        # ファイル読み取り
 
     steps:
-      # 重要: 設定ファイルをフォークPRではなくベースリポジトリから読み取るため、
-      # デフォルト（ベースブランチ）のチェックアウトを維持する
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Check out PR head for analysis
+        env:
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          git fetch --no-tags origin "+refs/pull/${PR_NUMBER}/head:refs/remotes/pull/head"
+          git checkout --detach "$HEAD_SHA"
 
       - uses: jey3dayo/pr-insights-labeler@v1
         with:

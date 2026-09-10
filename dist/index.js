@@ -259561,7 +259561,7 @@ module.exports = Queue;
 
 /***/ }),
 
-/***/ 67098:
+/***/ 66949:
 /***/ ((__unused_webpack_module, __unused_webpack___webpack_exports__, __nccwpck_require__) => {
 
 "use strict";
@@ -269031,7 +269031,7 @@ const errors_namespaceObject = /*#__PURE__*/JSON.parse('{"configuration":{"inval
 ;// CONCATENATED MODULE: ./src/locales/en/labels.json
 const labels_namespaceObject = /*#__PURE__*/JSON.parse('{"size":{"small":"Size: Small","medium":"Size: Medium","large":"Size: Large","xlarge":"Size: Extra Large"},"complexity":{"medium":"Complexity: Medium","high":"Complexity: High"},"category":{"tests":"Category: Tests","ciCd":"Category: CI/CD","documentation":"Category: Documentation","config":"Category: Configuration","spec":"Category: Specification","dependencies":"Category: Dependencies"},"risk":{"high":"Risk: High","medium":"Risk: Medium"},"reasoning":{"size":"additions ({{additions}}) falls in {{label}} range","complexity":"max complexity ({{maxComplexity}}) exceeds {{level}} threshold","category":"file patterns match {{label}} category","riskCIFailed":"CI checks failed (tests, type-check, build, or lint)","riskRefactoringSafe":"refactoring with all CI checks passed","riskFeatureNoTests":"new feature in core functionality without test files","riskCoreNoTests":"core functionality changed without test files","riskConfigChanged":"configuration files changed","largeFiles":"{{count}} file(s) exceed size limit","tooManyLines":"{{count}} file(s) exceed line limit","excessiveChanges":"total additions exceed limit","tooManyFiles":"file count exceeds limit"}}');
 ;// CONCATENATED MODULE: ./src/locales/en/logs.json
-const logs_namespaceObject = /*#__PURE__*/JSON.parse('{"initialization":{"starting":"Starting PR Insights Labeler","gettingInputs":"Getting action inputs...","analyzingPr":"Analyzing PR #{{prNumber}} in {{owner}}/{{repo}}","i18nInitializing":"Initializing i18n with language: {{language}}","i18nInitialized":"i18n initialized successfully with language: {{language}}","i18nLanguageChanged":"i18n language changed to: {{language}}","i18nFailed":"Failed to initialize i18n: {{message}}. Falling back to English.","configLoaded":"Configuration loaded from: {{path}}","usingDefaultConfig":"Using default labeler configuration","policyConfigFromBase":"pull_request_target detected: loading labeler configuration from base ref {{ref}}","policyConfigBaseShaMissing":"pull_request_target detected but base SHA is unavailable: loading labeler configuration from the default branch"},"analysis":{"gettingDiff":"Getting PR diff files...","retrievedFiles":"Retrieved {{count}} files using {{strategy}} strategy","analyzingFiles":"Analyzing files...","analysisComplete":"Analysis complete:","filesAnalyzed":"Files analyzed: {{count}}","filesExcluded":"Files excluded: {{count}}","binaryFilesSkipped":"Binary files skipped: {{count}}","totalAdditions":"Total additions: {{count}}","complexityAnalyzing":"Analyzing code complexity...","complexityFilesToAnalyze":"Files to analyze: {{count}}","complexitySkipped":"No complexity-eligible files detected; skipping analysis.","complexityResults":"Max complexity: {{max}}, Avg: {{avg}}, Files: {{files}}","complexityFailed":"Failed to analyze code complexity: {{message}}"},"labels":{"loading":"Loading PR Insights Labeler configuration...","loadedCustom":"Loaded custom labeler configuration from .github/pr-labeler.yml","merging":"Merging action inputs with labeler configuration...","decidingLabels":"Deciding labels based on PR metrics...","labelsToAdd":"Labels to add: {{labels}}","labelsToRemove":"Labels to remove: {{labels}}","applying":"Applying PR Insights Labeler decisions...","applied":"Applied: +{{added}} labels, -{{removed}} labels","applyFailed":"Failed to apply labels: {{message}}","apiCalls":"API calls: {{count}}","skipped":"Skipped label operations (insufficient permissions)","dryRun":"Dry run: skipping label API calls (decisions logged above)"},"directoryLabeling":{"starting":"Starting Directory-Based Labeling...","configNotFound":"Configuration file not found: {{path}}","usingDefaultCategories":"Using default categories as fallback","skipped":"Skipping directory-based labeling","configLoadFailed":"Failed to load configuration: {{message}}","decideFailed":"Failed to decide labels: {{message}}","decided":"Decided {{count}} labels from file paths","noLabelsMatched":"No labels matched for changed files","rejected":"Rejected {{count}} labels due to max_labels limit","rejectedDetail":"  - {{label}}: {{reason}}","applyResult":"Applied: {{applied}}, Skipped: {{skipped}}, Removed: {{removed}}, Failed: {{failed}}","applyFailed":"Failed to apply labels: {{message}}","permissionError":"Permission error: {{message}}","permissionHint":"Ensure the GITHUB_TOKEN has \'pull-requests: write\' permissions","failedDetail":"  - {{label}}: {{reason}}"},"comment":{"managing":"Managing PR comment...","manageFailed":"Failed to manage comment: {{message}}","action":"Comment {{action}}"},"summary":{"writing":"Writing GitHub Actions Summary...","writeFailed":"Failed to write summary: {{message}}","written":"Summary written successfully ({{bytes}} bytes)"},"ciStatus":{"fetching":"Fetching CI status for risk evaluation...","status":"CI Status: tests={{tests}}, typeCheck={{typeCheck}}, build={{build}}, lint={{lint}}","notAvailable":"CI status not available","fetchedCommits":"Fetched {{count}} commit messages","fetchCommitsFailed":"Failed to fetch commit messages"},"draft":{"skipping":"Skipping draft PR as skip_draft_pr is enabled","summaryWritten":"Summary written for draft PR","summaryWriteFailed":"Failed to write draft PR summary: {{message}}"},"violations":{"detected":"Violations detected:","largeFiles":"{{count}} large file(s)","exceedsFileLines":"{{count}} file(s) exceed line limit","exceedsAdditions":"Total additions exceed limit","exceedsFileCount":"File count exceeds limit","allChecksPassed":"All checks passed!"},"completion":{"success":"PR Insights Labeler completed successfully","skippedDraft":"PR Insights Labeler completed (skipped draft PR)","failed":"Action failed: {{message}}","failedViolations":"PR contains violations and fail_on_violation is enabled"},"failures":{"largeFiles":"Large files detected","tooManyFiles":"Too many files in PR","tooManyLines":"Files with too many lines detected","excessiveChanges":"PR additions exceed limit","prSize":"PR size ({{size}}) exceeds threshold ({{threshold}})"},"deprecation":{"failOnViolation":"⚠️  \'fail_on_violation\' is deprecated. Use \'fail_on_large_files\', \'fail_on_too_many_files\', or \'fail_on_pr_size\' instead."},"errors":{"invalidFailOnPrSize":"Invalid fail_on_pr_size value. Valid values: {{valid}}","failOnPrSizeRequiresSizeEnabled":"fail_on_pr_size requires size_enabled to be true"}}');
+const logs_namespaceObject = /*#__PURE__*/JSON.parse('{"initialization":{"starting":"Starting PR Insights Labeler","gettingInputs":"Getting action inputs...","analyzingPr":"Analyzing PR #{{prNumber}} in {{owner}}/{{repo}}","i18nInitializing":"Initializing i18n with language: {{language}}","i18nInitialized":"i18n initialized successfully with language: {{language}}","i18nLanguageChanged":"i18n language changed to: {{language}}","i18nFailed":"Failed to initialize i18n: {{message}}. Falling back to English.","configLoaded":"Configuration loaded from: {{path}}","usingDefaultConfig":"Using default labeler configuration","policyConfigFromBase":"pull_request_target detected: loading labeler configuration from base ref {{ref}}","policyConfigBaseShaMissing":"pull_request_target detected but base SHA is unavailable: loading labeler configuration from the default branch"},"analysis":{"gettingDiff":"Getting PR diff files...","retrievedFiles":"Retrieved {{count}} files using {{strategy}} strategy","analyzingFiles":"Analyzing files...","analysisComplete":"Analysis complete:","filesAnalyzed":"Files analyzed: {{count}}","filesExcluded":"Files excluded: {{count}}","binaryFilesSkipped":"Binary files skipped: {{count}}","totalAdditions":"Total additions: {{count}}","complexityAnalyzing":"Analyzing code complexity...","complexityFilesToAnalyze":"Files to analyze: {{count}}","complexitySkipped":"No complexity-eligible files detected; skipping analysis.","complexityResults":"Max complexity: {{max}}, Avg: {{avg}}, Files: {{files}}","complexityFailed":"Failed to analyze code complexity: {{message}}"},"labels":{"loading":"Loading PR Insights Labeler configuration...","loadedCustom":"Loaded custom labeler configuration from .github/pr-labeler.yml","merging":"Merging action inputs with labeler configuration...","decidingLabels":"Deciding labels based on PR metrics...","labelsToAdd":"Labels to add: {{labels}}","labelsToRemove":"Labels to remove: {{labels}}","applying":"Applying PR Insights Labeler decisions...","applied":"Applied: +{{added}} labels, -{{removed}} labels","applyFailed":"Failed to apply labels: {{message}}","apiCalls":"API calls: {{count}}","skipped":"Skipped label operations (insufficient permissions)","dryRun":"Dry run: skipping label API calls (decisions logged above)"},"directoryLabeling":{"starting":"Starting Directory-Based Labeling...","configFromTrustedRef":"pull_request_target detected: loading directory labeling configuration from trusted ref {{ref}}","configNotFound":"Configuration file not found: {{path}}","usingDefaultCategories":"Using default categories as fallback","skipped":"Skipping directory-based labeling","configLoadFailed":"Failed to load configuration: {{message}}","decideFailed":"Failed to decide labels: {{message}}","decided":"Decided {{count}} labels from file paths","noLabelsMatched":"No labels matched for changed files","rejected":"Rejected {{count}} labels due to max_labels limit","rejectedDetail":"  - {{label}}: {{reason}}","applyResult":"Applied: {{applied}}, Skipped: {{skipped}}, Removed: {{removed}}, Failed: {{failed}}","applyFailed":"Failed to apply labels: {{message}}","permissionError":"Permission error: {{message}}","permissionHint":"Ensure the GITHUB_TOKEN has \'pull-requests: write\' permissions","failedDetail":"  - {{label}}: {{reason}}"},"comment":{"managing":"Managing PR comment...","manageFailed":"Failed to manage comment: {{message}}","action":"Comment {{action}}"},"summary":{"writing":"Writing GitHub Actions Summary...","writeFailed":"Failed to write summary: {{message}}","written":"Summary written successfully ({{bytes}} bytes)"},"ciStatus":{"fetching":"Fetching CI status for risk evaluation...","status":"CI Status: tests={{tests}}, typeCheck={{typeCheck}}, build={{build}}, lint={{lint}}","notAvailable":"CI status not available","fetchedCommits":"Fetched {{count}} commit messages","fetchCommitsFailed":"Failed to fetch commit messages"},"draft":{"skipping":"Skipping draft PR as skip_draft_pr is enabled","summaryWritten":"Summary written for draft PR","summaryWriteFailed":"Failed to write draft PR summary: {{message}}"},"violations":{"detected":"Violations detected:","largeFiles":"{{count}} large file(s)","exceedsFileLines":"{{count}} file(s) exceed line limit","exceedsAdditions":"Total additions exceed limit","exceedsFileCount":"File count exceeds limit","allChecksPassed":"All checks passed!"},"completion":{"success":"PR Insights Labeler completed successfully","skippedDraft":"PR Insights Labeler completed (skipped draft PR)","failed":"Action failed: {{message}}","failedViolations":"PR contains violations and fail_on_violation is enabled"},"failures":{"largeFiles":"Large files detected","tooManyFiles":"Too many files in PR","tooManyLines":"Files with too many lines detected","excessiveChanges":"PR additions exceed limit","prSize":"PR size ({{size}}) exceeds threshold ({{threshold}})"},"deprecation":{"failOnViolation":"⚠️  \'fail_on_violation\' is deprecated. Use \'fail_on_large_files\', \'fail_on_too_many_files\', or \'fail_on_pr_size\' instead."},"errors":{"invalidFailOnPrSize":"Invalid fail_on_pr_size value. Valid values: {{valid}}","failOnPrSizeRequiresSizeEnabled":"fail_on_pr_size requires size_enabled to be true"}}');
 ;// CONCATENATED MODULE: ./src/locales/en/summary.json
 const en_summary_namespaceObject = /*#__PURE__*/JSON.parse('{"overview":{"title":"PR Metrics Overview","subtitle":"Automated analysis of pull request metrics"},"draftPr":{"title":"Draft PR Skipped","message":"Analysis skipped as this PR is in draft status."},"basicMetrics":{"title":"Basic Metrics","totalAdditions":"Total Additions","excludedAdditions":"Excluded Additions","totalFiles":"Total Files Changed","filesAnalyzed":"Files Analyzed","excludedFiles":"Excluded from Analysis","excludedFilesDetail":"Excluded from Analysis ({{count}})","binaryFilesSkipped":"Binary files skipped","filesWithErrors":"Files with errors","filesSkippedByLimit":"Skipped due to file count limit","analysisTime":"Analysis Time"},"violations":{"title":"Violations","sizeSummary":"Violations","allWithinLimits":"All files are within size limits","filesExceedSize":"{{count}} file(s) exceed size limit","filesExceedLines":"{{count}} file(s) exceed line limit","totalAdditionsExceed":"Total additions exceed limit","fileCountExceed":"File count exceeds limit","largeFilesDetected":"Large Files Detected","filesExceedLineLimit":"Files Exceed Line Limit","statusCritical":"Critical","statusWarning":"Warning","largeFiles":"Large Files","tooManyFiles":"Too Many Files","excessiveAdditions":"Excessive Additions","noViolations":"No violations detected"},"complexity":{"title":"Code Complexity Analysis","metrics":"Metrics","value":"Value","maxComplexity":"Maximum Complexity","avgComplexity":"Average Complexity","analyzedFiles":"Analyzed Files","highFiles":"High Complexity Files (Top 10)","allBelowThreshold":"All files are below complexity threshold (medium threshold: {{threshold}})","level":{"high":"high","medium":"medium"},"functionDetails":"Function Complexity (Top 5)","moreFunctions":"+{{count}} more functions (not shown)","moreFiles":"+{{count}} more files exceed complexity threshold (not shown)","skippedFiles":{"title":"Skipped Files","reason":"The following files were excluded from complexity analysis (not counted in metrics):","syntaxErrorNote":"Note: Syntax errors should be fixed by developers and are included in PR quality assessment."},"syntaxErrorFiles":{"title":"Syntax Error Files","reason":"The following files have syntax errors and are **counted with complexity 0 in the metrics**:","note":"Note: Syntax errors should be fixed by developers and are included in PR quality assessment."},"skipReasons":{"too_large":"File size exceeded (1MB or more)","analysis_failed":"AST parsing failed","timeout":"Timeout","binary":"Binary file","encoding_error":"Encoding error","syntax_error":"Syntax error","general":"General error"},"prFilesLimit":{"title":"PR File Count Limitation","reason":"Some files in this PR were excluded from analysis due to GitHub API limitations.","totalFiles":"Total PR Files","analyzedFiles":"Analyzed Files","skippedFiles":"Unanalyzed Files","note":"Note: Large PRs may not be fully analyzed due to GitHub API\'s 3000 file limit."},"tsconfigNotFound":{"title":"tsconfig.json Not Found","reason":"tsconfig.json was not found, using default settings (ecmaVersion: \'latest\', sourceType: \'module\').","note":"Note: For TypeScript projects, having a tsconfig.json enables more accurate analysis."},"highComplexityFiles":"High Complexity Files","averageComplexity":"Average Complexity","totalComplexity":"Total Complexity","noComplexityData":"No complexity data available"},"recommendations":{"title":"Recommendations","splitPr":"Consider splitting this PR into smaller changes","reviewCarefully":"Review carefully due to high complexity","goodSize":"PR size is appropriate for review"},"fileDetails":{"title":"File Details","topLargeFiles":"Largest Files","fileName":"File Name","size":"Size","lines":"Lines","additions":"Additions","changes":"Changes","limit":"Limit","status":"Status","noFiles":"No files to display"},"fileAnalysis":{"title":"File Analysis","status":{"lineExceed":"Line Exceed ({{limit}})","sizeExceed":"Size Exceed ({{limit}})","ok":"OK"}},"labels":{"applied":"Applied Labels","noLabels":"No labels applied"},"labelFileGroups":{"title":"Applied Labels and Files","reason":"Reason","affectedFiles":"Affected Files","totalAdditions":"Total Additions","analyzedFiles":"Analyzed Files","highComplexityFiles":"High Complexity Files"},"improvementActions":{"title":"Improvement Actions","intro":"Here are some ways to reduce your PR size:","splitting":{"title":"PR Splitting Strategies","byFeature":"Split by feature: Create separate PRs for independent features","byFileGroups":"Split by file groups: Group related files and merge incrementally","separateRefactoring":"Separate refactoring and new features: Keep code improvements and new functionality in different PRs"},"refactoring":{"title":"Large File Refactoring","splitFunctions":"Split functions or classes into multiple files","extractCommon":"Extract common logic into separate modules","organizeByLayer":"Organize files by layer (utils, services, components)"},"generated":{"title":"Handling Generated/Lock Files","excludeLock":"Lock files (package-lock.json, yarn.lock, etc.) are excluded from analysis by the default patterns","manageArtifacts":"Manage build artifacts (dist/, build/) with `.gitignore`","separateGenerated":"Consider updating auto-generated code in separate PRs"},"excludeConfig":{"title":"Excluding Files from Analysis","intro":"If generated or non-reviewable files are causing the limit violations, you can exclude them from analysis with the `additional_exclude_patterns` workflow input:","note":"Default exclude patterns (lock files, node_modules, dist, etc.) are applied when `use_default_excludes: \\"true\\"` (the default)."}},"bestPractices":{"title":"Best Practices","expandHint":"Click to expand","keepSmall":"Keep PRs small and focused","splitLogical":"Split large changes into logical commits","documentChanges":"Document significant changes in commit messages","reviewBefore":"Review your own code before requesting review","prSize":{"title":"Recommended PR Size","recommended":"Recommended: Under 400 lines","recommendedTime":"Review time: 15-30 minutes","recommendedBugRate":"Bug detection rate: High","acceptable":"Acceptable: 400-1000 lines","acceptableTime":"Review time: 1-2 hours","acceptableAdvice":"Incremental review recommended","avoid":"Avoid: Over 1000 lines","avoidEfficiency":"Review efficiency significantly decreases","avoidRisk":"Higher risk of missing bugs"},"fileSize":{"title":"File Size Guidelines","under500":"Aim for under 500 lines per file","under300":"For complex files, under 300 lines is ideal"},"reviewTips":{"title":"Review Efficiency Tips","smallerFaster":"Smaller PRs merge faster and reduce CI/CD load","largeMultiple":"Large PRs tend to require multiple review rounds","groupRelated":"Group related changes together to minimize context switching"}}}');
 ;// CONCATENATED MODULE: ./src/locales/ja/common.json
@@ -269041,7 +269041,7 @@ const ja_errors_namespaceObject = /*#__PURE__*/JSON.parse('{"configuration":{"in
 ;// CONCATENATED MODULE: ./src/locales/ja/labels.json
 const ja_labels_namespaceObject = /*#__PURE__*/JSON.parse('{"size":{"small":"サイズ: 小","medium":"サイズ: 中","large":"サイズ: 大","xlarge":"サイズ: 特大"},"complexity":{"medium":"複雑度: 中","high":"複雑度: 高"},"category":{"tests":"カテゴリ: テスト","ciCd":"カテゴリ: CI/CD","documentation":"カテゴリ: ドキュメント","config":"カテゴリ: 設定","spec":"カテゴリ: 仕様","dependencies":"カテゴリ: 依存関係"},"risk":{"high":"リスク: 高","medium":"リスク: 中"},"reasoning":{"size":"追加行数 ({{additions}}) が {{label}} の範囲内","complexity":"最大複雑度 ({{maxComplexity}}) が {{level}} 閾値を超過","category":"ファイルパターンが {{label}} カテゴリに一致","riskCIFailed":"CIチェック失敗 (tests, type-check, build, lint のいずれか)","riskRefactoringSafe":"リファクタリング - すべてのCIチェックが成功","riskFeatureNoTests":"テストファイルなしでコア機能に新機能を追加","riskCoreNoTests":"テストファイルなしでコア機能を変更","riskConfigChanged":"設定ファイルが変更されました","largeFiles":"{{count}}個のファイルがサイズ制限を超過","tooManyLines":"{{count}}個のファイルが行数制限を超過","excessiveChanges":"総追加行数が制限を超過","tooManyFiles":"ファイル数が制限を超過"}}');
 ;// CONCATENATED MODULE: ./src/locales/ja/logs.json
-const ja_logs_namespaceObject = /*#__PURE__*/JSON.parse('{"initialization":{"starting":"PR Insights Labelerを開始します","gettingInputs":"アクション入力を取得中...","analyzingPr":"PR #{{prNumber}} を分析中（{{owner}}/{{repo}}）","i18nInitializing":"i18nを初期化中（言語: {{language}}）","i18nInitialized":"i18nの初期化が成功しました（言語: {{language}}）","i18nLanguageChanged":"i18nの言語を変更しました: {{language}}","i18nFailed":"i18nの初期化に失敗しました: {{message}}。英語にフォールバックします。","configLoaded":"設定を読み込みました: {{path}}","usingDefaultConfig":"デフォルトのラベラー設定を使用します","policyConfigFromBase":"pull_request_target のため、ラベラー設定を base の参照 {{ref}} から読み込みます","policyConfigBaseShaMissing":"pull_request_target ですが base SHA が取得できないため、ラベラー設定をデフォルトブランチから読み込みます"},"analysis":{"gettingDiff":"PR差分ファイルを取得中...","retrievedFiles":"{{strategy}}戦略で{{count}}個のファイルを取得しました","analyzingFiles":"ファイルを分析中...","analysisComplete":"分析完了:","filesAnalyzed":"分析ファイル数: {{count}}","filesExcluded":"除外ファイル数: {{count}}","binaryFilesSkipped":"バイナリファイルスキップ数: {{count}}","totalAdditions":"総追加行数: {{count}}","complexityAnalyzing":"コード複雑度を分析中...","complexityFilesToAnalyze":"分析対象ファイル数: {{count}}","complexitySkipped":"複雑度解析の対象ファイルがないためスキップします。","complexityResults":"最大複雑度: {{max}}, 平均: {{avg}}, ファイル数: {{files}}","complexityFailed":"コード複雑度の解析に失敗しました: {{message}}"},"labels":{"loading":"PR Insights Labeler設定を読み込み中...","loadedCustom":".github/pr-labeler.ymlからカスタム設定を読み込みました","merging":"アクション入力とラベラー設定をマージ中...","decidingLabels":"PRメトリクスに基づいてラベルを決定中...","labelsToAdd":"追加するラベル: {{labels}}","labelsToRemove":"削除するラベル: {{labels}}","applying":"PR Insights Labelerの決定を適用中...","applied":"適用完了: +{{added}}ラベル, -{{removed}}ラベル","applyFailed":"ラベル適用に失敗しました: {{message}}","apiCalls":"API呼び出し数: {{count}}","skipped":"ラベル操作をスキップしました（権限不足）","dryRun":"ドライラン: ラベルAPI呼び出しをスキップ（決定は上記にログ出力）"},"directoryLabeling":{"starting":"ディレクトリベースラベリングを開始...","configNotFound":"設定ファイルが見つかりません: {{path}}","usingDefaultCategories":"デフォルトカテゴリをフォールバックとして使用します","skipped":"ディレクトリベースラベリングをスキップします","configLoadFailed":"設定の読み込みに失敗しました: {{message}}","decideFailed":"ラベル決定に失敗しました: {{message}}","decided":"ファイルパスから{{count}}個のラベルを決定しました","noLabelsMatched":"変更ファイルに一致するラベルがありません","rejected":"max_labels制限により{{count}}個のラベルを拒否しました","rejectedDetail":"  - {{label}}: {{reason}}","applyResult":"適用: {{applied}}, スキップ: {{skipped}}, 削除: {{removed}}, 失敗: {{failed}}","applyFailed":"ラベル適用に失敗しました: {{message}}","permissionError":"権限エラー: {{message}}","permissionHint":"GITHUB_TOKENに\'pull-requests: write\'権限があることを確認してください","failedDetail":"  - {{label}}: {{reason}}"},"comment":{"managing":"PRコメントを管理中...","manageFailed":"コメント管理に失敗しました: {{message}}","action":"コメント {{action}}"},"summary":{"writing":"GitHub Actions Summaryを書き込み中...","writeFailed":"Summary書き込みに失敗しました: {{message}}","written":"Summaryの書き込みが成功しました（{{bytes}}バイト）"},"ciStatus":{"fetching":"リスク評価のためCI状態を取得中...","status":"CI状態: tests={{tests}}, typeCheck={{typeCheck}}, build={{build}}, lint={{lint}}","notAvailable":"CI状態は利用できません","fetchedCommits":"{{count}}件のコミットメッセージを取得しました","fetchCommitsFailed":"コミットメッセージの取得に失敗しました"},"draft":{"skipping":"skip_draft_prが有効なため、ドラフトPRをスキップします","summaryWritten":"ドラフトPR用のSummaryを書き込みました","summaryWriteFailed":"ドラフトPR用のSummary書き込みに失敗しました: {{message}}"},"violations":{"detected":"違反が検出されました:","largeFiles":"{{count}}個の大きなファイル","exceedsFileLines":"{{count}}個のファイルが行数制限を超過","exceedsAdditions":"総追加行数が制限を超過","exceedsFileCount":"ファイル数が制限を超過","allChecksPassed":"すべてのチェックが合格しました！"},"completion":{"success":"PR Insights Labelerが正常に完了しました","skippedDraft":"PR Insights Labelerが完了しました（ドラフトPRをスキップ）","failed":"アクションが失敗しました: {{message}}","failedViolations":"PRに違反があり、fail_on_violationが有効です"},"failures":{"largeFiles":"大きなファイルが検出されました","tooManyFiles":"PRのファイル数が多すぎます","tooManyLines":"行数が多すぎるファイルが検出されました","excessiveChanges":"PRの追加行数が制限を超えています","prSize":"PRサイズ（{{size}}）が閾値（{{threshold}}）を超えています"},"deprecation":{"failOnViolation":"⚠️  \'fail_on_violation\'は非推奨です。\'fail_on_large_files\'、\'fail_on_too_many_files\'、または\'fail_on_pr_size\'を使用してください。"},"errors":{"invalidFailOnPrSize":"fail_on_pr_sizeの値が無効です。有効な値: {{valid}}","failOnPrSizeRequiresSizeEnabled":"fail_on_pr_sizeはsize_enabled: trueが必要です"}}');
+const ja_logs_namespaceObject = /*#__PURE__*/JSON.parse('{"initialization":{"starting":"PR Insights Labelerを開始します","gettingInputs":"アクション入力を取得中...","analyzingPr":"PR #{{prNumber}} を分析中（{{owner}}/{{repo}}）","i18nInitializing":"i18nを初期化中（言語: {{language}}）","i18nInitialized":"i18nの初期化が成功しました（言語: {{language}}）","i18nLanguageChanged":"i18nの言語を変更しました: {{language}}","i18nFailed":"i18nの初期化に失敗しました: {{message}}。英語にフォールバックします。","configLoaded":"設定を読み込みました: {{path}}","usingDefaultConfig":"デフォルトのラベラー設定を使用します","policyConfigFromBase":"pull_request_target のため、ラベラー設定を base の参照 {{ref}} から読み込みます","policyConfigBaseShaMissing":"pull_request_target ですが base SHA が取得できないため、ラベラー設定をデフォルトブランチから読み込みます"},"analysis":{"gettingDiff":"PR差分ファイルを取得中...","retrievedFiles":"{{strategy}}戦略で{{count}}個のファイルを取得しました","analyzingFiles":"ファイルを分析中...","analysisComplete":"分析完了:","filesAnalyzed":"分析ファイル数: {{count}}","filesExcluded":"除外ファイル数: {{count}}","binaryFilesSkipped":"バイナリファイルスキップ数: {{count}}","totalAdditions":"総追加行数: {{count}}","complexityAnalyzing":"コード複雑度を分析中...","complexityFilesToAnalyze":"分析対象ファイル数: {{count}}","complexitySkipped":"複雑度解析の対象ファイルがないためスキップします。","complexityResults":"最大複雑度: {{max}}, 平均: {{avg}}, ファイル数: {{files}}","complexityFailed":"コード複雑度の解析に失敗しました: {{message}}"},"labels":{"loading":"PR Insights Labeler設定を読み込み中...","loadedCustom":".github/pr-labeler.ymlからカスタム設定を読み込みました","merging":"アクション入力とラベラー設定をマージ中...","decidingLabels":"PRメトリクスに基づいてラベルを決定中...","labelsToAdd":"追加するラベル: {{labels}}","labelsToRemove":"削除するラベル: {{labels}}","applying":"PR Insights Labelerの決定を適用中...","applied":"適用完了: +{{added}}ラベル, -{{removed}}ラベル","applyFailed":"ラベル適用に失敗しました: {{message}}","apiCalls":"API呼び出し数: {{count}}","skipped":"ラベル操作をスキップしました（権限不足）","dryRun":"ドライラン: ラベルAPI呼び出しをスキップ（決定は上記にログ出力）"},"directoryLabeling":{"starting":"ディレクトリベースラベリングを開始...","configFromTrustedRef":"pull_request_target のため、ディレクトリラベリング設定を信頼済みの参照 {{ref}} から読み込みます","configNotFound":"設定ファイルが見つかりません: {{path}}","usingDefaultCategories":"デフォルトカテゴリをフォールバックとして使用します","skipped":"ディレクトリベースラベリングをスキップします","configLoadFailed":"設定の読み込みに失敗しました: {{message}}","decideFailed":"ラベル決定に失敗しました: {{message}}","decided":"ファイルパスから{{count}}個のラベルを決定しました","noLabelsMatched":"変更ファイルに一致するラベルがありません","rejected":"max_labels制限により{{count}}個のラベルを拒否しました","rejectedDetail":"  - {{label}}: {{reason}}","applyResult":"適用: {{applied}}, スキップ: {{skipped}}, 削除: {{removed}}, 失敗: {{failed}}","applyFailed":"ラベル適用に失敗しました: {{message}}","permissionError":"権限エラー: {{message}}","permissionHint":"GITHUB_TOKENに\'pull-requests: write\'権限があることを確認してください","failedDetail":"  - {{label}}: {{reason}}"},"comment":{"managing":"PRコメントを管理中...","manageFailed":"コメント管理に失敗しました: {{message}}","action":"コメント {{action}}"},"summary":{"writing":"GitHub Actions Summaryを書き込み中...","writeFailed":"Summary書き込みに失敗しました: {{message}}","written":"Summaryの書き込みが成功しました（{{bytes}}バイト）"},"ciStatus":{"fetching":"リスク評価のためCI状態を取得中...","status":"CI状態: tests={{tests}}, typeCheck={{typeCheck}}, build={{build}}, lint={{lint}}","notAvailable":"CI状態は利用できません","fetchedCommits":"{{count}}件のコミットメッセージを取得しました","fetchCommitsFailed":"コミットメッセージの取得に失敗しました"},"draft":{"skipping":"skip_draft_prが有効なため、ドラフトPRをスキップします","summaryWritten":"ドラフトPR用のSummaryを書き込みました","summaryWriteFailed":"ドラフトPR用のSummary書き込みに失敗しました: {{message}}"},"violations":{"detected":"違反が検出されました:","largeFiles":"{{count}}個の大きなファイル","exceedsFileLines":"{{count}}個のファイルが行数制限を超過","exceedsAdditions":"総追加行数が制限を超過","exceedsFileCount":"ファイル数が制限を超過","allChecksPassed":"すべてのチェックが合格しました！"},"completion":{"success":"PR Insights Labelerが正常に完了しました","skippedDraft":"PR Insights Labelerが完了しました（ドラフトPRをスキップ）","failed":"アクションが失敗しました: {{message}}","failedViolations":"PRに違反があり、fail_on_violationが有効です"},"failures":{"largeFiles":"大きなファイルが検出されました","tooManyFiles":"PRのファイル数が多すぎます","tooManyLines":"行数が多すぎるファイルが検出されました","excessiveChanges":"PRの追加行数が制限を超えています","prSize":"PRサイズ（{{size}}）が閾値（{{threshold}}）を超えています"},"deprecation":{"failOnViolation":"⚠️  \'fail_on_violation\'は非推奨です。\'fail_on_large_files\'、\'fail_on_too_many_files\'、または\'fail_on_pr_size\'を使用してください。"},"errors":{"invalidFailOnPrSize":"fail_on_pr_sizeの値が無効です。有効な値: {{valid}}","failOnPrSizeRequiresSizeEnabled":"fail_on_pr_sizeはsize_enabled: trueが必要です"}}');
 ;// CONCATENATED MODULE: ./src/locales/ja/summary.json
 const ja_summary_namespaceObject = /*#__PURE__*/JSON.parse('{"overview":{"title":"PRメトリクス概要","subtitle":"プルリクエストメトリクスの自動分析"},"draftPr":{"title":"ドラフトPRをスキップ","message":"Draft PRのため分析をスキップしました。"},"basicMetrics":{"title":"基本メトリクス","totalAdditions":"総追加行数","excludedAdditions":"除外ファイルの追加行数","totalFiles":"変更ファイル数","filesAnalyzed":"解析対象ファイル数","excludedFiles":"分析除外ファイル数","excludedFilesDetail":"分析除外ファイル ({{count}})","binaryFilesSkipped":"バイナリファイルをスキップ","filesWithErrors":"エラーのあるファイル","filesSkippedByLimit":"ファイル数上限によりスキップ","analysisTime":"分析時刻"},"violations":{"title":"違反","sizeSummary":"違反","allWithinLimits":"すべてのファイルがサイズ制限内です","filesExceedSize":"{{count}}個のファイルがサイズ制限を超過","filesExceedLines":"{{count}}個のファイルが行数制限を超過","totalAdditionsExceed":"総追加行数が制限を超過","fileCountExceed":"ファイル数が制限を超過","largeFilesDetected":"大規模ファイルを検出","filesExceedLineLimit":"行数制限超過ファイル","statusCritical":"クリティカル","statusWarning":"警告","largeFiles":"大規模ファイル","tooManyFiles":"ファイル数超過","excessiveAdditions":"追加行数超過","noViolations":"違反は検出されませんでした"},"complexity":{"title":"コード複雑度分析","metrics":"メトリクス","value":"値","maxComplexity":"最大複雑度","avgComplexity":"平均複雑度","analyzedFiles":"分析ファイル数","highFiles":"高複雑度ファイル（上位10件）","allBelowThreshold":"すべてのファイルが複雑度閾値以下です（medium閾値: {{threshold}}未満）","level":{"high":"高","medium":"中"},"functionDetails":"関数別複雑度（上位5件）","moreFunctions":"+{{count}}個の関数（表示省略）","moreFiles":"+{{count}}件のファイルが複雑度閾値を超過（表示省略）","skippedFiles":{"title":"スキップされたファイル","reason":"以下のファイルは複雑度分析から除外されました（集計対象外）：","syntaxErrorNote":"注意: 構文エラーは開発者の修正対象であり、PRの品質評価に含まれます。"},"syntaxErrorFiles":{"title":"構文エラーファイル","reason":"以下のファイルは構文エラーのため、**複雑度0として集計対象に含まれています**：","note":"注意: 構文エラーは開発者の修正対象であり、PRの品質評価に含まれます。"},"skipReasons":{"too_large":"ファイルサイズ超過（1MB以上）","analysis_failed":"AST解析失敗","timeout":"タイムアウト","binary":"バイナリファイル","encoding_error":"エンコーディングエラー","syntax_error":"構文エラー","general":"一般エラー"},"prFilesLimit":{"title":"PRファイル数制限","reason":"GitHub APIの制限により、PR内の一部ファイルが分析対象外となりました。","totalFiles":"PR全体のファイル数","analyzedFiles":"分析対象ファイル数","skippedFiles":"未分析ファイル数","note":"注意: 大規模PRでは、GitHub APIの3000ファイル制限により全ファイルを分析できない場合があります。"},"tsconfigNotFound":{"title":"tsconfig.json未検出","reason":"tsconfig.jsonが見つからなかったため、既定の設定（ecmaVersion: \'latest\', sourceType: \'module\'）を使用しました。","note":"注意: TypeScriptプロジェクトの場合、tsconfig.jsonがあるとより正確な解析が可能です。"},"highComplexityFiles":"High Complexity Files","averageComplexity":"Average Complexity","totalComplexity":"Total Complexity","noComplexityData":"No complexity data available"},"recommendations":{"title":"推奨事項","splitPr":"このPRを小さな変更に分割することを検討してください","reviewCarefully":"複雑度が高いため、慎重にレビューしてください","goodSize":"PRサイズはレビューに適切です"},"fileDetails":{"title":"ファイル詳細","topLargeFiles":"サイズの大きいファイル","fileName":"ファイル名","size":"サイズ","lines":"行数","additions":"追加行数","changes":"変更","limit":"制限値","status":"ステータス","noFiles":"表示するファイルがありません"},"fileAnalysis":{"title":"ファイル分析結果","status":{"lineExceed":"行数超過 ({{limit}})","sizeExceed":"サイズ超過 ({{limit}})","ok":"OK"}},"labels":{"applied":"適用されたラベル","noLabels":"ラベルは適用されていません"},"labelFileGroups":{"title":"適用されたラベルとファイル","reason":"理由","affectedFiles":"影響を受けたファイル","totalAdditions":"総追加行数","analyzedFiles":"解析対象ファイル","highComplexityFiles":"高複雑度ファイル"},"improvementActions":{"title":"改善アクション","intro":"PRサイズを削減する方法をいくつか紹介します：","splitting":{"title":"PR分割戦略","byFeature":"機能別に分割: 独立した機能ごとに別々のPRを作成","byFileGroups":"ファイルグループ別に分割: 関連ファイルをグループ化して段階的にマージ","separateRefactoring":"リファクタリングと新機能を分離: コード改善と新機能を別々のPRに分ける"},"refactoring":{"title":"大規模ファイルのリファクタリング","splitFunctions":"関数やクラスを複数のファイルに分割","extractCommon":"共通ロジックを別モジュールに抽出","organizeByLayer":"レイヤー別にファイルを整理（utils、services、components）"},"generated":{"title":"生成ファイル/ロックファイルの扱い","excludeLock":"ロックファイル（package-lock.json、yarn.lock など）はデフォルトの除外パターンで分析対象外","manageArtifacts":"`.gitignore`でビルド成果物（dist/、build/）を管理","separateGenerated":"自動生成コードの更新は別PRで行うことを検討"},"excludeConfig":{"title":"分析対象からの除外設定","intro":"自動生成ファイルなどレビュー対象外のファイルが制限超過の原因の場合は、ワークフローの`additional_exclude_patterns`入力で分析対象から除外できます：","note":"ロックファイルや node_modules、dist などのデフォルト除外パターンは`use_default_excludes: \\"true\\"`（既定値）のとき適用されます。"}},"bestPractices":{"title":"ベストプラクティス","expandHint":"クリックして展開","keepSmall":"PRは小さく、焦点を絞った内容に保つ","splitLogical":"大きな変更を論理的なコミットに分割する","documentChanges":"重要な変更をコミットメッセージに記録する","reviewBefore":"レビューを依頼する前に自分でコードをレビューする","prSize":{"title":"推奨PRサイズ","recommended":"推奨: 400行未満","recommendedTime":"レビュー時間: 15-30分","recommendedBugRate":"バグ検出率: 高","acceptable":"許容範囲: 400-1000行","acceptableTime":"レビュー時間: 1-2時間","acceptableAdvice":"段階的なレビューを推奨","avoid":"避けるべき: 1000行超","avoidEfficiency":"レビュー効率が大幅に低下","avoidRisk":"バグ見逃しのリスクが高まる"},"fileSize":{"title":"ファイルサイズガイドライン","under500":"1ファイルあたり500行未満を目指す","under300":"複雑なファイルの場合、300行未満が理想的"},"reviewTips":{"title":"レビュー効率向上のヒント","smallerFaster":"小さなPRはマージが早く、CI/CD負荷も軽減","largeMultiple":"大きなPRは複数回のレビューが必要になりがち","groupRelated":"関連する変更をまとめてコンテキスト切り替えを最小化"}}}');
 ;// CONCATENATED MODULE: ./src/i18n.ts
@@ -274688,30 +274688,34 @@ function resolveLanguage(actionInput, configFile, env) {
 
 const CONFIG_FILE_PATH = '.github/pr-labeler.yml';
 const MAX_CONFIG_SIZE = 1024 * 1024;
+const CONFIG_NOT_FOUND = 'not found';
+function isConfigNotFoundError(error) {
+    return error.value === CONFIG_NOT_FOUND;
+}
 function fetchRepositoryConfig(params) {
-    const { token, owner, repo, ref } = params;
+    const { token, owner, repo, ref, path = CONFIG_FILE_PATH } = params;
     const octokit = getOctokit(token);
     return index_cjs/* ResultAsync */.EN.fromPromise(octokit.rest.repos.getContent({
         owner,
         repo,
-        path: CONFIG_FILE_PATH,
+        path,
         ...(ref ? { ref } : {}),
     }), error => {
         const status = extractErrorStatus(error);
         if (status === 404) {
-            info(`Configuration file ${CONFIG_FILE_PATH} not found, using defaults`);
-            return factories_createConfigurationError(CONFIG_FILE_PATH, 'not found', 'Configuration file not found');
+            info(`Configuration file ${path} not found, using defaults`);
+            return factories_createConfigurationError(path, CONFIG_NOT_FOUND, 'Configuration file not found');
         }
-        return factories_createConfigurationError(CONFIG_FILE_PATH, error, `Failed to fetch configuration file: ${helpers_ensureError(error).message}`);
+        return factories_createConfigurationError(path, error, `Failed to fetch configuration file: ${helpers_ensureError(error).message}`);
     }).andThen(response => {
         if (!('content' in response.data)) {
-            return (0,index_cjs/* errAsync */.s1)(factories_createConfigurationError(CONFIG_FILE_PATH, response.data, 'Response does not contain file content'));
+            return (0,index_cjs/* errAsync */.s1)(factories_createConfigurationError(path, response.data, 'Response does not contain file content'));
         }
         const content = Buffer.from(response.data.content, 'base64').toString('utf-8');
         const byteLen = Buffer.byteLength(content, 'utf-8');
         if (byteLen > MAX_CONFIG_SIZE) {
             warning(`Configuration file exceeds size limit (${byteLen} > ${MAX_CONFIG_SIZE} bytes), using defaults`);
-            return (0,index_cjs/* errAsync */.s1)(factories_createConfigurationError(CONFIG_FILE_PATH, byteLen, 'Configuration file too large'));
+            return (0,index_cjs/* errAsync */.s1)(factories_createConfigurationError(path, byteLen, 'Configuration file too large'));
         }
         return (0,index_cjs/* okAsync */.Ph)(content);
     });
@@ -279201,6 +279205,18 @@ function parseActionInputs() {
     });
 }
 
+;// CONCATENATED MODULE: ./src/workflow/policy/policy-config-ref.ts
+const PULL_REQUEST_TARGET_EVENT = 'pull_request_target';
+function resolvePolicyConfigRef(eventName, prContext) {
+    if (eventName !== PULL_REQUEST_TARGET_EVENT) {
+        return { source: 'head', ref: prContext.headSha };
+    }
+    if (prContext.baseSha) {
+        return { source: 'base', ref: prContext.baseSha };
+    }
+    return { source: 'default', ref: undefined };
+}
+
 ;// CONCATENATED MODULE: ./src/workflow/stages/initialization.ts
 
 
@@ -279210,16 +279226,15 @@ function parseActionInputs() {
 
 
 
-function resolvePolicyConfigRef(prContext) {
-    if (getEnvVar('GITHUB_EVENT_NAME') !== 'pull_request_target') {
-        return prContext.headSha;
+
+function logPolicyConfigRefResolution(resolution) {
+    if (resolution.source === 'base') {
+        logInfoI18n('initialization.policyConfigFromBase', { ref: resolution.ref });
+        return;
     }
-    if (prContext.baseSha) {
-        logInfoI18n('initialization.policyConfigFromBase', { ref: prContext.baseSha });
-        return prContext.baseSha;
+    if (resolution.source === 'default') {
+        logWarningI18n('initialization.policyConfigBaseShaMissing');
     }
-    logWarningI18n('initialization.policyConfigBaseShaMissing');
-    return undefined;
 }
 function initializeAction() {
     return index_cjs/* ResultAsync */.EN.fromPromise((async () => {
@@ -279238,7 +279253,9 @@ function initializeAction() {
         });
         const envConfig = loadEnvironmentConfig();
         logInfoI18n('labels.loading');
-        const labelerConfigResult = await loadConfig(token, prContext.owner, prContext.repo, resolvePolicyConfigRef(prContext));
+        const policyConfigRef = resolvePolicyConfigRef(getEnvVar('GITHUB_EVENT_NAME'), prContext);
+        logPolicyConfigRefResolution(policyConfigRef);
+        const labelerConfigResult = await loadConfig(token, prContext.owner, prContext.repo, policyConfigRef.ref);
         const labelerConfig = labelerConfigResult.unwrapOr(getDefaultLabelerConfig());
         const config = buildCompleteConfig(parsedInputs, labelerConfig, envConfig);
         const i18nResult = initializeI18n(config.language);
@@ -279635,6 +279652,7 @@ const DEFAULT_LABEL_DESCRIPTION = '';
 
 
 
+
 function loadDirectoryLabelerConfig(configPath) {
     if (!external_node_fs_default().existsSync(configPath)) {
         return (0,index_cjs/* err */._q)(createFileSystemError(configPath, 'notFound'));
@@ -279646,6 +279664,21 @@ function loadDirectoryLabelerConfig(configPath) {
     catch {
         return (0,index_cjs/* err */._q)(createFileSystemError(configPath, 'read'));
     }
+    return parseDirectoryLabelerConfigContent(fileContent);
+}
+function loadDirectoryLabelerConfigFromRepository(params) {
+    const { configPath } = params;
+    return fetchRepositoryConfig({
+        token: params.token,
+        owner: params.owner,
+        repo: params.repo,
+        path: configPath,
+        ...(params.ref ? { ref: params.ref } : {}),
+    })
+        .mapErr((error) => isConfigNotFoundError(error) ? createFileSystemError(configPath, 'notFound') : error)
+        .andThen(content => parseDirectoryLabelerConfigContent(content));
+}
+function parseDirectoryLabelerConfigContent(fileContent) {
     let rawConfig;
     try {
         rawConfig = load(fileContent);
@@ -279658,9 +279691,7 @@ function loadDirectoryLabelerConfig(configPath) {
     if (validationResult.isErr()) {
         return validationResult;
     }
-    const validatedConfig = validationResult.value;
-    const configWithDefaults = applyDefaults(validatedConfig);
-    return (0,index_cjs.ok)(configWithDefaults);
+    return (0,index_cjs.ok)(applyDefaults(validationResult.value));
 }
 function validateDirectoryLabelerConfig(config) {
     return validateConfigWithTransformer(config, parseDirectoryLabelerConfig);
@@ -280493,6 +280524,18 @@ function decideViolationLabels(violations, violationLabels) {
 
 
 
+
+function loadDirectoryConfigFromTrustedRef(context, resolution) {
+    const { token, prContext, config } = context;
+    logInfoI18n('directoryLabeling.configFromTrustedRef', { ref: resolution.ref ?? 'default branch' });
+    return loadDirectoryLabelerConfigFromRepository({
+        token,
+        owner: prContext.owner,
+        repo: prContext.repo,
+        configPath: config.directoryLabelerConfigPath,
+        ...(resolution.ref ? { ref: resolution.ref } : {}),
+    });
+}
 async function enrichContextWithCIStatus(octokit, prContext, labelerConfig, extendedPRContext) {
     const useCiStatus = labelerConfig.risk.use_ci_status ?? true;
     if (!useCiStatus) {
@@ -280529,9 +280572,13 @@ async function enrichContextWithCIStatus(octokit, prContext, labelerConfig, exte
         actions_io_logWarning(`Failed to fetch commit messages: ${commitMessagesResult.error.message}`);
     }
 }
-async function processDirectoryLabeling(octokit, prContext, config, files, artifacts) {
+async function processDirectoryLabeling(octokit, context, files, artifacts) {
+    const { prContext, config } = context;
     logInfoI18n('directoryLabeling.starting');
-    const dirConfigResult = loadDirectoryLabelerConfig(config.directoryLabelerConfigPath);
+    const resolution = resolvePolicyConfigRef(getEnvVar('GITHUB_EVENT_NAME'), prContext);
+    const dirConfigResult = resolution.source === 'head'
+        ? loadDirectoryLabelerConfig(config.directoryLabelerConfigPath)
+        : await loadDirectoryConfigFromTrustedRef(context, resolution);
     let dirConfig;
     if (dirConfigResult.isErr()) {
         if (dirConfigResult.error.type === 'FileSystemError') {
@@ -280654,7 +280701,7 @@ function applyLabelsStage(context, artifacts) {
         if (!config.enableDirectoryLabeling) {
             return artifacts;
         }
-        return processDirectoryLabeling(octokit, prContext, config, files, artifacts);
+        return processDirectoryLabeling(octokit, context, files, artifacts);
     })(), toAppError);
 }
 function fetchCommitMessages(octokit, owner, repo, pullNumber) {
@@ -425032,7 +425079,7 @@ module.exports = {"rE":"2.7.0"};
 /******/ 	// module cache are used so entry inlining is disabled
 /******/ 	// startup
 /******/ 	// Load entry module and return exports
-/******/ 	var __webpack_exports__ = __nccwpck_require__(67098);
+/******/ 	var __webpack_exports__ = __nccwpck_require__(66949);
 /******/ 	module.exports = __webpack_exports__;
 /******/ 	
 /******/ })()

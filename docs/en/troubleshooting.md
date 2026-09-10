@@ -83,15 +83,23 @@ jobs:
       contents: read
 
     steps:
-      # Keep the base branch checkout (the default) under pull_request_target
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Check out PR head for analysis
+        env:
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          git fetch --no-tags origin "+refs/pull/${PR_NUMBER}/head:refs/remotes/pull/head"
+          git checkout --detach "$HEAD_SHA"
 
       - uses: jey3dayo/pr-insights-labeler@v1
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
 ```
 
-⚠️ **Security Note**: `pull_request_target` runs in the base repository context with write permissions. Only use when necessary, and do not check out `github.event.pull_request.head.sha` — configuration files would then come from the fork PR. See [Fork PR Handling](advanced-usage.md#fork-pr-handling).
+⚠️ **Security Note**: `pull_request_target` runs in the base repository context with write permissions. Only use when necessary. Policy configuration (`.github/pr-labeler.yml`, `.github/directory-labeler.yml`) is always read from the base ref via the GitHub API under this event, regardless of the local checkout. See [Fork PR Handling](advanced-usage.md#fork-pr-handling) for why the PR head is still checked out locally for analysis.
 
 #### 3. Repository Settings
 

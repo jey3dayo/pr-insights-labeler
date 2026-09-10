@@ -185,6 +185,8 @@ These parameters control workflow failures based on applied labels or actual vio
 
 Directory-Based Labeling is enabled by default. Set `enable_directory_labeling: "false"` if you prefer to opt out.
 
+Under `pull_request_target`, `directory_labeler_config_path` is resolved as a repository-relative path read from the base ref via the GitHub API — this is what lets a fork PR's own copy of the file be ignored in favor of the trusted base policy. An absolute path, a path outside the checkout, or a file generated earlier in the workflow will not be found under this event. Under `pull_request` and other events, the path is still read as a local file from the checkout, so those usages remain available.
+
 ### Example
 
 ```yaml

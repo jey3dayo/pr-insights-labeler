@@ -43,6 +43,7 @@
   },
   "directoryLabeling": {
     "starting": "ディレクトリベースラベリングを開始...",
+    "configFromTrustedRef": "pull_request_target のため、ディレクトリラベリング設定を信頼済みの参照 {{ref}} から読み込みます",
     "configNotFound": "設定ファイルが見つかりません: {{path}}",
     "usingDefaultCategories": "デフォルトカテゴリをフォールバックとして使用します",
     "skipped": "ディレクトリベースラベリングをスキップします",

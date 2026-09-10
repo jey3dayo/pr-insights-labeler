@@ -808,15 +808,23 @@ jobs:
       issues: write
       contents: read
     steps:
-      # 設定ファイルをベースリポジトリから読み取るため、デフォルトのチェックアウトを維持する
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Check out PR head for analysis
+        env:
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          git fetch --no-tags origin "+refs/pull/${PR_NUMBER}/head:refs/remotes/pull/head"
+          git checkout --detach "$HEAD_SHA"
 
       - uses: jey3dayo/pr-insights-labeler@v1
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
 ```
 
-**注意**: `pull_request_target`はフォークからのPRでもベースリポジトリのコンテキストで実行されるため、セキュリティリスクがあります。信頼できるコードのみに使用してください。
+**注意**: `pull_request_target`はフォークからのPRでもベースリポジトリのコンテキストで実行されるため、セキュリティリスクがあります。信頼できるコードのみに使用してください。`.github/pr-labeler.yml` と `.github/directory-labeler.yml` はこのイベントの場合、ローカルチェックアウトの内容にかかわらずGitHub API経由でベースの参照から読み込まれます。
 
 ---
 
