@@ -16,7 +16,7 @@ paths:
 ## PR/ブランチ運用
 
 - 実装後は `pnpm lint && pnpm type-check && pnpm test && pnpm build` をローカルで成功させてからプッシュする。
-- すべてのCIチェック（Code Quality, Integration Tests Node22, Documentation Quality, PR Metrics Self-Check, Quality Gate）が通るまでマージしない。
+- すべてのCIチェック（Code Quality, Integration Tests (Node 22 / 24), Documentation Quality, PR Insights Labeler Self-Check, Quality Gate）が通るまでマージしない。
 - PRはテンプレートに従い、変更内容を要約する。レビュー承認を取得してからマージする。
 
 ## リリース

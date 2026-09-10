@@ -32,7 +32,7 @@ pnpm build       # ビルド成功確認
 ### 2. プッシュとCI確認
 
 1. フィーチャーブランチにプッシュ
-2. PRを作成（`/create-pr` または以下）
+2. PRを作成
 
    ```bash
    gh pr create \
@@ -46,9 +46,9 @@ pnpm build       # ビルド成功確認
 3. GitHub Actions ワークフローの完了を待機
 4. すべてのCIチェックが成功するまで待つ
    - ✅ Code Quality
-   - ✅ Integration Tests
+   - ✅ Integration Tests (Node 22 / Node 24)
    - ✅ Documentation Quality（Markdown変更時）
-   - ✅ PR Metrics Self-Check
+   - ✅ PR Insights Labeler Self-Check
    - ✅ Quality Gate
 
 CIチェックが失敗した場合は修正してから再度プッシュする。
