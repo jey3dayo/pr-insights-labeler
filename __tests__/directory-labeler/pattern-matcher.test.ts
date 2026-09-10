@@ -174,6 +174,43 @@ describe('Directory-Based Labeler: Pattern Matcher', () => {
       expect(sourceFileResult.matched).toBe(true);
     });
 
+    test('デフォルト除外パターン: ロックファイルと生成物', () => {
+      const patterns = compilePatterns(['**/*'], { dot: true });
+      const excludePatterns = compilePatterns(DEFAULT_EXCLUDES as unknown as string[], { dot: true });
+      const excluded = (path: string) => !matchIncludePatterns(path, patterns, excludePatterns).matched;
+
+      // Gradle の依存ロック（buildscript / per-configuration を含む）
+      expect(excluded('gradle.lockfile')).toBe(true);
+      expect(excluded('buildscript-gradle.lockfile')).toBe(true);
+      expect(excluded('gradle/dependency-locks/compileClasspath.lockfile')).toBe(true);
+
+      // 末尾が .lock / .lockfile ではないロックファイル
+      expect(excluded('pylock.toml')).toBe(true);
+      expect(excluded('pylock.dev.toml')).toBe(true);
+      expect(excluded('gems.locked')).toBe(true);
+      expect(excluded('conda-lock.yml')).toBe(true);
+      expect(excluded('cabal.project.freeze')).toBe(true);
+      expect(excluded('maven_install.json')).toBe(true);
+
+      // Yarn Berry が設計上コミットする生成物
+      expect(excluded('.pnp.cjs')).toBe(true);
+      expect(excluded('.pnp.loader.mjs')).toBe(true);
+      expect(excluded('.yarn/cache/lodash-npm-4.17.21.zip')).toBe(true);
+      expect(excluded('.yarn/releases/yarn-4.0.0.cjs')).toBe(true);
+      expect(excluded('packages/app/.yarn/cache/x.zip')).toBe(true);
+
+      // 手書きで解析対象に残すファイル
+      expect(excluded('requirements.txt')).toBe(false);
+      expect(excluded('gradle/libs.versions.toml')).toBe(false);
+      expect(excluded('pnpm-workspace.yaml')).toBe(false);
+      expect(excluded('go.mod')).toBe(false);
+      expect(excluded('.yarn/patches/lodash.patch')).toBe(false);
+      expect(excluded('.yarnrc.yml')).toBe(false);
+
+      // PEP 751 の命名規則（`pylock.<非ドット1要素>.toml`）を超えるものは除外しない
+      expect(excluded('pylock.dev.backup.toml')).toBe(false);
+    });
+
     test('リネームファイル: 新パスで判定', () => {
       // リネームの場合、呼び出し側で新パスを渡すことを想定
       const patterns = compilePatterns(['src/new/**'], { dot: true });

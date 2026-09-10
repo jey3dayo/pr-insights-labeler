@@ -161,6 +161,8 @@ describe('PatternMatcher', () => {
       // Lock files whose names end in neither `.lock` nor `.lockfile`
       expect(isExcluded('pylock.toml', defaultPatterns)).toBe(true);
       expect(isExcluded('pylock.dev.toml', defaultPatterns)).toBe(true);
+      // PEP 751 の命名規則（`pylock.<非ドット1要素>.toml`）を超えるものは除外しない
+      expect(isExcluded('pylock.dev.backup.toml', defaultPatterns)).toBe(false);
       expect(isExcluded('gems.locked', defaultPatterns)).toBe(true);
       expect(isExcluded('conda-lock.yml', defaultPatterns)).toBe(true);
       expect(isExcluded('cabal.project.freeze', defaultPatterns)).toBe(true);

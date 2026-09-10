@@ -58,7 +58,7 @@ export const DEFAULT_EXCLUDES: readonly string[] = [
   '**/Pipfile.lock', // Python Pipenv
   '**/*.lockfile', // Gradle dependency locking
   '**/pylock.toml', // PEP 751
-  '**/pylock.*.toml', // PEP 751 named variants
+  '**/pylock.+([!.]).toml', // PEP 751 named variants (a single non-dot segment)
   '**/gems.locked', // Bundler with a `gems.rb` Gemfile
   '**/conda-lock.yml', // conda-lock
   '**/cabal.project.freeze', // Haskell Cabal

@@ -33,7 +33,7 @@ export const DEFAULT_EXCLUDE_PATTERNS: string[] = [
   // `buildscript-gradle.lockfile`, and any custom `lockFile` location
   '*.lockfile',
   'pylock.toml', // PEP 751
-  'pylock.*.toml', // PEP 751 named variants
+  'pylock.+([!.]).toml', // PEP 751 named variants (a single non-dot segment)
   'gems.locked', // Bundler when the Gemfile is named `gems.rb`
   'conda-lock.yml',
   'cabal.project.freeze', // Haskell Cabal
