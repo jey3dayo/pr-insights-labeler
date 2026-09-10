@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.13.0] - 2026-09-10
+
+### ✨ Added
+
+- exclude compound-extension lock files (`*.lock.yaml`, `*.lock.json`, `*.lock.hcl`) and additional dependency manifests (`npm-shrinkwrap.json`, `gradle.lockfile`, `go.sum`, `Package.resolved`, `Cartfile.resolved`) from size/line analysis by default; `*.lock` alone could not match them. Opt out with `use_default_excludes: "false"`
+
+### 🔄 Changed
+
+- update the bundled runtime dependencies: ESLint v10 and i18next v26 (`initImmediate` was renamed to `initAsync`)
+- update the development toolchain: Vitest v5, pnpm v12.3.4, and the outstanding patch/minor bumps
+- pin TypeScript to the v5 line in `.ncurc.cjs`; typescript-eslint 8.x rejects TS 7.0 and ESLint is a runtime dependency of the complexity analyzer (#160)
+- raise the Vitest `testTimeout` to 30s so the cold-cache integration run does not time out in CI (#161)
+
 ## [1.12.0] - 2026-08-18
 
 ### ✨ Added
@@ -534,6 +547,7 @@ PRメトリクス分析に基づいた高度な自動ラベル付け機能を追
 
 [1.0.1]: https://github.com/jey3dayo/pr-insights-labeler/releases/tag/v1.0.1
 [1.0.0]: https://github.com/jey3dayo/pr-insights-labeler/releases/tag/v1.0.0
+[1.13.0]: https://github.com/jey3dayo/pr-insights-labeler/releases/tag/v1.13.0
 [1.12.0]: https://github.com/jey3dayo/pr-insights-labeler/releases/tag/v1.12.0
 [1.11.5]: https://github.com/jey3dayo/pr-insights-labeler/releases/tag/v1.11.5
 [1.11.4]: https://github.com/jey3dayo/pr-insights-labeler/releases/tag/v1.11.4
