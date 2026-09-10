@@ -56,6 +56,22 @@ export const DEFAULT_EXCLUDES: readonly string[] = [
   '**/Cargo.lock', // Rust
   '**/poetry.lock', // Python Poetry
   '**/Pipfile.lock', // Python Pipenv
+  '**/*.lockfile', // Gradle dependency locking
+  '**/pylock.toml', // PEP 751
+  '**/pylock.+([!.]).toml', // PEP 751 named variants (a single non-dot segment)
+  '**/gems.locked', // Bundler with a `gems.rb` Gemfile
+  '**/conda-lock.yml', // conda-lock
+  '**/cabal.project.freeze', // Haskell Cabal
+  '**/maven_install.json', // Bazel rules_jvm_external
+
+  // Yarn Berry generated artifacts that are committed by design
+  '**/.pnp.*',
+  '**/.yarn/cache/**',
+  '**/.yarn/unplugged/**',
+  '**/.yarn/install-state.gz',
+  '**/.yarn/releases/**',
+  '**/.yarn/plugins/**',
+  '**/.yarn/sdks/**',
 
   // OS-specific files
   '**/.DS_Store', // macOS

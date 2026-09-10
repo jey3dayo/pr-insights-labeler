@@ -154,6 +154,38 @@ describe('PatternMatcher', () => {
       expect(isExcluded('go.sum', defaultPatterns)).toBe(true);
       expect(isExcluded('gradle.lockfile', defaultPatterns)).toBe(true);
 
+      // Gradle dependency locking beyond the per-project `gradle.lockfile`
+      expect(isExcluded('buildscript-gradle.lockfile', defaultPatterns)).toBe(true);
+      expect(isExcluded('gradle/dependency-locks/compileClasspath.lockfile', defaultPatterns)).toBe(true);
+
+      // Lock files whose names end in neither `.lock` nor `.lockfile`
+      expect(isExcluded('pylock.toml', defaultPatterns)).toBe(true);
+      expect(isExcluded('pylock.dev.toml', defaultPatterns)).toBe(true);
+      // PEP 751 の命名規則（`pylock.<非ドット1要素>.toml`）を超えるものは除外しない
+      expect(isExcluded('pylock.dev.backup.toml', defaultPatterns)).toBe(false);
+      expect(isExcluded('gems.locked', defaultPatterns)).toBe(true);
+      expect(isExcluded('conda-lock.yml', defaultPatterns)).toBe(true);
+      expect(isExcluded('cabal.project.freeze', defaultPatterns)).toBe(true);
+      expect(isExcluded('maven_install.json', defaultPatterns)).toBe(true);
+
+      // Yarn Berry generated artifacts that are committed by design
+      expect(isExcluded('.pnp.cjs', defaultPatterns)).toBe(true);
+      expect(isExcluded('.pnp.loader.mjs', defaultPatterns)).toBe(true);
+      expect(isExcluded('.yarn/cache/lodash-npm-4.17.21.zip', defaultPatterns)).toBe(true);
+      expect(isExcluded('.yarn/releases/yarn-4.0.0.cjs', defaultPatterns)).toBe(true);
+      expect(isExcluded('packages/app/.yarn/cache/x.zip', defaultPatterns)).toBe(true);
+
+      // Agent skill metadata (same category as .claude / .codex / .kiro)
+      expect(isExcluded('.agents/skills/asta-deployment/SKILL.md', defaultPatterns)).toBe(true);
+
+      // Hand-authored dependency files that must stay in scope
+      expect(isExcluded('requirements.txt', defaultPatterns)).toBe(false);
+      expect(isExcluded('gradle/libs.versions.toml', defaultPatterns)).toBe(false);
+      expect(isExcluded('pnpm-workspace.yaml', defaultPatterns)).toBe(false);
+      expect(isExcluded('go.mod', defaultPatterns)).toBe(false);
+      expect(isExcluded('.yarn/patches/lodash.patch', defaultPatterns)).toBe(false);
+      expect(isExcluded('.yarnrc.yml', defaultPatterns)).toBe(false);
+
       // Test node_modules
       expect(isExcluded('node_modules/react/index.js', defaultPatterns)).toBe(true);
       expect(isExcluded('packages/app/node_modules/test.js', defaultPatterns)).toBe(true);
