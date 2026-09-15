@@ -71,6 +71,20 @@ Include this section when:
 
 Main section containing all changes, organized by type.
 
+This template is the source of truth for how a commit's Conventional Commits
+prefix maps to a release-notes subsection. `scripts/release.sh` and
+`.claude/commands/release.md` follow this table; do not duplicate it
+elsewhere.
+
+| Commit prefix | Section |
+| --- | --- |
+| `feat:` / `feat(...)` | `### ✨ Added` |
+| `fix:` / `fix(...)` | `### 🐛 Fixed` |
+| Everything else (`chore:`, `docs:`, `style:`, `refactor:`, `perf:`, `test:`, `build:`, `ci:`, and no prefix) | `### 🔄 Changed` |
+
+Breaking changes are detected separately (see `⚠️ Breaking Changes` above)
+and are not covered by this table.
+
 ### Subsections (use as needed)
 
 - **✨ Added**: New features, capabilities, or enhancements

@@ -166,14 +166,10 @@ gh release create v1.8.1 \
 
 ## Changelog Generation Rules
 
-The script follows Conventional Commits for changelog categorization:
-
-| Commit Prefix | Category | Example |
-| ------------- | -------- | ------- |
-| `feat:`, `feat(*)` | ✨ Added | `feat: add new label type` |
-| `fix:`, `fix(*)` | 🐛 Fixed | `fix: resolve parsing error` |
-| `chore:`, `docs:`, `style:` | 🔄 Changed | `chore: update dependencies` |
-| Other | Other Changes | `improve performance` |
+The script follows Conventional Commits for changelog categorization. The
+commit prefix → section mapping is defined in `.github/RELEASE_TEMPLATE.md`
+(`### 🚀 What's New` section), which is the source of truth; it is not
+duplicated here.
 
 **PR number extraction**: Automatically extracts `(#123)` from commit messages.
 

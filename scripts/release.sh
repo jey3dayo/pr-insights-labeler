@@ -115,7 +115,6 @@ generate_changelog() {
   local added=()
   local changed=()
   local fixed=()
-  local other=()
 
   while IFS= read -r commit; do
     local msg
@@ -126,7 +125,7 @@ generate_changelog() {
     pr_num=$(echo "$msg" | sed -n 's/.*(#\([0-9][0-9]*\)).*/\(#\1\)/p')
 
     case $msg in
-      feat:*|feat\(*)
+      feat:*|feat\(*|feat!:*)
         local clean_msg="${msg#feat*: }"
         # Ensure PR number is present
         if [[ -n $pr_num ]] && [[ ! $clean_msg =~ \(#[0-9]+\) ]]; then
@@ -134,14 +133,14 @@ generate_changelog() {
         fi
         added+=("- ${clean_msg}")
         ;;
-      fix:*|fix\(*)
+      fix:*|fix\(*|fix!:*)
         local clean_msg="${msg#fix*: }"
         if [[ -n $pr_num ]] && [[ ! $clean_msg =~ \(#[0-9]+\) ]]; then
           clean_msg="${clean_msg} ${pr_num}"
         fi
         fixed+=("- ${clean_msg}")
         ;;
-      chore:*|chore\(*|docs:*|docs\(*|style:*|style\(*)
+      chore:*|chore\(*|docs:*|docs\(*|style:*|style\(*|refactor:*|refactor\(*|perf:*|perf\(*|test:*|test\(*|build:*|build\(*|ci:*|ci\(*)
         local clean_msg="${msg#*: }"
         if [[ -n $pr_num ]] && [[ ! $clean_msg =~ \(#[0-9]+\) ]]; then
           clean_msg="${clean_msg} ${pr_num}"
@@ -150,10 +149,16 @@ generate_changelog() {
         ;;
       *)
         local clean_msg="$msg"
+        # Only strip a leading Conventional Commits prefix (type, optional
+        # (scope), optional !, then ": ") -- a bare colon elsewhere in the
+        # message (e.g. `Revert "fix: ..."`, `Update docs: ...`) must survive.
+        if [[ $clean_msg =~ ^[a-z]+(\([^\)]*\))?!?:\  ]]; then
+          clean_msg="${clean_msg#*: }"
+        fi
         if [[ -n $pr_num ]] && [[ ! $clean_msg =~ \(#[0-9]+\) ]]; then
           clean_msg="${clean_msg} ${pr_num}"
         fi
-        other+=("- ${clean_msg}")
+        changed+=("- ${clean_msg}")
         ;;
     esac
   done < <(git rev-list "$from_tag..$to_ref")
@@ -179,13 +184,6 @@ generate_changelog() {
       printf '%s\n' "${fixed[@]}"
       echo ""
     fi
-
-    if [ ${#other[@]} -gt 0 ]; then
-      echo "### Other Changes"
-      echo ""
-      printf '%s\n' "${other[@]}"
-      echo ""
-    fi
   }
 }
 
@@ -208,10 +206,11 @@ detect_breaking_changes() {
       fi
     fi
 
-    # Check for ! notation (feat!:, fix!:, etc.)
-    if echo "$msg" | grep -qE '^[a-z]+!(\([^)]+\))?:'; then
+    # Check for ! notation (feat!:, fix(scope)!:, etc.). Conventional Commits
+    # places the scope before the !, not after.
+    if echo "$msg" | grep -qE '^[a-z]+(\([^)]+\))?!:'; then
       local clean_msg
-      clean_msg=$(echo "$msg" | sed -E 's/^[a-z]+!(\([^)]+\))?: //')
+      clean_msg=$(echo "$msg" | sed -E 's/^[a-z]+(\([^)]+\))?!: //')
       breaking_changes+=("- $clean_msg")
     fi
   done < <(git rev-list "$from_tag..$to_ref")
