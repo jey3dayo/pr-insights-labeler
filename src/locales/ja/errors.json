@@ -37,7 +37,7 @@
     "complexityAnalysisError": "複雑度の分析に失敗しました: {{message}}",
     "diffError": "差分の取得に失敗しました: {{message}}",
     "cacheError": "キャッシュエラー: {{message}}",
-    "headCheckoutMismatch": "pull_request_target: ローカルの checkout は {{actual}} ですが、workflow イベントが記録した PR head は {{expected}} です。workflow の queue 後に PR が更新されたため、イベントが指す revision とは異なる tree を解析しようとしています。workflow を再実行するか、checkout ステップで PR head の SHA を明示的に fetch して checkout してください。",
+    "headCheckoutMismatch": "pull_request_target: ローカルの checkout は {{actual}} ですが、workflow イベントが記録した PR head は {{expected}} です。checkout ステップが PR head を取得していない（pull_request_target の既定では base が checkout されます）か、workflow の queue 後に PR head が更新された可能性があります。いずれの場合もイベントが指す revision とは異なる tree を解析することになります。checkout ステップで PR head の SHA を明示的に fetch して checkout してください。head の更新が原因の場合、その更新で発生する新しい synchronize run が最新の head を解析するため、この run の再実行は不要です（再実行しても同じイベントに記録された古い head SHA が使われます）。",
     "headCheckoutUnavailable": "pull_request_target: ローカルの HEAD revision を取得できなかったため（GITHUB_WORKSPACE={{workspace}}）、workflow イベントが記録した PR head {{expected}} と checkout を突き合わせられません。誤った tree の解析を避けるため中断します。",
     "headCheckoutHeadShaMissing": "pull_request_target: workflow イベントに PR head の SHA が無いため、ローカルの checkout を検証できません。誤った tree の解析を避けるため中断します。"
   },
