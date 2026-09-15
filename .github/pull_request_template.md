@@ -16,7 +16,7 @@
 - [ ] `pnpm test`
 - [ ] `pnpm build`
 - [ ] `mise ci`
-- [ ] その他 (例: `pnpm docs:lint`、`pnpm docs:links`)
+- [ ] その他 (例: `mise run docs:lint`、`mise run docs:links`)
   - 実行していない項目がある場合は理由を書く
 
 ## 影響範囲とフォローアップ
