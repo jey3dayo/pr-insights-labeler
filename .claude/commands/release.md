@@ -119,17 +119,9 @@ pnpm build       # ビルド実行
 
 GitHub CLI (`gh`) を使用してリリースを作成する。リリースノートの**レイアウト**は `.github/RELEASE_TEMPLATE.md` を正本とし、ここには再掲しない。テスト数は `pnpm vitest run` の結果から、Contributors は `git shortlog -s -n vPREV..HEAD` から取得する。
 
-コミットの分類は `git log vPREV..HEAD --pretty=format:"%s"` を次の表で振り分ける。これは `scripts/release.sh:128-188` の**現行実装を書き写した観測表**であり、確定した規約ではない（`.github/RELEASE_TEMPLATE.md` に分類の記載がないため、暫定的にここへ置いている）。
-
-| コミット prefix | セクション |
-| --- | --- |
-| `feat:` | `### ✨ Added` |
-| `fix:` | `### 🐛 Fixed` |
-| `chore:` / `docs:` / `style:` | `### 🔄 Changed` |
-| 上記以外（`refactor:` を含む） | `### Other Changes` |
+コミットの分類（prefix → セクションの対応表）も `.github/RELEASE_TEMPLATE.md` の `### 🚀 What's New` 節を正本とし、ここには再掲しない。`git log vPREV..HEAD --pretty=format:"%s"` で取得したコミットを、その対応表に従って分類する。`scripts/release.sh` の `generate_changelog` も同じ対応表で実装している。
 
 - `## 🚀 What's New` は変更種別に関わらず常に置き、該当のない小見出しは省略する
-- **`refactor:` の帰属は未決。この表に従う前に決着させること。** `scripts/release.sh:128-158` は `Other Changes` へ落とすが、CHANGELOG では `### 🔧 Refactoring` を使ってきた実績があり（`CHANGELOG.md:80-100`）、一方で `Other` に refactor が露出した例もある（同 `:202-204`）＝既に不統一。`🔧 Refactoring` を正式採用する場合は `scripts/release.sh`・`.github/RELEASE_TEMPLATE.md`・この表の 3 箇所を同時に変更する
 
 ### Phase 6: メジャーバージョンRelease更新
 

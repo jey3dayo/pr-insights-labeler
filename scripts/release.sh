@@ -115,7 +115,6 @@ generate_changelog() {
   local added=()
   local changed=()
   local fixed=()
-  local other=()
 
   while IFS= read -r commit; do
     local msg
@@ -126,7 +125,7 @@ generate_changelog() {
     pr_num=$(echo "$msg" | sed -n 's/.*(#\([0-9][0-9]*\)).*/\(#\1\)/p')
 
     case $msg in
-      feat:*|feat\(*)
+      feat:*|feat\(*|feat!:*)
         local clean_msg="${msg#feat*: }"
         # Ensure PR number is present
         if [[ -n $pr_num ]] && [[ ! $clean_msg =~ \(#[0-9]+\) ]]; then
@@ -134,14 +133,14 @@ generate_changelog() {
         fi
         added+=("- ${clean_msg}")
         ;;
-      fix:*|fix\(*)
+      fix:*|fix\(*|fix!:*)
         local clean_msg="${msg#fix*: }"
         if [[ -n $pr_num ]] && [[ ! $clean_msg =~ \(#[0-9]+\) ]]; then
           clean_msg="${clean_msg} ${pr_num}"
         fi
         fixed+=("- ${clean_msg}")
         ;;
-      chore:*|chore\(*|docs:*|docs\(*|style:*|style\(*)
+      chore:*|chore\(*|docs:*|docs\(*|style:*|style\(*|refactor:*|refactor\(*|perf:*|perf\(*|test:*|test\(*|build:*|build\(*|ci:*|ci\(*)
         local clean_msg="${msg#*: }"
         if [[ -n $pr_num ]] && [[ ! $clean_msg =~ \(#[0-9]+\) ]]; then
           clean_msg="${clean_msg} ${pr_num}"
@@ -150,10 +149,16 @@ generate_changelog() {
         ;;
       *)
         local clean_msg="$msg"
+        # Only strip a leading Conventional Commits prefix (type, optional
+        # (scope), optional !, then ": ") -- a bare colon elsewhere in the
+        # message (e.g. `Revert "fix: ..."`, `Update docs: ...`) must survive.
+        if [[ $clean_msg =~ ^[a-z]+(\([^\)]*\))?!?:\  ]]; then
+          clean_msg="${clean_msg#*: }"
+        fi
         if [[ -n $pr_num ]] && [[ ! $clean_msg =~ \(#[0-9]+\) ]]; then
           clean_msg="${clean_msg} ${pr_num}"
         fi
-        other+=("- ${clean_msg}")
+        changed+=("- ${clean_msg}")
         ;;
     esac
   done < <(git rev-list "$from_tag..$to_ref")
@@ -179,13 +184,6 @@ generate_changelog() {
       printf '%s\n' "${fixed[@]}"
       echo ""
     fi
-
-    if [ ${#other[@]} -gt 0 ]; then
-      echo "### Other Changes"
-      echo ""
-      printf '%s\n' "${other[@]}"
-      echo ""
-    fi
   }
 }
 
@@ -196,22 +194,37 @@ detect_breaking_changes() {
   local breaking_changes=()
 
   while IFS= read -r commit; do
-    local msg
-    msg=$(git log -1 --format=%B "$commit")
+    local subject body
+    subject=$(git log -1 --format=%s "$commit")
+    body=$(git log -1 --format=%B "$commit")
 
-    # Check for BREAKING CHANGE: footer (Conventional Commits)
-    if echo "$msg" | grep -q "BREAKING CHANGE:"; then
-      local breaking_msg
-      breaking_msg=$(echo "$msg" | sed -n 's/^BREAKING CHANGE: //p')
+    # At most one *source* of entries per commit: the BREAKING CHANGE:
+    # footer(s) win when present, and the `!` subject marker is only a
+    # fallback for commits where no footer line carried an inline
+    # description -- never both, or the same commit would be listed twice.
+    # A commit can have more than one footer (each describing a distinct
+    # breaking change), so every footer still gets its own bullet.
+    local footer_entry_added=0
+
+    # Check for BREAKING CHANGE: footer(s) (Conventional Commits). Read line
+    # by line with IFS= read -r (no word splitting) so each footer becomes
+    # its own array entry -- collapsing multiple sed output lines into one
+    # entry via command substitution broke the bullet list when a commit had
+    # more than one footer.
+    while IFS= read -r breaking_msg; do
       if [[ -n $breaking_msg ]]; then
         breaking_changes+=("- $breaking_msg")
+        footer_entry_added=1
       fi
-    fi
+    done < <(echo "$body" | sed -n 's/^BREAKING CHANGE: //p')
 
-    # Check for ! notation (feat!:, fix!:, etc.)
-    if echo "$msg" | grep -qE '^[a-z]+!(\([^)]+\))?:'; then
+    # Check for ! notation (feat!:, fix(scope)!:, etc.) on the subject line
+    # only -- the body can be many lines long and must never leak into the
+    # release notes. Conventional Commits places the scope before the !, not
+    # after.
+    if [[ $footer_entry_added -eq 0 ]] && echo "$subject" | grep -qE '^[a-z]+(\([^)]+\))?!:'; then
       local clean_msg
-      clean_msg=$(echo "$msg" | sed -E 's/^[a-z]+!(\([^)]+\))?: //')
+      clean_msg=$(echo "$subject" | sed -E 's/^[a-z]+(\([^)]+\))?!: //')
       breaking_changes+=("- $clean_msg")
     fi
   done < <(git rev-list "$from_tag..$to_ref")
@@ -631,21 +644,26 @@ main() {
   success "Release v${new_version} completed! 🎉"
 }
 
-# Handle script arguments
-if [[ "${1:-}" == "--help" ]] || [[ "${1:-}" == "-h" ]]; then
-  echo "Usage: $0"
-  echo ""
-  echo "Interactive release script for PR Insights Labeler"
-  echo ""
-  echo "This script will:"
-  echo "  1. Check for uncommitted changes"
-  echo "  2. Let you select release type (patch/minor/major)"
-  echo "  3. Run quality checks (lint/test/build)"
-  echo "  4. Generate changelog from git commits"
-  echo "  5. Update package.json and CHANGELOG.md"
-  echo "  6. Create git commit and tags"
-  echo "  7. Push to origin and create GitHub release"
-  exit 0
-fi
+# Executed directly, this runs the interactive release flow; sourced (e.g.
+# from a test), it only defines the functions above so they can be called
+# and asserted on individually.
+if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
+  # Handle script arguments
+  if [[ "${1:-}" == "--help" ]] || [[ "${1:-}" == "-h" ]]; then
+    echo "Usage: $0"
+    echo ""
+    echo "Interactive release script for PR Insights Labeler"
+    echo ""
+    echo "This script will:"
+    echo "  1. Check for uncommitted changes"
+    echo "  2. Let you select release type (patch/minor/major)"
+    echo "  3. Run quality checks (lint/test/build)"
+    echo "  4. Generate changelog from git commits"
+    echo "  5. Update package.json and CHANGELOG.md"
+    echo "  6. Create git commit and tags"
+    echo "  7. Push to origin and create GitHub release"
+    exit 0
+  fi
 
-main "$@"
+  main "$@"
+fi
