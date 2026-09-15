@@ -194,23 +194,33 @@ detect_breaking_changes() {
   local breaking_changes=()
 
   while IFS= read -r commit; do
-    local msg
-    msg=$(git log -1 --format=%B "$commit")
+    local subject body
+    subject=$(git log -1 --format=%s "$commit")
+    body=$(git log -1 --format=%B "$commit")
+
+    # At most one entry per commit: the BREAKING CHANGE: footer wins when it
+    # has a body, and the `!` subject marker is only a fallback for commits
+    # where the footer line exists but carries no inline description -- never
+    # both, or the same commit would be listed twice.
+    local footer_entry_added=0
 
     # Check for BREAKING CHANGE: footer (Conventional Commits)
-    if echo "$msg" | grep -q "BREAKING CHANGE:"; then
+    if echo "$body" | grep -q "BREAKING CHANGE:"; then
       local breaking_msg
-      breaking_msg=$(echo "$msg" | sed -n 's/^BREAKING CHANGE: //p')
+      breaking_msg=$(echo "$body" | sed -n 's/^BREAKING CHANGE: //p')
       if [[ -n $breaking_msg ]]; then
         breaking_changes+=("- $breaking_msg")
+        footer_entry_added=1
       fi
     fi
 
-    # Check for ! notation (feat!:, fix(scope)!:, etc.). Conventional Commits
-    # places the scope before the !, not after.
-    if echo "$msg" | grep -qE '^[a-z]+(\([^)]+\))?!:'; then
+    # Check for ! notation (feat!:, fix(scope)!:, etc.) on the subject line
+    # only -- the body can be many lines long and must never leak into the
+    # release notes. Conventional Commits places the scope before the !, not
+    # after.
+    if [[ $footer_entry_added -eq 0 ]] && echo "$subject" | grep -qE '^[a-z]+(\([^)]+\))?!:'; then
       local clean_msg
-      clean_msg=$(echo "$msg" | sed -E 's/^[a-z]+(\([^)]+\))?!: //')
+      clean_msg=$(echo "$subject" | sed -E 's/^[a-z]+(\([^)]+\))?!: //')
       breaking_changes+=("- $clean_msg")
     fi
   done < <(git rev-list "$from_tag..$to_ref")
@@ -630,21 +640,26 @@ main() {
   success "Release v${new_version} completed! 🎉"
 }
 
-# Handle script arguments
-if [[ "${1:-}" == "--help" ]] || [[ "${1:-}" == "-h" ]]; then
-  echo "Usage: $0"
-  echo ""
-  echo "Interactive release script for PR Insights Labeler"
-  echo ""
-  echo "This script will:"
-  echo "  1. Check for uncommitted changes"
-  echo "  2. Let you select release type (patch/minor/major)"
-  echo "  3. Run quality checks (lint/test/build)"
-  echo "  4. Generate changelog from git commits"
-  echo "  5. Update package.json and CHANGELOG.md"
-  echo "  6. Create git commit and tags"
-  echo "  7. Push to origin and create GitHub release"
-  exit 0
-fi
+# Executed directly, this runs the interactive release flow; sourced (e.g.
+# from a test), it only defines the functions above so they can be called
+# and asserted on individually.
+if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
+  # Handle script arguments
+  if [[ "${1:-}" == "--help" ]] || [[ "${1:-}" == "-h" ]]; then
+    echo "Usage: $0"
+    echo ""
+    echo "Interactive release script for PR Insights Labeler"
+    echo ""
+    echo "This script will:"
+    echo "  1. Check for uncommitted changes"
+    echo "  2. Let you select release type (patch/minor/major)"
+    echo "  3. Run quality checks (lint/test/build)"
+    echo "  4. Generate changelog from git commits"
+    echo "  5. Update package.json and CHANGELOG.md"
+    echo "  6. Create git commit and tags"
+    echo "  7. Push to origin and create GitHub release"
+    exit 0
+  fi
 
-main "$@"
+  main "$@"
+fi
