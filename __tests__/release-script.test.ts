@@ -96,6 +96,13 @@ describe('scripts/release.sh commit classification', () => {
       repoDir,
       'fix(core)!: multiline subject (#13)\n\nThis body has several lines.\nSecond detail line.\nThird detail line.',
     );
+    // A commit with two BREAKING CHANGE: footers: each must become its own
+    // bullet, not get collapsed into one array entry with an unmarked
+    // second line.
+    commit(
+      repoDir,
+      'feat: two footers (#20)\n\nBREAKING CHANGE: first description\nBREAKING CHANGE: second description',
+    );
 
     changelog = runShellFunction(repoDir, 'generate_changelog', ['base', 'HEAD']);
     breaking = runShellFunction(repoDir, 'detect_breaking_changes', ['base', 'HEAD']);
@@ -154,5 +161,13 @@ describe('scripts/release.sh commit classification', () => {
     expect(breaking).not.toContain('This body has several lines');
     expect(breaking).not.toContain('Second detail line');
     expect(breaking).not.toContain('Third detail line');
+  });
+
+  it('gives each of several BREAKING CHANGE: footers on one commit its own bullet', () => {
+    expect(breaking).toContain('- first description');
+    expect(breaking).toContain('- second description');
+    // The second footer must not be swallowed into the first line's bullet.
+    expect(breaking).not.toContain('first description\nsecond description');
+    expect(breaking).not.toMatch(/^second description$/m);
   });
 });

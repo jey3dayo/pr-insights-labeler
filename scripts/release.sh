@@ -198,21 +198,25 @@ detect_breaking_changes() {
     subject=$(git log -1 --format=%s "$commit")
     body=$(git log -1 --format=%B "$commit")
 
-    # At most one entry per commit: the BREAKING CHANGE: footer wins when it
-    # has a body, and the `!` subject marker is only a fallback for commits
-    # where the footer line exists but carries no inline description -- never
-    # both, or the same commit would be listed twice.
+    # At most one *source* of entries per commit: the BREAKING CHANGE:
+    # footer(s) win when present, and the `!` subject marker is only a
+    # fallback for commits where no footer line carried an inline
+    # description -- never both, or the same commit would be listed twice.
+    # A commit can have more than one footer (each describing a distinct
+    # breaking change), so every footer still gets its own bullet.
     local footer_entry_added=0
 
-    # Check for BREAKING CHANGE: footer (Conventional Commits)
-    if echo "$body" | grep -q "BREAKING CHANGE:"; then
-      local breaking_msg
-      breaking_msg=$(echo "$body" | sed -n 's/^BREAKING CHANGE: //p')
+    # Check for BREAKING CHANGE: footer(s) (Conventional Commits). Read line
+    # by line with IFS= read -r (no word splitting) so each footer becomes
+    # its own array entry -- collapsing multiple sed output lines into one
+    # entry via command substitution broke the bullet list when a commit had
+    # more than one footer.
+    while IFS= read -r breaking_msg; do
       if [[ -n $breaking_msg ]]; then
         breaking_changes+=("- $breaking_msg")
         footer_entry_added=1
       fi
-    fi
+    done < <(echo "$body" | sed -n 's/^BREAKING CHANGE: //p')
 
     # Check for ! notation (feat!:, fix(scope)!:, etc.) on the subject line
     # only -- the body can be many lines long and must never leak into the
