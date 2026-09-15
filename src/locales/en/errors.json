@@ -37,7 +37,7 @@
     "complexityAnalysisError": "Failed to analyze complexity: {{message}}",
     "diffError": "Failed to get diff: {{message}}",
     "cacheError": "Cache error: {{message}}",
-    "headCheckoutMismatch": "pull_request_target: the local checkout is at {{actual}} but the workflow event recorded PR head {{expected}}. The pull request was most likely updated after the workflow was queued, so analysis would measure a different tree than the event refers to. Re-run the workflow, or make the checkout step fetch and check out the PR head SHA explicitly.",
+    "headCheckoutMismatch": "pull_request_target: the local checkout is at {{actual}} but the workflow event recorded PR head {{expected}}. Either the checkout step never fetched the PR head (pull_request_target checks out base by default), or the PR head was updated after the workflow was queued. In both cases analysis would measure a different tree than the event refers to. Make the checkout step fetch and check out the PR head SHA explicitly, and re-run the workflow on the latest head if the head moved.",
     "headCheckoutUnavailable": "pull_request_target: could not determine the local HEAD revision (GITHUB_WORKSPACE={{workspace}}), so the checkout cannot be verified against the PR head {{expected}} recorded in the workflow event. Refusing to analyze a possibly incorrect tree.",
     "headCheckoutHeadShaMissing": "pull_request_target: the workflow event did not provide a PR head SHA, so the local checkout cannot be verified. Refusing to analyze a possibly incorrect tree."
   },
