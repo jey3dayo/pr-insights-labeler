@@ -1,5 +1,6 @@
 ---
 name: release-automation
+model: sonnet
 description: Specialized skill for PR Insights Labeler release automation. Automates semantic versioning releases (patch/minor/major) with quality checks, changelog generation, GitHub Release creation, and template-based release notes following .github/RELEASE_TEMPLATE.md format. Trigger when users mention "release", "リリース", version numbers (e.g., "v1.8.1"), or request version bumps ("patch", "minor", "major").
 ---
 

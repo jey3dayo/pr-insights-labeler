@@ -1,3 +1,7 @@
+---
+model: sonnet
+---
+
 # Release Command - 自動リリース管理システム
 
 GitHub Actionプロジェクトの新バージョンリリースを自動化するコマンドです。
