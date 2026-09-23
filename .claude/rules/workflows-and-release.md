@@ -3,7 +3,7 @@ paths:
   - ".github/workflows/**"
   - "action.yml"
   - "docs/ja/release-process.md"
-  - ".claude/commands/release.md"
+  - ".claude/skills/release/SKILL.md"
   - "CHANGELOG.md"
 ---
 

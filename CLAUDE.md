@@ -11,7 +11,6 @@ GitHub Action で PR にサイズ・複雑度・カテゴリ・リスクのラ�
 
 ## Development Guidelines
 
-- Think in English, but generate responses in Japanese（思考は英語、回答の生成は日本語で行う）
 - 利用者向けドキュメント（`docs/en/`）は英語が正典、日本語版は追従。メンテナ向けドキュメント（`docs/ja/`）は日本語のみで可
 
 ## Workflow
@@ -57,10 +56,7 @@ CIチェックが失敗した場合は修正してから再度プッシュする
 
 1. レビュアーを指定し、フィードバックに対応する
 2. 承認（Approval）を取得する
-3. マージ戦略を選ぶ
-   - **`squash`**（推奨）: 小さな機能追加やバグフィックス
-   - **`merge`**: 開発履歴を残したい場合
-   - **`rebase`**: 線形な履歴を維持したい場合
+3. squash merge する
 4. マージ後、フィーチャーブランチを削除し、main の CI 成功を確認する
 
 ### 4. リリース（バージョンアップ時）
@@ -84,7 +80,7 @@ CIチェックが失敗した場合は修正してから再度プッシュする
 
 ## Development Rules
 
-1. Local validation first: push 前に `pnpm lint && pnpm type-check && pnpm test && pnpm build` を通す
+1. Local validation first: 上記「1. ローカル品質保証」を push 前に通す
 2. CI success required: すべての CI チェックが成功するまでマージしない
 3. Review before merge: main へのマージ前にレビュー承認を得る
 4. `dist/` などの生成物を更新する場合は、CI・リリース手順との整合を取る

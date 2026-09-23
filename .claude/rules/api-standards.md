@@ -1,7 +1,8 @@
 ---
 paths:
-  - "src/api/**"
-  - "src/**/*.api.ts"
+  - "src/input/**"
+  - "src/input-*.ts"
+  - "action.yml"
   - "docs/ja/API.md"
 ---
 

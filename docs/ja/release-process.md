@@ -51,7 +51,7 @@
 
 ### 詳細
 
-詳細な使用方法とオプションは [.claude/commands/release.md](../../.claude/commands/release.md) を参照してください。
+詳細な使用方法とオプションは [.claude/skills/release/SKILL.md](../../.claude/skills/release/SKILL.md) を参照してください。
 
 ---
 
