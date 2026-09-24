@@ -24701,14 +24701,14 @@ module.exports.sync = path => {
 
 /***/ }),
 
-/***/ 19954:
+/***/ 45496:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 "use strict";
 
 
-const pico = __nccwpck_require__(4028);
-const utils = __nccwpck_require__(18055);
+const pico = __nccwpck_require__(57282);
+const utils = __nccwpck_require__(10365);
 
 function picomatch(glob, options, returnState = false) {
   // default to os.platform()
@@ -24726,7 +24726,7 @@ module.exports = picomatch;
 
 /***/ }),
 
-/***/ 78039:
+/***/ 31225:
 /***/ ((module) => {
 
 "use strict";
@@ -24918,14 +24918,14 @@ module.exports = {
 
 /***/ }),
 
-/***/ 66117:
+/***/ 44695:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 "use strict";
 
 
-const constants = __nccwpck_require__(78039);
-const utils = __nccwpck_require__(18055);
+const constants = __nccwpck_require__(31225);
+const utils = __nccwpck_require__(10365);
 
 /**
  * Constants
@@ -26099,6 +26099,15 @@ const parse = (input, options) => {
         consume('/**', 3);
       }
 
+      // A globstar followed only by balanced closing parens is at the logical end of patterns like
+      // `test(/utils/**)` and `test?(/utils/**)`. Treat it as EOS so the trailing `/**` can match its
+      // parent path, except in negated extglobs where that would change the exclusion semantics.
+      const isEnd = eos() || (
+        state.parens > 0
+        && rest === ')'.repeat(state.parens)
+        && !extglobs.some(extglob => extglob.type === 'negate')
+      );
+
       if (prior.type === 'bos' && eos()) {
         prev.type = 'globstar';
         prev.value += value;
@@ -26109,7 +26118,7 @@ const parse = (input, options) => {
         continue;
       }
 
-      if (prior.type === 'slash' && prior.prev.type !== 'bos' && !afterStar && eos()) {
+      if (prior.type === 'slash' && prior.prev.type !== 'bos' && !afterStar && isEnd) {
         state.output = state.output.slice(0, -(prior.output + prev.output).length);
         prior.output = `(?:${prior.output}`;
 
@@ -26342,16 +26351,16 @@ module.exports = parse;
 
 /***/ }),
 
-/***/ 4028:
+/***/ 57282:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 "use strict";
 
 
-const scan = __nccwpck_require__(5769);
-const parse = __nccwpck_require__(66117);
-const utils = __nccwpck_require__(18055);
-const constants = __nccwpck_require__(78039);
+const scan = __nccwpck_require__(30843);
+const parse = __nccwpck_require__(44695);
+const utils = __nccwpck_require__(10365);
+const constants = __nccwpck_require__(31225);
 const isObject = val => val && typeof val === 'object' && !Array.isArray(val);
 
 /**
@@ -26711,13 +26720,13 @@ module.exports = picomatch;
 
 /***/ }),
 
-/***/ 5769:
+/***/ 30843:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 "use strict";
 
 
-const utils = __nccwpck_require__(18055);
+const utils = __nccwpck_require__(10365);
 const {
   CHAR_ASTERISK,             /* * */
   CHAR_AT,                   /* @ */
@@ -26734,7 +26743,7 @@ const {
   CHAR_RIGHT_CURLY_BRACE,    /* } */
   CHAR_RIGHT_PARENTHESES,    /* ) */
   CHAR_RIGHT_SQUARE_BRACKET  /* ] */
-} = __nccwpck_require__(78039);
+} = __nccwpck_require__(31225);
 
 const isPathSeparator = code => {
   return code === CHAR_FORWARD_SLASH || code === CHAR_BACKWARD_SLASH;
@@ -26767,7 +26776,7 @@ const scan = (input, options) => {
   const opts = options || {};
 
   const length = input.length - 1;
-  const scanToEnd = opts.parts === true || opts.scanToEnd === true;
+  const scanToEnd = opts.parts === true || opts.tokens === true || opts.scanToEnd === true;
   const slashes = [];
   const tokens = [];
   const parts = [];
@@ -26901,15 +26910,21 @@ const scan = (input, options) => {
         }
 
         if (scanToEnd === true) {
+          let parens = 0;
+
           while (eos() !== true && (code = advance())) {
             if (code === CHAR_BACKWARD_SLASH) {
               backslashes = token.backslashes = true;
-              code = advance();
+              advance();
               continue;
             }
 
-            if (code === CHAR_RIGHT_PARENTHESES) {
-              isGlob = token.isGlob = true;
+            if (code === CHAR_LEFT_PARENTHESES) {
+              parens++;
+              continue;
+            }
+
+            if (code === CHAR_RIGHT_PARENTHESES && --parens === 0) {
               finished = true;
               break;
             }
@@ -26974,14 +26989,21 @@ const scan = (input, options) => {
       isGlob = token.isGlob = true;
 
       if (scanToEnd === true) {
+        let parens = 1;
+
         while (eos() !== true && (code = advance())) {
-          if (code === CHAR_LEFT_PARENTHESES) {
+          if (code === CHAR_BACKWARD_SLASH) {
             backslashes = token.backslashes = true;
-            code = advance();
+            advance();
             continue;
           }
 
-          if (code === CHAR_RIGHT_PARENTHESES) {
+          if (code === CHAR_LEFT_PARENTHESES) {
+            parens++;
+            continue;
+          }
+
+          if (code === CHAR_RIGHT_PARENTHESES && --parens === 0) {
             finished = true;
             break;
           }
@@ -27068,7 +27090,7 @@ const scan = (input, options) => {
     let prevIndex;
 
     for (let idx = 0; idx < slashes.length; idx++) {
-      const n = prevIndex ? prevIndex + 1 : start;
+      const n = prevIndex !== undefined ? prevIndex + 1 : start;
       const i = slashes[idx];
       const value = input.slice(n, i);
       if (opts.tokens) {
@@ -27081,21 +27103,20 @@ const scan = (input, options) => {
         depth(tokens[idx]);
         state.maxDepth += tokens[idx].depth;
       }
-      if (idx !== 0 || value !== '') {
+      if (i >= start) {
         parts.push(value);
+        prevIndex = i;
       }
-      prevIndex = i;
     }
 
-    if (prevIndex && prevIndex + 1 < input.length) {
-      const value = input.slice(prevIndex + 1);
-      parts.push(value);
+    const n = prevIndex !== undefined ? prevIndex + 1 : start;
+    const value = input.slice(n);
+    parts.push(value);
 
-      if (opts.tokens) {
-        tokens[tokens.length - 1].value = value;
-        depth(tokens[tokens.length - 1]);
-        state.maxDepth += tokens[tokens.length - 1].depth;
-      }
+    if (opts.tokens && prevIndex && prevIndex + 1 < input.length) {
+      tokens[tokens.length - 1].value = value;
+      depth(tokens[tokens.length - 1]);
+      state.maxDepth += tokens[tokens.length - 1].depth;
     }
 
     state.slashes = slashes;
@@ -27110,7 +27131,7 @@ module.exports = scan;
 
 /***/ }),
 
-/***/ 18055:
+/***/ 10365:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
@@ -27122,7 +27143,7 @@ const {
   REGEX_REMOVE_BACKSLASH,
   REGEX_SPECIAL_CHARS,
   REGEX_SPECIAL_CHARS_GLOBAL
-} = __nccwpck_require__(78039);
+} = __nccwpck_require__(31225);
 
 exports.isObject = val => val !== null && typeof val === 'object' && !Array.isArray(val);
 exports.hasRegexChars = str => REGEX_SPECIAL_CHARS.test(str);
@@ -298519,7 +298540,7 @@ function withoutProjectParserOptions(opts) {
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.getKeys = void 0;
-const eslint_visitor_keys_1 = __nccwpck_require__(22471);
+const eslint_visitor_keys_1 = __nccwpck_require__(12234);
 exports.getKeys = eslint_visitor_keys_1.getKeys;
 //# sourceMappingURL=get-keys.js.map
 
@@ -298580,7 +298601,7 @@ var __importStar = (this && this.__importStar) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.visitorKeys = void 0;
-const eslintVisitorKeys = __importStar(__nccwpck_require__(22471));
+const eslintVisitorKeys = __importStar(__nccwpck_require__(12234));
 /*
  ********************************** IMPORTANT NOTE ********************************
  *                                                                                *
@@ -414445,410 +414466,6 @@ exports.unionWith = unionWith;
 
 /***/ }),
 
-/***/ 22471:
-/***/ ((__unused_webpack_module, exports) => {
-
-"use strict";
-
-
-/* eslint-disable jsdoc/valid-types -- doesn't allow `readonly`.
-   TODO: remove eslint-disable when https://github.com/jsdoc-type-pratt-parser/jsdoc-type-pratt-parser/issues/164 is fixed
-*/
-/**
- * @typedef {{ readonly [type: string]: ReadonlyArray<string> }} VisitorKeys
- */
-/* eslint-enable jsdoc/valid-types -- doesn't allow `readonly string[]`. TODO: check why */
-
-/**
- * @type {VisitorKeys}
- */
-const KEYS = {
-    ArrayExpression: [
-        "elements"
-    ],
-    ArrayPattern: [
-        "elements"
-    ],
-    ArrowFunctionExpression: [
-        "params",
-        "body"
-    ],
-    AssignmentExpression: [
-        "left",
-        "right"
-    ],
-    AssignmentPattern: [
-        "left",
-        "right"
-    ],
-    AwaitExpression: [
-        "argument"
-    ],
-    BinaryExpression: [
-        "left",
-        "right"
-    ],
-    BlockStatement: [
-        "body"
-    ],
-    BreakStatement: [
-        "label"
-    ],
-    CallExpression: [
-        "callee",
-        "arguments"
-    ],
-    CatchClause: [
-        "param",
-        "body"
-    ],
-    ChainExpression: [
-        "expression"
-    ],
-    ClassBody: [
-        "body"
-    ],
-    ClassDeclaration: [
-        "id",
-        "superClass",
-        "body"
-    ],
-    ClassExpression: [
-        "id",
-        "superClass",
-        "body"
-    ],
-    ConditionalExpression: [
-        "test",
-        "consequent",
-        "alternate"
-    ],
-    ContinueStatement: [
-        "label"
-    ],
-    DebuggerStatement: [],
-    DoWhileStatement: [
-        "body",
-        "test"
-    ],
-    EmptyStatement: [],
-    ExperimentalRestProperty: [
-        "argument"
-    ],
-    ExperimentalSpreadProperty: [
-        "argument"
-    ],
-    ExportAllDeclaration: [
-        "exported",
-        "source",
-        "attributes"
-    ],
-    ExportDefaultDeclaration: [
-        "declaration"
-    ],
-    ExportNamedDeclaration: [
-        "declaration",
-        "specifiers",
-        "source",
-        "attributes"
-    ],
-    ExportSpecifier: [
-        "local",
-        "exported"
-    ],
-    ExpressionStatement: [
-        "expression"
-    ],
-    ForInStatement: [
-        "left",
-        "right",
-        "body"
-    ],
-    ForOfStatement: [
-        "left",
-        "right",
-        "body"
-    ],
-    ForStatement: [
-        "init",
-        "test",
-        "update",
-        "body"
-    ],
-    FunctionDeclaration: [
-        "id",
-        "params",
-        "body"
-    ],
-    FunctionExpression: [
-        "id",
-        "params",
-        "body"
-    ],
-    Identifier: [],
-    IfStatement: [
-        "test",
-        "consequent",
-        "alternate"
-    ],
-    ImportAttribute: [
-        "key",
-        "value"
-    ],
-    ImportDeclaration: [
-        "specifiers",
-        "source",
-        "attributes"
-    ],
-    ImportDefaultSpecifier: [
-        "local"
-    ],
-    ImportExpression: [
-        "source",
-        "options"
-    ],
-    ImportNamespaceSpecifier: [
-        "local"
-    ],
-    ImportSpecifier: [
-        "imported",
-        "local"
-    ],
-    JSXAttribute: [
-        "name",
-        "value"
-    ],
-    JSXClosingElement: [
-        "name"
-    ],
-    JSXClosingFragment: [],
-    JSXElement: [
-        "openingElement",
-        "children",
-        "closingElement"
-    ],
-    JSXEmptyExpression: [],
-    JSXExpressionContainer: [
-        "expression"
-    ],
-    JSXFragment: [
-        "openingFragment",
-        "children",
-        "closingFragment"
-    ],
-    JSXIdentifier: [],
-    JSXMemberExpression: [
-        "object",
-        "property"
-    ],
-    JSXNamespacedName: [
-        "namespace",
-        "name"
-    ],
-    JSXOpeningElement: [
-        "name",
-        "attributes"
-    ],
-    JSXOpeningFragment: [],
-    JSXSpreadAttribute: [
-        "argument"
-    ],
-    JSXSpreadChild: [
-        "expression"
-    ],
-    JSXText: [],
-    LabeledStatement: [
-        "label",
-        "body"
-    ],
-    Literal: [],
-    LogicalExpression: [
-        "left",
-        "right"
-    ],
-    MemberExpression: [
-        "object",
-        "property"
-    ],
-    MetaProperty: [
-        "meta",
-        "property"
-    ],
-    MethodDefinition: [
-        "key",
-        "value"
-    ],
-    NewExpression: [
-        "callee",
-        "arguments"
-    ],
-    ObjectExpression: [
-        "properties"
-    ],
-    ObjectPattern: [
-        "properties"
-    ],
-    PrivateIdentifier: [],
-    Program: [
-        "body"
-    ],
-    Property: [
-        "key",
-        "value"
-    ],
-    PropertyDefinition: [
-        "key",
-        "value"
-    ],
-    RestElement: [
-        "argument"
-    ],
-    ReturnStatement: [
-        "argument"
-    ],
-    SequenceExpression: [
-        "expressions"
-    ],
-    SpreadElement: [
-        "argument"
-    ],
-    StaticBlock: [
-        "body"
-    ],
-    Super: [],
-    SwitchCase: [
-        "test",
-        "consequent"
-    ],
-    SwitchStatement: [
-        "discriminant",
-        "cases"
-    ],
-    TaggedTemplateExpression: [
-        "tag",
-        "quasi"
-    ],
-    TemplateElement: [],
-    TemplateLiteral: [
-        "quasis",
-        "expressions"
-    ],
-    ThisExpression: [],
-    ThrowStatement: [
-        "argument"
-    ],
-    TryStatement: [
-        "block",
-        "handler",
-        "finalizer"
-    ],
-    UnaryExpression: [
-        "argument"
-    ],
-    UpdateExpression: [
-        "argument"
-    ],
-    VariableDeclaration: [
-        "declarations"
-    ],
-    VariableDeclarator: [
-        "id",
-        "init"
-    ],
-    WhileStatement: [
-        "test",
-        "body"
-    ],
-    WithStatement: [
-        "object",
-        "body"
-    ],
-    YieldExpression: [
-        "argument"
-    ]
-};
-
-// Types.
-const NODE_TYPES = Object.keys(KEYS);
-
-// Freeze the keys.
-for (const type of NODE_TYPES) {
-    Object.freeze(KEYS[type]);
-}
-Object.freeze(KEYS);
-
-/**
- * @author Toru Nagashima <https://github.com/mysticatea>
- * See LICENSE file in root directory for full license.
- */
-
-/**
- * @typedef {import('./visitor-keys.js').VisitorKeys} VisitorKeys
- */
-
-// List to ignore keys.
-const KEY_BLACKLIST = new Set([
-    "parent",
-    "leadingComments",
-    "trailingComments"
-]);
-
-/**
- * Check whether a given key should be used or not.
- * @param {string} key The key to check.
- * @returns {boolean} `true` if the key should be used.
- */
-function filterKey(key) {
-    return !KEY_BLACKLIST.has(key) && key[0] !== "_";
-}
-
-
-/* eslint-disable jsdoc/valid-types -- doesn't allow `readonly`.
-   TODO: remove eslint-disable when https://github.com/jsdoc-type-pratt-parser/jsdoc-type-pratt-parser/issues/164 is fixed
-*/
-/**
- * Get visitor keys of a given node.
- * @param {Object} node The AST node to get keys.
- * @returns {readonly string[]} Visitor keys of the node.
- */
-function getKeys(node) {
-    return Object.keys(node).filter(filterKey);
-}
-/* eslint-enable jsdoc/valid-types -- doesn't allow `readonly` */
-
-/**
- * Make the union set with `KEYS` and given keys.
- * @param {VisitorKeys} additionalKeys The additional keys.
- * @returns {VisitorKeys} The union set.
- */
-function unionWith(additionalKeys) {
-    const retv = /** @type {{ [type: string]: ReadonlyArray<string> }} */
-        (Object.assign({}, KEYS));
-
-    for (const type of Object.keys(additionalKeys)) {
-        if (Object.hasOwn(retv, type)) {
-            const keys = new Set(additionalKeys[type]);
-
-            for (const key of retv[type]) {
-                keys.add(key);
-            }
-
-            retv[type] = Object.freeze(Array.from(keys));
-        } else {
-            retv[type] = Object.freeze(Array.from(additionalKeys[type]));
-        }
-    }
-
-    return Object.freeze(retv);
-}
-
-exports.KEYS = KEYS;
-exports.getKeys = getKeys;
-exports.unionWith = unionWith;
-
-
-/***/ }),
-
 /***/ 12234:
 /***/ ((__unused_webpack_module, exports) => {
 
@@ -416336,7 +415953,7 @@ exports.version = version;
 
 /***/ }),
 
-/***/ 32384:
+/***/ 96234:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 //#region rolldown:runtime
@@ -416799,8 +416416,8 @@ var APIBuilder = class {
 let pm = null;
 /* c8 ignore next 6 */
 try {
-	/*require.resolve*/(19954);
-	pm = __nccwpck_require__(19954);
+	/*require.resolve*/(45496);
+	pm = __nccwpck_require__(45496);
 } catch {}
 var Builder = class {
 	globCache = {};
@@ -422298,8 +421915,8 @@ var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__ge
 let fs = __nccwpck_require__(79896);
 let path = __nccwpck_require__(16928);
 let url = __nccwpck_require__(87016);
-let fdir = __nccwpck_require__(32384);
-let picomatch = __nccwpck_require__(19954);
+let fdir = __nccwpck_require__(96234);
+let picomatch = __nccwpck_require__(45496);
 picomatch = __toESM(picomatch, 1);
 //#region src/utils.ts
 const isReadonlyArray = Array.isArray;
