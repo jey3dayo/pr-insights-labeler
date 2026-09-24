@@ -7,6 +7,7 @@ pre-commit:
   jobs:
     - name: prettier
       glob: "*.{ts,tsx,js,jsx,mjs,cjs,json,jsonc,md,yml,yaml}"
+      file_types: [not symlink]
       run: pnpm exec prettier --write --ignore-unknown --log-level warn {staged_files}
       stage_fixed: true
 
