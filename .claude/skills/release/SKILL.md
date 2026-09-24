@@ -243,6 +243,7 @@ For detailed release notes, see: https://github.com/jey3dayo/pr-insights-labeler
 - [vX.Y.Z-2](URL) - YYYY-MM-DD
 
 **Full Changelog**: <https://github.com/jey3dayo/pr-insights-labeler/compare/vPREV...vCURRENT>
+
 ```
 
 ### Step 7: Completion Report
