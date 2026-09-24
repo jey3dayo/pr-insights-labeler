@@ -5,7 +5,7 @@ GitHub Action that auto-labels pull requests by size, complexity, category, and 
 ## Entry Points
 
 - [README.md](README.md): Project overview and quick start.
-- [CLAUDE.md](CLAUDE.md): Development workflow, quality gates, and release conventions.
+- [AGENTS.md](AGENTS.md): Development workflow, quality gates, and release conventions.
 - [docs/README.md](docs/README.md): Documentation index by audience (Users / Maintainers).
 
 ## Source

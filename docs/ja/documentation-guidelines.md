@@ -117,7 +117,7 @@ pr-labeler/
 | README.md | EN | `category/documentation`, `audience/user` | プロジェクト概要・使用方法 | ✅ 作成済 |
 | README.ja.md | JA | `category/documentation`, `audience/user` | プロジェクト概要・使用方法（日本語） | ✅ 作成済 |
 | docs/README.md | EN/JA | `category/documentation`, `audience/user`, `audience/developer` | 言語別インデックス | ✅ 作成済 |
-| CLAUDE.md | EN | `category/documentation`, `audience/developer`, `environment/development` | Claude Code協働ガイド | ✅ 作成済 |
+| AGENTS.md | EN | `category/documentation`, `audience/developer`, `environment/development` | Claude Code協働ガイド | ✅ 作成済 |
 | docs/en/configuration.md | EN | `category/action`, `audience/user`, `audience/developer` | Action設定ガイド | ✅ 作成済 |
 | docs/en/advanced-usage.md | EN | `category/action`, `audience/developer` | 高度な使用例（英語） | ✅ 作成済 |
 | docs/en/labeling-rules.md | EN | `category/documentation`, `audience/developer`, `audience/contributor` | ラベル判定サマリ（英語） | ✅ 作成済 |
@@ -151,7 +151,7 @@ pr-labeler/
 
 - 本ガイドラインのメタデータ形式に従う
 - ドキュメント一覧表に追加
-- CLAUDE.mdの関連ドキュメントセクションを更新（必要な場合）
+- AGENTS.mdの関連ドキュメントセクションを更新（必要な場合）
 
 ### 3. タグの新規追加
 
