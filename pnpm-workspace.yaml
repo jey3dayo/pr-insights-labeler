@@ -1,6 +1,10 @@
 allowBuilds:
   esbuild: true
   unrs-resolver: true
+# pnpm does not enforce the pinned packageManager version; mise owns it.
+# Side effect: pnpm-lock.yaml stays a single YAML document
+# (https://github.com/pnpm/pnpm/issues/13805).
+pmOnFail: ignore
 overrides:
   undici: ">=6.27.0 <7"
   "picomatch@>=4.0.0 <4.0.4": ">=4.0.4"
