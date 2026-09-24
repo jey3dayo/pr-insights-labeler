@@ -15,8 +15,28 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
 const SCRIPT_PATH = resolve(__dirname, '../scripts/release.sh');
 
+// A parent process (notably a git hook, which exports GIT_DIR / GIT_WORK_TREE
+// / GIT_INDEX_FILE etc. to its children) can make every git invocation below
+// target the real repository instead of the disposable fixture repo. Strip
+// all inherited GIT_* variables and give the fixture its own throwaway
+// identity via GIT_AUTHOR_*/GIT_COMMITTER_* so nothing here can ever read or
+// write the real repo's config, refs, or history.
+function fixtureEnv(): NodeJS.ProcessEnv {
+  const env: NodeJS.ProcessEnv = {};
+  for (const [key, value] of Object.entries(process.env)) {
+    if (!key.startsWith('GIT_')) {
+      env[key] = value;
+    }
+  }
+  env.GIT_AUTHOR_NAME = 'Test';
+  env.GIT_AUTHOR_EMAIL = 'test@example.com';
+  env.GIT_COMMITTER_NAME = 'Test';
+  env.GIT_COMMITTER_EMAIL = 'test@example.com';
+  return env;
+}
+
 function git(cwd: string, args: string[]): void {
-  execFileSync('git', args, { cwd, stdio: 'ignore' });
+  execFileSync('git', args, { cwd, env: fixtureEnv(), stdio: 'ignore' });
 }
 
 function commit(cwd: string, message: string): void {
@@ -27,6 +47,7 @@ function runShellFunction(cwd: string, fn: string, args: string[]): string {
   const quotedArgs = args.map(arg => `'${arg.replace(/'/g, `'\\''`)}'`).join(' ');
   return execFileSync('bash', ['-c', `set -euo pipefail; source '${SCRIPT_PATH}'; ${fn} ${quotedArgs}`], {
     cwd,
+    env: fixtureEnv(),
     encoding: 'utf8',
   });
 }
