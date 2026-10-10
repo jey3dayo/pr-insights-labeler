@@ -1,6 +1,6 @@
 # ローカルフックの CI 相当ゲート
 # pre-commit: staged ファイルの自動整形のみ（高速）
-# pre-push:   .github/workflows/quality.yml の code-quality / docs-quality 相当
+# pre-push:   .github/workflows/quality.yml の code-quality / docs-quality 相当（+ workflow の jactionlint）
 
 pre-commit:
   parallel: true
@@ -65,3 +65,9 @@ pre-push:
         - "*.md"
         - ".markdownlint-cli2.jsonc"
       run: mise run docs:lint
+
+    - name: jactionlint
+      glob:
+        - ".github/workflows/*.{yml,yaml}"
+        - ".github/jactionlint.yaml"
+      run: jactionlint

@@ -56,7 +56,7 @@ jobs:
               fi
             fi
 
-            changed_files=$(git diff --name-only $base_ref..HEAD)
+            changed_files=$(git diff --name-only "$base_ref"..HEAD)
           else
             # pushの場合はGitHubコンテキストを使用
             before_sha="$BEFORE_SHA"
@@ -65,29 +65,29 @@ jobs:
             if [ -z "$before_sha" ] || [ "$before_sha" = "0000000000000000000000000000000000000000" ]; then
               # 初回コミットまたは空の場合は全ファイルを対象
               echo "Initial commit or empty before SHA detected, listing all files"
-              changed_files=$(git ls-tree -r --name-only $current_sha)
+              changed_files=$(git ls-tree -r --name-only "$current_sha")
             else
               # 通常のpushの場合
               echo "Using GitHub context: $before_sha..$current_sha"
 
               if ! git cat-file -e "$before_sha^{commit}" >/dev/null 2>&1; then
                 echo "Before SHA not present locally. Fetching from origin for fallback"
-                git fetch --no-tags --depth=1 origin $before_sha || true
+                git fetch --no-tags --depth=1 origin "$before_sha" || true
               fi
 
               if git cat-file -e "$before_sha^{commit}" >/dev/null 2>&1; then
-                if ! changed_files=$(git diff --name-only $before_sha..$current_sha); then
+                if ! changed_files=$(git diff --name-only "$before_sha".."$current_sha"); then
                   echo "Diff using GitHub context failed. Trying merge-base fallback"
-                  if ancestor=$(git merge-base $before_sha $current_sha 2>/dev/null); then
+                  if ancestor=$(git merge-base "$before_sha" "$current_sha" 2>/dev/null); then
                     echo "Using merge-base $ancestor"
-                    changed_files=$(git diff --name-only $ancestor..$current_sha)
+                    changed_files=$(git diff --name-only "$ancestor".."$current_sha")
                   else
                     echo "Merge-base unavailable. Falling back to parent commit"
                     if git rev-parse --verify "HEAD^" >/dev/null 2>&1; then
                       changed_files=$(git diff --name-only HEAD^..HEAD)
                     else
                       echo "No parent commit available, listing all files at HEAD"
-                      changed_files=$(git ls-tree -r --name-only $current_sha)
+                      changed_files=$(git ls-tree -r --name-only "$current_sha")
                     fi
                   fi
                 fi
@@ -97,7 +97,7 @@ jobs:
                   changed_files=$(git diff --name-only HEAD^..HEAD)
                 else
                   echo "No parent commit available, listing all files at HEAD"
-                  changed_files=$(git ls-tree -r --name-only $current_sha)
+                  changed_files=$(git ls-tree -r --name-only "$current_sha")
                 fi
               fi
             fi
@@ -115,19 +115,19 @@ jobs:
 
           # Markdownファイルの変更があるかチェック
           if [[ -n "$markdown_files" ]]; then
-            echo "markdown-changed=true" >> $GITHUB_OUTPUT
+            echo "markdown-changed=true" >> "$GITHUB_OUTPUT"
             echo "Markdown files have been changed"
           else
-            echo "markdown-changed=false" >> $GITHUB_OUTPUT
+            echo "markdown-changed=false" >> "$GITHUB_OUTPUT"
             echo "No markdown files changed"
           fi
 
           # docs-onlyの判定（Markdownファイルのみの変更）
           if [[ -n "$changed_files" && -z "$code_files" ]]; then
-            echo "docs-only=true" >> $GITHUB_OUTPUT
+            echo "docs-only=true" >> "$GITHUB_OUTPUT"
             echo "This is a docs-only change"
           else
-            echo "docs-only=false" >> $GITHUB_OUTPUT
+            echo "docs-only=false" >> "$GITHUB_OUTPUT"
             echo "This includes code changes"
           fi
 
@@ -148,11 +148,11 @@ jobs:
 
       - name: Check documentation quality
         run: |
-          echo "## 📝 Documentation Quality Check" >> $GITHUB_STEP_SUMMARY
+          echo "## 📝 Documentation Quality Check" >> "$GITHUB_STEP_SUMMARY"
           if mise run docs:check; then
-            echo "✅ Markdown lint and links check passed" >> $GITHUB_STEP_SUMMARY
+            echo "✅ Markdown lint and links check passed" >> "$GITHUB_STEP_SUMMARY"
           else
-            echo "⚠️ Some checks failed (non-blocking)" >> $GITHUB_STEP_SUMMARY
+            echo "⚠️ Some checks failed (non-blocking)" >> "$GITHUB_STEP_SUMMARY"
             # Link checkは警告のみ（失敗させない）
           fi
 
@@ -194,46 +194,46 @@ jobs:
 
       - name: Run linting
         run: |
-          echo "## 🔍 Code Linting" >> $GITHUB_STEP_SUMMARY
+          echo "## 🔍 Code Linting" >> "$GITHUB_STEP_SUMMARY"
           if pnpm lint; then
-            echo "✅ Linting passed" >> $GITHUB_STEP_SUMMARY
+            echo "✅ Linting passed" >> "$GITHUB_STEP_SUMMARY"
           else
-            echo "❌ Linting failed" >> $GITHUB_STEP_SUMMARY
+            echo "❌ Linting failed" >> "$GITHUB_STEP_SUMMARY"
             exit 1
           fi
 
       - name: Run type checking
         run: |
-          echo "## 📋 Type Checking" >> $GITHUB_STEP_SUMMARY
+          echo "## 📋 Type Checking" >> "$GITHUB_STEP_SUMMARY"
           if pnpm type-check; then
-            echo "✅ Type check passed" >> $GITHUB_STEP_SUMMARY
+            echo "✅ Type check passed" >> "$GITHUB_STEP_SUMMARY"
           else
-            echo "❌ Type check failed" >> $GITHUB_STEP_SUMMARY
+            echo "❌ Type check failed" >> "$GITHUB_STEP_SUMMARY"
             exit 1
           fi
 
       - name: Run tests
         run: |
-          echo "## 🧪 Tests" >> $GITHUB_STEP_SUMMARY
+          echo "## 🧪 Tests" >> "$GITHUB_STEP_SUMMARY"
           if pnpm test; then
-            echo "✅ All tests passed" >> $GITHUB_STEP_SUMMARY
+            echo "✅ All tests passed" >> "$GITHUB_STEP_SUMMARY"
           else
-            echo "❌ Some tests failed" >> $GITHUB_STEP_SUMMARY
+            echo "❌ Some tests failed" >> "$GITHUB_STEP_SUMMARY"
             exit 1
           fi
 
       - name: Check dependency violations
         continue-on-error: true
         run: |
-          echo "## 🔗 Dependency Cruiser" >> $GITHUB_STEP_SUMMARY
+          echo "## 🔗 Dependency Cruiser" >> "$GITHUB_STEP_SUMMARY"
           # Produce a JSON report for triage
           pnpm depcruise --output-type json > depcruise.json || true
           # Also run the default text reporter for console visibility (exit code governs the if)
           if pnpm depcruise; then
-            echo "✅ No dependency violations found" >> $GITHUB_STEP_SUMMARY
+            echo "✅ No dependency violations found" >> "$GITHUB_STEP_SUMMARY"
           else
-            echo "⚠️ Dependency violations detected (non-blocking)" >> $GITHUB_STEP_SUMMARY
-            echo "See Issue #43 for remediation plan" >> $GITHUB_STEP_SUMMARY
+            echo "⚠️ Dependency violations detected (non-blocking)" >> "$GITHUB_STEP_SUMMARY"
+            echo "See Issue #43 for remediation plan" >> "$GITHUB_STEP_SUMMARY"
           fi
 
       - name: Upload depcruise report
@@ -246,11 +246,11 @@ jobs:
 
       - name: Build action
         run: |
-          echo "## 📦 Build" >> $GITHUB_STEP_SUMMARY
+          echo "## 📦 Build" >> "$GITHUB_STEP_SUMMARY"
           if pnpm build; then
-            echo "✅ Build passed" >> $GITHUB_STEP_SUMMARY
+            echo "✅ Build passed" >> "$GITHUB_STEP_SUMMARY"
           else
-            echo "❌ Build failed" >> $GITHUB_STEP_SUMMARY
+            echo "❌ Build failed" >> "$GITHUB_STEP_SUMMARY"
             exit 1
           fi
 
@@ -290,17 +290,17 @@ jobs:
 
       - name: Run integration tests
         run: |
-          echo "## 🔬 Integration Tests (Node ${{ matrix.node-version }})" >> $GITHUB_STEP_SUMMARY
+          echo "## 🔬 Integration Tests (Node ${{ matrix.node-version }})" >> "$GITHUB_STEP_SUMMARY"
           if pnpm test:vitest __tests__/integration.test.ts; then
-            echo "✅ Integration tests passed" >> $GITHUB_STEP_SUMMARY
+            echo "✅ Integration tests passed" >> "$GITHUB_STEP_SUMMARY"
           else
-            echo "❌ Integration tests failed" >> $GITHUB_STEP_SUMMARY
+            echo "❌ Integration tests failed" >> "$GITHUB_STEP_SUMMARY"
             exit 1
           fi
 
       - name: Verify dist/ build
         run: |
-          echo "## 📦 Verify dist/ Build" >> $GITHUB_STEP_SUMMARY
+          echo "## 📦 Verify dist/ Build" >> "$GITHUB_STEP_SUMMARY"
 
           # 既存のdist/をバックアップ
           cp -r dist/ dist-backup/
@@ -316,11 +316,13 @@ jobs:
             -x "*.d.ts" \
             -x "*.d.ts.map" \
             dist/ dist-backup/ > /dev/null 2>&1; then
-            echo "✅ dist/ is up to date" >> $GITHUB_STEP_SUMMARY
+            echo "✅ dist/ is up to date" >> "$GITHUB_STEP_SUMMARY"
           else
-            echo "⚠️ dist/ differs from committed version" >> $GITHUB_STEP_SUMMARY
-            echo "Run \`pnpm build\` and commit the changes" >> $GITHUB_STEP_SUMMARY
-            echo "(non-deterministic files are excluded: *.map, *.d.ts, *.d.ts.map)" >> $GITHUB_STEP_SUMMARY
+            {
+              echo "⚠️ dist/ differs from committed version"
+              echo "Run \`pnpm build\` and commit the changes"
+              echo "(non-deterministic files are excluded: *.map, *.d.ts, *.d.ts.map)"
+            } >> "$GITHUB_STEP_SUMMARY"
             diff -r -x "*.map" -x "*.d.ts" -x "*.d.ts.map" dist/ dist-backup/ || true
             exit 1
           fi
@@ -379,71 +381,71 @@ jobs:
           integration_result="${{ needs.integration-test.result }}"
           self_check_result="${{ needs.self-check.result }}"
 
-          echo "## 🎯 Quality Gate Summary" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "## 🎯 Quality Gate Summary" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
 
           if [[ "$docs_only" == "true" ]]; then
             # ドキュメントのみの変更
-            echo "📝 **Documentation-only PR detected**" >> $GITHUB_STEP_SUMMARY
+            echo "📝 **Documentation-only PR detected**" >> "$GITHUB_STEP_SUMMARY"
 
             if [[ "$docs_result" == "success" ]] || [[ "$docs_result" == "skipped" ]]; then
-              echo "✅ Documentation quality checks passed" >> $GITHUB_STEP_SUMMARY
-              echo "result=success" >> $GITHUB_OUTPUT
+              echo "✅ Documentation quality checks passed" >> "$GITHUB_STEP_SUMMARY"
+              echo "result=success" >> "$GITHUB_OUTPUT"
               exit 0
             else
-              echo "❌ Documentation quality checks failed" >> $GITHUB_STEP_SUMMARY
-              echo "result=failure" >> $GITHUB_OUTPUT
+              echo "❌ Documentation quality checks failed" >> "$GITHUB_STEP_SUMMARY"
+              echo "result=failure" >> "$GITHUB_OUTPUT"
               exit 1
             fi
           else
             # コード変更を含む
-            echo "💻 **Code changes detected**" >> $GITHUB_STEP_SUMMARY
+            echo "💻 **Code changes detected**" >> "$GITHUB_STEP_SUMMARY"
 
             all_success=true
 
             # コード品質チェック結果
             if [[ "$code_result" == "success" ]]; then
-              echo "✅ Code quality checks passed" >> $GITHUB_STEP_SUMMARY
+              echo "✅ Code quality checks passed" >> "$GITHUB_STEP_SUMMARY"
             else
-              echo "❌ Code quality checks failed" >> $GITHUB_STEP_SUMMARY
+              echo "❌ Code quality checks failed" >> "$GITHUB_STEP_SUMMARY"
               all_success=false
             fi
 
             # 統合テスト結果
             if [[ "$integration_result" == "success" ]]; then
-              echo "✅ Integration tests passed" >> $GITHUB_STEP_SUMMARY
+              echo "✅ Integration tests passed" >> "$GITHUB_STEP_SUMMARY"
             else
-              echo "❌ Integration tests failed" >> $GITHUB_STEP_SUMMARY
+              echo "❌ Integration tests failed" >> "$GITHUB_STEP_SUMMARY"
               all_success=false
             fi
 
             # 自己チェック結果（PR時のみ）
             if [[ "$self_check_result" == "success" ]]; then
-              echo "✅ PR Insights Labeler self-check passed" >> $GITHUB_STEP_SUMMARY
+              echo "✅ PR Insights Labeler self-check passed" >> "$GITHUB_STEP_SUMMARY"
             elif [[ "$self_check_result" == "failure" ]]; then
-              echo "❌ PR Insights Labeler self-check failed" >> $GITHUB_STEP_SUMMARY
+              echo "❌ PR Insights Labeler self-check failed" >> "$GITHUB_STEP_SUMMARY"
               all_success=false
             fi
 
             # Markdownファイルも変更されている場合
             if [[ "$markdown_changed" == "true" ]]; then
               if [[ "$docs_result" == "success" ]]; then
-                echo "✅ Documentation quality checks passed" >> $GITHUB_STEP_SUMMARY
+                echo "✅ Documentation quality checks passed" >> "$GITHUB_STEP_SUMMARY"
               else
-                echo "❌ Documentation quality checks failed" >> $GITHUB_STEP_SUMMARY
+                echo "❌ Documentation quality checks failed" >> "$GITHUB_STEP_SUMMARY"
                 all_success=false
               fi
             fi
 
             if [[ "$all_success" == "true" ]]; then
-              echo "" >> $GITHUB_STEP_SUMMARY
-              echo "## ✅ All quality checks passed!" >> $GITHUB_STEP_SUMMARY
-              echo "result=success" >> $GITHUB_OUTPUT
+              echo "" >> "$GITHUB_STEP_SUMMARY"
+              echo "## ✅ All quality checks passed!" >> "$GITHUB_STEP_SUMMARY"
+              echo "result=success" >> "$GITHUB_OUTPUT"
               exit 0
             else
-              echo "" >> $GITHUB_STEP_SUMMARY
-              echo "## ❌ Some quality checks failed" >> $GITHUB_STEP_SUMMARY
-              echo "result=failure" >> $GITHUB_OUTPUT
+              echo "" >> "$GITHUB_STEP_SUMMARY"
+              echo "## ❌ Some quality checks failed" >> "$GITHUB_STEP_SUMMARY"
+              echo "result=failure" >> "$GITHUB_OUTPUT"
               exit 1
             fi
           fi

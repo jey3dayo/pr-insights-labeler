@@ -11,6 +11,7 @@ _.path = ['./node_modules/.bin']
 node = "24.12"
 fd = 'latest'
 lefthook = "latest"
+"github:jdx/jactionlint" = "2.1.0"
 
 [tasks]
 # === 統合タスク ===
