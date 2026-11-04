@@ -233,6 +233,17 @@ git push origin v1.0.0
 git push origin v1 --force
 ```
 
+### Step 8: actions.lock の更新（`v1` を動かした場合）
+
+`released-action-check.yml` は公開済み `@v1` を smoke する。リリースで `v1` タグを進めたあと、lock が古い commit のままだと CI は旧バンドルを検証し続ける。partial ref（`@v1`）は通常の `mise run actions-lock:generate` では locked commit が進まないため、`--relock` を使う:
+
+```bash
+mise run actions-lock:relock
+git add .github/workflows/actions.lock
+git commit -m "chore: relock actions after v1 release"
+git push origin main
+```
+
 ---
 
 ## GitHub Releaseの作成

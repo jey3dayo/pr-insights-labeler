@@ -98,9 +98,16 @@ run = "act pull_request -W .github/workflows/test.yml"
 # setup-node-env だけ手で $/ にしている。ルートの ./ は remote action を使わないので lock の対象外で問題ない。
 # --no-narrow: released-action-check.yml は公開済みの浮動タグ @v1 を検証する目的なので @v1 のまま残す
 [tasks."actions-lock:generate"]
-description = "actions.lock を生成して検証"
+description = "actions.lock を生成して検証（workflow の uses: 変更時）"
 run = [
   "gh-actions-lock --no-narrow --no-interactive",
+  "gh-actions-lock --verify",
+]
+
+[tasks."actions-lock:relock"]
+description = "浮動タグ（@v1 等）が指す commit を lock へ反映（リリースで v1 を動かした後）"
+run = [
+  "gh-actions-lock --relock --no-narrow --no-interactive",
   "gh-actions-lock --verify",
 ]
 

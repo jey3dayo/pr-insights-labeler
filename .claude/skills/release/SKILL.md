@@ -259,6 +259,15 @@ git tag -l "v*" | sort -V | tail -5
 gh run list --branch main --limit 3
 ```
 
+After advancing the major-version tag (`v1`, `v2`, …), update `.github/workflows/actions.lock` so `released-action-check.yml`'s `@v1` pin matches the new release. Partial refs are not advanced by `mise run actions-lock:generate`; use relock instead:
+
+```bash
+mise run actions-lock:relock
+git add .github/workflows/actions.lock
+git commit -m "chore: relock actions after v1 release"
+git push origin main
+```
+
 ## Options
 
 These apply to both the manual workflow and any agent-driven invocation of this skill:

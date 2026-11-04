@@ -78,6 +78,8 @@ CIチェックが失敗した場合は修正してから再度プッシュする
 
 手動手順とメジャータグ（`v1`）の更新を含む詳細: [docs/ja/release-process.md](docs/ja/release-process.md)
 
+リリースで `v1` タグを進めたあとは、`released-action-check.yml` の `@v1` が lock に反映されるよう `mise run actions-lock:relock` を実行し、生成された `.github/workflows/actions.lock` を main にコミットする（`actions-lock:generate` では partial ref の locked commit は進まない）。
+
 ## Development Rules
 
 1. Local validation first: 上記「1. ローカル品質保証」を push 前に通す
