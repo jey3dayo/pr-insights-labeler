@@ -10,6 +10,11 @@
 # 警告として処理される（ジョブは失敗しない）。read 権限を write へ
 # 戻すと PR のラベルが self-check と別に書き換わるので戻さないこと。
 # ラベル付与は self-check が担う。
+#
+# @v1 も .github/workflows/actions.lock で commit 固定される。リリースで v1 を
+# 動かしたら `mise run actions-lock:relock` で lock を現在の @v1 に進めること
+# （`--no-narrow` 付きの通常 generate は partial ref の locked commit を維持する。
+# `--verify` だけでは不足。gh-actions-lock v0.4.0 の ref-moved 参照）。
 name: Released Action Check
 
 on:
@@ -30,8 +35,8 @@ jobs:
     steps:
       # ファイル単位の size/lines 解析は working directory を読むため、
       # checkout が無いと解析が空振りして smoke check として成立しない。
-      # 補助ステップは full commit SHA で固定する（actions/checkout v7.0.1）
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      # 補助ステップの commit は .github/workflows/actions.lock で固定している
+      - uses: actions/checkout@v7.0.1
         with:
           fetch-depth: 0
 

@@ -71,3 +71,9 @@ pre-push:
         - ".github/workflows/*.{yml,yaml}"
         - ".github/jactionlint.yaml"
       run: jactionlint
+
+    - name: actions-lock
+      glob:
+        - ".github/**"
+        - "mise.toml"
+      run: mise run actions-lock:verify

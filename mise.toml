@@ -11,7 +11,11 @@ _.path = ['./node_modules/.bin']
 node = "26.12"
 fd = 'latest'
 lefthook = "latest"
-"github:jdx/jactionlint" = "2.1.0"
+"github:jdx/jactionlint" = "2.3.0"
+gh-actions-lock = { version = "0.4.0", bin = "gh-actions-lock" }
+
+[tool_alias]
+gh-actions-lock = "github:github/gh-actions-lock"
 
 [tasks]
 # === 統合タスク ===
@@ -87,6 +91,29 @@ run = "pnpx markdownlint-cli2 --fix '**/*.md'"
 [tasks."action:test"]
 description = "GitHub Actionをローカルでテスト実行"
 run = "act pull_request -W .github/workflows/test.yml"
+
+# ローカル action の扱い:
+# test-pr-labeler.yml は `gh pr checkout` で別 PR のコードに切り替えてから `uses: ./` を実行するため、
+# ./ を $/ (workflow と同じ commit) に移行すると意味が変わる。--migrate-local-actions は使わず、
+# setup-node-env だけ手で $/ にしている。ルートの ./ は remote action を使わないので lock の対象外で問題ない。
+# --no-narrow: released-action-check.yml は公開済みの浮動タグ @v1 を検証する目的なので @v1 のまま残す
+[tasks."actions-lock:generate"]
+description = "actions.lock を生成して検証（workflow の uses: 変更時）"
+run = [
+  "gh-actions-lock --no-narrow --no-interactive",
+  "gh-actions-lock --verify",
+]
+
+[tasks."actions-lock:relock"]
+description = "浮動タグ（@v1 等）が指す commit を lock へ反映（リリースで v1 を動かした後）"
+run = [
+  "gh-actions-lock --relock --no-narrow --no-interactive",
+  "gh-actions-lock --verify",
+]
+
+[tasks."actions-lock:verify"]
+description = "actions.lock がすべての workflow をカバーしているか検証"
+run = "gh-actions-lock --verify-local"
 
 # === クリーンアップ ===
 [tasks.clean]
