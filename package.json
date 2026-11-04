@@ -12,7 +12,7 @@
   "engines": {
     "node": ">=24"
   },
-  "packageManager": "pnpm@12.15.0",
+  "packageManager": "pnpm@12.16.1",
   "main": "dist/index.js",
   "scripts": {
     "generate:i18n-types": "tsx scripts/generate-i18n-types.ts",
@@ -41,12 +41,12 @@
   "dependencies": {
     "@actions/core": "^3.0.1",
     "@actions/github": "^9.1.1",
-    "@typescript-eslint/parser": "^8.72.0",
+    "@typescript-eslint/parser": "^8.72.1",
     "bytes": "^3.1.2",
     "eslint": "^10.13.0",
-    "i18next": "^26.5.6",
+    "i18next": "26.5.11",
     "js-yaml": "^5.5.0",
-    "minimatch": "^10.2.6",
+    "minimatch": "11.0.1",
     "neverthrow": "^8.2.0",
     "p-limit": "3.1.0"
   },
@@ -63,13 +63,13 @@
     "eslint-plugin-import-x": "^4.17.1",
     "eslint-plugin-neverthrow": "^1.1.4",
     "eslint-plugin-simple-import-sort": "^14.0.0",
-    "knip": "^6.42.1",
+    "knip": "~6.43.0",
     "npm-run-all": "^4.1.5",
     "prettier": "^3.9.10",
     "rimraf": "^6.1.3",
     "tsx": "^4.23.15",
     "typescript": "^5.9.3",
-    "typescript-eslint": "^8.72.0",
+    "typescript-eslint": "^8.72.1",
     "vitest": "^5.0.5"
   },
   "keywords": [
