@@ -236,7 +236,6 @@ jobs:
           fi
 
       - name: Check dependency violations
-        continue-on-error: true
         run: |
           echo "## 🔗 Dependency Cruiser" >> "$GITHUB_STEP_SUMMARY"
           # Produce a JSON report for triage
@@ -245,8 +244,8 @@ jobs:
           if pnpm depcruise; then
             echo "✅ No dependency violations found" >> "$GITHUB_STEP_SUMMARY"
           else
-            echo "⚠️ Dependency violations detected (non-blocking)" >> "$GITHUB_STEP_SUMMARY"
-            echo "See Issue #43 for remediation plan" >> "$GITHUB_STEP_SUMMARY"
+            echo "❌ Dependency violations detected" >> "$GITHUB_STEP_SUMMARY"
+            exit 1
           fi
 
       - name: Upload depcruise report

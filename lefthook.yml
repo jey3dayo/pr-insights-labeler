@@ -39,6 +39,12 @@ pre-push:
         - "package.json"
       run: pnpm type-check
 
+    - name: depcruise
+      glob:
+        - "src/**/*.ts"
+        - ".dependency-cruiser.js"
+      run: pnpm depcruise
+
     - name: test
       glob:
         - "{src,__tests__}/**/*.ts"
