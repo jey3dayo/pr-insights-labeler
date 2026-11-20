@@ -43,7 +43,7 @@ dependencies:
         repo_id: 738284564
     'jey3dayo/pr-insights-labeler@v1':
         ref: 'v1'
-        commit: 'sha1-19045111c0318d811e60d49706878074df2c3593'
+        commit: 'sha1-53b86a7299383618defd52c9c77b9b2fb1b18a89'
         owner_id: 16203828
         repo_id: 1076550331
     'pnpm/action-setup@v6.1.0':
