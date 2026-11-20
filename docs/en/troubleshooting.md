@@ -60,7 +60,7 @@ jobs:
       contents: read        # File reading
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - uses: jey3dayo/pr-insights-labeler@v1
         with:
@@ -84,7 +84,7 @@ jobs:
       contents: read
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0
 
