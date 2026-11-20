@@ -4,10 +4,6 @@
 
 import type { AnalysisOptions, LabelerConfig } from '../types/config.js';
 import { DEFAULT_CATEGORIES } from './categories.js';
-import { DEFAULT_EXCLUDE_PATTERNS } from './default-excludes.js';
-
-// Re-export for backward compatibility
-export { DEFAULT_EXCLUDE_PATTERNS };
 
 /**
  * Default analysis options for complexity calculation

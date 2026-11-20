@@ -15,14 +15,6 @@ import {
 import { parseSize } from '../parsers/size-parser.js';
 
 export type { SizeThresholds } from '../parsers/action-input-parsers.js';
-export {
-  parseBoolean,
-  parseBooleanStrict,
-  parseCommentMode,
-  parseComplexityThresholdsV2,
-  parseExcludePatterns,
-  parseSizeThresholds,
-} from '../parsers/action-input-parsers.js';
 
 /**
  * Normalized action inputs after validation (excluding githubToken/language)

@@ -28,7 +28,7 @@
     "test:ui": "vitest --ui",
     "test:coverage": "vitest run --coverage",
     "test:quick": "run-p eslint type-check",
-    "lint": "run-p eslint type-check prettier",
+    "lint": "run-p eslint type-check prettier knip",
     "eslint": "eslint . --cache --cache-strategy content",
     "eslint:fix": "eslint . --fix --cache --cache-strategy content",
     "type-check": "tsc --noEmit",
@@ -53,7 +53,6 @@
   "devDependencies": {
     "@eslint/js": "^10.0.1",
     "@types/bytes": "^3.1.6",
-    "@types/js-yaml": "^4.0.9",
     "@types/node": "^26.6.6",
     "@vercel/ncc": "^0.45.0",
     "@vitest/coverage-v8": "^5.1.0",
