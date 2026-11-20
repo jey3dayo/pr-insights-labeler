@@ -226,8 +226,10 @@ The quality gates (`fail_on_*`) are disabled by default. The sample below enable
 Contributions welcome! Please:
 
 1. Open an issue for major changes
-2. Ensure all tests pass (`pnpm test`)
+2. Run the full local gate before pushing: `mise run ci` (or `pnpm lint && pnpm test && pnpm build`). Git hooks are managed by lefthook and installed via `pnpm install` after `mise install`
 3. Follow existing code style
+
+Development rules, the PR workflow, and the release process are documented in [AGENTS.md](AGENTS.md).
 
 ### For Maintainers: Releasing
 
