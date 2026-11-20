@@ -23,8 +23,8 @@ export type {
   Violations,
 } from './types.js';
 
-// Export BaseError and ErrorLevel
-export { BaseError, type ErrorLevel } from './base-error.js';
+// Export ErrorLevel (BaseError is imported directly from base-error.js by consumers)
+export { type ErrorLevel } from './base-error.js';
 
 // Export all factory functions
 export {
@@ -39,7 +39,6 @@ export {
   createPatternError,
   createPermissionError,
   createRateLimitError,
-  createUnexpectedError,
   createViolationError,
 } from './factories.js';
 
@@ -55,7 +54,7 @@ export {
 } from './guards.js';
 
 // Export error helper functions
-export { ensureError, extractAggregateError } from './helpers.js';
+export { ensureError } from './helpers.js';
 
 // Export AppError utilities
 export { formatAppError, toAppError } from './app-error-utils.js';

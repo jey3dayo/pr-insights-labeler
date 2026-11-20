@@ -9,14 +9,6 @@ import type { ConfigurationError, ParseError } from './errors/index.js';
 import { normalizeActionInputStrings, type NormalizedActionInputs } from './input/input-normalizer.js';
 
 export type { SizeThresholds } from './input/input-normalizer.js';
-export {
-  parseBoolean,
-  parseBooleanStrict,
-  parseCommentMode,
-  parseComplexityThresholdsV2,
-  parseExcludePatterns,
-  parseSizeThresholds,
-} from './input/input-normalizer.js';
 
 /**
  * Internal configuration (camelCase, parsed)

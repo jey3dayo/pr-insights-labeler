@@ -259610,7 +259610,7 @@ module.exports = Queue;
 
 /***/ }),
 
-/***/ 11540:
+/***/ 43109:
 /***/ ((__unused_webpack_module, __unused_webpack___webpack_exports__, __nccwpck_require__) => {
 
 "use strict";
@@ -266677,20 +266677,6 @@ const RISK_LABELS = {
     medium: 'risk/medium',
 };
 
-;// CONCATENATED MODULE: ./src/errors/base-error.ts
-class BaseError extends Error {
-    errorLevel;
-    constructor(message, errorLevel = 'warning', options) {
-        super(message, options);
-        Object.setPrototypeOf(this, new.target.prototype);
-        this.name = new.target.name;
-        this.errorLevel = errorLevel;
-        if (Error.captureStackTrace) {
-            Error.captureStackTrace(this, new.target);
-        }
-    }
-}
-
 ;// CONCATENATED MODULE: ./node_modules/.pnpm/i18next@27.1.1_typescript@5.9.3/node_modules/i18next/dist/esm/i18next.js
 const isString = obj => typeof obj === 'string';
 const defer = () => {
@@ -269574,7 +269560,6 @@ function formatAppError(error) {
 
 
 
-
 ;// CONCATENATED MODULE: ./src/actions-io.ts
 
 
@@ -270552,8 +270537,6 @@ const DEFAULT_CATEGORIES = [
 ];
 
 ;// CONCATENATED MODULE: ./src/configs/default-config.ts
-
-
 
 const DEFAULT_ANALYSIS_OPTIONS = {
     concurrency: 8,
@@ -275791,7 +275774,6 @@ function fetchRepositoryConfig(params) {
 ;// CONCATENATED MODULE: ./src/configs/index.ts
 
 
-
 ;// CONCATENATED MODULE: ./src/labeler-types.ts
 
 
@@ -280166,7 +280148,6 @@ function parseSize(input) {
 }
 
 ;// CONCATENATED MODULE: ./src/input/input-normalizer.ts
-
 
 
 
@@ -426934,7 +426915,7 @@ module.exports = {"rE":"2.7.0"};
 /******/ 	// module cache are used so entry inlining is disabled
 /******/ 	// startup
 /******/ 	// Load entry module and return exports
-/******/ 	var __webpack_exports__ = __nccwpck_require__(11540);
+/******/ 	var __webpack_exports__ = __nccwpck_require__(43109);
 /******/ 	module.exports = __webpack_exports__;
 /******/ 	
 /******/ })()
