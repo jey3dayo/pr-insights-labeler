@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.15.2] - 2026-11-20
+
+### 🐛 Fixed
+
+- warn with the reason when `.github/pr-labeler.yml` cannot be loaded or fails validation, instead of silently falling back to the default configuration. Fetch failures other than "file not found" (for example, GitHub API permission or rate-limit errors) were silent too, so a written configuration — including a `dry_run: true` setting — could be ignored without any trace in the log (#185)
+
+### 🔄 Changed
+
+- update dependencies (i18next 27, vitest 5.1, eslint 10.14, knip 6.45, and others) following the 7-day adoption rule (#182)
+- remove unused exports flagged by knip, and gate knip in `pnpm lint` so unused exports and dependencies fail CI (#183)
+- gate CI on dependency-cruiser violations: the check in quality.yml is no longer `continue-on-error`, and lefthook's pre-push runs the same check locally (#189)
+- documentation: fill in the empty "Customize" section in the READMEs, fix the non-existent `category/docs` label name and the broken `recommended.yml` reference, note that the `fail_on_*` quality gates are disabled by default in the Common Options samples (#184), point the Contributing section at AGENTS.md and the full local gate (#186), and bump the user-facing `actions/checkout` samples from v4 to v7 (#187)
+
 ## [1.15.1] - 2026-09-15
 
 ### 🐛 Fixed
@@ -612,6 +625,7 @@ PRメトリクス分析に基づいた高度な自動ラベル付け機能を追
 
 [1.0.1]: https://github.com/jey3dayo/pr-insights-labeler/releases/tag/v1.0.1
 [1.0.0]: https://github.com/jey3dayo/pr-insights-labeler/releases/tag/v1.0.0
+[1.15.2]: https://github.com/jey3dayo/pr-insights-labeler/releases/tag/v1.15.2
 [1.15.1]: https://github.com/jey3dayo/pr-insights-labeler/releases/tag/v1.15.1
 [1.15.0]: https://github.com/jey3dayo/pr-insights-labeler/releases/tag/v1.15.0
 [1.14.0]: https://github.com/jey3dayo/pr-insights-labeler/releases/tag/v1.14.0
