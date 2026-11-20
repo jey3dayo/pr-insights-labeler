@@ -90,7 +90,7 @@ run = "pnpx markdownlint-cli2 --fix '**/*.md'"
 # === GitHub Actions ===
 [tasks."action:test"]
 description = "GitHub Actionをローカルでテスト実行"
-run = "act pull_request -W .github/workflows/test.yml"
+run = "act pull_request -W .github/workflows/test-pr-labeler.yml"
 
 # ローカル action の扱い:
 # test-pr-labeler.yml は `gh pr checkout` で別 PR のコードに切り替えてから `uses: ./` を実行するため、
