@@ -430,7 +430,7 @@ PR Insights Labelerの詳細なAPI仕様書です。
         en: 'Test Files'
         ja: 'テストファイル'
 
-    - label: 'category/docs'
+    - label: 'category/documentation'
       patterns:
         - 'docs/**'
         - '**/*.md'

@@ -67,7 +67,7 @@ jobs:
 設定後、すべてのPRに自動的に以下が付与されます:
 
 - **サイズラベル**: `size/small`, `size/medium`, `size/large`, `size/xlarge`, `size/xxlarge`
-- **カテゴリラベル**: `category/tests`, `category/docs`, `category/ci-cd`, `category/dependencies` など
+- **カテゴリラベル**: `category/tests`, `category/documentation`, `category/ci-cd`, `category/dependencies` など
 - **リスクラベル**: `risk/high`, `risk/medium`（リスク検出時のみ）
 - **複雑度ラベル**: ESLint複雑度が閾値を超えた場合に `complexity/high`（有効化時）
 - **GitHub Actions Summary**: CI結果ページにメトリクス・違反一覧・ベストプラクティスを表示
@@ -80,7 +80,9 @@ PRに自動適用されるラベルは次のように表示されます（GitHub
 
 ### 3. カスタマイズ（オプション）
 
-### ワークフローサンプル
+しきい値・ラベル・品質ゲートはすべて、ワークフローの input、設定ファイル `.github/pr-labeler.yml`、パスベースのルール `.github/directory-labeler.yml` で調整できます。まず下のサンプルから始め、詳細は[設定ガイド](docs/en/configuration.md)を参照してください。
+
+#### ワークフローサンプル
 
 - [basic.yml](examples/workflows/basic.yml) - デフォルト設定
 - [advanced.yml](examples/workflows/advanced.yml) - オプション機能付き
@@ -164,6 +166,8 @@ PR変更の潜在的な影響と安全性を評価:
 
 ### 主要オプション
 
+品質ゲート（`fail_on_*`）はデフォルトでは無効です。以下のサンプルは有効化した例なので、そのままコピーすると上限超過でワークフローが失敗します。
+
 ```yaml
 - uses: jey3dayo/pr-insights-labeler@v1
   with:
@@ -185,7 +189,7 @@ PR変更の潜在的な影響と安全性を評価:
     risk_enabled: "true"          # リスクラベル有効化
     complexity_enabled: "false"   # 複雑度ラベル（デフォルトOFF）
 
-    # 品質ゲート
+    # 品質ゲート（デフォルト無効。以下は有効化する値）
     fail_on_pr_size: "xlarge"     # PRが大きすぎる場合に失敗
     fail_on_large_files: "true"   # ファイルが制限超過時に失敗
     fail_on_too_many_files: "true" # 変更ファイル数が多すぎる場合に失敗
