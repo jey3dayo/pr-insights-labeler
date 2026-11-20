@@ -34,11 +34,15 @@ let isI18nInitialized = false;
  */
 /**
  * BoundTFunction type represents a simplified translation function signature.
- * Note: Type assertion `as BoundTFunction` is used when binding i18next.t
+ * Note: Type assertion `as unknown as BoundTFunction` is used when binding i18next.t
  * due to i18next's complex method overloading that makes type inference difficult.
  * This is a technical constraint of the i18next library's type definitions.
  */
 type BoundTFunction = (key: string, options?: TOptions) => string;
+
+function bindTFunction(): BoundTFunction {
+  return i18next.t.bind(i18next) as unknown as BoundTFunction;
+}
 
 let cachedTFunction: BoundTFunction | null = null;
 
@@ -110,7 +114,7 @@ export function initializeI18n(language: LanguageCode): Result<void, Configurati
 
       // アプリケーション側のフラグを先に更新（changeLanguage()がisI18nInitializedをチェックするため）
       isI18nInitialized = true;
-      cachedTFunction = i18next.t.bind(i18next) as BoundTFunction;
+      cachedTFunction = bindTFunction();
 
       const currentLang = getCurrentLanguage();
       if (currentLang !== language) {
@@ -144,7 +148,7 @@ export function initializeI18n(language: LanguageCode): Result<void, Configurati
     // 初期化完了後にフラグとキャッシュを設定
     // 静的リソースの場合、init()呼び出し後すぐにt()が使用可能になる
     isI18nInitialized = true;
-    cachedTFunction = i18next.t.bind(i18next) as BoundTFunction;
+    cachedTFunction = bindTFunction();
 
     core.debug('[i18n] Initialization completed successfully');
     return ok(undefined);
@@ -233,11 +237,11 @@ export function changeLanguage(lang: LanguageCode): void {
   // Make the new language observable synchronously for callers/tests.
   // i18next may switch asynchronously in Node, so set the visible state first.
   i18next.language = lang;
-  cachedTFunction = i18next.t.bind(i18next) as BoundTFunction;
+  cachedTFunction = bindTFunction();
 
   // Kick the real language change; update t() again on completion (if async).
   const result = i18next.changeLanguage(lang, () => {
-    cachedTFunction = i18next.t.bind(i18next) as BoundTFunction;
+    cachedTFunction = bindTFunction();
   });
   // Check if result is a Promise using type guard
   if (result && isPromise(result)) {

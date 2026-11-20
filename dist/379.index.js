@@ -1,9 +1,9 @@
 "use strict";
-exports.id = 157;
-exports.ids = [157];
+exports.id = 379;
+exports.ids = [379];
 exports.modules = {
 
-/***/ 79157:
+/***/ 6379:
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
 
@@ -14,7 +14,7 @@ __webpack_require__.d(__webpack_exports__, {
 
 // UNUSED EXPORTS: Hfs, NodeHfs, NodeHfsImpl
 
-;// CONCATENATED MODULE: ./node_modules/.pnpm/@humanfs+core@0.19.1/node_modules/@humanfs/core/src/hfs.js
+;// CONCATENATED MODULE: ./node_modules/.pnpm/@humanfs+core@0.19.2/node_modules/@humanfs/core/src/hfs.js
 /**
  * @fileoverview The main file for the humanfs package.
  * @author Nicholas C. Zakas
@@ -715,7 +715,7 @@ class Hfs {
 	}
 }
 
-;// CONCATENATED MODULE: ./node_modules/.pnpm/@humanfs+core@0.19.1/node_modules/@humanfs/core/src/path.js
+;// CONCATENATED MODULE: ./node_modules/.pnpm/@humanfs+core@0.19.2/node_modules/@humanfs/core/src/path.js
 /**
  * @fileoverview The Path class.
  * @author Nicholas C. Zakas
@@ -954,7 +954,7 @@ class Path {
 	}
 }
 
-;// CONCATENATED MODULE: ./node_modules/.pnpm/@humanfs+core@0.19.1/node_modules/@humanfs/core/src/errors.js
+;// CONCATENATED MODULE: ./node_modules/.pnpm/@humanfs+core@0.19.2/node_modules/@humanfs/core/src/errors.js
 /**
  * @fileoverview Common error classes
  * @author Nicholas C. Zakas
@@ -1061,7 +1061,7 @@ class NotEmptyError extends Error {
 	}
 }
 
-;// CONCATENATED MODULE: ./node_modules/.pnpm/@humanfs+core@0.19.1/node_modules/@humanfs/core/src/index.js
+;// CONCATENATED MODULE: ./node_modules/.pnpm/@humanfs+core@0.19.2/node_modules/@humanfs/core/src/index.js
 /**
  * @fileoverview API entrypoint for hfs/core
  * @author Nicholas C. Zakas
@@ -1556,7 +1556,7 @@ class Retrier {
 var promises_ = __webpack_require__(51455);
 // EXTERNAL MODULE: external "node:url"
 var external_node_url_ = __webpack_require__(73136);
-;// CONCATENATED MODULE: ./node_modules/.pnpm/@humanfs+node@0.16.7/node_modules/@humanfs/node/src/node-hfs.js
+;// CONCATENATED MODULE: ./node_modules/.pnpm/@humanfs+node@0.16.8/node_modules/@humanfs/node/src/node-hfs.js
 /**
  * @fileoverview The main file for the hfs package.
  * @author Nicholas C. Zakas
@@ -1918,7 +1918,12 @@ class NodeHfsImpl {
 	 * @throws {Error} If the source file is a directory.
 	 * @throws {Error} If the destination file is a directory.
 	 */
-	copy(source, destination) {
+	async copy(source, destination) {
+		const stat = await this.#fsp.lstat(source);
+		if (stat.isSymbolicLink()) {
+			const target = await this.#fsp.readlink(source);
+			return this.#fsp.symlink(target, destination);
+		}
 		return this.#fsp.copyFile(source, destination);
 	}
 
@@ -1952,7 +1957,10 @@ class NodeHfsImpl {
 			const fromEntryPath = external_node_path_.join(sourceStr, entry.name);
 			const toEntryPath = external_node_path_.join(destinationStr, entry.name);
 
-			if (entry.isDirectory) {
+			if (entry.isSymlink) {
+				const target = await this.#fsp.readlink(fromEntryPath);
+				await this.#fsp.symlink(target, toEntryPath);
+			} else if (entry.isDirectory) {
 				await this.copyAll(fromEntryPath, toEntryPath);
 			} else {
 				await this.copy(fromEntryPath, toEntryPath);
@@ -2010,7 +2018,7 @@ class NodeHfs extends Hfs {
 
 const hfs = new NodeHfs();
 
-;// CONCATENATED MODULE: ./node_modules/.pnpm/@humanfs+node@0.16.7/node_modules/@humanfs/node/src/index.js
+;// CONCATENATED MODULE: ./node_modules/.pnpm/@humanfs+node@0.16.8/node_modules/@humanfs/node/src/index.js
 /**
  * @fileoverview This file exports everything for this package.
  * @author Nicholas C. Zakas
@@ -2024,4 +2032,4 @@ const hfs = new NodeHfs();
 
 };
 ;
-//# sourceMappingURL=157.index.js.map
+//# sourceMappingURL=379.index.js.map
