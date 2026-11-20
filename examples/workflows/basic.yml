@@ -28,7 +28,7 @@ jobs:
 # What you get with default settings:
 #
 # - Size labels: size/small, size/medium, size/large, size/xlarge, size/xxlarge
-# - Category labels: category/tests, category/docs, category/ci-cd, etc.
+# - Category labels: category/tests, category/documentation, category/ci-cd, etc.
 # - Risk labels: risk/high, risk/medium (when applicable)
 # - GitHub Actions Summary: Metrics and violation tables
 # - Auto-created labels with default colors
@@ -39,4 +39,4 @@ jobs:
 # - PR additions: 5000 lines
 # - PR files: 50 files
 #
-# See recommended.yml for advanced configuration options.
+# See advanced.yml for advanced configuration options.

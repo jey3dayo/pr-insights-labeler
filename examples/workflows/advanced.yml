@@ -122,7 +122,6 @@ jobs:
           # too_many_lines_label: "violations/too-many-lines"
           # excessive_changes_label: "violations/excessive-changes"
 
-          # Auto-remove labels when limits are no longer exceeded
           # ============================================
           # Optional: Multi-language Support
           # ============================================

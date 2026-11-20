@@ -67,7 +67,7 @@ jobs:
 Once configured, every PR automatically receives:
 
 - **Size labels**: `size/small`, `size/medium`, `size/large`, `size/xlarge`, `size/xxlarge`
-- **Category labels**: `category/tests`, `category/docs`, `category/ci-cd`, `category/dependencies`, etc.
+- **Category labels**: `category/tests`, `category/documentation`, `category/ci-cd`, `category/dependencies`, etc.
 - **Risk labels**: `risk/high`, `risk/medium` (when applicable)
 - **Complexity labels**: `complexity/high` when ESLint complexity thresholds are exceeded (if enabled)
 - **GitHub Actions Summary**: Consolidated metrics, violation tables, and best-practice reminders directly in CI results
@@ -80,7 +80,9 @@ Here's how the automatically applied labels appear on a pull request (GitHub lab
 
 ### 3. Customize (Optional)
 
-### Workflow examples
+Every threshold, label, and quality gate can be tuned with workflow inputs, a `.github/pr-labeler.yml` configuration file, or path-based rules in `.github/directory-labeler.yml`. Start from an example below, then see the [Configuration Guide](docs/en/configuration.md) for all options.
+
+#### Workflow examples
 
 - [basic.yml](examples/workflows/basic.yml) - Default settings
 - [advanced.yml](examples/workflows/advanced.yml) - With optional features
@@ -164,6 +166,8 @@ When limits exceeded:
 
 ### Common Options
 
+The quality gates (`fail_on_*`) are disabled by default. The sample below enables them, so copying it as-is makes the workflow fail when a limit is exceeded.
+
 ```yaml
 - uses: jey3dayo/pr-insights-labeler@v1
   with:
@@ -185,7 +189,7 @@ When limits exceeded:
     risk_enabled: "true"          # Enable risk labels
     complexity_enabled: "false"   # Complexity labels (off by default)
 
-    # Quality Gates
+    # Quality Gates (disabled by default; the values below enable them)
     fail_on_pr_size: "xlarge"     # Fail if PR too large
     fail_on_large_files: "true"   # Fail if files exceed limits
     fail_on_too_many_files: "true" # Fail if too many files are changed
