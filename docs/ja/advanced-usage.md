@@ -32,10 +32,10 @@ PR Insights Labelerの実践的な例と高度な設定です。
 
 #### ベースリポジトリをチェックアウトしたうえで、解析用にPR headをチェックアウトする
 
-`pull_request_target` では、ローカルでのdiff計算にbaseとheadの両方のcommit、およびその間のmerge-baseまでの履歴がオブジェクトDBに必要です。`actions/checkout@v4` のデフォルト（`fetch-depth: 1`）にはこの履歴がなく、`fetch-depth: 0` も「チェックアウト元のremoteの全履歴」しか保証しません。ベースリポジトリをoriginとする安全な既定構成でも、フォークのhead commitは通常のbranch refの外にあるため取得されないままです。そのためフォークPRではhead commitを明示的にfetchする必要があります。必要な履歴が揃わない場合、このアクションは失敗するのではなくGitHub API経由でのdiff取得にフォールバックします。
+`pull_request_target` では、ローカルでのdiff計算にbaseとheadの両方のcommit、およびその間のmerge-baseまでの履歴がオブジェクトDBに必要です。`actions/checkout@v7` のデフォルト（`fetch-depth: 1`）にはこの履歴がなく、`fetch-depth: 0` も「チェックアウト元のremoteの全履歴」しか保証しません。ベースリポジトリをoriginとする安全な既定構成でも、フォークのhead commitは通常のbranch refの外にあるため取得されないままです。そのためフォークPRではhead commitを明示的にfetchする必要があります。必要な履歴が揃わない場合、このアクションは失敗するのではなくGitHub API経由でのdiff取得にフォールバックします。
 
 ```yaml
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0
 
@@ -54,7 +54,7 @@ PR Insights Labelerの実践的な例と高度な設定です。
           git checkout --detach "$FETCHED_SHA"
 ```
 
-head SHAは `git fetch` / `git checkout` に渡され、`actions/checkout` 自体には渡されません。`actions/checkout` 自身が持つ `pull_request_target` 向けの安全対策（近年のリリースにある `allow-unsafe-pr-checkout` など、既定でこのイベント下でのフォークhead checkoutを拒否する仕組み）は `checkout` アクションへ渡す対象に対するものであり、その後の素の `git checkout` には適用されません。このリポジトリが案内する `actions/checkout` のバージョンをv4より先に上げる際は、この違いを再確認してください。
+head SHAは `git fetch` / `git checkout` に渡され、`actions/checkout` 自体には渡されません。`actions/checkout` 自身が持つ `pull_request_target` 向けの安全対策（近年のリリースにある `allow-unsafe-pr-checkout` など、既定でこのイベント下でのフォークhead checkoutを拒否する仕組み）は `checkout` アクションへ渡す対象に対するものであり、その後の素の `git checkout` には適用されません。案内するバージョンをv7に上げる際に、この違いをv7のソースで再確認しました。v7の安全対策は `repository`、`ref`、解決されたcommitのいずれかがフォークのPR headを指す場合にのみcheckoutを拒否し、この手順ではそのいずれもアクションへ渡しません。なお、この確認はv7のソースを読んだもので、実際のフォークPRでの実行は未検証です。
 
 このステップが解析するのは `pull_request_target` イベントのpayloadに記録されたhead SHAだけで、可変refそのものではありません。`refs/pull/${PR_NUMBER}/head` は可変なため、このワークフローがキューに入った後にPRが更新されると、fetchしたcommitは `HEAD_SHA` と一致しなくなります。その場合、このステップは誤ったrevisionをcheckoutせずに意図的に失敗します。更新によって起動する `synchronize` runが新しいheadを解析するため、自然に回復します。
 
@@ -83,7 +83,7 @@ jobs:
       contents: read        # ファイル読み取り
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0
 
@@ -132,7 +132,7 @@ jobs:
   check:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - uses: jey3dayo/pr-insights-labeler@v1
         with:
@@ -161,7 +161,7 @@ jobs:
     if: "!contains(github.event.pull_request.labels.*.name, 'skip-check')"
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - uses: jey3dayo/pr-insights-labeler@v1
         with:
@@ -186,7 +186,7 @@ jobs:
     if: "!startsWith(github.head_ref, 'release/')"
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - uses: jey3dayo/pr-insights-labeler@v1
         with:
@@ -216,7 +216,7 @@ jobs:
       contents: read
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - uses: jey3dayo/pr-insights-labeler@v1
         with:
@@ -259,7 +259,7 @@ jobs:
       contents: read  # 読み取りのみ必要
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - uses: jey3dayo/pr-insights-labeler@v1
         with:
@@ -414,7 +414,7 @@ jobs:
       contents: read
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - uses: jey3dayo/pr-insights-labeler@v1
         with:

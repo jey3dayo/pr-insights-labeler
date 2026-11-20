@@ -32,10 +32,10 @@ When handling PRs from forks, permissions are restricted. Use the `pull_request_
 
 #### Check out the base repository, then the PR head for analysis
 
-Under `pull_request_target`, local diff computation needs both the base and head commits — and the merge-base between them — in the checked-out object database. The default `actions/checkout@v4` (`fetch-depth: 1`) does not have this history, and `fetch-depth: 0` only guarantees the full history of the **checkout's own remote**: with the base repository as origin (the safe default), that still excludes the fork's head commit, which lives outside any branch ref. So the fork head must be fetched explicitly. When the required history isn't available, this action falls back to computing the diff via the GitHub API instead of failing outright.
+Under `pull_request_target`, local diff computation needs both the base and head commits — and the merge-base between them — in the checked-out object database. The default `actions/checkout@v7` (`fetch-depth: 1`) does not have this history, and `fetch-depth: 0` only guarantees the full history of the **checkout's own remote**: with the base repository as origin (the safe default), that still excludes the fork's head commit, which lives outside any branch ref. So the fork head must be fetched explicitly. When the required history isn't available, this action falls back to computing the diff via the GitHub API instead of failing outright.
 
 ```yaml
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0
 
@@ -54,7 +54,7 @@ Under `pull_request_target`, local diff computation needs both the base and head
           git checkout --detach "$FETCHED_SHA"
 ```
 
-The head SHA is passed to `git fetch`/`git checkout`, never to `actions/checkout` itself — `actions/checkout`'s own `pull_request_target` safeguards (such as `allow-unsafe-pr-checkout` in recent releases, which by default refuses to check out a fork head under this event) apply to what you pass to the `checkout` action, not to a plain `git checkout` run afterward. Re-verify this distinction when this project's documented `actions/checkout` version is bumped past v4.
+The head SHA is passed to `git fetch`/`git checkout`, never to `actions/checkout` itself — `actions/checkout`'s own `pull_request_target` safeguards (such as `allow-unsafe-pr-checkout` in recent releases, which by default refuses to check out a fork head under this event) apply to what you pass to the `checkout` action, not to a plain `git checkout` run afterward. When the documented version was bumped to v7, this distinction was re-verified against the v7 source: its unsafe-checkout guard refuses a checkout only when `repository`, `ref`, or the resolved commit points at the fork's PR head, none of which this procedure passes to the action. Note that this verification is from reading the v7 source, not from a live fork-PR run.
 
 This step only analyzes the head SHA recorded in the `pull_request_target` event payload, never a live ref. `refs/pull/${PR_NUMBER}/head` is mutable: if the PR is updated after this run was queued, the fetched commit will no longer match `HEAD_SHA`, and the step deliberately fails rather than checking out the wrong revision. This is self-healing — the `synchronize` run triggered by that update analyzes the new head.
 
@@ -83,7 +83,7 @@ jobs:
       contents: read        # File reading
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0
 
@@ -132,7 +132,7 @@ jobs:
   check:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - uses: jey3dayo/pr-insights-labeler@v1
         with:
@@ -161,7 +161,7 @@ jobs:
     if: "!contains(github.event.pull_request.labels.*.name, 'skip-check')"
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - uses: jey3dayo/pr-insights-labeler@v1
         with:
@@ -186,7 +186,7 @@ jobs:
     if: "!startsWith(github.head_ref, 'release/')"
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - uses: jey3dayo/pr-insights-labeler@v1
         with:
@@ -216,7 +216,7 @@ jobs:
       contents: read
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - uses: jey3dayo/pr-insights-labeler@v1
         with:
@@ -259,7 +259,7 @@ jobs:
       contents: read  # Only reading required
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - uses: jey3dayo/pr-insights-labeler@v1
         with:
@@ -414,7 +414,7 @@ jobs:
       contents: read
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - uses: jey3dayo/pr-insights-labeler@v1
         with:
