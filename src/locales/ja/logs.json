@@ -8,6 +8,7 @@
     "i18nLanguageChanged": "i18nの言語を変更しました: {{language}}",
     "i18nFailed": "i18nの初期化に失敗しました: {{message}}。英語にフォールバックします。",
     "configLoaded": "設定を読み込みました: {{path}}",
+    "configLoadFailed": "設定ファイルの読み込みに失敗しました: {{message}}。デフォルト設定を使用します。",
     "usingDefaultConfig": "デフォルトのラベラー設定を使用します",
     "policyConfigFromBase": "pull_request_target のため、ラベラー設定を base の参照 {{ref}} から読み込みます",
     "policyConfigBaseShaMissing": "pull_request_target ですが base SHA が取得できないため、ラベラー設定をデフォルトブランチから読み込みます"
