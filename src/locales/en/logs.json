@@ -8,6 +8,7 @@
     "i18nLanguageChanged": "i18n language changed to: {{language}}",
     "i18nFailed": "Failed to initialize i18n: {{message}}. Falling back to English.",
     "configLoaded": "Configuration loaded from: {{path}}",
+    "configLoadFailed": "Failed to load configuration file: {{message}}. Using default configuration.",
     "usingDefaultConfig": "Using default labeler configuration",
     "policyConfigFromBase": "pull_request_target detected: loading labeler configuration from base ref {{ref}}",
     "policyConfigBaseShaMissing": "pull_request_target detected but base SHA is unavailable: loading labeler configuration from the default branch"

@@ -1,4 +1,4 @@
-import { ok, okAsync } from 'neverthrow';
+import { errAsync, ok, okAsync } from 'neverthrow';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { getEnvVar, getPullRequestContext, logInfoI18n, logWarningI18n } from '../../src/actions-io';
@@ -87,6 +87,38 @@ describe('workflow/stages/initialization', () => {
       expect(result.isOk()).toBe(true);
       expect(loadConfig).toHaveBeenCalledWith('token', 'octo', 'repo', undefined);
       expect(logWarningI18n).toHaveBeenCalledWith('initialization.policyConfigBaseShaMissing');
+    });
+  });
+
+  describe('labeler config load failure', () => {
+    it('warns with the reason and continues with defaults when the config fails to load', async () => {
+      vi.mocked(getEnvVar).mockReturnValue('pull_request');
+      vi.mocked(loadConfig).mockReturnValue(
+        errAsync({ value: 'invalid', message: 'Invalid configuration: bad thresholds' }) as never,
+      );
+      const defaultConfig = { marker: 'default' };
+      vi.mocked(getDefaultLabelerConfig).mockReturnValue(defaultConfig as never);
+
+      const result = await initializeAction();
+
+      expect(result.isOk()).toBe(true);
+      expect(logWarningI18n).toHaveBeenCalledWith('initialization.configLoadFailed', {
+        message: 'Invalid configuration: bad thresholds',
+      });
+      expect(buildCompleteConfig).toHaveBeenCalledWith(expect.anything(), defaultConfig, expect.anything());
+    });
+
+    it('does not warn when the configuration file simply does not exist', async () => {
+      vi.mocked(getEnvVar).mockReturnValue('pull_request');
+      vi.mocked(loadConfig).mockReturnValue(
+        errAsync({ value: 'not found', message: 'Configuration file not found' }) as never,
+      );
+
+      const result = await initializeAction();
+
+      expect(result.isOk()).toBe(true);
+      expect(logWarningI18n).not.toHaveBeenCalledWith('initialization.configLoadFailed', expect.anything());
+      expect(getDefaultLabelerConfig).toHaveBeenCalled();
     });
   });
 });

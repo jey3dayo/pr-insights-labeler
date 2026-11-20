@@ -11,6 +11,7 @@ Common issues and solutions for PR Insights Labeler.
 
 - [Permission Errors](#permission-errors)
 - [Labels Not Applied](#labels-not-applied)
+- [Configuration File Not Taking Effect](#configuration-file-not-taking-effect)
 - [Draft PR Skipped](#draft-pr-skipped)
 - [Complexity Analysis Failed](#complexity-analysis-failed)
 - [File Count Mismatch](#file-count-mismatch)
@@ -206,6 +207,41 @@ After creating labels, check:
 ### Related
 
 - [Configuration Guide - Label Settings](configuration.md#label-settings)
+
+## Configuration File Not Taking Effect
+
+### Problem
+
+You added or edited `.github/pr-labeler.yml`, but the action behaves as if the file does not exist: default thresholds and labels are used and your settings are ignored.
+
+### Cause
+
+When the configuration file cannot be loaded or fails validation, the action falls back to the built-in default configuration instead of failing. This includes:
+
+- Invalid values (for example, size thresholds in the wrong order, an unsupported `language`, or malformed category patterns)
+- Fetch failures other than "file not found" (for example, GitHub API permission or rate-limit errors)
+- YAML syntax errors and empty files
+
+### Solutions
+
+#### 1. Check the workflow log for a warning
+
+Load and validation failures are reported as a warning in the workflow log:
+
+```text
+Failed to load configuration file: <reason>. Using default configuration.
+```
+
+Fix the reported problem in `.github/pr-labeler.yml` and re-run the workflow. (YAML syntax errors and empty files log their own specific warnings.)
+
+#### 2. Verify the file location and which ref is read
+
+- The file must be at `.github/pr-labeler.yml`.
+- Under `pull_request_target`, the configuration is read from the base ref, so edits inside the PR itself are not applied. See [Fork PR Handling](advanced-usage.md#fork-pr-handling).
+
+### Related
+
+- [Configuration Guide](configuration.md)
 
 ## Draft PR Skipped
 

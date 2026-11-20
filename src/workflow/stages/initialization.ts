@@ -1,6 +1,7 @@
 import { ResultAsync } from 'neverthrow';
 
 import { getEnvVar, getPullRequestContext, logInfoI18n, logWarningI18n } from '../../actions-io';
+import { isConfigNotFoundError } from '../../config/loaders/github-config-fetcher.js';
 import { buildCompleteConfig } from '../../config-builder.js';
 import { getDefaultLabelerConfig, loadConfig } from '../../config-loader';
 import { loadEnvironmentConfig } from '../../environment-loader.js';
@@ -53,7 +54,19 @@ export function initializeAction(): ResultAsync<InitializationArtifacts, AppErro
       const policyConfigRef = resolvePolicyConfigRef(getEnvVar('GITHUB_EVENT_NAME'), prContext);
       logPolicyConfigRefResolution(policyConfigRef);
       const labelerConfigResult = await loadConfig(token, prContext.owner, prContext.repo, policyConfigRef.ref);
-      const labelerConfig = labelerConfigResult.unwrapOr(getDefaultLabelerConfig());
+      const labelerConfig = labelerConfigResult.match(
+        config => config,
+        error => {
+          // A missing configuration file is the normal no-config case and the fetcher
+          // already logs it at info level. Every other failure means a configuration
+          // the user wrote is being ignored, so surface the reason as a warning
+          // instead of silently falling back to defaults.
+          if (!isConfigNotFoundError(error)) {
+            logWarningI18n('initialization.configLoadFailed', { message: error.message });
+          }
+          return getDefaultLabelerConfig();
+        },
+      );
 
       const config = buildCompleteConfig(parsedInputs, labelerConfig, envConfig);
 
