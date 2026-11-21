@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.15.3] - 2026-11-21
+
+### 🔄 Changed
+
+- update dependencies (eslint 10.15 and pnpm 12.21) following the 7-day adoption rule (#190)
+
 ## [1.15.2] - 2026-11-20
 
 ### 🐛 Fixed
@@ -625,6 +631,7 @@ PRメトリクス分析に基づいた高度な自動ラベル付け機能を追
 
 [1.0.1]: https://github.com/jey3dayo/pr-insights-labeler/releases/tag/v1.0.1
 [1.0.0]: https://github.com/jey3dayo/pr-insights-labeler/releases/tag/v1.0.0
+[1.15.3]: https://github.com/jey3dayo/pr-insights-labeler/releases/tag/v1.15.3
 [1.15.2]: https://github.com/jey3dayo/pr-insights-labeler/releases/tag/v1.15.2
 [1.15.1]: https://github.com/jey3dayo/pr-insights-labeler/releases/tag/v1.15.1
 [1.15.0]: https://github.com/jey3dayo/pr-insights-labeler/releases/tag/v1.15.0
