@@ -12,7 +12,7 @@
   "engines": {
     "node": ">=24"
   },
-  "packageManager": "pnpm@12.20.0",
+  "packageManager": "pnpm@12.21.0",
   "main": "dist/index.js",
   "scripts": {
     "generate:i18n-types": "tsx scripts/generate-i18n-types.ts",
@@ -43,7 +43,7 @@
     "@actions/github": "^9.1.1",
     "@typescript-eslint/parser": "^8.72.2",
     "bytes": "^3.1.2",
-    "eslint": "^10.14.0",
+    "eslint": "^10.15.0",
     "i18next": "27.1.1",
     "js-yaml": "^5.5.0",
     "minimatch": "11.0.8",
