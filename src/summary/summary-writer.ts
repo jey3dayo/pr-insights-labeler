@@ -1,8 +1,3 @@
-/**
- * GitHub Actions Summary writer
- * Responsible for generating and publishing markdown reports
- */
-
 import * as core from '@actions/core';
 import { errAsync, okAsync, Result, ResultAsync } from 'neverthrow';
 
@@ -24,9 +19,6 @@ import {
 } from '../report-formatter';
 import type { AnalysisResult } from '../types/analysis.js';
 
-/**
- * Write raw markdown content to GitHub Actions summary
- */
 export function writeSummary(content: string): ResultAsync<void, Error> {
   return ResultAsync.fromPromise(core.summary.addRaw(content).write(), error => {
     const e = ensureError(error);
@@ -34,9 +26,6 @@ export function writeSummary(content: string): ResultAsync<void, Error> {
   }).map(() => undefined);
 }
 
-/**
- * Summary write result
- */
 export interface SummaryWriteResult {
   action: 'written' | 'skipped';
   bytesWritten?: number;
@@ -49,9 +38,6 @@ export interface SummaryWriteOptions {
   reasoning?: import('../labeler-types').LabelReasoning[];
 }
 
-/**
- * Build markdown body for GitHub Actions Summary output.
- */
 function buildSummaryMarkdown(
   analysis: AnalysisResult,
   complexity?: { metrics: ComplexityMetrics; config: ComplexityConfig; context: SummaryContext },
@@ -66,7 +52,6 @@ function buildSummaryMarkdown(
       markdown += `# 📊 ${summaryTitle}\n\n`;
       markdown += formatSummaryBasicMetrics(analysis.metrics);
 
-      // Use new label-file groups formatter if reasoning is provided
       if (options?.reasoning && options.reasoning.length > 0) {
         const labelFileGroupsSection = formatLabelFileGroups(
           options.reasoning,
@@ -77,7 +62,6 @@ function buildSummaryMarkdown(
           markdown += labelFileGroupsSection;
         }
       } else {
-        // Fallback to old label format if reasoning is not available
         const appliedLabelsSection = formatAppliedLabels(options?.appliedLabels);
         if (appliedLabelsSection) {
           markdown += appliedLabelsSection;
@@ -127,18 +111,6 @@ function buildSummaryMarkdown(
   )();
 }
 
-/**
- * Write PR analysis results to GitHub Actions Summary
- * @param analysis - File analysis result
- * @param config - Summary output configuration
- * @param complexity - Optional complexity data object
- * @param complexity.metrics - Complexity analysis metrics (ComplexityMetrics)
- * @param complexity.config - Complexity configuration settings (ComplexityConfig)
- * @param complexity.context - Summary context for GitHub URLs (SummaryContext)
- * @param options - Optional summary options
- * @param options.disabledFeatures - List of disabled label types (size, complexity, category, risk)
- * @returns ResultAsync<SummaryWriteResult, Error>
- */
 export function writeSummaryWithAnalysis(
   analysis: AnalysisResult,
   config: { enableSummary: boolean },

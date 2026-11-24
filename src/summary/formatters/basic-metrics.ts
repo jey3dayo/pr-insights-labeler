@@ -5,7 +5,6 @@ import { formatNumber } from './common.js';
 export interface FormatBasicMetricsOptions {
   includeHeader?: boolean;
   includeTimestamp?: boolean;
-  /** Optional label override for analyzed file count (backward-compat support) */
   filesAnalyzedLabel?: string;
 }
 
@@ -70,8 +69,6 @@ function renderBasicMetrics(metrics: AnalysisResult['metrics'], options: RenderB
 }
 
 export function formatBasicMetrics(metrics: AnalysisResult['metrics'], options?: FormatBasicMetricsOptions): string {
-  // NOTE: Historically the "Total Files" row shows analyzed files (filesAnalyzed.length).
-  // Use filesAnalyzedLabel to opt-in to a clearer label without breaking existing output.
   return renderBasicMetrics(metrics, {
     ...options,
     totalFilesLabel: options?.filesAnalyzedLabel ?? t('summary', 'basicMetrics.totalFiles'),

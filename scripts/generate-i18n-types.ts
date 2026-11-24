@@ -1,16 +1,8 @@
 #!/usr/bin/env tsx
 
-/**
- * i18n型定義生成スクリプト
- *
- * 翻訳JSONファイルから TypeScript 型定義を自動生成します。
- * Phase 1: resources形状型のみ実装 (DotPath型は将来実装)
- */
-
 import { writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 
-// 翻訳JSONの型定義をimport
 import type summaryEn from '../src/locales/en/summary.json';
 import type errorsEn from '../src/locales/en/errors.json';
 import type logsEn from '../src/locales/en/logs.json';
@@ -19,9 +11,6 @@ import type commonEn from '../src/locales/en/common.json';
 
 const OUTPUT_PATH = resolve(__dirname, '../src/types/i18n.d.ts');
 
-/**
- * 型定義ファイルを生成
- */
 function generateTypeDefinitions(): void {
   const content = `/**
  * i18n型定義 (自動生成)
@@ -75,7 +64,6 @@ declare module 'i18next' {
   console.log(`✅ i18n type definitions generated at: ${OUTPUT_PATH}`);
 }
 
-// スクリプト実行
 try {
   generateTypeDefinitions();
   process.exit(0);

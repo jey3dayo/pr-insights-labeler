@@ -30,16 +30,6 @@ import type { PolicyConfigRefResolution } from '../policy/policy-config-ref.js';
 import { resolvePolicyConfigRef } from '../policy/policy-config-ref.js';
 import type { AnalysisArtifacts, InitializationArtifacts } from '../types';
 
-/**
- * Load the directory labeling policy from the ref that is trusted for the current event.
- *
- * Under `pull_request_target` the local checkout is the fork-controlled head, so a PR could
- * otherwise ship its own `directory-labeler.yml` and relabel itself. For that event the policy is
- * read from the trusted base ref (or the default branch when the base SHA is unavailable) over the
- * GitHub API, while analyzed file contents keep coming from the local checkout. Other events keep
- * reading the local file, because `directory_labeler_config_path` is a documented file path and may
- * point at a generated or out-of-checkout file.
- */
 function loadDirectoryConfigFromTrustedRef(
   context: InitializationArtifacts,
   resolution: Exclude<PolicyConfigRefResolution, { source: 'head' }>,
@@ -194,9 +184,6 @@ async function processDirectoryLabeling(
   return artifacts;
 }
 
-/**
- * Apply PR labels including directory-based labeling
- */
 export function applyLabelsStage(
   context: InitializationArtifacts,
   artifacts: AnalysisArtifacts,

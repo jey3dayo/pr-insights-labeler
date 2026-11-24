@@ -6,31 +6,24 @@ const neverthrow = require('eslint-plugin-neverthrow');
 const importX = require('eslint-plugin-import-x');
 
 module.exports = tseslint.config(
-  // ESLint推奨設定
   eslint.configs.recommended,
 
-  // TypeScript ESLint推奨設定
   ...tseslint.configs.recommended,
 
-  // Ignore generated artifacts
   {
     ignores: ['dist/**'],
   },
 
-  // Prettier設定（フォーマット競合を無効化）
   prettierConfig,
 
-  // グローバル設定
   {
     languageOptions: {
       globals: {
-        // Node.js globals
         process: 'readonly',
         Buffer: 'readonly',
         __dirname: 'readonly',
         __filename: 'readonly',
         console: 'readonly',
-        // Test globals
         describe: 'readonly',
         it: 'readonly',
         expect: 'readonly',
@@ -48,7 +41,6 @@ module.exports = tseslint.config(
     },
   },
 
-  // TypeScriptファイル用設定
   {
     files: ['**/*.ts'],
     languageOptions: {
@@ -65,27 +57,19 @@ module.exports = tseslint.config(
       'import-x': importX,
     },
     settings: {
-      // パスエイリアスを使っていないため、import-x 同梱の node resolver で足りる。
-      // eslint-import-resolver-typescript は eslint-plugin-import を peer に引き込むので採用しない
       'import-x/resolver-next': [importX.createNodeResolver({ extensions: ['.ts', '.js', '.json'] })],
     },
     rules: {
-      // Import/Export sorting
       'simple-import-sort/imports': 'warn',
       'simple-import-sort/exports': 'warn',
 
-      // Import plugin rules
       'import-x/no-cycle': ['warn', { maxDepth: 10 }],
       'import-x/no-self-import': 'error',
       'import-x/no-useless-path-segments': 'warn',
       'import-x/no-duplicates': 'warn',
 
-      // Neverthrow - allow flexible Result handling patterns
-      // OFF: Allows both imperative (if result.isErr()) and functional (.match()) patterns
-      // This is more readable for GitHub Actions code with complex error handling
       'neverthrow/must-use-result': 'off',
 
-      // TypeScript specific rules
       '@typescript-eslint/no-unused-vars': [
         'warn',
         {
@@ -123,14 +107,12 @@ module.exports = tseslint.config(
         },
       ],
 
-      // 一般的なコード品質ルール
       'no-console': ['warn', { allow: ['warn', 'error'] }],
       'prefer-const': 'error',
       'no-var': 'error',
       eqeqeq: ['error', 'always'],
       curly: ['error', 'all'],
 
-      // クラス構文と Dynamic Import の禁止
       'no-restricted-syntax': [
         'error',
         {
@@ -145,7 +127,6 @@ module.exports = tseslint.config(
     },
   },
 
-  // クラス構文を許可する例外ファイル
   {
     files: ['src/complexity-analyzer.ts', 'src/errors/**/*.ts', '__tests__/**/*.ts'],
     rules: {
@@ -159,7 +140,6 @@ module.exports = tseslint.config(
     },
   },
 
-  // JavaScriptファイル用設定
   {
     files: ['**/*.js'],
     rules: {
@@ -175,7 +155,6 @@ module.exports = tseslint.config(
     },
   },
 
-  // テストファイル用設定
   {
     files: ['**/*.test.ts', '**/*.spec.ts', '__tests__/**/*.ts'],
     rules: {
@@ -187,7 +166,6 @@ module.exports = tseslint.config(
     },
   },
 
-  // 無視するファイル
   {
     ignores: [
       'dist/**/*',
@@ -199,13 +177,13 @@ module.exports = tseslint.config(
       '*.config.cjs',
       '.ncurc.cjs',
       '.eslintrc.js',
-      '.dependency-cruiser.js', // dependency-cruiser config (CommonJS)
+      '.dependency-cruiser.js',
       'eslint.config.js',
-      'scripts/**/*', // Build scripts
-      'tmp/**/*', // gitignore 済みのスクラッチ出力（調査メモ・レポート等）
-      'src/types/i18n.d.ts', // Auto-generated i18n types
-      '__tests__/fixtures/**/*', // Test fixtures with intentional syntax errors
-      '__tests__/__tests__/**/*', // Duplicate test fixtures directory
+      'scripts/**/*',
+      'tmp/**/*',
+      'src/types/i18n.d.ts',
+      '__tests__/fixtures/**/*',
+      '__tests__/__tests__/**/*',
     ],
   },
 );

@@ -1,18 +1,11 @@
-/**
- * Default configuration for PR Insights Labeler
- */
-
 import type { AnalysisOptions, LabelerConfig } from '../types/config.js';
 import { DEFAULT_CATEGORIES } from './categories.js';
 
-/**
- * Default analysis options for complexity calculation
- */
 export const DEFAULT_ANALYSIS_OPTIONS: Required<AnalysisOptions> = {
   concurrency: 8,
   timeout: 60,
   fileTimeout: 5,
-  maxFileSize: 1024 * 1024, // 1MB
+  maxFileSize: 1024 * 1024,
   extensions: ['.ts', '.tsx', '.js', '.jsx'],
   exclude: [
     '**/dist/**',
@@ -34,12 +27,9 @@ export const DEFAULT_ANALYSIS_OPTIONS: Required<AnalysisOptions> = {
   ],
 };
 
-/**
- * Default labeler configuration
- */
 export const DEFAULT_LABELER_CONFIG: LabelerConfig = {
   size: {
-    enabled: true, // サイズラベルはデフォルトで有効
+    enabled: true,
     thresholds: {
       small: 200,
       medium: 500,
@@ -58,11 +48,11 @@ export const DEFAULT_LABELER_CONFIG: LabelerConfig = {
     exclude: DEFAULT_ANALYSIS_OPTIONS.exclude,
   },
   categoryLabeling: {
-    enabled: true, // カテゴリラベルはデフォルトで有効
+    enabled: true,
   },
   categories: DEFAULT_CATEGORIES,
   risk: {
-    enabled: true, // リスクラベルはデフォルトで有効
+    enabled: true,
     high_if_no_tests_for_core: true,
     core_paths: ['src/**'],
     config_files: ['.github/workflows/**', 'package.json', 'tsconfig.json'],

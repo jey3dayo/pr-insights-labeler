@@ -1,8 +1,3 @@
-/**
- * PR Insights Labeler - Main entry point
- * Analyzes pull request files and enforces size limits
- */
-
 import { ResultAsync } from 'neverthrow';
 
 import { logErrorI18n, logInfoI18n, logWarningI18n, setFailed } from './actions-io';
@@ -13,9 +8,6 @@ import { writeSummary } from './summary/summary-writer';
 import { analyzePullRequest, applyLabelsStage, finalizeAction, initializeAction } from './workflow/pipeline';
 import type { InitializationArtifacts } from './workflow/types';
 
-/**
- * Main action function orchestrating the workflow pipeline
- */
 async function run(): Promise<void> {
   const result = await executeAction();
 
@@ -60,5 +52,4 @@ function handleDraft(context: InitializationArtifacts): ResultAsync<void, AppErr
   ).map(() => undefined);
 }
 
-// Export for testing and for main entry point
 export { executeAction, run };

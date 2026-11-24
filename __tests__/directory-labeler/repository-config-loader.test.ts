@@ -1,10 +1,3 @@
-/**
- * Directory-Based Labeler: リポジトリ経由（GitHub API）の設定ローダーのユニットテスト
- *
- * `pull_request_target` で信頼済みの ref からポリシーを読むための経路。ローカル FS 経路と
- * 「未存在」セマンティクスが一致していることが呼び出し側のフォールバック契約になる。
- */
-
 import { getOctokit } from '@actions/github';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -30,10 +23,6 @@ rules:
       - "src/components/**"
 `;
 
-/**
- * YAML アンカー/エイリアスの許可は directory-labeler 固有の契約（pr-labeler 側の JSON_SCHEMA
- * パーサでは通らない）。ローカル FS 経路と同じスキーマで読めることを固定する。
- */
 const ANCHOR_CONFIG = `
 version: 1
 shared: &shared_include

@@ -1,17 +1,8 @@
-/**
- * Label-File Groups formatter for Summary output
- * Groups files by their applied labels with collapsible details
- */
-
 import { t } from '../../i18n.js';
 import type { ComplexityMetrics, LabelReasoning } from '../../labeler-types';
 import type { FileMetrics } from '../../types/analysis.js';
 import { escapeMarkdown } from './common.js';
 
-/**
- * Format label-file groups for Summary output.
- * Groups files by applied labels with collapsible details.
- */
 export function formatLabelFileGroups(
   reasoning: LabelReasoning[],
   fileMetrics: FileMetrics[],
@@ -23,32 +14,27 @@ export function formatLabelFileGroups(
 
   let output = `### 🏷️ ${t('summary', 'labelFileGroups.title')}\n\n`;
 
-  // Group by category for better organization
   const categoryGroups = groupByCategory(reasoning);
   const excludedAdditions = calculateExcludedAdditions(fileMetrics);
 
-  // Category labels
   if (categoryGroups.category.length > 0) {
     for (const item of categoryGroups.category) {
       output += formatCategoryLabel(item);
     }
   }
 
-  // Risk labels
   if (categoryGroups.risk.length > 0) {
     for (const item of categoryGroups.risk) {
       output += formatRiskLabel(item);
     }
   }
 
-  // Complexity labels
   if (categoryGroups.complexity.length > 0) {
     for (const item of categoryGroups.complexity) {
       output += formatComplexityLabel(item, complexityMetrics);
     }
   }
 
-  // Size labels
   if (categoryGroups.size.length > 0) {
     for (const item of categoryGroups.size) {
       output += formatSizeLabel(item, fileMetrics, excludedAdditions);
@@ -58,9 +44,6 @@ export function formatLabelFileGroups(
   return output;
 }
 
-/**
- * Group reasoning by category
- */
 function groupByCategory(reasoning: LabelReasoning[]): {
   category: LabelReasoning[];
   risk: LabelReasoning[];
@@ -89,9 +72,6 @@ function groupByCategory(reasoning: LabelReasoning[]): {
   return groups;
 }
 
-/**
- * Format category label with file list
- */
 function formatCategoryLabel(item: LabelReasoning): string {
   const files = item.matchedFiles || [];
   if (files.length === 0) {
@@ -110,9 +90,6 @@ function formatCategoryLabel(item: LabelReasoning): string {
   return output;
 }
 
-/**
- * Format risk label with reason and affected files
- */
 function formatRiskLabel(item: LabelReasoning): string {
   const files = item.matchedFiles || [];
 
@@ -129,9 +106,6 @@ function formatRiskLabel(item: LabelReasoning): string {
   });
 }
 
-/**
- * Format complexity label with high-complexity files
- */
 function formatComplexityLabel(item: LabelReasoning, complexityMetrics?: ComplexityMetrics): string {
   const files = item.matchedFiles || [];
 
@@ -153,9 +127,6 @@ function formatComplexityLabel(item: LabelReasoning, complexityMetrics?: Complex
   });
 }
 
-/**
- * Format size label with calculation basis
- */
 function formatSizeLabel(item: LabelReasoning, fileMetrics: FileMetrics[], excludedAdditions: number): string {
   const files = item.matchedFiles || [];
   const totalAdditions = fileMetrics.reduce((sum, f) => sum + f.additions, 0);
@@ -170,7 +141,6 @@ function formatSizeLabel(item: LabelReasoning, fileMetrics: FileMetrics[], exclu
 
   if (files.length > 0) {
     output += `**${t('summary', 'labelFileGroups.analyzedFiles')} (${files.length}):**\n`;
-    // Show top 10 files by additions
     const sortedFiles = files
       .map(path => fileMetrics.find(f => f.path === path))
       .filter((f): f is FileMetrics => f !== undefined)
@@ -208,11 +178,6 @@ function formatReasonSection(item: LabelReasoning, files: string[], renderFiles:
   return output;
 }
 
-/**
- * Calculate excluded additions from file metrics
- */
 function calculateExcludedAdditions(_fileMetrics: FileMetrics[]): number {
-  // This is a placeholder - actual excluded additions should be passed from the caller
-  // For now, we return 0 as we don't have this information in fileMetrics
   return 0;
 }

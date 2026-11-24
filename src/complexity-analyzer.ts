@@ -1,8 +1,3 @@
-/**
- * Complexity Analyzer for PR files
- * Uses ESLint standard complexity rule
- */
-
 import { existsSync, promises as fs } from 'node:fs';
 import * as path from 'node:path';
 
@@ -23,7 +18,6 @@ import {
 import type { ComplexityMetrics, FileComplexity, FunctionComplexity, SkippedFile } from './labeler-types.js';
 import type { AnalysisOptions } from './types/config.js';
 
-// Re-export for backward compatibility
 export { DEFAULT_ANALYSIS_OPTIONS };
 export type { AnalysisOptions };
 
@@ -31,10 +25,6 @@ function mergeAnalysisOptions(options?: Partial<AnalysisOptions>): Required<Anal
   return { ...DEFAULT_ANALYSIS_OPTIONS, ...options };
 }
 
-/**
- * Check if tsconfig.json exists in the project root
- * @returns True if tsconfig.json exists
- */
 function hasTsconfigJson(): boolean {
   try {
     const tsconfigPath = path.join(process.cwd(), 'tsconfig.json');
@@ -44,11 +34,6 @@ function hasTsconfigJson(): boolean {
   }
 }
 
-/**
- * Create ESLint instance with complexity rule enabled
- * @param hasTsconfig - Whether tsconfig.json exists
- * @returns Configured ESLint instance
- */
 function createESLintInstance(hasTsconfig: boolean): ESLint {
   return new ESLint({
     overrideConfigFile: true,
@@ -66,22 +51,13 @@ function createESLintInstance(hasTsconfig: boolean): ESLint {
         },
       },
       rules: {
-        complexity: ['error', 0], // Report all functions (threshold 0)
+        complexity: ['error', 0],
       },
     },
   });
 }
 
-/**
- * Parse complexity from ESLint message
- * Message format: "Function 'functionName' has a complexity of 5. Maximum allowed is 0."
- *
- * @param message - ESLint message object
- * @returns Parsed function complexity or null
- */
 function parseComplexityMessage(message: Linter.LintMessage): FunctionComplexity | null {
-  // Pattern: "Function 'name' has a complexity of N." or "Function \"name\" has a complexity of N."
-  // Tightened to handle quoted names with punctuation robustly
   const pattern = /Function ["']([^"']+)["'] has a complexity of (\d+)\b/i;
   const match = message.message.match(pattern);
 
@@ -106,21 +82,10 @@ function parseComplexityMessage(message: Linter.LintMessage): FunctionComplexity
   };
 }
 
-/**
- * Check if error is a syntax error
- * @param messages - ESLint messages
- * @returns True if syntax error found
- */
 function hasSyntaxError(messages: Linter.LintMessage[]): boolean {
   return messages.some(m => m.fatal === true || m.message.toLowerCase().includes('parsing error'));
 }
 
-/**
- * Analyze a single file for complexity
- * @param filePath - Repository-relative file path
- * @param options - Analysis options
- * @returns File complexity or error
- */
 function analyzeFile(
   filePath: string,
   options?: Partial<AnalysisOptions>,
@@ -130,7 +95,6 @@ function analyzeFile(
 
   return ResultAsync.fromPromise(
     (async () => {
-      // 1. Check file size (before reading content)
       try {
         const stats = await fs.stat(filePath);
         if (stats.size > opts.maxFileSize) {
@@ -143,7 +107,6 @@ function analyzeFile(
         }
       } catch (error) {
         if (isComplexityAnalysisError(error)) {
-          // Re-throw ComplexityAnalysisError
           throw error;
         }
         throw createComplexityAnalysisError('analysis_failed', {
@@ -152,9 +115,6 @@ function analyzeFile(
         });
       }
 
-      // 2. Run ESLint complexity rule
-      // Reuse the shared ESLint instance from analyzeFiles when provided, since
-      // hasTsconfig is invariant for the duration of a single analysis run.
       let eslint: ESLint;
       if (eslintContext) {
         ({ eslint } = eslintContext);
@@ -183,7 +143,6 @@ function analyzeFile(
         });
       }
 
-      // Check for syntax errors
       const syntaxError = hasSyntaxError(result.messages);
       if (syntaxError) {
         core.debug(`Syntax error in ${filePath}, treating as complexity 0`);
@@ -195,13 +154,11 @@ function analyzeFile(
         };
       }
 
-      // Parse complexity from messages
       const functions = result.messages
         .filter(m => m.ruleId === 'complexity')
         .map(parseComplexityMessage)
         .filter((f): f is FunctionComplexity => f !== null);
 
-      // Calculate total file complexity (sum of all functions)
       const totalComplexity = functions.reduce((sum, f) => sum + f.complexity, 0);
 
       return {
@@ -212,12 +169,10 @@ function analyzeFile(
       };
     })(),
     (error): ComplexityAnalysisError => {
-      // Error is already a ComplexityAnalysisError
       if (isComplexityAnalysisError(error)) {
         return error;
       }
 
-      // Convert unknown errors
       return createComplexityAnalysisError('analysis_failed', {
         filename: filePath,
         details: `Failed to analyze ${filePath}: ${ensureError(error).message}`,
@@ -226,12 +181,6 @@ function analyzeFile(
   );
 }
 
-/**
- * Analyze multiple files in parallel and aggregate metrics
- * @param filePaths - List of file paths to analyze
- * @param options - Analysis options
- * @returns PR-wide complexity metrics or error
- */
 function analyzeFiles(
   filePaths: string[],
   options?: Partial<AnalysisOptions>,
@@ -244,22 +193,18 @@ function analyzeFiles(
       const successful: FileComplexity[] = [];
       const skippedFiles: SkippedFile[] = [];
 
-      // p-limitで並列度制御
       const raw = Number.isFinite(opts.concurrency as number) ? (opts.concurrency as number) : 8;
       const concurrency = Math.max(1, Math.min(raw, 8));
       const limit = pLimit(concurrency);
 
       core.info(`Analyzing ${filePaths.length} files with concurrency ${concurrency}`);
 
-      // hasTsconfig is invariant for this analysis run, so determine it once and
-      // reuse a single ESLint instance across all files instead of recreating it per file.
       const hasTsconfig = hasTsconfigJson();
       if (!hasTsconfig) {
         core.warning('tsconfig.json not found. Using default parser options for complexity analysis.');
       }
       const eslint = createESLintInstance(hasTsconfig);
 
-      // 各ファイルの解析を並列実行
       const promises = filePaths.map(filePath =>
         limit(async () => {
           const result = await analyzeFile(filePath, opts, { eslint, hasTsconfig });
@@ -277,7 +222,6 @@ function analyzeFiles(
 
       const results = await Promise.all(promises);
 
-      // 成功/失敗を分類
       for (const result of results) {
         if (result.status === 'fulfilled') {
           successful.push(result.value);
@@ -294,7 +238,6 @@ function analyzeFiles(
         }
       }
 
-      // 実行時間測定
       const elapsedTime = Date.now() - startTime;
       core.info(`Complexity analysis completed: ${successful.length} files, ${elapsedTime}ms`);
 
@@ -302,7 +245,6 @@ function analyzeFiles(
         core.warning(`Complexity analysis took ${elapsedTime}ms (target: <5000ms for 100 files)`);
       }
 
-      // 集計
       const baseMetrics = aggregateMetrics(successful);
 
       if (!baseMetrics) {
@@ -311,11 +253,10 @@ function analyzeFiles(
         });
       }
 
-      // 完全なComplexityMetricsを構築
       const completeMetrics: ComplexityMetrics = {
         ...baseMetrics,
         skippedFiles,
-        truncated: false, // 呼び出し元で設定
+        truncated: false,
         hasTsconfig,
       };
 
@@ -337,35 +278,23 @@ export type ComplexityAnalyzer = {
   analyzeFiles: typeof analyzeFiles;
 };
 
-/**
- * Aggregate complexity metrics from file results
- * @param results - Array of file complexity results
- * @returns Aggregated metrics or undefined if no files
- */
 export function aggregateMetrics(
   results: FileComplexity[],
 ): Omit<ComplexityMetrics, 'skippedFiles' | 'truncated' | 'totalPRFiles' | 'hasTsconfig'> | undefined {
-  // 0件の場合は早期リターン（Math.max([])で-Infinity、0除算を回避）
   if (results.length === 0) {
     return undefined;
   }
 
-  // 構文エラーファイル（複雑度0、isSyntaxError: true）を抽出
   const syntaxErrorFiles = results.filter(r => r.isSyntaxError === true).map(r => r.path);
 
-  // 全ファイル（構文エラー含む）を集計対象とする（要件6.3準拠）
   const validFiles = results.filter(r => r.complexity >= 0);
 
-  // validFilesが0件の場合もundefined（全ファイルがスキップされた場合）
   if (validFiles.length === 0) {
     return undefined;
   }
 
-  // 最大複雑度: 全ファイルから最大値を取得
   const maxComplexity = Math.max(...validFiles.map(f => f.complexity));
 
-  // 平均複雑度: 構文エラーファイル（複雑度0）も含めて計算（要件6.3準拠）
-  // 小数第1位で四捨五入
   const avgComplexity =
     Math.round((validFiles.reduce((sum, f) => sum + f.complexity, 0) / validFiles.length) * 10) / 10;
 
@@ -378,9 +307,6 @@ export function aggregateMetrics(
   };
 }
 
-/**
- * Create a new ComplexityAnalyzer instance
- */
 export function createComplexityAnalyzer(): ComplexityAnalyzer {
   return {
     analyzeFile: (filePath, options) => analyzeFile(filePath, options),

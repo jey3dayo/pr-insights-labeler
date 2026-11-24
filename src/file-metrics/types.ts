@@ -1,20 +1,13 @@
 import type { AnalysisResult, FileMetrics, Metrics } from '../types/analysis.js';
 
-// Re-export analysis types for convenience
 export type { AnalysisResult, FileMetrics, Metrics };
 
-/**
- * Repository context for operations that need Git metadata
- */
 export interface RepoContext {
   owner: string;
   repo: string;
   headSha?: string;
 }
 
-/**
- * Runtime configuration for file analysis
- */
 export interface AnalysisConfig {
   fileSizeLimit: number;
   fileSizeLimitEnabled: boolean;
@@ -25,6 +18,5 @@ export interface AnalysisConfig {
   maxAddedLines: number;
   maxFileCount: number;
   excludePatterns: string[];
-  /** デフォルト除外パターンを適用するか。省略時は true（後方互換） */
   useDefaultExcludes?: boolean;
 }

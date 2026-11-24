@@ -21,14 +21,6 @@ import { t } from '../../i18n.js';
 import { verifyHeadCheckout } from '../policy/head-checkout-guard.js';
 import type { AnalysisArtifacts, InitializationArtifacts } from '../types';
 
-/**
- * Refuse to analyze a tree other than the PR head recorded in the event payload.
- *
- * Runs before any diff retrieval or file analysis: the analyzers read the local checkout, so a
- * checkout that is not the PR head would produce metrics for the wrong tree. See
- * `../policy/head-checkout-guard.js` for why this is fail-closed and limited to
- * `pull_request_target`.
- */
 async function assertLocalCheckoutIsPrHead(headSha: string): Promise<void> {
   const verification = await verifyHeadCheckout({
     eventName: getEnvVar('GITHUB_EVENT_NAME'),
@@ -46,9 +38,6 @@ async function assertLocalCheckoutIsPrHead(headSha: string): Promise<void> {
   }
 }
 
-/**
- * Analyze diff files and optional complexity metrics
- */
 export function analyzePullRequest(context: InitializationArtifacts): ResultAsync<AnalysisArtifacts, AppError> {
   return ResultAsync.fromPromise(
     (async () => {

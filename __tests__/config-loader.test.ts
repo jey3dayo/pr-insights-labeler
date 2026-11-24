@@ -190,7 +190,6 @@ size:
             patterns: ['**/*.test.ts'],
             display_name: {
               en: 'Tests',
-              // missing ja
             },
           },
         ],
@@ -386,7 +385,7 @@ size:
     });
 
     it('should reject oversized config files', async () => {
-      const largeContent = 'x'.repeat(2 * 1024 * 1024); // 2MB
+      const largeContent = 'x'.repeat(2 * 1024 * 1024);
       const mockGetContent = vi.fn().mockResolvedValue({
         data: {
           content: Buffer.from(largeContent).toString('base64'),

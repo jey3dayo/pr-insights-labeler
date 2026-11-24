@@ -1,8 +1,3 @@
-/**
- * Comment management for GitHub pull requests
- * Handles posting and updating PR comments with analysis results
- */
-
 import * as github from '@actions/github';
 import { err, ok, Result } from 'neverthrow';
 
@@ -20,27 +15,17 @@ import {
 } from './report-formatter';
 import type { PRContext } from './types';
 
-/**
- * Comment configuration
- */
 export interface CommentConfig {
   commentMode: 'always' | 'auto' | 'never';
 }
 
-/**
- * Comment action result
- */
 export interface CommentResult {
   action: 'created' | 'updated' | 'deleted' | 'skipped';
   commentId: number | null;
 }
 
-// Comment signature for identification
 export const COMMENT_SIGNATURE = '<!-- pr-labeler -->';
 
-/**
- * Check if analysis result has any violations
- */
 function hasViolations(analysisResult: AnalysisResult): boolean {
   return (
     analysisResult.violations.largeFiles.length > 0 ||
@@ -50,30 +35,23 @@ function hasViolations(analysisResult: AnalysisResult): boolean {
   );
 }
 
-/**
- * Generate comment body from analysis results
- */
 export function generateCommentBody(analysisResult: AnalysisResult): string {
   const { metrics, violations } = analysisResult;
   const hasViolationsFlag = hasViolations(analysisResult);
 
   let body = '';
 
-  // Header (translated)
   if (hasViolationsFlag) {
     body += `## 📊 ${t('common', 'comment.headerViolation')}\n\n`;
   } else {
     body += `## ✅ ${t('common', 'comment.headerPassed')}\n\n`;
   }
 
-  // Basic metrics section (using shared formatter, without timestamp for comments)
   const metricsSection = formatBasicMetrics(metrics, { includeTimestamp: false });
   body += metricsSection;
 
-  // Violations section (using shared formatter - summary only)
   body += formatViolations(violations);
 
-  // Unified file analysis table (combines violations and file details)
   if (metrics.filesAnalyzed.length > 0) {
     body += formatFileAnalysis(violations, metrics.filesAnalyzed, 10);
   }
@@ -81,7 +59,6 @@ export function generateCommentBody(analysisResult: AnalysisResult): string {
   body += formatImprovementActions(violations);
   body += formatBestPractices(violations, metrics);
 
-  // Files with errors note (translated)
   if (metrics.filesWithErrors.length > 0) {
     body += `### ⚠️ ${t('common', 'comment.analysisErrors')}\n\n`;
     body += `${t('common', 'comment.filesNotAnalyzed')}\n\n`;
@@ -94,7 +71,6 @@ export function generateCommentBody(analysisResult: AnalysisResult): string {
     body += '\n';
   }
 
-  // Footer with signature (translated)
   body += '---\n';
   body += `*${t('common', 'comment.footer')}*\n`;
   body += COMMENT_SIGNATURE;
@@ -102,9 +78,6 @@ export function generateCommentBody(analysisResult: AnalysisResult): string {
   return body;
 }
 
-/**
- * Find existing comment with our signature
- */
 export async function findExistingComment(
   token: string,
   context: PRContext,
@@ -114,7 +87,6 @@ export async function findExistingComment(
 
     const octokit = github.getOctokit(token);
 
-    // Use Octokit's paginate.iterator for efficient pagination
     for await (const { data } of octokit.paginate.iterator(octokit.rest.issues.listComments, {
       owner: context.owner,
       repo: context.repo,
@@ -141,9 +113,6 @@ export async function findExistingComment(
   }
 }
 
-/**
- * Post a new comment
- */
 export async function postComment(
   body: string,
   token: string,
@@ -168,9 +137,6 @@ export async function postComment(
   }
 }
 
-/**
- * Update an existing comment
- */
 export async function updateComment(
   commentId: number,
   body: string,
@@ -196,9 +162,6 @@ export async function updateComment(
   }
 }
 
-/**
- * Delete a comment
- */
 export async function deleteComment(
   commentId: number,
   token: string,
@@ -222,9 +185,6 @@ export async function deleteComment(
   }
 }
 
-/**
- * Manage PR comment based on configuration
- */
 export async function manageComment(
   analysisResult: AnalysisResult,
   config: CommentConfig,
@@ -233,29 +193,24 @@ export async function manageComment(
 ): Promise<Result<CommentResult, GitHubAPIError>> {
   const hasViolationsFlag = hasViolations(analysisResult);
 
-  // Check for existing comment
   const existingCommentResult = await findExistingComment(token, context);
   if (existingCommentResult.isErr()) {
     return err(existingCommentResult.error);
   }
   const existingCommentId = existingCommentResult.value;
 
-  // Handle 'never' mode
   if (config.commentMode === 'never') {
     return handleSkipOrDelete(existingCommentId, token, context);
   }
 
-  // Handle 'auto' mode
   if (config.commentMode === 'auto') {
     if (!hasViolationsFlag) {
       return handleSkipOrDelete(existingCommentId, token, context);
     }
   }
 
-  // Generate comment body
   const commentBody = generateCommentBody(analysisResult);
 
-  // Update or create comment
   if (existingCommentId) {
     const updateResult = await updateComment(existingCommentId, commentBody, token, context);
     if (updateResult.isErr()) {

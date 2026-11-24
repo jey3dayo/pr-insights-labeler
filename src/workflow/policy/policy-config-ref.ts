@@ -26,7 +26,6 @@ export type PolicyConfigRefSource = 'head' | 'base' | 'default';
 
 export interface PolicyConfigRefResolution {
   source: PolicyConfigRefSource;
-  /** Commit SHA or ref to read from. `undefined` means the repository default branch. */
   ref: string | undefined;
 }
 

@@ -1,12 +1,5 @@
-/**
- * Analysis types for file metrics
- */
-
 import type { Violations } from '../errors/types.js';
 
-/**
- * File metrics for a single file
- */
 export interface FileMetrics {
   path: string;
   size: number;
@@ -16,9 +9,6 @@ export interface FileMetrics {
   deletions: number;
 }
 
-/**
- * Analysis result with metrics and violations
- */
 export interface Metrics {
   totalFiles: number;
   totalAdditions: number;
@@ -27,14 +17,10 @@ export interface Metrics {
   filesExcluded: string[];
   filesSkippedBinary: string[];
   filesWithErrors: string[];
-  /** maxFileCount 到達により解析対象から除外されたファイル（totalAdditions には加算済み） */
   filesSkippedByLimit: string[];
-  allFiles: string[]; // カテゴリラベル判定用の全ファイルパス（除外前）
+  allFiles: string[];
 }
 
-/**
- * Analysis result with metrics and violations
- */
 export interface AnalysisResult {
   metrics: Metrics;
   violations: Violations;

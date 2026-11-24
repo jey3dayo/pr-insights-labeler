@@ -1,13 +1,8 @@
-/**
- * Tests for input-parser module
- */
-
 import * as core from '@actions/core';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { parseActionInputs } from '../src/input-parser.js';
 
-// Mock @actions/core
 vi.mock('@actions/core', () => ({
   getInput: vi.fn(),
 }));
@@ -64,7 +59,6 @@ describe('parseActionInputs', () => {
   beforeEach(() => {
     vi.clearAllMocks();
 
-    // デフォルトの有効な入力値を設定
     mockGetInput.mockImplementation(buildInputs());
   });
 
@@ -78,9 +72,9 @@ describe('parseActionInputs', () => {
       }
 
       const parsed = result.value;
-      expect(parsed.language).toBeUndefined(); // 空文字列 → undefined
+      expect(parsed.language).toBeUndefined();
       expect(parsed.githubToken).toBe('test-token');
-      expect(parsed.fileSizeLimit).toBe(102400); // 100KB
+      expect(parsed.fileSizeLimit).toBe(102400);
       expect(parsed.fileSizeLimitEnabled).toBe(true);
       expect(parsed.fileLinesLimit).toBe(1000);
       expect(parsed.fileLinesLimitEnabled).toBe(true);
@@ -91,7 +85,6 @@ describe('parseActionInputs', () => {
     });
 
     it('should convert empty string language to undefined', () => {
-      // デフォルト値を維持しつつ、language のみ空文字列に
       mockGetInput.mockImplementation((name: string) => {
         const defaults: Record<string, string> = {
           language: '',
@@ -375,7 +368,7 @@ describe('parseActionInputs', () => {
       if (result.isErr()) {
         return;
       }
-      expect(result.value.fileSizeLimit).toBe(1048576); // 1MB in bytes
+      expect(result.value.fileSizeLimit).toBe(1048576);
     });
   });
 });

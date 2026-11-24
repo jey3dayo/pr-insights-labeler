@@ -1,7 +1,3 @@
-/**
- * Tests for config-builder module
- */
-
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { buildCompleteConfig } from '../src/config-builder.js';
@@ -9,7 +5,6 @@ import type { EnvironmentConfig } from '../src/environment-loader.js';
 import type { ParsedInputs } from '../src/input-parser.js';
 import type { LabelerConfig } from '../src/labeler-types.js';
 
-// Mock actions-io for logDebug and logWarning
 vi.mock('../src/actions-io.js', () => ({
   logDebug: vi.fn(),
   logWarning: vi.fn(),
@@ -21,7 +16,6 @@ describe('buildCompleteConfig', () => {
   let envConfig: EnvironmentConfig;
 
   beforeEach(() => {
-    // デフォルトのパース済み inputs
     parsedInputs = {
       language: undefined,
       githubToken: 'test-token',
@@ -56,10 +50,8 @@ describe('buildCompleteConfig', () => {
       useDefaultExcludes: true,
     };
 
-    // デフォルトの labeler config
     labelerConfig = {};
 
-    // デフォルトの環境設定
     envConfig = {
       language: undefined,
       githubToken: undefined,
@@ -114,7 +106,7 @@ describe('buildCompleteConfig', () => {
     it('should fallback to default for invalid language codes', () => {
       parsedInputs.language = 'fr';
       const config = buildCompleteConfig(parsedInputs, labelerConfig, envConfig);
-      expect(config.language).toBe('en'); // normalized with warning
+      expect(config.language).toBe('en');
     });
   });
 

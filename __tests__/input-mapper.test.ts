@@ -9,10 +9,8 @@ import {
   parseSizeThresholds,
 } from '../src/parsers/action-input-parsers';
 
-// Mock @actions/core
 vi.mock('@actions/core');
 
-// デフォルトのDirectory-Based Labeling入力値を持つヘルパー
 const getDefaultDirectoryLabelingInputs = () => ({
   file_size_limit_enabled: 'true',
   pr_additions_limit_enabled: 'true',
@@ -25,7 +23,6 @@ const getDefaultDirectoryLabelingInputs = () => ({
   use_default_excludes: 'true',
 });
 
-// デフォルトのPR Insights Labeler入力値を持つヘルパー
 const getDefaultPRLabelerInputs = () => ({
   size_enabled: 'true',
   size_thresholds: '{"small": 200, "medium": 500, "large": 1000, "xlarge": 3000}',
@@ -36,7 +33,6 @@ const getDefaultPRLabelerInputs = () => ({
   file_size_limit_enabled: 'true',
   pr_additions_limit_enabled: 'true',
   pr_files_limit_enabled: 'true',
-  // Label-Based Workflow Failure Control
   fail_on_large_files: '',
   fail_on_too_many_files: '',
   fail_on_pr_size: '',
@@ -57,7 +53,7 @@ describe('InputMapper', () => {
       expect(parseBoolean('YES')).toBe(true);
       expect(parseBoolean('on')).toBe(true);
       expect(parseBoolean('ON')).toBe(true);
-      expect(parseBoolean(' true ')).toBe(true); // with spaces
+      expect(parseBoolean(' true ')).toBe(true);
     });
 
     it('should parse false values', () => {
@@ -169,7 +165,7 @@ describe('InputMapper', () => {
         pr_files_limit: '50',
         pr_files_limit_enabled: 'true',
         size_enabled: 'true',
-        size_thresholds: 'invalid-json', // Invalid JSON
+        size_thresholds: 'invalid-json',
         complexity_enabled: 'true',
         complexity_thresholds: '{"medium": 10, "high": 20}',
         category_enabled: 'true',
@@ -203,7 +199,7 @@ describe('InputMapper', () => {
         pr_files_limit: '50',
         pr_files_limit_enabled: 'true',
         size_enabled: 'true',
-        size_thresholds: '{"small": -100, "medium": 500, "large": 1000, "xlarge": 3000}', // Negative value
+        size_thresholds: '{"small": -100, "medium": 500, "large": 1000, "xlarge": 3000}',
         complexity_enabled: 'true',
         complexity_thresholds: '{"medium": 10, "high": 20}',
         category_enabled: 'true',
@@ -237,7 +233,7 @@ describe('InputMapper', () => {
         pr_files_limit: '50',
         pr_files_limit_enabled: 'true',
         size_enabled: 'true',
-        size_thresholds: '{"small": 1000, "medium": 500, "large": 100, "xlarge": 3000}', // Incorrect order
+        size_thresholds: '{"small": 1000, "medium": 500, "large": 100, "xlarge": 3000}',
         complexity_enabled: 'true',
         complexity_thresholds: '{"medium": 10, "high": 20}',
         category_enabled: 'true',
@@ -275,7 +271,7 @@ describe('InputMapper', () => {
         size_enabled: 'true',
         size_thresholds: '{"small": 200, "medium": 500, "large": 1000, "xlarge": 3000}',
         complexity_enabled: 'true',
-        complexity_thresholds: 'invalid-json', // Invalid JSON
+        complexity_thresholds: 'invalid-json',
         category_enabled: 'true',
         risk_enabled: 'true',
         large_files_label: 'auto/large-files',
@@ -309,7 +305,7 @@ describe('InputMapper', () => {
         size_enabled: 'true',
         size_thresholds: '{"small": 200, "medium": 500, "large": 1000, "xlarge": 3000}',
         complexity_enabled: 'true',
-        complexity_thresholds: '{"medium": -10, "high": 20}', // Negative value
+        complexity_thresholds: '{"medium": -10, "high": 20}',
         category_enabled: 'true',
         risk_enabled: 'true',
         large_files_label: 'auto/large-files',
@@ -343,7 +339,7 @@ describe('InputMapper', () => {
         size_enabled: 'true',
         size_thresholds: '{"small": 200, "medium": 500, "large": 1000, "xlarge": 3000}',
         complexity_enabled: 'true',
-        complexity_thresholds: '{"medium": 20, "high": 10}', // Incorrect order
+        complexity_thresholds: '{"medium": 20, "high": 10}',
         category_enabled: 'true',
         risk_enabled: 'true',
         large_files_label: 'auto/large-files',
@@ -390,14 +386,13 @@ describe('InputMapper', () => {
       expect(result.isOk()).toBe(true);
       if (result.isOk()) {
         const config = result.value;
-        expect(config.fileSizeLimit).toBe(102400); // 100KB in bytes
+        expect(config.fileSizeLimit).toBe(102400);
         expect(config.fileSizeLimitEnabled).toBe(true);
         expect(config.fileLinesLimit).toBe(500);
         expect(config.fileLinesLimitEnabled).toBe(true);
         expect(config.prAdditionsLimit).toBe(5000);
         expect(config.prAdditionsLimitEnabled).toBe(true);
         expect(config.prFilesLimit).toBe(50);
-        // PR Insights Labeler - Selective Label Enabling
         expect(config.sizeEnabled).toBe(true);
         expect(config.sizeThresholds.small).toBe(200);
         expect(config.sizeThresholds.medium).toBe(500);
@@ -451,7 +446,7 @@ describe('InputMapper', () => {
         pr_files_limit: '50',
         pr_files_limit_enabled: 'true',
         size_enabled: 'true',
-        size_thresholds: 'invalid json', // Invalid JSON for testing
+        size_thresholds: 'invalid json',
         complexity_enabled: 'true',
         complexity_thresholds: '{"medium": 10, "high": 20}',
         category_enabled: 'true',
@@ -514,7 +509,7 @@ describe('InputMapper', () => {
         pr_files_limit_enabled: 'true',
         size_enabled: 'true',
         size_thresholds: '{"small": 200, "medium": 500, "large": 1000, "xlarge": 3000}',
-        complexity_enabled: 'false', // デフォルト値
+        complexity_enabled: 'false',
         complexity_thresholds: '{"medium": 15, "high": 30}',
         category_enabled: 'true',
         risk_enabled: 'true',
@@ -550,7 +545,7 @@ describe('InputMapper', () => {
         size_enabled: 'true',
         size_thresholds: '{"small": 200, "medium": 500, "large": 1000, "xlarge": 3000}',
         complexity_enabled: 'false',
-        complexity_thresholds: '{"medium": 15, "high": 30}', // デフォルト値
+        complexity_thresholds: '{"medium": 15, "high": 30}',
         category_enabled: 'true',
         risk_enabled: 'true',
         large_files_label: 'auto/large-files',

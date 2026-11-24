@@ -1,7 +1,3 @@
-/**
- * Directory-Based Labeler: Decision Engineのユニットテスト
- */
-
 import { describe, expect, test } from 'vitest';
 
 import {

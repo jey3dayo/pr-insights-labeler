@@ -122,7 +122,6 @@ describe('validateMinimatchPattern', () => {
       const result = validateMinimatchPattern('}*.ts');
       expect(result.isErr()).toBe(true);
       if (result.isErr()) {
-        // Unbalanced braces is checked before invalid pattern start
         expect(result.error.reason).toBe('Unbalanced braces');
       }
     });
@@ -131,7 +130,6 @@ describe('validateMinimatchPattern', () => {
       const result = validateMinimatchPattern(']*.ts');
       expect(result.isErr()).toBe(true);
       if (result.isErr()) {
-        // Unbalanced brackets is checked before invalid pattern start
         expect(result.error.reason).toBe('Unbalanced brackets');
       }
     });
@@ -140,7 +138,6 @@ describe('validateMinimatchPattern', () => {
       const result = validateMinimatchPattern('{{}}');
       expect(result.isErr()).toBe(true);
       if (result.isErr()) {
-        // Empty brace expansion is checked before nested braces
         expect(result.error.reason).toBe('Empty brace expansion');
       }
     });

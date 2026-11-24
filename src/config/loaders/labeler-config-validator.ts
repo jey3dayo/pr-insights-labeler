@@ -6,9 +6,6 @@ import { DEFAULT_LABELER_CONFIG } from '../../labeler-types.js';
 import { validateConfigWithTransformerAsync } from '../../utils/config-validation-utils.js';
 import { parseLabelerConfig } from '../transformers/labeler-config-transformer.js';
 
-/**
- * Validate and sanitize labeler configuration via transformer layer
- */
 export function validateLabelerConfig(config: unknown): ResultAsync<LabelerConfig, ConfigurationError> {
   return validateConfigWithTransformerAsync(config, parseLabelerConfig).map(normalizedConfig =>
     mergeWithDefaults(normalizedConfig),

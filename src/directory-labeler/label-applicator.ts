@@ -1,9 +1,3 @@
-/**
- * Directory-Based Labeler: ラベル適用機能
- *
- * 名前空間ポリシー適用、冪等性保証、GitHub API呼び出し調整を担当
- */
-
 import * as core from '@actions/core';
 import * as github from '@actions/github';
 import { err, ok, type Result } from 'neverthrow';
@@ -23,9 +17,6 @@ import type { NamespacePolicy } from './types.js';
 
 type Octokit = ReturnType<typeof github.getOctokit>;
 
-/**
- * PRコンテキスト情報
- */
 export interface PullRequestContext {
   repo: {
     owner: string;
@@ -36,17 +27,10 @@ export interface PullRequestContext {
   };
 }
 
-/**
- * ラベル適用結果
- */
 export interface ApplyResult {
-  /** 適用されたラベル */
   applied: string[];
-  /** スキップされたラベル（既存重複） */
   skipped: string[];
-  /** 削除されたラベル */
   removed?: string[];
-  /** 失敗したラベル */
   failed: Array<{ label: string; reason: string }>;
 }
 
@@ -117,17 +101,6 @@ function calculateNamespaceRemovals(
   return labelsToRemove;
 }
 
-/**
- * Directory-Based Labelerのラベルを適用
- *
- * Labels are always auto-created if they don't exist (using fixed defaults: color=cccccc, description="")
- *
- * @param octokit - GitHub APIクライアント
- * @param context - PRコンテキスト
- * @param decisions - ラベル決定結果
- * @param namespaces - 名前空間ポリシー
- * @returns 適用結果またはエラー
- */
 export async function applyDirectoryLabels(
   octokit: Octokit,
   context: PullRequestContext,
@@ -156,7 +129,6 @@ export async function applyDirectoryLabels(
   const newLabels = decisions.map(d => d.label);
   const labelsToRemove = calculateNamespaceRemovals(existingLabels, newLabels, namespaces);
 
-  // ラベルを削除
   for (const label of labelsToRemove) {
     try {
       await octokit.rest.issues.removeLabel({
@@ -174,10 +146,8 @@ export async function applyDirectoryLabels(
     }
   }
 
-  // 追加すべきラベルを決定（既存重複を除外）
   const labelsToAdd = newLabels.filter(label => !existingLabels.includes(label));
 
-  // スキップされたラベルを記録
   for (const label of newLabels) {
     if (existingLabels.includes(label)) {
       result.skipped.push(label);
@@ -185,7 +155,6 @@ export async function applyDirectoryLabels(
     }
   }
 
-  // ラベルを追加
   if (labelsToAdd.length > 0) {
     try {
       await octokit.rest.issues.addLabels({
@@ -200,12 +169,10 @@ export async function applyDirectoryLabels(
       const e = ensureError(error);
       const status = extractErrorStatus(error);
 
-      // ラベル未存在エラー（422）の場合、常にラベルを作成
       if (status === 422) {
         core.info('Some labels do not exist. Attempting to create them...');
         await createMissingLabels(octokit, context, labelsToAdd, result);
       } else {
-        // その他のエラーは失敗として記録
         for (const label of labelsToAdd) {
           result.failed.push({ label, reason: e.message });
         }
@@ -220,11 +187,6 @@ export async function applyDirectoryLabels(
   return ok(result);
 }
 
-/**
- * 未存在のラベルを作成して追加
- *
- * Labels are created with fixed defaults: color=cccccc, description=""
- */
 async function createMissingLabels(
   octokit: Octokit,
   context: PullRequestContext,
@@ -241,7 +203,6 @@ async function createMissingLabels(
       continue;
     }
 
-    // 2) Create the missing label (ignore 422 already_exists) then add again
     try {
       await octokit.rest.issues.createLabel({
         owner: context.repo.owner,
@@ -254,7 +215,6 @@ async function createMissingLabels(
     } catch (error) {
       const status = extractErrorStatus(error);
       const e = ensureError(error);
-      // If it already exists (422), proceed to add; otherwise record failure and continue
       if (status !== 422) {
         result.failed.push({ label, reason: `Failed to create: ${e.message}` });
         core.warning(`Failed to create label "${label}": ${e.message}`);

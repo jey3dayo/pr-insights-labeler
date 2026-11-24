@@ -1,7 +1,3 @@
-/**
- * Directory-Based Labeler: Pattern Matcherのユニットテスト
- */
-
 import { describe, expect, test } from 'vitest';
 
 import {
@@ -75,9 +71,6 @@ describe('Directory-Based Labeler: Pattern Matcher', () => {
     });
 
     test('dotオプションで隠しファイルをマッチング', () => {
-      // dotオプションは、ワイルドカード（*や**）がドットで始まるセグメントにマッチするかを制御
-      // dot:trueの場合、`**/*`は`.hidden`にマッチ
-      // dot:falseの場合、`**/*`は`.hidden`にマッチしない
       const patternsWildcard = ['src/**/*'];
       const compiledWithDot = compilePatterns(patternsWildcard, { dot: true, nocase: false, matchBase: false });
       const compiledWithoutDot = compilePatterns(patternsWildcard, { dot: false, nocase: false, matchBase: false });
@@ -85,7 +78,6 @@ describe('Directory-Based Labeler: Pattern Matcher', () => {
       expect(compiledWithDot[0]?.matcher('src/.hidden/file.ts')).toBe(true);
       expect(compiledWithoutDot[0]?.matcher('src/.hidden/file.ts')).toBe(false);
 
-      // パターンが明示的にドットを含む場合（`**/.hidden`）は、dotオプションに関わらずマッチ
       const patternsExplicitDot = ['**/.github/**'];
       const compiledExplicitDot = compilePatterns(patternsExplicitDot, { dot: false, nocase: false, matchBase: false });
       expect(compiledExplicitDot[0]?.matcher('project/.github/workflows/ci.yml')).toBe(true);
@@ -120,7 +112,7 @@ describe('Directory-Based Labeler: Pattern Matcher', () => {
       const result = matchIncludePatterns('src/components/Button.tsx', patterns, excludePatterns);
 
       expect(result.matched).toBe(true);
-      expect(result.matchedPattern).toBe('src/components/**'); // より具体的なパターン
+      expect(result.matchedPattern).toBe('src/components/**');
     });
 
     test('除外パターン優先評価', () => {
@@ -149,7 +141,6 @@ describe('Directory-Based Labeler: Pattern Matcher', () => {
       const result = matchIncludePatterns('src/components/Button.tsx', patterns, excludePatterns);
 
       expect(result.matched).toBe(true);
-      // 'src/components/**/*.tsx' の方が具体的なため、こちらがマッチ
       expect(result.matchedPattern).toBe('src/components/**/*.tsx');
     });
 
@@ -157,19 +148,15 @@ describe('Directory-Based Labeler: Pattern Matcher', () => {
       const patterns = compilePatterns(['**/*'], { dot: true });
       const excludePatterns = compilePatterns(DEFAULT_EXCLUDES as unknown as string[], { dot: true });
 
-      // node_modulesは除外される
       const nodeModulesResult = matchIncludePatterns('node_modules/package/index.js', patterns, excludePatterns);
       expect(nodeModulesResult.matched).toBe(false);
 
-      // .gitディレクトリは除外される
       const gitResult = matchIncludePatterns('.git/config', patterns, excludePatterns);
       expect(gitResult.matched).toBe(false);
 
-      // ロックファイルは除外される
       const lockFileResult = matchIncludePatterns('package-lock.json', patterns, excludePatterns);
       expect(lockFileResult.matched).toBe(false);
 
-      // 通常のソースファイルはマッチ
       const sourceFileResult = matchIncludePatterns('src/index.ts', patterns, excludePatterns);
       expect(sourceFileResult.matched).toBe(true);
     });
@@ -179,12 +166,10 @@ describe('Directory-Based Labeler: Pattern Matcher', () => {
       const excludePatterns = compilePatterns(DEFAULT_EXCLUDES as unknown as string[], { dot: true });
       const excluded = (path: string) => !matchIncludePatterns(path, patterns, excludePatterns).matched;
 
-      // Gradle の依存ロック（buildscript / per-configuration を含む）
       expect(excluded('gradle.lockfile')).toBe(true);
       expect(excluded('buildscript-gradle.lockfile')).toBe(true);
       expect(excluded('gradle/dependency-locks/compileClasspath.lockfile')).toBe(true);
 
-      // 末尾が .lock / .lockfile ではないロックファイル
       expect(excluded('pylock.toml')).toBe(true);
       expect(excluded('pylock.dev.toml')).toBe(true);
       expect(excluded('gems.locked')).toBe(true);
@@ -192,14 +177,12 @@ describe('Directory-Based Labeler: Pattern Matcher', () => {
       expect(excluded('cabal.project.freeze')).toBe(true);
       expect(excluded('maven_install.json')).toBe(true);
 
-      // Yarn Berry が設計上コミットする生成物
       expect(excluded('.pnp.cjs')).toBe(true);
       expect(excluded('.pnp.loader.mjs')).toBe(true);
       expect(excluded('.yarn/cache/lodash-npm-4.17.21.zip')).toBe(true);
       expect(excluded('.yarn/releases/yarn-4.0.0.cjs')).toBe(true);
       expect(excluded('packages/app/.yarn/cache/x.zip')).toBe(true);
 
-      // 手書きで解析対象に残すファイル
       expect(excluded('requirements.txt')).toBe(false);
       expect(excluded('gradle/libs.versions.toml')).toBe(false);
       expect(excluded('pnpm-workspace.yaml')).toBe(false);
@@ -207,16 +190,14 @@ describe('Directory-Based Labeler: Pattern Matcher', () => {
       expect(excluded('.yarn/patches/lodash.patch')).toBe(false);
       expect(excluded('.yarnrc.yml')).toBe(false);
 
-      // PEP 751 の命名規則（`pylock.<非ドット1要素>.toml`）を超えるものは除外しない
       expect(excluded('pylock.dev.backup.toml')).toBe(false);
     });
 
     test('リネームファイル: 新パスで判定', () => {
-      // リネームの場合、呼び出し側で新パスを渡すことを想定
       const patterns = compilePatterns(['src/new/**'], { dot: true });
       const excludePatterns = compilePatterns([], { dot: true });
 
-      const newPath = 'src/new/A.ts'; // 移動先パス
+      const newPath = 'src/new/A.ts';
       const result = matchIncludePatterns(newPath, patterns, excludePatterns);
 
       expect(result.matched).toBe(true);
@@ -256,7 +237,7 @@ describe('Directory-Based Labeler: Pattern Matcher', () => {
         {
           pattern: 'src/components/**',
           matcher: (path: string) => path.startsWith('src/components/'),
-          priority: 10, // 同じpriority
+          priority: 10,
         },
       ];
 
@@ -264,7 +245,6 @@ describe('Directory-Based Labeler: Pattern Matcher', () => {
       const result = matchIncludePatterns('src/components/Button.tsx', patterns, excludePatterns);
 
       expect(result.matched).toBe(true);
-      // より具体的な 'src/components/**' が選ばれる
       expect(result.matchedPattern).toBe('src/components/**');
     });
 

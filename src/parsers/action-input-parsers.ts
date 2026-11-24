@@ -1,15 +1,8 @@
-/**
- * Shared parsing utilities for GitHub Action inputs
- */
-
 import { err, ok, Result } from 'neverthrow';
 
 import type { ConfigurationError, ParseError } from '../errors/index.js';
 import { createConfigurationError, createParseError } from '../errors/index.js';
 
-/**
- * Size threshold configuration (small/medium/large/xlarge with additions only)
- */
 export interface SizeThresholds {
   small: number;
   medium: number;
@@ -17,21 +10,11 @@ export interface SizeThresholds {
   xlarge: number;
 }
 
-/**
- * Parse boolean value (lenient)
- * Accepts: true, 1, yes, on (case insensitive, with spaces)
- * Unknown values default to false
- */
 export function parseBoolean(value: string): boolean {
   const normalized = value.trim().toLowerCase();
   return ['true', '1', 'yes', 'on'].includes(normalized);
 }
 
-/**
- * Parse boolean value (strict)
- * Accepts: true, 1, yes, on, false, 0, no, off (case insensitive, with spaces)
- * Unknown values return ConfigurationError
- */
 export function parseBooleanStrict(value: string): Result<boolean, ConfigurationError> {
   const normalized = value.trim().toLowerCase();
 
@@ -52,24 +35,14 @@ export function parseBooleanStrict(value: string): Result<boolean, Configuration
   );
 }
 
-/**
- * Parse comment mode
- * Valid values: auto, always, never
- * Default: auto
- */
 export function parseCommentMode(value: string): 'auto' | 'always' | 'never' {
   const normalized = value.trim().toLowerCase();
   if (normalized === 'always' || normalized === 'never') {
     return normalized;
   }
-  return 'auto'; // default
+  return 'auto';
 }
 
-/**
- * Parse exclude patterns
- * Splits by comma or newline, trims, filters empty values and comments
- * Also removes duplicate patterns
- */
 export function parseExcludePatterns(value: string): string[] {
   const patterns = value
     .split(/[,\n]/)
@@ -79,9 +52,6 @@ export function parseExcludePatterns(value: string): string[] {
   return [...new Set(patterns)];
 }
 
-/**
- * Parse size thresholds from JSON string (small/medium/large/xlarge with additions only)
- */
 export function parseSizeThresholds(
   value: string,
 ): Result<{ small: number; medium: number; large: number; xlarge: number }, ParseError> {
@@ -123,9 +93,6 @@ export function parseSizeThresholds(
   }
 }
 
-/**
- * Parse complexity thresholds from JSON string (V2: medium/high)
- */
 export function parseComplexityThresholdsV2(value: string): Result<{ medium: number; high: number }, ParseError> {
   try {
     const parsed = JSON.parse(value);

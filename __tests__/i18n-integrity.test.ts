@@ -1,9 +1,3 @@
-/**
- * 翻訳キー整合性テスト
- *
- * すべての翻訳キーが全言語で定義されていることを保証します。
- */
-
 import { describe, expect, it } from 'vitest';
 
 import commonEn from '../src/locales/en/common.json';
@@ -17,9 +11,6 @@ import labelsJa from '../src/locales/ja/labels.json';
 import logsJa from '../src/locales/ja/logs.json';
 import summaryJa from '../src/locales/ja/summary.json';
 
-/**
- * オブジェクトからすべてのドット区切りキーを取得
- */
 function getAllKeys(obj: Record<string, unknown>, prefix = ''): string[] {
   const keys: string[] = [];
 
@@ -27,10 +18,8 @@ function getAllKeys(obj: Record<string, unknown>, prefix = ''): string[] {
     const fullKey = prefix ? `${prefix}.${key}` : key;
 
     if (value && typeof value === 'object' && !Array.isArray(value)) {
-      // ネストされたオブジェクトの場合、再帰的にキーを取得
       keys.push(...getAllKeys(value as Record<string, unknown>, fullKey));
     } else {
-      // 値がプリミティブの場合、キーを追加
       keys.push(fullKey);
     }
   }
@@ -38,9 +27,6 @@ function getAllKeys(obj: Record<string, unknown>, prefix = ''): string[] {
   return keys;
 }
 
-/**
- * 翻訳整合性をテストするヘルパー関数
- */
 function testNamespaceIntegrity(
   namespace: string,
   enResource: Record<string, unknown>,
@@ -133,7 +119,6 @@ function testNamespaceIntegrity(
 }
 
 describe('Translation Integrity', () => {
-  // すべての名前空間の整合性テスト
   testNamespaceIntegrity('summary', summaryEn, summaryJa);
   testNamespaceIntegrity('errors', errorsEn, errorsJa);
   testNamespaceIntegrity('logs', logsEn, logsJa);

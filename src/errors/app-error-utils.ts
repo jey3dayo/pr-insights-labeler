@@ -11,11 +11,6 @@ import type {
   ParseError,
 } from './types.js';
 
-/**
- * Type guard to check if a value is an AppError
- * Verifies that the value has both `type` and `message` string properties,
- * and that `type` ends with "Error"
- */
 function isAppError(value: unknown): value is AppError {
   return isErrorWithTypeAndMessage(value) && value.type.endsWith('Error');
 }

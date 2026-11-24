@@ -1,10 +1,3 @@
-/**
- * Input Parser
- *
- * Action inputs のパース・バリデーション
- * 参考: action-cache の getInputs() パターン
- */
-
 import * as core from '@actions/core';
 import { err, ok, type Result } from 'neverthrow';
 
@@ -16,28 +9,15 @@ import {
   type NormalizedActionInputs,
 } from './input/input-normalizer.js';
 
-/**
- * Parsed Inputs Interface (型安全)
- */
 export interface ParsedInputs extends NormalizedActionInputs {
   language: string | undefined;
   githubToken: string;
 }
 
-/**
- * Parse and validate all action inputs
- * 既存の mapActionInputsToConfig() のロジックを100%保持
- *
- * 参考: action-cache の getInputs()
- *
- * @returns パース済みの型安全な入力データ
- */
 export function parseActionInputs(): Result<ParsedInputs, ConfigurationError | ParseError> {
-  // Language (nullable: action.yml の default 削除により undefined 可能)
   const rawLanguage = core.getInput('language');
-  const language = rawLanguage || undefined; // 空文字列 → undefined
+  const language = rawLanguage || undefined;
 
-  // GitHub Token (required)
   const githubToken = core.getInput('github_token');
   if (!githubToken) {
     return err(createConfigurationError('github_token', undefined, 'GitHub token is required'));

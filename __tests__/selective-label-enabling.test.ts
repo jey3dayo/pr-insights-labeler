@@ -1,8 +1,3 @@
-/**
- * Tests for Selective Label Enabling Feature
- * テスト駆動開発（TDD）によるラベル種別の選択的有効化機能
- */
-
 import { describe, expect, it } from 'vitest';
 
 import type { LabelerConfig } from '../src/labeler-types';

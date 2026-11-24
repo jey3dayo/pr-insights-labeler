@@ -13,9 +13,6 @@ import type { PolicyConfigRefResolution } from '../policy/policy-config-ref.js';
 import { resolvePolicyConfigRef } from '../policy/policy-config-ref.js';
 import type { InitializationArtifacts, PullRequestRuntimeContext } from '../types';
 
-/**
- * Report which ref the labeling policy was read from, so the trust boundary is visible in logs.
- */
 function logPolicyConfigRefResolution(resolution: PolicyConfigRefResolution): void {
   if (resolution.source === 'base') {
     logInfoI18n('initialization.policyConfigFromBase', { ref: resolution.ref });
@@ -26,9 +23,6 @@ function logPolicyConfigRefResolution(resolution: PolicyConfigRefResolution): vo
   }
 }
 
-/**
- * Initialize action inputs, configuration, and i18n
- */
 export function initializeAction(): ResultAsync<InitializationArtifacts, AppError> {
   return ResultAsync.fromPromise(
     (async () => {
@@ -57,10 +51,6 @@ export function initializeAction(): ResultAsync<InitializationArtifacts, AppErro
       const labelerConfig = labelerConfigResult.match(
         config => config,
         error => {
-          // A missing configuration file is the normal no-config case and the fetcher
-          // already logs it at info level. Every other failure means a configuration
-          // the user wrote is being ignored, so surface the reason as a warning
-          // instead of silently falling back to defaults.
           if (!isConfigNotFoundError(error)) {
             logWarningI18n('initialization.configLoadFailed', { message: error.message });
           }

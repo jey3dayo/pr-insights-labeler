@@ -24,13 +24,11 @@ import {
 
 describe('ReportFormatter', () => {
   beforeEach(() => {
-    // Mock Date for consistent timestamp
     vi.setSystemTime(new Date('2025-10-18T15:30:00Z'));
 
-    // Initialize i18n with English for consistent test results
     resetI18n();
     initializeI18n('en');
-    changeLanguage('en'); // 明示的に英語に変更
+    changeLanguage('en');
   });
 
   afterEach(() => {
@@ -222,7 +220,7 @@ describe('ReportFormatter', () => {
       expect(result).toContain('<details>');
       expect(result).toContain('Excluded from Analysis');
       expect(result).toContain('dist/index.js');
-      expect(result).toContain('node_modules/@types/index.d.ts'); // No escaping in code blocks
+      expect(result).toContain('node_modules/@types/index.d.ts');
     });
 
     it('should return empty string when no files provided', () => {
@@ -292,7 +290,6 @@ describe('ReportFormatter', () => {
 
       expect(result).toContain('### 📊 Violations');
       expect(result).toContain('2 file(s) exceed size limit');
-      // Detailed table removed - now shown in formatFileAnalysis
       expect(result).not.toContain('### 🚫 Large Files Detected');
       expect(result).not.toContain('| File Name | Size | Limit | Status |');
     });
@@ -317,7 +314,6 @@ describe('ReportFormatter', () => {
 
       expect(result).toContain('### 📊 Violations');
       expect(result).toContain('1 file(s) exceed line limit');
-      // Detailed table removed - now shown in formatFileAnalysis
       expect(result).not.toContain('### ⚠️ Files Exceed Line Limit');
       expect(result).not.toContain('| File Name | Lines | Limit | Status |');
     });
@@ -381,7 +377,6 @@ describe('ReportFormatter', () => {
       expect(result).toContain('1 file(s) exceed line limit');
       expect(result).toContain('Total additions exceed limit');
       expect(result).toContain('File count exceeds limit');
-      // Detailed tables removed - now shown in formatFileAnalysis
       expect(result).not.toContain('### 🚫 Large Files Detected');
       expect(result).not.toContain('### ⚠️ Files Exceed Line Limit');
     });
@@ -465,7 +460,6 @@ describe('ReportFormatter', () => {
       const lines = result.split('\n');
       const fileLines = lines.filter(line => line.includes('.ts'));
 
-      // First file should be the largest
       expect(fileLines[0]).toContain('large.ts');
       expect(fileLines[1]).toContain('medium.ts');
       expect(fileLines[2]).toContain('small.ts');
@@ -711,10 +705,9 @@ describe('ReportFormatter', () => {
     });
 
     it('should display all warnings in a complex scenario', () => {
-      // Create files with the first one having highest complexity to ensure it's in top 10
       const files = Array.from({ length: 12 }, (_, i) => ({
         path: `src/complex${i + 1}.ts`,
-        complexity: i === 0 ? 30 : 15 + i, // First file has highest complexity
+        complexity: i === 0 ? 30 : 15 + i,
         functions:
           i === 0
             ? Array.from({ length: 7 }, (_, j) => ({
@@ -739,7 +732,6 @@ describe('ReportFormatter', () => {
 
       const result = generateComplexitySummary(metrics, baseConfig, baseContext);
 
-      // All warnings should be present
       expect(result).toContain('High Complexity Files (Top 10)');
       expect(result).toContain('Function Complexity (Top 5)');
       expect(result).toContain('+2 more files exceed complexity threshold');
@@ -969,7 +961,7 @@ describe('ReportFormatter', () => {
     const createTestContext = (): TestContext => {
       const fileMetrics: FileMetrics = {
         path: 'src/example.ts',
-        size: 51200, // 50 KB
+        size: 51200,
         lines: 450,
         additions: 120,
         deletions: 30,
@@ -979,8 +971,8 @@ describe('ReportFormatter', () => {
         largeFiles: [
           {
             file: 'src/example.ts',
-            actualValue: 51200, // 50 KB
-            limit: 10000, // 10 KB limit
+            actualValue: 51200,
+            limit: 10000,
             violationType: 'size',
             severity: 'warning',
           },
@@ -1117,11 +1109,9 @@ describe('ReportFormatter', () => {
       const output1 = formatBasicMetrics(context.analysisResult.metrics);
       const output2 = formatBasicMetrics(context.analysisResult.metrics);
 
-      // Should be idempotent
       expect(output1).toBe(output2);
-      // Should contain expected English phrases
       expect(output1).toContain('Total Additions');
-      expect(output1).not.toContain('合計追加行数'); // Not Japanese
+      expect(output1).not.toContain('合計追加行数');
     });
 
     it('should detect regression in Japanese output', () => {
@@ -1132,11 +1122,9 @@ describe('ReportFormatter', () => {
       const output1 = formatBasicMetrics(context.analysisResult.metrics);
       const output2 = formatBasicMetrics(context.analysisResult.metrics);
 
-      // Should be idempotent
       expect(output1).toBe(output2);
-      // Should contain expected Japanese phrases
       expect(output1).toContain('総追加行数');
-      expect(output1).not.toContain('Total Additions'); // Not English
+      expect(output1).not.toContain('Total Additions');
     });
   });
 
@@ -1180,7 +1168,7 @@ describe('ReportFormatter', () => {
 
       expect(result).toContain('### 📊 File Analysis');
       expect(result).toContain('src/index.ts');
-      expect(result).toContain('18.9 KB'); // 19400 bytes = 18.9 KB
+      expect(result).toContain('18.9 KB');
       expect(result).toContain('501');
       expect(result).toContain('+85/-87');
       expect(result).toContain('✅ OK');
@@ -1365,8 +1353,8 @@ describe('ReportFormatter', () => {
 
       const fileMatches = result.match(/src\/file\d+\.ts/g);
       expect(fileMatches).toHaveLength(5);
-      expect(result).toContain('src/file0.ts'); // Largest
-      expect(result).not.toContain('src/file10.ts'); // Outside limit
+      expect(result).toContain('src/file0.ts');
+      expect(result).not.toContain('src/file10.ts');
     });
 
     it('should handle Japanese language', () => {
@@ -1402,7 +1390,6 @@ describe('ReportFormatter', () => {
       expect(result).not.toContain('File Analysis');
       expect(result).not.toContain('Line Exceed');
 
-      // Reset to English for other tests
       changeLanguage('en');
     });
   });
@@ -1460,7 +1447,7 @@ describe('ReportFormatter', () => {
       expect(result).toContain('<details>');
       expect(result).toContain('category/tests');
       expect(result).toContain('1 file');
-      expect(result).toContain('`__tests__/test.ts`'); // No escaping in code blocks
+      expect(result).toContain('`__tests__/test.ts`');
       expect(result).toContain('category/documentation');
       expect(result).toContain('2 files');
       expect(result).toContain('`docs/README.md`');
@@ -1541,14 +1528,13 @@ describe('ReportFormatter', () => {
           label: 'category/tests',
           reason: 'file patterns match category/tests category',
           category: 'category',
-          // matchedFiles is undefined
         },
       ];
 
       const result = formatLabelFileGroups(reasoning, createFileMetrics());
 
       expect(result).toContain('### 🏷️ Applied Labels and Files');
-      expect(result).not.toContain('category/tests'); // Should not render if no matchedFiles
+      expect(result).not.toContain('category/tests');
     });
 
     it('should handle empty matchedFiles array', () => {
@@ -1564,7 +1550,7 @@ describe('ReportFormatter', () => {
       const result = formatLabelFileGroups(reasoning, createFileMetrics());
 
       expect(result).toContain('### 🏷️ Applied Labels and Files');
-      expect(result).not.toContain('category/tests'); // Should not render if matchedFiles is empty
+      expect(result).not.toContain('category/tests');
     });
 
     it('should group labels by category', () => {
@@ -1597,7 +1583,6 @@ describe('ReportFormatter', () => {
 
       const result = formatLabelFileGroups(reasoning, createFileMetrics(), createComplexityMetrics());
 
-      // Check that all categories are present in order
       const categoryIndex = result.indexOf('category/tests');
       const riskIndex = result.indexOf('risk/medium');
       const complexityIndex = result.indexOf('complexity/high');
@@ -1625,9 +1610,8 @@ describe('ReportFormatter', () => {
 
       expect(result).toContain('適用されたラベルとファイル');
       expect(result).toContain('category/tests');
-      expect(result).toContain('`__tests__/test.ts`'); // No escaping in code blocks
+      expect(result).toContain('`__tests__/test.ts`');
 
-      // Reset to English
       changeLanguage('en');
     });
 
@@ -1643,7 +1627,6 @@ describe('ReportFormatter', () => {
 
       const result = formatLabelFileGroups(reasoning, createFileMetrics());
 
-      // File paths in code blocks don't need escaping
       expect(result).toContain('special_file.test.ts');
       expect(result).toContain('[bracket].ts');
     });

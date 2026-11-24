@@ -4,14 +4,12 @@ import { createInterface } from 'node:readline';
 import * as github from '@actions/github';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-// Create hoisted mock function
 const { mockExecAsync } = vi.hoisted(() => {
   return {
     mockExecAsync: vi.fn(),
   };
 });
 
-// Setup mocks
 vi.mock('node:fs', () => ({
   promises: {
     stat: vi.fn(),
@@ -27,7 +25,6 @@ vi.mock('node:readline', () => ({
 
 vi.mock('node:child_process');
 
-// Mock util to return our hoisted mock function
 vi.mock('node:util', () => ({
   promisify: () => mockExecAsync,
 }));
@@ -35,14 +32,12 @@ vi.mock('node:util', () => ({
 vi.mock('@actions/github');
 vi.mock('@actions/core');
 
-// Import after mocking
 import type { DiffFile } from '../src/diff-strategy';
 import { analyzeFiles, getFileLineCount, getFileSize, isBinaryFile } from '../src/file-metrics';
 
 describe('FileMetrics', () => {
   let mockOctokit: any;
 
-  // Helper to create mock Stats object
   const createMockStats = (size: number): any => ({
     size,
     isFile: () => true,
@@ -74,7 +69,6 @@ describe('FileMetrics', () => {
   beforeEach(() => {
     vi.clearAllMocks();
 
-    // Setup GitHub mock
     mockOctokit = {
       rest: {
         repos: {
@@ -182,7 +176,6 @@ describe('FileMetrics', () => {
     it('should fallback to Node.js streaming implementation when wc fails', async () => {
       mockExecAsync.mockRejectedValue(new Error('Command not found'));
 
-      // Mock streaming for static imports
       const mockReadStream = {
         destroy: vi.fn(),
         on: vi.fn(),
@@ -217,7 +210,6 @@ describe('FileMetrics', () => {
     it('should handle large files with streaming (early termination)', async () => {
       mockExecAsync.mockRejectedValue(new Error('Command not found'));
 
-      // Mock streaming to simulate large file
       const mockReadStream = {
         destroy: vi.fn(),
         on: vi.fn(),
@@ -239,12 +231,10 @@ describe('FileMetrics', () => {
 
       expect(result.isOk()).toBe(true);
       if (result.isOk()) {
-        // Should stop counting at maxLines
         expect(result.value.lines).toBe(50000);
         expect(result.value.isCapped).toBe(true);
       }
 
-      // Verify stream was closed early
       expect(mockReadlineInterface.close).toHaveBeenCalled();
       expect(mockReadStream.destroy).toHaveBeenCalled();
     });
@@ -252,7 +242,6 @@ describe('FileMetrics', () => {
     it('should handle streaming errors gracefully', async () => {
       mockExecAsync.mockRejectedValue(new Error('Command not found'));
 
-      // Mock createReadStream to throw error
       vi.mocked(createReadStream).mockImplementation(() => {
         throw new Error('Permission denied');
       });
@@ -298,7 +287,6 @@ describe('FileMetrics', () => {
       vi.mocked(fs.readFile).mockResolvedValue('#!/bin/bash\necho "hello"');
       expect(await isBinaryFile('Makefile')).toBe(false);
 
-      // ELF header with more binary data (more than 30% non-printable)
       vi.mocked(fs.readFile).mockResolvedValue(
         Buffer.from([0x7f, 0x45, 0x4c, 0x46, 0x02, 0x01, 0x01, 0x00, 0x00, 0x00]),
       );
@@ -307,14 +295,13 @@ describe('FileMetrics', () => {
 
     it('should handle read errors gracefully', async () => {
       vi.mocked(fs.readFile).mockRejectedValue(new Error('File not found'));
-      // Assume text file if we can't read it
       expect(await isBinaryFile('unknown.xyz')).toBe(false);
     });
   });
 
   describe('analyzeFiles', () => {
     const config = {
-      fileSizeLimit: 1000000, // 1MB
+      fileSizeLimit: 1000000,
       fileSizeLimitEnabled: true,
       fileLineLimit: 1000,
       fileLineLimitEnabled: true,
@@ -337,7 +324,6 @@ describe('FileMetrics', () => {
         { filename: 'src/new.ts', additions: 200, deletions: 0, status: 'added' },
       ];
 
-      // Mock file sizes
       vi.mocked(fs.stat).mockImplementation(path => {
         const sizes: Record<string, number> = {
           'src/index.ts': 5000,
@@ -347,7 +333,6 @@ describe('FileMetrics', () => {
         return Promise.resolve(createMockStats(sizes[path as string] || 1000));
       });
 
-      // Mock line counts (execFile format: command, args[])
       mockExecAsync.mockImplementation((command: string, args?: readonly string[]) => {
         if (command === 'wc' && args?.[0] === '-l') {
           const lines: Record<string, string> = {
@@ -490,7 +475,7 @@ describe('FileMetrics', () => {
       const files: DiffFile[] = [
         { filename: 'src/index.ts', additions: 100, deletions: 20, status: 'modified' },
         { filename: 'assets/logo.png', additions: 0, deletions: 0, status: 'added' },
-        { filename: 'fonts/icon.woff', additions: 0, deletions: 0, status: 'added' }, // Using .woff instead of .wasm (wasm is in default exclude patterns)
+        { filename: 'fonts/icon.woff', additions: 0, deletions: 0, status: 'added' },
       ];
 
       vi.mocked(fs.stat).mockResolvedValue(createMockStats(1000));
@@ -519,7 +504,7 @@ describe('FileMetrics', () => {
 
       vi.mocked(fs.stat).mockImplementation(path => {
         const sizes: Record<string, number> = {
-          'src/large.ts': 2000000, // 2MB - exceeds limit
+          'src/large.ts': 2000000,
           'src/normal.ts': 5000,
         };
         return Promise.resolve(createMockStats(sizes[path as string] || 1000));
@@ -529,7 +514,7 @@ describe('FileMetrics', () => {
         if (command === 'wc' && args?.[0] === '-l') {
           if (args[1] === 'src/large.ts') {
             return Promise.resolve({
-              stdout: '     2000 src/large.ts', // Exceeds line limit
+              stdout: '     2000 src/large.ts',
               stderr: '',
             });
           }
@@ -543,22 +528,21 @@ describe('FileMetrics', () => {
 
       const smallConfig = {
         ...config,
-        fileSizeLimit: 1000000, // 1MB
+        fileSizeLimit: 1000000,
         fileLineLimit: 1000,
         fileLineLimitEnabled: true,
         fileCountLimitEnabled: true,
-        maxAddedLines: 500, // Will be exceeded
+        maxAddedLines: 500,
       };
 
       const result = await analyzeFiles(files, smallConfig, 'token', context);
 
       expect(result.isOk()).toBe(true);
       if (result.isOk()) {
-        // Check violations
         expect(result.value.violations.largeFiles).toHaveLength(1);
         expect(result.value.violations.largeFiles[0]?.file).toBe('src/large.ts');
         expect(result.value.violations.exceedsFileLines).toHaveLength(1);
-        expect(result.value.violations.exceedsAdditions).toBe(true); // 1100 > 500
+        expect(result.value.violations.exceedsAdditions).toBe(true);
         expect(result.value.violations.exceedsFileCount).toBe(false);
       }
     });
@@ -566,7 +550,7 @@ describe('FileMetrics', () => {
     it('should skip file size violations when disabled', async () => {
       const files: DiffFile[] = [{ filename: 'src/huge.ts', additions: 10, deletions: 0, status: 'modified' }];
 
-      vi.mocked(fs.stat).mockResolvedValue(createMockStats(5_000_000)); // 5MB
+      vi.mocked(fs.stat).mockResolvedValue(createMockStats(5_000_000));
 
       mockExecAsync.mockResolvedValue({
         stdout: '     100 src/huge.ts',
@@ -575,7 +559,7 @@ describe('FileMetrics', () => {
 
       const disabledConfig = {
         ...config,
-        fileSizeLimit: 100000, // 100KB
+        fileSizeLimit: 100000,
         fileSizeLimitEnabled: false,
       };
 
@@ -677,12 +661,11 @@ describe('FileMetrics', () => {
 
       expect(result.isOk()).toBe(true);
       if (result.isOk()) {
-        // Should continue with files that can be analyzed
         expect(result.value.metrics.filesAnalyzed).toHaveLength(1);
         expect(result.value.metrics.filesWithErrors).toHaveLength(1);
         expect(result.value.metrics.filesWithErrors).toContain('src/error.ts');
-        expect(result.value.metrics.excludedAdditions).toBe(100); // Errors are tracked separately
-        expect(result.value.metrics.totalAdditions).toBe(50); // Only successful files (errors excluded from totals)
+        expect(result.value.metrics.excludedAdditions).toBe(100);
+        expect(result.value.metrics.totalAdditions).toBe(50);
       }
     });
 
@@ -718,9 +701,7 @@ describe('FileMetrics', () => {
       expect(result.isOk()).toBe(true);
       if (result.isOk()) {
         expect(result.value.violations.exceedsFileCount).toBe(true);
-        // Should still analyze up to maxFileCount
         expect(result.value.metrics.filesAnalyzed.length).toBeLessThanOrEqual(100);
-        // Files beyond the limit are recorded as skipped and their additions still counted
         expect(result.value.metrics.filesSkippedByLimit).toHaveLength(50);
         expect(result.value.metrics.filesSkippedByLimit).toContain('src/file149.ts');
         expect(result.value.metrics.totalAdditions).toBe(1500);
@@ -746,7 +727,6 @@ describe('FileMetrics', () => {
 
       expect(result.isOk()).toBe(true);
       if (result.isOk()) {
-        // The excluded tail file must not inflate totalAdditions (49 skipped + 100 analyzed) * 10
         expect(result.value.metrics.totalAdditions).toBe(1490);
         expect(result.value.metrics.excludedAdditions).toBe(10);
         expect(result.value.metrics.filesExcluded).toContain('pnpm-lock.lock');

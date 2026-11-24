@@ -16,9 +16,6 @@ export function formatNumber(value: number): string {
   return formatNumberWithLocale(value);
 }
 
-/**
- * Escape special markdown characters
- */
 export function escapeMarkdown(text: string): string {
   return text.replace(/([_*[\]`|])/g, '\\$1');
 }
