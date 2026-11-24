@@ -1,14 +1,3 @@
-/**
- * Tests for Complexity Analyzer
- *
- * このファイルは実 ESLint（+ @typescript-eslint/parser）を実際に起動して複雑度を解析する。
- * `createComplexityAnalyzer()` と実 ESLint の間の契約を証明する唯一の場所であり、
- * 削除・弱化してはならない（`__tests__/integration.test.ts` は同じファクトリをモックに
- * 差し替えており、実 ESLint の起動確認はこのファイルの責務）。実測では cold cache でも
- * 1秒未満（fixtures 配下の小さな固定ファイルのみを解析するため）で、`testTimeout` の
- * グローバル既定を上げる必要はない（issue #161）。
- */
-
 import * as path from 'node:path';
 
 import { describe, expect, it } from 'vitest';
@@ -56,7 +45,7 @@ describe('ComplexityAnalyzer', () => {
 
     it('should skip files larger than maxFileSize', async () => {
       const filePath = path.join(fixturesDir, 'complexity-sample.ts');
-      const result = await analyzer.analyzeFile(filePath, { maxFileSize: 100 }); // 100 bytes limit
+      const result = await analyzer.analyzeFile(filePath, { maxFileSize: 100 });
 
       expect(result.isErr()).toBe(true);
       if (result.isErr()) {
@@ -79,7 +68,7 @@ describe('ComplexityAnalyzer', () => {
       expect(result.isOk()).toBe(true);
       if (result.isOk()) {
         const metrics = result.value;
-        expect(metrics.analyzedFiles).toBe(2); // Both files included
+        expect(metrics.analyzedFiles).toBe(2);
         expect(metrics.files).toHaveLength(2);
         expect(metrics.syntaxErrorFiles).toEqual([path.join(fixturesDir, 'syntax-error.ts')]);
         expect(metrics.skippedFiles).toHaveLength(0);
@@ -95,7 +84,7 @@ describe('ComplexityAnalyzer', () => {
       expect(result.isOk()).toBe(true);
       if (result.isOk()) {
         const metrics = result.value;
-        expect(metrics.analyzedFiles).toBe(1); // Only complexity-sample.ts
+        expect(metrics.analyzedFiles).toBe(1);
         expect(metrics.skippedFiles).toHaveLength(1);
         expect(metrics.skippedFiles[0]?.reason).toBe('analysis_failed');
       }
@@ -126,7 +115,6 @@ describe('ComplexityAnalyzer', () => {
       const metrics = aggregateMetrics(results);
 
       expect(metrics).toBeDefined();
-      // Average = (10 + 20 + 15) / 3 = 15.0
       expect(metrics?.avgComplexity).toBe(15.0);
     });
 
@@ -140,7 +128,6 @@ describe('ComplexityAnalyzer', () => {
       const metrics = aggregateMetrics(results);
 
       expect(metrics).toBeDefined();
-      // Average = (10 + 11 + 12) / 3 = 11.0
       expect(metrics?.avgComplexity).toBe(11.0);
     });
 
@@ -154,13 +141,9 @@ describe('ComplexityAnalyzer', () => {
       const metrics = aggregateMetrics(results);
 
       expect(metrics).toBeDefined();
-      // Max should be 30 (ignoring syntax error file)
       expect(metrics?.maxComplexity).toBe(30);
-      // Average = (20 + 0 + 30) / 3 = 16.7
       expect(metrics?.avgComplexity).toBe(16.7);
-      // Analyzed files should be 3 (including syntax error)
       expect(metrics?.analyzedFiles).toBe(3);
-      // Syntax error files should be tracked separately
       expect(metrics?.syntaxErrorFiles).toEqual(['syntax-error.ts']);
     });
 
@@ -181,13 +164,9 @@ describe('ComplexityAnalyzer', () => {
       const metrics = aggregateMetrics(results);
 
       expect(metrics).toBeDefined();
-      // Max should be 0 (all syntax errors)
       expect(metrics?.maxComplexity).toBe(0);
-      // Average should be 0
       expect(metrics?.avgComplexity).toBe(0);
-      // Analyzed files should be 2
       expect(metrics?.analyzedFiles).toBe(2);
-      // Both files should be in syntax error list
       expect(metrics?.syntaxErrorFiles).toHaveLength(2);
       expect(metrics?.syntaxErrorFiles).toContain('error1.ts');
       expect(metrics?.syntaxErrorFiles).toContain('error2.ts');
@@ -203,7 +182,7 @@ describe('ComplexityAnalyzer', () => {
       const metrics = aggregateMetrics(results);
 
       expect(metrics).toBeDefined();
-      expect(metrics?.analyzedFiles).toBe(3); // All files including syntax errors
+      expect(metrics?.analyzedFiles).toBe(3);
     });
   });
 });

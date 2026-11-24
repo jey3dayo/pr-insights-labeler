@@ -2,11 +2,9 @@ import * as core from '@actions/core';
 import * as github from '@actions/github';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-// Setup mocks
 vi.mock('@actions/github');
 vi.mock('@actions/core');
 
-// Import after mocking
 import type { Violations } from '../src/errors';
 import type { AnalysisResult } from '../src/file-metrics';
 import { initializeI18n, resetI18n } from '../src/i18n.js';
@@ -29,7 +27,6 @@ describe('LabelManager', () => {
   beforeEach(() => {
     vi.clearAllMocks();
 
-    // Initialize i18n with English
     const originalLang = process.env['LANG'];
     const originalLanguage = process.env['LANGUAGE'];
     delete process.env['LANG'];
@@ -38,7 +35,6 @@ describe('LabelManager', () => {
     resetI18n();
     initializeI18n('en');
 
-    // Restore original environment variables
     if (originalLang) {
       process.env['LANG'] = originalLang;
     }
@@ -46,7 +42,6 @@ describe('LabelManager', () => {
       process.env['LANGUAGE'] = originalLanguage;
     }
 
-    // Setup GitHub mock
     mockListLabels = vi.fn();
     mockAddLabels = vi.fn();
     mockRemoveLabel = vi.fn();
@@ -439,17 +434,14 @@ describe('LabelManager', () => {
         },
       };
 
-      // Current labels on PR
       mockListLabels.mockResolvedValue({
         data: [{ name: 'bug' }, { name: 'size/small' }, { name: 'auto/old-violation' }],
       });
 
-      // Adding new labels
       mockAddLabels.mockResolvedValue({
         data: [],
       });
 
-      // Removing old labels
       mockRemoveLabel.mockResolvedValue({});
 
       const result = await updateLabels(analysisResult, config, 'token', {
@@ -460,11 +452,11 @@ describe('LabelManager', () => {
 
       expect(result.isOk()).toBe(true);
       if (result.isOk()) {
-        expect(result.value.added).toContain('size/large'); // 150 additions: 100 < 150 < 500
-        expect(result.value.removed).toContain('size/small'); // Old size label
-        expect(result.value.removed).toContain('auto/old-violation'); // Old auto label
-        expect(result.value.current).toContain('bug'); // Preserved
-        expect(result.value.current).toContain('size/large'); // New size
+        expect(result.value.added).toContain('size/large');
+        expect(result.value.removed).toContain('size/small');
+        expect(result.value.removed).toContain('auto/old-violation');
+        expect(result.value.current).toContain('bug');
+        expect(result.value.current).toContain('size/large');
       }
     });
 
@@ -521,7 +513,7 @@ describe('LabelManager', () => {
 
       expect(result.isOk()).toBe(true);
       if (result.isOk()) {
-        expect(result.value.added).toContain('size/medium'); // 50 additions: 10 < 50 < 100
+        expect(result.value.added).toContain('size/medium');
         expect(result.value.added).toContain('auto/large-files');
         expect(result.value.added).toContain('auto/excessive-changes');
       }
@@ -556,7 +548,6 @@ describe('LabelManager', () => {
         },
       };
 
-      // Current labels already correct
       mockListLabels.mockResolvedValue({
         data: [{ name: 'size/medium' }],
       });
@@ -626,11 +617,11 @@ describe('LabelManager', () => {
 
       expect(result.isOk()).toBe(true);
       if (result.isOk()) {
-        expect(result.value.added).toContain('size/small'); // 5 additions = Small
+        expect(result.value.added).toContain('size/small');
         expect(result.value.removed).toContain('size/large');
         expect(result.value.removed).toContain('auto/large-files');
         expect(result.value.removed).toContain('auto/excessive-changes');
-        expect(result.value.current).toContain('feature'); // Preserved
+        expect(result.value.current).toContain('feature');
         expect(result.value.current).not.toContain('auto/large-files');
       }
     });
@@ -681,7 +672,7 @@ describe('LabelManager', () => {
       const config: LabelConfig = {
         sizeLabelThresholds: {
           small: 100,
-          medium: 50, // medium < small (violates monotonicity)
+          medium: 50,
           large: 500,
           xlarge: 1000,
         },

@@ -1,25 +1,9 @@
-/**
- * Configuration Fixtures
- *
- * Provides default test configurations and factory functions
- * for creating mock configs with flexible overrides.
- *
- * Pattern inspired by action-cache's actionContextFixtures.ts
- */
-
 import type { EnvironmentConfig } from '../../src/environment-loader.js';
 import type { Config } from '../../src/input-mapper.js';
 import type { ParsedInputs } from '../../src/input-parser.js';
 import type { LabelerConfig } from '../../src/labeler-types.js';
 import { DEFAULT_LABELER_CONFIG } from '../../src/labeler-types.js';
 
-// ============================================================================
-// Default Values
-// ============================================================================
-
-/**
- * Default ParsedInputs for testing
- */
 export const defaultParsedInputs: ParsedInputs = {
   language: 'en',
   githubToken: 'test-github-token',
@@ -54,15 +38,8 @@ export const defaultParsedInputs: ParsedInputs = {
   useDefaultExcludes: true,
 };
 
-/**
- * Default LabelerConfig for testing
- * Uses the actual DEFAULT_LABELER_CONFIG but can be overridden
- */
 export const defaultLabelerConfig: LabelerConfig = { ...DEFAULT_LABELER_CONFIG };
 
-/**
- * Default EnvironmentConfig for testing
- */
 export const defaultEnvironmentConfig: EnvironmentConfig = {
   language: undefined,
   enableSize: undefined,
@@ -73,73 +50,30 @@ export const defaultEnvironmentConfig: EnvironmentConfig = {
   complexityThresholds: undefined,
 };
 
-/**
- * Default Config for testing
- */
 export const defaultConfig: Config = {
   ...defaultParsedInputs,
 };
 
-// ============================================================================
-// Factory Functions
-// ============================================================================
-
-/**
- * Create a mock ParsedInputs with optional overrides
- *
- * @example
- * const inputs = createMockParsedInputs({ language: 'ja' });
- */
 export const createMockParsedInputs = (overrides?: Partial<ParsedInputs>): ParsedInputs => ({
   ...defaultParsedInputs,
   ...overrides,
 });
 
-/**
- * Create a mock LabelerConfig with optional overrides
- *
- * @example
- * const config = createMockLabelerConfig({ language: 'ja' });
- */
 export const createMockLabelerConfig = (overrides?: Partial<LabelerConfig>): LabelerConfig => ({
   ...defaultLabelerConfig,
   ...overrides,
 });
 
-/**
- * Create a mock EnvironmentConfig with optional overrides
- *
- * @example
- * const envConfig = createMockEnvironmentConfig({ language: 'ja' });
- */
 export const createMockEnvironmentConfig = (overrides?: Partial<EnvironmentConfig>): EnvironmentConfig => ({
   ...defaultEnvironmentConfig,
   ...overrides,
 });
 
-/**
- * Create a mock Config with optional overrides
- *
- * @example
- * const config = createMockConfig({ language: 'ja' });
- */
 export const createMockConfig = (overrides?: Partial<Config>): Config => ({
   ...defaultConfig,
   ...overrides,
 });
 
-// ============================================================================
-// Test Helpers
-// ============================================================================
-
-/**
- * Backup and restore environment variables helper
- *
- * @example
- * const restoreEnv = backupEnvironment();
- * // ... test code that modifies process.env
- * restoreEnv();
- */
 export const backupEnvironment = (): (() => void) => {
   const originalEnv = { ...process.env };
   return () => {
@@ -147,24 +81,12 @@ export const backupEnvironment = (): (() => void) => {
   };
 };
 
-/**
- * Setup environment variables for testing
- *
- * @example
- * setupEnvironment({ LANGUAGE: 'ja', ENABLE_SIZE: 'true' });
- */
 export const setupEnvironment = (env: Record<string, string>): void => {
   Object.entries(env).forEach(([key, value]) => {
     process.env[key] = value;
   });
 };
 
-/**
- * Clear specific environment variables
- *
- * @example
- * clearEnvironment(['LANGUAGE', 'ENABLE_SIZE']);
- */
 export const clearEnvironment = (keys: string[]): void => {
   keys.forEach(key => {
     delete process.env[key];

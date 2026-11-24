@@ -10,16 +10,15 @@ describe('PatternMatcher', () => {
       expect(patterns).toBeInstanceOf(Array);
       expect(patterns.length).toBeGreaterThanOrEqual(40);
 
-      // Verify some key patterns are included
       const expectedCategories = [
-        '*.lock', // lock files
-        '**/node_modules/**', // dependencies
-        '*.min.js', // minified files
-        '**/dist/**', // build outputs (any location)
-        '*.map', // source maps
-        'coverage/**', // test coverage
-        '*.log', // log files
-        '.git/**', // git directory
+        '*.lock',
+        '**/node_modules/**',
+        '*.min.js',
+        '**/dist/**',
+        '*.map',
+        'coverage/**',
+        '*.log',
+        '.git/**',
       ];
 
       expectedCategories.forEach(pattern => {
@@ -42,7 +41,6 @@ describe('PatternMatcher', () => {
       ];
 
       lockFiles.forEach(lockFile => {
-        // Either the specific file or a pattern that matches it should be included
         const hasPattern = patterns.some(p => p === lockFile || p === '*.lock' || p === `**/${lockFile}`);
         expect(hasPattern).toBe(true);
       });
@@ -141,12 +139,10 @@ describe('PatternMatcher', () => {
     it('should exclude files matching default patterns', () => {
       const defaultPatterns = getDefaultExcludePatterns();
 
-      // Test lock files
       expect(isExcluded('package-lock.json', defaultPatterns)).toBe(true);
       expect(isExcluded('yarn.lock', defaultPatterns)).toBe(true);
       expect(isExcluded('src/package-lock.json', defaultPatterns)).toBe(true);
 
-      // Lock files with a compound extension (`<name>.lock.<ext>`)
       expect(isExcluded('apm.lock.yaml', defaultPatterns)).toBe(true);
       expect(isExcluded('config/apm.lock.yaml', defaultPatterns)).toBe(true);
       expect(isExcluded('packages.lock.json', defaultPatterns)).toBe(true);
@@ -154,31 +150,25 @@ describe('PatternMatcher', () => {
       expect(isExcluded('go.sum', defaultPatterns)).toBe(true);
       expect(isExcluded('gradle.lockfile', defaultPatterns)).toBe(true);
 
-      // Gradle dependency locking beyond the per-project `gradle.lockfile`
       expect(isExcluded('buildscript-gradle.lockfile', defaultPatterns)).toBe(true);
       expect(isExcluded('gradle/dependency-locks/compileClasspath.lockfile', defaultPatterns)).toBe(true);
 
-      // Lock files whose names end in neither `.lock` nor `.lockfile`
       expect(isExcluded('pylock.toml', defaultPatterns)).toBe(true);
       expect(isExcluded('pylock.dev.toml', defaultPatterns)).toBe(true);
-      // PEP 751 の命名規則（`pylock.<非ドット1要素>.toml`）を超えるものは除外しない
       expect(isExcluded('pylock.dev.backup.toml', defaultPatterns)).toBe(false);
       expect(isExcluded('gems.locked', defaultPatterns)).toBe(true);
       expect(isExcluded('conda-lock.yml', defaultPatterns)).toBe(true);
       expect(isExcluded('cabal.project.freeze', defaultPatterns)).toBe(true);
       expect(isExcluded('maven_install.json', defaultPatterns)).toBe(true);
 
-      // Yarn Berry generated artifacts that are committed by design
       expect(isExcluded('.pnp.cjs', defaultPatterns)).toBe(true);
       expect(isExcluded('.pnp.loader.mjs', defaultPatterns)).toBe(true);
       expect(isExcluded('.yarn/cache/lodash-npm-4.17.21.zip', defaultPatterns)).toBe(true);
       expect(isExcluded('.yarn/releases/yarn-4.0.0.cjs', defaultPatterns)).toBe(true);
       expect(isExcluded('packages/app/.yarn/cache/x.zip', defaultPatterns)).toBe(true);
 
-      // Agent skill metadata (same category as .claude / .codex / .kiro)
       expect(isExcluded('.agents/skills/asta-deployment/SKILL.md', defaultPatterns)).toBe(true);
 
-      // Hand-authored dependency files that must stay in scope
       expect(isExcluded('requirements.txt', defaultPatterns)).toBe(false);
       expect(isExcluded('gradle/libs.versions.toml', defaultPatterns)).toBe(false);
       expect(isExcluded('pnpm-workspace.yaml', defaultPatterns)).toBe(false);
@@ -186,25 +176,20 @@ describe('PatternMatcher', () => {
       expect(isExcluded('.yarn/patches/lodash.patch', defaultPatterns)).toBe(false);
       expect(isExcluded('.yarnrc.yml', defaultPatterns)).toBe(false);
 
-      // Test node_modules
       expect(isExcluded('node_modules/react/index.js', defaultPatterns)).toBe(true);
       expect(isExcluded('packages/app/node_modules/test.js', defaultPatterns)).toBe(true);
 
-      // Test minified files
       expect(isExcluded('app.min.js', defaultPatterns)).toBe(true);
       expect(isExcluded('styles.min.css', defaultPatterns)).toBe(true);
 
-      // Test build directories (root level)
       expect(isExcluded('dist/index.js', defaultPatterns)).toBe(true);
       expect(isExcluded('build/app.js', defaultPatterns)).toBe(true);
 
-      // Test nested build directories (monorepo, nested structures)
       expect(isExcluded('packages/app/dist/index.js', defaultPatterns)).toBe(true);
       expect(isExcluded('packages/lib/build/main.js', defaultPatterns)).toBe(true);
       expect(isExcluded('src/compiled/dist/output.js', defaultPatterns)).toBe(true);
       expect(isExcluded('apps/web/out/bundle.js', defaultPatterns)).toBe(true);
 
-      // Test files
       expect(isExcluded('__tests__/unit.test.ts', defaultPatterns)).toBe(true);
       expect(isExcluded('src/components/__tests__/Button.test.tsx', defaultPatterns)).toBe(true);
       expect(isExcluded('tests/unit.spec.js', defaultPatterns)).toBe(true);
@@ -221,20 +206,16 @@ describe('PatternMatcher', () => {
     it('should exclude fixed-name changelog/todo files by default (root and nested)', () => {
       const defaultPatterns = getDefaultExcludePatterns();
 
-      // Root-level
       expect(isExcluded('CHANGELOG.md', defaultPatterns)).toBe(true);
       expect(isExcluded('TODO.md', defaultPatterns)).toBe(true);
       expect(isExcluded('todo.txt', defaultPatterns)).toBe(true);
       expect(isExcluded('done.txt', defaultPatterns)).toBe(true);
 
-      // Nested (matchBase applies to slash-free patterns, so any directory depth matches)
       expect(isExcluded('packages/a/CHANGELOG.md', defaultPatterns)).toBe(true);
       expect(isExcluded('docs/TODO.md', defaultPatterns)).toBe(true);
       expect(isExcluded('notes/todo.txt', defaultPatterns)).toBe(true);
       expect(isExcluded('notes/done.txt', defaultPatterns)).toBe(true);
 
-      // Other markdown files are NOT excluded by this default (only the fixed names above are).
-      // Note: docs/foo.md is still excluded, but via the separate `docs/**` pattern, not markdown-by-extension.
       expect(isExcluded('README.md', defaultPatterns)).toBe(false);
       expect(isExcluded('packages/a/README.md', defaultPatterns)).toBe(false);
       expect(isExcluded('src/components/Button.mdx', defaultPatterns)).toBe(false);
@@ -256,22 +237,18 @@ describe('PatternMatcher', () => {
       const customPatterns = ['*.custom', 'temp/**'];
       const allPatterns = [...defaultPatterns, ...customPatterns];
 
-      // Should match default patterns
       expect(isExcluded('package-lock.json', allPatterns)).toBe(true);
       expect(isExcluded('node_modules/test.js', allPatterns)).toBe(true);
 
-      // Should match custom patterns
       expect(isExcluded('file.custom', allPatterns)).toBe(true);
       expect(isExcluded('temp/data.json', allPatterns)).toBe(true);
 
-      // Should not match either
       expect(isExcluded('src/index.ts', allPatterns)).toBe(false);
     });
 
     it('should handle paths with backslashes correctly', () => {
       const patterns = ['src/test/**', '*.lock'];
 
-      // Windows-style paths should be normalized and matched
       expect(isExcluded('src\\test\\file.ts', patterns)).toBe(true);
       expect(isExcluded('src\\other\\file.ts', patterns)).toBe(false);
       expect(isExcluded('package.lock', patterns)).toBe(true);

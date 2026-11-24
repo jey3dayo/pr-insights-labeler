@@ -1,7 +1,3 @@
-/**
- * Input mapper - converts action inputs to internal config
- */
-
 import { err, ok, type Result } from 'neverthrow';
 
 import type { ActionInputs } from './actions-io';
@@ -10,18 +6,11 @@ import { normalizeActionInputStrings, type NormalizedActionInputs } from './inpu
 
 export type { SizeThresholds } from './input/input-normalizer.js';
 
-/**
- * Internal configuration (camelCase, parsed)
- */
 export interface Config extends NormalizedActionInputs {
   githubToken: string;
-  // i18n Support
-  language?: string; // Language code (e.g., 'en', 'ja', 'en-US', 'ja-JP')
+  language?: string;
 }
 
-/**
- * Map action input strings to internal config
- */
 export function mapActionInputsToConfig(inputs: ActionInputs): Result<Config, ConfigurationError | ParseError> {
   const normalizedResult = normalizeActionInputStrings(inputs);
   if (normalizedResult.isErr()) {

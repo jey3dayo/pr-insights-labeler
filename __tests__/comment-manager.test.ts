@@ -2,11 +2,9 @@ import * as core from '@actions/core';
 import * as github from '@actions/github';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-// Setup mocks
 vi.mock('@actions/github');
 vi.mock('@actions/core');
 
-// Import after mocking
 import {
   COMMENT_SIGNATURE,
   CommentConfig,
@@ -28,7 +26,6 @@ describe('CommentManager', () => {
   let mockDeleteComment: ReturnType<typeof vi.fn>;
   let mockPaginateIterator: ReturnType<typeof vi.fn>;
 
-  // Helper to create async iterator for pagination
   const createPaginateIterator = (pages: any[][]) => {
     return (async function* () {
       for (const data of pages) {
@@ -40,15 +37,12 @@ describe('CommentManager', () => {
   beforeEach(() => {
     vi.clearAllMocks();
 
-    // Mock Date for consistent timestamp in snapshots
     vi.setSystemTime(new Date('2025-10-18T15:30:00Z'));
 
-    // Initialize i18n with English for consistent test results
     resetI18n();
     initializeI18n('en');
-    changeLanguage('en'); // 明示的に英語に変更
+    changeLanguage('en');
 
-    // Setup GitHub mock
     mockListComments = vi.fn();
     mockCreateComment = vi.fn();
     mockUpdateComment = vi.fn();
@@ -132,7 +126,6 @@ describe('CommentManager', () => {
         expect(body).toContain('✅ PRサイズチェック合格');
         expect(body).toContain('[PR Insights Labeler](https://github.com/jey3dayo/pr-insights-labeler)により生成');
 
-        // Reset to English for other tests
         changeLanguage('en');
       });
 
@@ -187,7 +180,6 @@ describe('CommentManager', () => {
         expect(body).toContain('### ⚠️ 分析エラー');
         expect(body).toContain('一部のファイルを分析できませんでした:');
 
-        // Reset to English for other tests
         changeLanguage('en');
       });
 
@@ -215,7 +207,6 @@ describe('CommentManager', () => {
         const body = generateCommentBody(analysisResult);
         expect(body).toContain('📊 PRサイズチェック - 大規模なPRを検出');
 
-        // Reset to English for other tests
         changeLanguage('en');
       });
     });
@@ -472,10 +463,8 @@ describe('CommentManager', () => {
       expect(body).toContain('📊 PR Size Check - Large PR Detected');
       expect(body).toContain('### 📊 Violations');
       expect(body).toContain('Total additions exceed limit');
-      // Detailed violation tables removed - now shown in unified formatFileAnalysis
       expect(body).not.toContain('### 🚫 Large Files Detected');
       expect(body).not.toContain('### ⚠️ Files Exceed Line Limit');
-      // Check for unified file analysis table instead
       expect(body).toContain('### 📊 File Analysis');
       expect(body).toContain('| File Name | Size | Lines | Changes | Status |');
       expect(body).toContain(COMMENT_SIGNATURE);
@@ -539,7 +528,6 @@ describe('CommentManager', () => {
 
       const body = generateCommentBody(analysisResult);
 
-      // Updated: Now uses formatFileAnalysis which includes Status column
       expect(body).toContain('### 📊 File Analysis');
       expect(body).toContain('| File Name | Size | Lines | Changes | Status |');
       expect(body).toContain('src/file1.ts');
@@ -578,7 +566,7 @@ describe('CommentManager', () => {
       };
 
       const body = generateCommentBody(analysisResult);
-      expect(body).toContain('512 B'); // Updated to match actual format (no decimal places for whole numbers)
+      expect(body).toContain('512 B');
     });
 
     it('should handle empty analysis result', () => {
@@ -630,8 +618,8 @@ describe('CommentManager', () => {
       const body = generateCommentBody(analysisResult);
 
       expect(body).toContain('Files with errors: **2**');
-      expect(body).toContain('### ⚠️ Analysis Errors'); // Check for the section heading
-      expect(body).toContain('Some files could not be analyzed:'); // Updated to match actual text (no emoji in this specific line)
+      expect(body).toContain('### ⚠️ Analysis Errors');
+      expect(body).toContain('Some files could not be analyzed:');
     });
   });
 
@@ -912,7 +900,6 @@ describe('CommentManager', () => {
         commentMode: 'auto',
       };
 
-      // With violations
       const withViolations: AnalysisResult = {
         metrics: {
           totalFiles: 1,
@@ -946,7 +933,6 @@ describe('CommentManager', () => {
         expect(result.value.action).toBe('created');
       }
 
-      // Without violations - should delete existing comment
       const noViolations: AnalysisResult = {
         ...withViolations,
         violations: {
@@ -1001,7 +987,6 @@ describe('CommentManager', () => {
         },
       };
 
-      // Should delete existing comment if present
       mockPaginateIterator.mockReturnValue(
         createPaginateIterator([
           [{ id: 999, body: `Old\n${COMMENT_SIGNATURE}`, user: { login: 'github-actions[bot]', type: 'Bot' } }],

@@ -1,8 +1,3 @@
-/**
- * npm-check-updates configuration
- * Controls which packages should not be automatically updated
- */
-
 module.exports = {
   upgrade: false,
   reject: [

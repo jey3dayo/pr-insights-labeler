@@ -1,8 +1,3 @@
-/**
- * Label management for GitHub pull requests
- * Handles size labels and violation labels
- */
-
 import * as github from '@actions/github';
 import { err, ok, Result } from 'neverthrow';
 
@@ -15,9 +10,6 @@ import type { PRContext } from './types';
 import { getCurrentLabels as fetchCurrentLabels } from './utils/github-label-utils.js';
 import { calculateSizeLabel } from './utils/size-label-utils.js';
 
-/**
- * Label configuration
- */
 export interface LabelConfig {
   sizeLabelThresholds: {
     small: number;
@@ -25,30 +17,22 @@ export interface LabelConfig {
     large: number;
     xlarge: number;
   };
-  applySizeLabels?: boolean; // If false, skip size label updates
-  autoRemoveLabels?: boolean; // If false, don't remove old labels
-  largeFilesLabel?: string; // Custom label for large files
-  tooManyFilesLabel?: string; // Custom label for too many files
-  tooManyLinesLabel?: string; // Custom label for too many lines
+  applySizeLabels?: boolean;
+  autoRemoveLabels?: boolean;
+  largeFilesLabel?: string;
+  tooManyFilesLabel?: string;
+  tooManyLinesLabel?: string;
 }
 
-/**
- * Label update result
- */
 export interface LabelUpdate {
   added: string[];
   removed: string[];
   current: string[];
 }
 
-/**
- * Validate size label thresholds
- * Ensures non-negative values and monotonicity (small ≤ medium ≤ large ≤ xlarge)
- */
 function validateSizeLabelThresholds(thresholds: LabelConfig['sizeLabelThresholds']): Result<void, ConfigurationError> {
   const { small, medium, large, xlarge } = thresholds;
 
-  // Check for non-negative values
   if (small < 0 || medium < 0 || large < 0 || xlarge < 0) {
     return err(
       createConfigurationError(
@@ -59,7 +43,6 @@ function validateSizeLabelThresholds(thresholds: LabelConfig['sizeLabelThreshold
     );
   }
 
-  // Check for monotonicity (small ≤ medium ≤ large ≤ xlarge)
   if (small > medium || medium > large || large > xlarge) {
     return err(
       createConfigurationError(
@@ -73,9 +56,6 @@ function validateSizeLabelThresholds(thresholds: LabelConfig['sizeLabelThreshold
   return ok(undefined);
 }
 
-/**
- * Get detail labels based on violations
- */
 export function getDetailLabels(
   violations: Violations,
   customLabels?: { largeFiles?: string; tooManyFiles?: string; tooManyLines?: string },
@@ -101,9 +81,6 @@ export function getDetailLabels(
   return labels;
 }
 
-/**
- * Get current labels on the PR
- */
 export async function getCurrentLabels(token: string, context: PRContext): Promise<Result<string[], GitHubAPIError>> {
   logDebug(`Getting current labels for PR #${context.pullNumber}`);
 
@@ -116,11 +93,6 @@ export async function getCurrentLabels(token: string, context: PRContext): Promi
   return result;
 }
 
-/**
- * Get current labels on the PR (Graceful Degradation version)
- * Returns undefined if label retrieval fails, allowing failure conditions
- * to be evaluated based on violations only.
- */
 export async function getCurrentPRLabels(token: string, context: PRContext): Promise<string[] | undefined> {
   logDebug(`Getting current labels for PR #${context.pullNumber}`);
 
@@ -136,19 +108,12 @@ export async function getCurrentPRLabels(token: string, context: PRContext): Pro
   return labels;
 }
 
-/**
- * Label modifier function type
- */
 type LabelModifier = (
   octokit: ReturnType<typeof github.getOctokit>,
   context: PRContext,
   labels: string[],
 ) => Promise<void>;
 
-/**
- * Common label modification function
- * Handles empty check, logging, octokit creation, and error handling
- */
 async function modifyLabels(
   labels: string[],
   token: string,
@@ -175,9 +140,6 @@ async function modifyLabels(
   }
 }
 
-/**
- * Add labels to the PR
- */
 export async function addLabels(
   labels: string[],
   token: string,
@@ -197,9 +159,6 @@ export async function addLabels(
   });
 }
 
-/**
- * Remove labels from the PR
- */
 export async function removeLabels(
   labels: string[],
   token: string,
@@ -219,7 +178,6 @@ export async function removeLabels(
             name: label,
           });
         } catch (error) {
-          // Log warning but continue removing other labels
           logWarning(`Failed to remove label '${label}': ${ensureError(error).message}`);
         }
       }
@@ -289,10 +247,6 @@ function calculateLabelsToAdd(
   return labelsToAdd;
 }
 
-/**
- * Update labels based on analysis results
- * Ensures idempotency - only adds/removes what's necessary
- */
 export async function updateLabels(
   analysisResult: AnalysisResult,
   config: LabelConfig,

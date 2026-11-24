@@ -9,11 +9,6 @@ import { DEFAULT_LABELER_CONFIG } from './labeler-types.js';
 
 export { mergeWithDefaults, validateLabelerConfig };
 
-/**
- * Load labeler configuration from repository
- *
- * @param ref - Commit SHA or ref to read from. Omit to read from the repository default branch.
- */
 export function loadConfig(
   token: string,
   owner: string,
@@ -25,19 +20,10 @@ export function loadConfig(
   return fetchRepositoryConfig(params).andThen(content => parseYamlConfig(content));
 }
 
-/**
- * Parse YAML configuration content and validate result
- */
 export function parseYamlConfig(content: string): ResultAsync<LabelerConfig, ConfigurationError> {
   return parseYamlContent(content).andThen(validateLabelerConfig);
 }
 
-/**
- * Get default labeler configuration
- * Used when configuration file is not found or fails to parse
- *
- * @returns Default LabelerConfig (deep copy to prevent mutations)
- */
 export function getDefaultLabelerConfig(): LabelerConfig {
   return JSON.parse(JSON.stringify(DEFAULT_LABELER_CONFIG));
 }

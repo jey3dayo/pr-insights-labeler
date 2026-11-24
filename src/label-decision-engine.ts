@@ -1,8 +1,3 @@
-/**
- * Label Decision Engine for PR Insights Labeler
- * Determines which labels to apply based on PR metrics and configuration
- */
-
 import { minimatch } from 'minimatch';
 import { ok, Result } from 'neverthrow';
 
@@ -15,17 +10,6 @@ import type { PRContext } from './types.js';
 import { extractNamespace, matchesNamespacePattern } from './utils/namespace-utils.js';
 import { calculateSizeLabel } from './utils/size-label-utils.js';
 
-/**
- * Decide labels based on PR metrics and configuration
- * Pure function with no side effects
- *
- * @param metrics - PR metrics (additions, files, complexity)
- * @param config - Labeler configuration
- * @param violations - Violations detected during file analysis
- * @param prContext - Optional PR context with CI status and commit messages
- * @param violationLabels - Custom violation label names (falls back to VIOLATION_LABELS defaults when omitted)
- * @returns LabelDecisions with labels to add/remove and reasoning
- */
 export function decideLabels(
   metrics: PRMetrics,
   config: LabelerConfig,
@@ -36,7 +20,6 @@ export function decideLabels(
   const reasoning: LabelReasoning[] = [];
   const labelsToAdd: string[] = [];
 
-  // 1. Decide size label (if enabled)
   if (config.size.enabled) {
     const sizeLabel = decideSizeLabel(metrics.totalAdditions, config.size.thresholds);
     labelsToAdd.push(sizeLabel);
@@ -48,12 +31,11 @@ export function decideLabels(
     });
   }
 
-  // 2. Decide complexity label (if complexity metrics available and enabled)
   if (metrics.complexity && config.complexity.enabled) {
     const complexityLabel = decideComplexityLabel(metrics.complexity.maxComplexity, config.complexity.thresholds);
     if (complexityLabel) {
       labelsToAdd.push(complexityLabel);
-      const level = complexityLabel.split('/')[1]; // "high" or "medium"
+      const level = complexityLabel.split('/')[1];
       reasoning.push({
         label: complexityLabel,
         reason: t('labels', 'reasoning.complexity', { maxComplexity: metrics.complexity.maxComplexity, level }),
@@ -65,10 +47,7 @@ export function decideLabels(
     }
   }
 
-  // 3. Decide category labels (if enabled)
   if (config.categoryLabeling.enabled) {
-    // カテゴリラベル判定には全ファイル（除外前）を使用
-    // これにより .kiro/ などの除外ファイルもカテゴリとして認識される
     const categoryResults = decideCategoryLabelsWithFiles(metrics.allFiles, config.categories);
     labelsToAdd.push(...categoryResults.map(r => r.label));
     for (const result of categoryResults) {
@@ -81,9 +60,7 @@ export function decideLabels(
     }
   }
 
-  // 4. Decide risk label (if enabled)
   if (config.risk.enabled) {
-    // Use allFiles (before exclusion) for risk evaluation to include test files
     const files = metrics.allFiles;
     const riskLabel = decideRiskLabel(files, config.risk, prContext);
     if (riskLabel) {
@@ -98,12 +75,10 @@ export function decideLabels(
     }
   }
 
-  // 5. Decide violation labels (if violations exist)
   const violationLabelsResult = decideViolationLabels(violations, violationLabels);
   labelsToAdd.push(...violationLabelsResult.labels);
   reasoning.push(...violationLabelsResult.reasoning);
 
-  // Determine labels to remove based on namespace policies
   const labelsToRemove = determineLabelsToRemove(labelsToAdd, config.labels.namespace_policies);
 
   return ok({
@@ -113,13 +88,6 @@ export function decideLabels(
   });
 }
 
-/**
- * Decide size label based on additions
- *
- * @param additions - Total additions in PR
- * @param thresholds - Size thresholds configuration
- * @returns Size label (size/small, size/medium, size/large, size/xlarge, or size/xxlarge)
- */
 export function decideSizeLabel(
   additions: number,
   thresholds: { small: number; medium: number; large: number; xlarge: number },
@@ -127,13 +95,6 @@ export function decideSizeLabel(
   return calculateSizeLabel(additions, thresholds);
 }
 
-/**
- * Decide complexity label based on max complexity
- *
- * @param complexity - Maximum complexity in PR
- * @param thresholds - Complexity thresholds configuration
- * @returns Complexity label or null if complexity is low
- */
 export function decideComplexityLabel(complexity: number, thresholds: { medium: number; high: number }): string | null {
   if (complexity >= thresholds.high) {
     return COMPLEXITY_LABELS.high;
@@ -141,16 +102,9 @@ export function decideComplexityLabel(complexity: number, thresholds: { medium: 
   if (complexity >= thresholds.medium) {
     return COMPLEXITY_LABELS.medium;
   }
-  return null; // 低複雑度はラベルなし
+  return null;
 }
 
-/**
- * Decide category labels based on file patterns
- *
- * @param files - List of changed file paths
- * @param categories - Category configuration
- * @returns List of category labels
- */
 export function decideCategoryLabels(
   files: string[],
   categories: Array<{ label: string; patterns: string[]; exclude?: string[] }>,
@@ -167,13 +121,6 @@ export function decideCategoryLabels(
   return matchedLabels;
 }
 
-/**
- * Decide category labels with matched files
- *
- * @param files - List of changed file paths
- * @param categories - Category configuration
- * @returns List of category labels with matched files
- */
 export function decideCategoryLabelsWithFiles(
   files: string[],
   categories: Array<{ label: string; patterns: string[]; exclude?: string[] }>,
@@ -211,22 +158,12 @@ function matchCategoryFiles(
   });
 }
 
-/**
- * Determine labels to remove based on namespace policies
- * For 'replace' policies, existing labels in that namespace should be removed
- *
- * @param labelsToAdd - Labels that will be added
- * @param policies - Namespace policies (replace/additive)
- * @returns Labels to remove
- */
 function determineLabelsToRemove(labelsToAdd: string[], policies: Record<string, 'replace' | 'additive'>): string[] {
-  // Extract namespaces from labels to add
   const namespacesToReplace = new Set<string>();
 
   for (const label of labelsToAdd) {
     const namespace = extractNamespace(label);
     if (namespace) {
-      // Check if this namespace has a replace policy
       for (const [policyPattern, policy] of Object.entries(policies)) {
         if (policy === 'replace' && matchesNamespacePattern(namespace, policyPattern)) {
           namespacesToReplace.add(policyPattern);
@@ -235,15 +172,9 @@ function determineLabelsToRemove(labelsToAdd: string[], policies: Record<string,
     }
   }
 
-  // Return list of namespace patterns to remove
-  // The actual removal will be done by comparing with current labels in the applicator
   return Array.from(namespacesToReplace);
 }
 
-/**
- * Custom violation label names (action input `*_label` params)
- * Falls back to VIOLATION_LABELS.* defaults per-field when a field is omitted.
- */
 export interface ViolationLabelNames {
   largeFiles?: string;
   tooManyFiles?: string;
@@ -251,13 +182,6 @@ export interface ViolationLabelNames {
   excessiveChanges?: string;
 }
 
-/**
- * Decide violation labels based on detected violations
- *
- * @param violations - Violations detected during file analysis
- * @param violationLabels - Custom violation label names (falls back to VIOLATION_LABELS defaults when omitted)
- * @returns Violation labels and reasoning
- */
 export function decideViolationLabels(
   violations: Violations,
   violationLabels?: ViolationLabelNames,
@@ -273,7 +197,6 @@ export function decideViolationLabels(
   const excessiveChangesLabel = violationLabels?.excessiveChanges || VIOLATION_LABELS.excessiveChanges;
   const tooManyFilesLabel = violationLabels?.tooManyFiles || VIOLATION_LABELS.tooManyFiles;
 
-  // auto/large-files - Individual files too large
   if (violations.largeFiles.length > 0) {
     labels.push(largeFilesLabel);
     reasoning.push({
@@ -284,7 +207,6 @@ export function decideViolationLabels(
     });
   }
 
-  // auto/too-many-lines - Individual files exceed line limits
   if (violations.exceedsFileLines.length > 0) {
     labels.push(tooManyLinesLabel);
     reasoning.push({
@@ -295,7 +217,6 @@ export function decideViolationLabels(
     });
   }
 
-  // auto/excessive-changes - Total additions exceed limit
   if (violations.exceedsAdditions) {
     labels.push(excessiveChangesLabel);
     reasoning.push({
@@ -306,7 +227,6 @@ export function decideViolationLabels(
     });
   }
 
-  // auto/too-many-files - Too many files changed
   if (violations.exceedsFileCount) {
     labels.push(tooManyFilesLabel);
     reasoning.push({

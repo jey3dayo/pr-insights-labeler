@@ -10,9 +10,6 @@ import { writeSummaryWithAnalysis } from '../../summary/summary-writer';
 import { evaluatePRFailures } from '../policy/pr-failure-evaluator';
 import type { AnalysisArtifacts, InitializationArtifacts } from '../types';
 
-/**
- * Finalize action by posting comments, summaries, and outputs
- */
 export function finalizeAction(
   context: InitializationArtifacts,
   artifacts: AnalysisArtifacts,

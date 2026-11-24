@@ -115,7 +115,7 @@ describe('Label Applicator', () => {
 
       const decisions: LabelDecisions = {
         labelsToAdd: ['size/large'],
-        labelsToRemove: ['size/*'], // namespace pattern
+        labelsToRemove: ['size/*'],
         reasoning: [],
       };
 
@@ -218,7 +218,6 @@ describe('Label Applicator', () => {
       expect(result.isOk()).toBe(true);
 
       const update = result._unsafeUnwrap();
-      // category/tests already exists, only category/ci-cd should be added
       expect(update.added).toEqual(['category/ci-cd']);
       expect(mockAddLabels).toHaveBeenCalledWith({
         owner: 'test-owner',
@@ -257,11 +256,8 @@ describe('Label Applicator', () => {
       expect(result.isOk()).toBe(true);
 
       const update = result._unsafeUnwrap();
-      // auto/too-many-lines should be removed (no longer in decisions)
       expect(update.removed).toContain('auto/too-many-lines');
-      // size/L should be removed (replaced by size/M)
       expect(update.removed).toContain('size/L');
-      // size/M should be added
       expect(update.added).toContain('size/M');
     });
 
@@ -296,9 +292,7 @@ describe('Label Applicator', () => {
       expect(result.isOk()).toBe(true);
 
       const update = result._unsafeUnwrap();
-      // Custom violation label with a resolved violation should be removed
       expect(update.removed).toContain('quality/large-files');
-      // Unrelated user-applied label should not be touched
       expect(update.removed).not.toContain('wip');
       expect(mockRemoveLabel).toHaveBeenCalledTimes(1);
     });

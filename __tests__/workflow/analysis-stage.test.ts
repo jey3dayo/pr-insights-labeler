@@ -19,8 +19,6 @@ vi.mock('../../src/actions-io', () => ({
   logWarningI18n: vi.fn(),
 }));
 
-// Substitute only the `git rev-parse HEAD` call so the guard's real trust decision runs without
-// spawning a process; the stage keeps calling the production `verifyHeadCheckout`.
 const localHeadRevisionMock = vi.fn<(workspace: string | undefined) => Promise<string | undefined>>();
 
 vi.mock('../../src/workflow/policy/head-checkout-guard.js', async importOriginal => {
@@ -329,7 +327,6 @@ describe('workflow/stages/analysis', () => {
       setEnv({ GITHUB_EVENT_NAME: 'pull_request_target', GITHUB_WORKSPACE: '/workspace' });
       localHeadRevisionMock.mockResolvedValue(`${HEAD_SHA}\n`);
       getDiffFilesMock.mockResolvedValue(ok(diffResult));
-      // A distinctive downstream failure proves file analysis was reached rather than short-circuited.
       analyzeFilesMock.mockResolvedValue(
         err({ type: 'FileAnalysisError', file: 'src/app.ts', message: 'reached file analysis' }),
       );
@@ -342,8 +339,6 @@ describe('workflow/stages/analysis', () => {
     it('fails before diff retrieval and file analysis when the local checkout is not the PR head', async () => {
       setEnv({ GITHUB_EVENT_NAME: 'pull_request_target', GITHUB_WORKSPACE: '/workspace' });
       localHeadRevisionMock.mockResolvedValue(OTHER_SHA);
-      // Downstream mocks are deliberately left unconfigured: reaching them would surface as a
-      // different error than the guard's.
 
       const result = await analyzePullRequest(targetContext);
 

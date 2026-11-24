@@ -1,13 +1,3 @@
-/**
- * Trust boundary for the directory labeling policy under `pull_request_target`.
- *
- * The docs recommend checking out the base ref so that a fork cannot swap the labeling policy,
- * but file metrics must still measure the PR head. These tests pin the resulting split: the
- * policy comes from the trusted base ref over the GitHub API, while other events keep reading the
- * local checkout. They drive the real directory-labeler pipeline (config parsing, pattern
- * matching, decision engine) and assert on the labels that actually reach label application.
- */
-
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
@@ -85,7 +75,6 @@ function base64(content: string): string {
   return Buffer.from(content, 'utf-8').toString('base64');
 }
 
-/** Labels that reached label application, i.e. the effective labeling decision. */
 function appliedLabels(): string[] {
   const call = vi.mocked(applyDirectoryLabels).mock.calls[0];
   if (!call) {
@@ -162,7 +151,6 @@ describe('workflow/stages/labeling: directory labeling policy trust boundary', (
         core_paths: [],
         coverage_threshold: undefined,
         config_files: [],
-        // Keeps the test focused on config loading: no CI status or commit fetching.
         use_ci_status: false,
       },
       exclude: { additional: [] },
@@ -204,7 +192,6 @@ describe('workflow/stages/labeling: directory labeling policy trust boundary', (
 
     tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'policy-trust-'));
     localConfigPath = path.join(tempDir, 'directory-labeler.yml');
-    // The local checkout is the fork-controlled head under `pull_request_target`.
     fs.writeFileSync(localConfigPath, ATTACKER_CONFIG, 'utf-8');
 
     getContent = vi.fn().mockResolvedValue({ data: { content: base64(TRUSTED_CONFIG) } });

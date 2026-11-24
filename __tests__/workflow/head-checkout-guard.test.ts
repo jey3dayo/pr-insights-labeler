@@ -3,8 +3,6 @@ import { describe, expect, it, vi } from 'vitest';
 import type { LocalHeadRevisionReader } from '../../src/workflow/policy/head-checkout-guard';
 import { evaluateHeadCheckout, verifyHeadCheckout } from '../../src/workflow/policy/head-checkout-guard';
 
-// Render the key plus its interpolation values so assertions can check that the message carries
-// both the expected and the actual revision without depending on the wording of the locale files.
 vi.mock('../../src/i18n.js', () => ({
   t: (_ns: string, key: string, params?: Record<string, unknown>) =>
     [key, ...Object.entries(params ?? {}).map(([name, value]) => `${name}=${String(value)}`)].join(' '),
@@ -20,7 +18,6 @@ describe('workflow/policy/head-checkout-guard', () => {
         eventName: 'pull_request_target',
         expectedHeadSha: HEAD_SHA,
         workspace: '/workspace',
-        // `git rev-parse HEAD` emits a trailing newline; the raw output must still match.
         localHeadRevision: `${HEAD_SHA}\n`,
       });
 

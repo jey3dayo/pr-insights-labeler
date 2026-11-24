@@ -1,7 +1,3 @@
-/**
- * エラーファクトリーの多言語化テスト
- */
-
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import {
@@ -25,17 +21,13 @@ describe('Error Factories - i18n Integration', () => {
   let originalEnv: NodeJS.ProcessEnv;
 
   beforeEach(() => {
-    // 環境変数のバックアップ
     originalEnv = { ...process.env };
-    // 環境変数をクリア（テストで明示的に設定した言語が優先されるように）
     delete process.env['LANGUAGE'];
     delete process.env['LANG'];
-    // i18nをリセット
     resetI18n();
   });
 
   afterEach(() => {
-    // 環境変数を復元
     process.env = originalEnv;
   });
 
@@ -160,7 +152,6 @@ describe('Error Factories - i18n Integration', () => {
       initializeI18n('ja');
       const error = createFileSystemError('/path/to/missing.ts', 'notFound');
 
-      // パスが変更されずに保持されることを確認
       expect(error.path).toBe('/path/to/missing.ts');
       expect(error.message).toContain('/path/to/missing.ts');
     });
@@ -169,7 +160,6 @@ describe('Error Factories - i18n Integration', () => {
       initializeI18n('ja');
       const error = createGitHubAPIError('認証に失敗しました', 401);
 
-      // HTTPステータスコードが保持されることを確認
       expect(error.status).toBe(401);
     });
 
@@ -177,7 +167,6 @@ describe('Error Factories - i18n Integration', () => {
       initializeI18n('ja');
       const error = createPatternError('**/*.test.ts');
 
-      // パターン文字列が保持されることを確認
       expect(error.pattern).toBe('**/*.test.ts');
       expect(error.message).toContain('**/*.test.ts');
     });

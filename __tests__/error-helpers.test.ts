@@ -1,7 +1,3 @@
-/**
- * Tests for error helper functions
- */
-
 import { describe, expect, it } from 'vitest';
 
 import { ensureError, extractAggregateError } from '../src/errors/helpers.js';
@@ -102,7 +98,6 @@ describe('ensureError', () => {
       const result = ensureError('');
 
       expect(result).toBeInstanceOf(Error);
-      // Empty string is falsy, but ensureError treats string inputs verbatim
       expect(result.message).toBe('');
     });
 
@@ -162,14 +157,12 @@ describe('extractAggregateError', () => {
   it('should handle object with errors array but not AggregateError', () => {
     const error1 = new Error('Error 1');
     const error2 = new Error('Error 2');
-    // Must be an actual Error instance with errors property
     const fakeAggregateError = Object.assign(new Error('Fake aggregate'), {
       errors: [error1, error2],
     });
 
     const result = extractAggregateError(fakeAggregateError);
 
-    // Should extract first error even if not actual AggregateError
     expect(result).toBe(error1);
   });
 

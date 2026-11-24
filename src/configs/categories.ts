@@ -1,12 +1,5 @@
-/**
- * Default category configurations for PR Insights Labeler
- */
-
 import type { CategoryConfig } from '../types/config.js';
 
-/**
- * Default categories for PR classification
- */
 export const DEFAULT_CATEGORIES: CategoryConfig[] = [
   {
     label: 'category/tests',

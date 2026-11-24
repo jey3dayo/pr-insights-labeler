@@ -3,9 +3,6 @@ import type { DiffFile } from '../diff-strategy';
 import type { ComplexityMetrics, LabelDecisions, LabelerConfig } from '../labeler-types';
 import type { AnalysisResult } from '../types/analysis.js';
 
-/**
- * Runtime context data extracted from the pull request payload
- */
 export interface PullRequestRuntimeContext {
   owner: string;
   repo: string;
@@ -15,9 +12,6 @@ export interface PullRequestRuntimeContext {
   isDraft: boolean;
 }
 
-/**
- * Shared data produced during initialization stage
- */
 export interface InitializationArtifacts {
   token: string;
   prContext: PullRequestRuntimeContext;
@@ -26,9 +20,6 @@ export interface InitializationArtifacts {
   skipDraft: boolean;
 }
 
-/**
- * Shared data produced during analysis stage
- */
 export interface AnalysisArtifacts {
   files: DiffFile[];
   analysis: AnalysisResult;

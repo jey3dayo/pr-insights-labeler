@@ -1,8 +1,5 @@
 import { t } from '../../i18n.js';
 
-/**
- * Format applied labels for Summary output.
- */
 export function formatAppliedLabels(labels: string[] | undefined): string {
   if (labels === undefined) {
     return '';

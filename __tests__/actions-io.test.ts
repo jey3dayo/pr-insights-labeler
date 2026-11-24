@@ -21,16 +21,13 @@ import { resetI18n } from '../src/i18n';
 import { writeSummaryWithAnalysis } from '../src/summary/summary-writer';
 import { clearGitHubTokens, setupI18nTestEnglish, setupI18nTestJapanese } from './__fixtures__/index.js';
 
-// Mock @actions/core
 vi.mock('@actions/core');
 
 describe('GitHub Actions I/O', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    // Reset environment variables
     clearGitHubTokens();
 
-    // Initialize i18n with English for consistent test results
     setupI18nTestEnglish();
   });
 
@@ -132,7 +129,6 @@ describe('GitHub Actions I/O', () => {
       expect(inputs.pr_additions_limit).toBe('5000');
       expect(inputs.pr_additions_limit_enabled).toBe('true');
       expect(inputs.pr_files_limit).toBe('50');
-      // PR Insights Labeler - Selective Label Enabling
       expect(inputs.size_enabled).toBe('true');
       expect(inputs.size_thresholds).toBe('{"small": 100, "medium": 500, "large": 1000}');
       expect(inputs.complexity_enabled).toBe('false');
@@ -177,7 +173,6 @@ describe('GitHub Actions I/O', () => {
       expect(inputs.pr_additions_limit_enabled).toBe('false');
       expect(inputs.pr_files_limit).toBe('100');
       expect(inputs.pr_files_limit_enabled).toBe('false');
-      // PR Insights Labeler - Selective Label Enabling (expect defaults)
       expect(inputs.size_enabled).toBe('true');
       expect(inputs.complexity_enabled).toBe('false');
       expect(inputs.category_enabled).toBe('true');
@@ -352,7 +347,6 @@ describe('GitHub Actions I/O', () => {
       expect(mockSummary.addRaw).toHaveBeenCalled();
       expect(mockSummary.write).toHaveBeenCalled();
 
-      // Verify markdown content includes expected sections
       const markdown = mockSummary.addRaw.mock.calls[0][0];
       expect(markdown).toContain('# 📊 PR Metrics Overview');
       expect(markdown).toContain('### 📈 Basic Metrics');
@@ -461,7 +455,6 @@ describe('GitHub Actions I/O', () => {
       expect(result.isOk()).toBe(true);
       const markdown = mockSummary.addRaw.mock.calls[0][0];
       expect(markdown).toContain('### 📊 Violations');
-      // Detailed tables removed - now in formatFileAnalysis
       expect(markdown).not.toContain('### 🚫 Large Files Detected');
     });
   });
@@ -509,7 +502,6 @@ describe('GitHub Actions I/O', () => {
       });
 
       it('should fallback to key when i18n not initialized', () => {
-        // i18n未初期化のまま呼び出し
         resetI18n();
         const spy = vi.mocked(core.info);
 
@@ -614,7 +606,6 @@ describe('GitHub Actions I/O', () => {
       it('should preserve filename in translated messages', () => {
         setupI18nTestJapanese();
 
-        // i18n初期化ログをクリア
         vi.clearAllMocks();
         const spy = vi.mocked(core.info);
 
@@ -628,7 +619,6 @@ describe('GitHub Actions I/O', () => {
       it('should preserve error messages in original form', () => {
         setupI18nTestJapanese();
 
-        // i18n初期化ログをクリア
         vi.clearAllMocks();
         const spy = vi.mocked(core.warning);
 
@@ -636,7 +626,7 @@ describe('GitHub Actions I/O', () => {
         logWarningI18n('initialization.i18nFailed', { message: errorMessage });
 
         const message = spy.mock.calls[0][0] as string;
-        expect(message).toContain(errorMessage); // エラーメッセージはそのまま保持
+        expect(message).toContain(errorMessage);
       });
     });
   });

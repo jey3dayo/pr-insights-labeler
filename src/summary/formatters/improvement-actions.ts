@@ -79,7 +79,6 @@ export function formatImprovementActions(violations: Violations): string {
   output += `${t('summary', 'improvementActions.intro')}\n\n`;
   output += ACTION_SECTIONS.map(formatSection).join('');
 
-  // ファイル単位の制限超過はexclude設定で解消できる場合があるため、設定手順を案内する
   if (violations.exceedsFileLines.length > 0 || violations.largeFiles.length > 0) {
     output += formatExcludeConfigSection();
   }

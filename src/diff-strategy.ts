@@ -1,7 +1,3 @@
-/**
- * Diff strategy - retrieves PR diff files using local git or GitHub API
- */
-
 import { execFile } from 'node:child_process';
 import { promisify } from 'node:util';
 
@@ -12,12 +8,8 @@ import { getEnvVar, logDebug, logInfo, logWarning } from './actions-io.js';
 import type { DiffError } from './errors/index.js';
 import { createDiffError, ensureError } from './errors/index.js';
 
-// Create execFileAsync using promisify
 const execFileAsync = promisify(execFile);
 
-/**
- * Diff file information
- */
 export interface DiffFile {
   filename: string;
   additions: number;
@@ -25,17 +17,11 @@ export interface DiffFile {
   status: 'added' | 'modified' | 'renamed' | 'copied';
 }
 
-/**
- * Diff result with strategy used
- */
 export interface DiffResult {
   files: DiffFile[];
   strategy: 'local-git' | 'github-api';
 }
 
-/**
- * Pull request context
- */
 export interface PullRequestContext {
   owner: string;
   repo: string;
@@ -44,9 +30,6 @@ export interface PullRequestContext {
   headSha: string;
 }
 
-/**
- * Parse git diff numstat output line
- */
 function parseGitDiffLine(line: string): DiffFile | null {
   const parts = line.trim().split('\t');
   if (parts.length !== 3) {
@@ -57,7 +40,6 @@ function parseGitDiffLine(line: string): DiffFile | null {
   const deletions = parseInt(parts[1] ?? '', 10);
   let filename = parts[2] ?? '';
 
-  // Skip if parsing failed
   if (isNaN(additions) || isNaN(deletions) || !filename) {
     return null;
   }
@@ -73,7 +55,6 @@ function parseGitDiffLine(line: string): DiffFile | null {
     filename = prefix + newName + suffix;
   }
 
-  // Determine status based on additions and deletions
   let status: DiffFile['status'];
   if (deletions === 0 && additions > 0) {
     status = 'added';
@@ -91,24 +72,16 @@ function parseGitDiffLine(line: string): DiffFile | null {
   };
 }
 
-/**
- * Get diff files using local git command
- */
 async function getLocalGitDiff(context: PullRequestContext): Promise<Result<DiffFile[], DiffError>> {
   try {
     logDebug('Attempting to get diff using local git command');
 
-    // Use git diff with numstat to get file changes
-    // --diff-filter=ACMR filters: Added, Copied, Modified, Renamed (excludes Deleted)
-    // -M/-C enables rename and copy detection for better accuracy
-    // execFile with an argument array (rather than a shell string) avoids shell
-    // interpolation of the SHA values.
     const { stdout, stderr } = await execFileAsync(
       'git',
       ['diff', '--numstat', '-M', '-C', '--diff-filter=ACMR', `${context.baseSha}...${context.headSha}`],
       {
         cwd: getEnvVar('GITHUB_WORKSPACE') || process.cwd(),
-        maxBuffer: 16 * 1024 * 1024, // 16MB buffer for large diffs
+        maxBuffer: 16 * 1024 * 1024,
       },
     );
 
@@ -116,7 +89,6 @@ async function getLocalGitDiff(context: PullRequestContext): Promise<Result<Diff
       logWarning(`Git command stderr: ${stderr}`);
     }
 
-    // Parse the output
     const lines = stdout
       .trim()
       .split('\n')
@@ -126,7 +98,6 @@ async function getLocalGitDiff(context: PullRequestContext): Promise<Result<Diff
     for (const line of lines) {
       const file = parseGitDiffLine(line);
       if (file) {
-        // Filter out removed files (shouldn't happen with --diff-filter, but double-check)
         if (file.additions === 0 && file.deletions > 0) {
           continue;
         }
@@ -143,9 +114,6 @@ async function getLocalGitDiff(context: PullRequestContext): Promise<Result<Diff
   }
 }
 
-/**
- * Get diff files using GitHub API
- */
 async function getGitHubAPIDiff(context: PullRequestContext, token: string): Promise<Result<DiffFile[], DiffError>> {
   try {
     logDebug('Attempting to get diff using GitHub API');
@@ -155,7 +123,6 @@ async function getGitHubAPIDiff(context: PullRequestContext, token: string): Pro
     let page = 1;
     const perPage = 100;
 
-    // Paginate through all files - continue until we get an empty response
     while (true) {
       const response = await octokit.rest.pulls.listFiles({
         owner: context.owner,
@@ -165,18 +132,15 @@ async function getGitHubAPIDiff(context: PullRequestContext, token: string): Pro
         page,
       });
 
-      // Stop when there are no more files
       if (response.data.length === 0) {
         break;
       }
 
       for (const file of response.data) {
-        // Filter out removed files
         if (file.status === 'removed') {
           continue;
         }
 
-        // Map GitHub API status to our status
         let status: DiffFile['status'];
         switch (file.status) {
           case 'added':
@@ -203,10 +167,8 @@ async function getGitHubAPIDiff(context: PullRequestContext, token: string): Pro
         });
       }
 
-      // Continue to next page
       page++;
 
-      // Safety check to prevent infinite loops
       if (page > 100) {
         logWarning('Pagination safety limit reached (100 pages)');
         break;
@@ -222,12 +184,7 @@ async function getGitHubAPIDiff(context: PullRequestContext, token: string): Pro
   }
 }
 
-/**
- * Get diff files for a pull request
- * Tries local git first, then falls back to GitHub API
- */
 export async function getDiffFiles(context: PullRequestContext, token: string): Promise<Result<DiffResult, DiffError>> {
-  // Try local git first (faster and doesn't count against API limits)
   const localResult = await getLocalGitDiff(context);
   if (localResult.isOk()) {
     return ok({
@@ -236,7 +193,6 @@ export async function getDiffFiles(context: PullRequestContext, token: string): 
     });
   }
 
-  // Fallback to GitHub API
   logInfo('Falling back to GitHub API for diff retrieval');
   const apiResult = await getGitHubAPIDiff(context, token);
   if (apiResult.isOk()) {
@@ -246,7 +202,6 @@ export async function getDiffFiles(context: PullRequestContext, token: string): 
     });
   }
 
-  // Both strategies failed
   return err(
     createDiffError(
       'both',

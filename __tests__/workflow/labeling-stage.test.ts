@@ -184,7 +184,6 @@ describe('workflow/stages/labeling', () => {
     vi.mocked(logDebugI18n).mockReset();
     vi.mocked(logWarning).mockReset();
     vi.mocked(getCIStatus).mockReturnValue(okAsync(null));
-    // Default to a non-`pull_request_target` event so the local checkout config is used.
     vi.mocked(getEnvVar).mockReturnValue('pull_request');
     context.config.enableDirectoryLabeling = true;
     context.labelerConfig.runtime.fail_on_error = false;

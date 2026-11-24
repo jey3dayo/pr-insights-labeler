@@ -1,9 +1,3 @@
-/**
- * Directory-Based Labeler: 統合テスト
- *
- * 要件定義書の受け入れテストケースに基づいた統合テスト
- */
-
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
@@ -119,7 +113,7 @@ namespaces:
       expect(decisionsResult.isOk()).toBe(true);
       if (decisionsResult.isOk()) {
         mockOctokit.rest.issues.listLabelsOnIssue.mockResolvedValue({
-          data: [{ name: 'size:S' }], // 既存ラベル
+          data: [{ name: 'size:S' }],
         });
         mockOctokit.rest.issues.removeLabel.mockResolvedValue({ data: {} });
         mockOctokit.rest.issues.addLabels.mockResolvedValue({ data: [] });
@@ -161,7 +155,7 @@ rules:
 
       expect(decisionsResult.isOk()).toBe(true);
       if (decisionsResult.isOk()) {
-        expect(decisionsResult.value).toHaveLength(0); // 除外されるため、ラベルなし
+        expect(decisionsResult.value).toHaveLength(0);
       }
     }
   });
@@ -212,7 +206,7 @@ rules:
       expect(decisionsResult.isOk()).toBe(true);
       if (decisionsResult.isOk()) {
         mockOctokit.rest.issues.listLabelsOnIssue.mockResolvedValue({
-          data: [{ name: 'area:components' }], // 既に同じラベルが存在
+          data: [{ name: 'area:components' }],
         });
 
         const applyResult = await applyDirectoryLabels(
@@ -228,7 +222,6 @@ rules:
           expect(applyResult.value.applied).toHaveLength(0);
         }
 
-        // APIは呼び出されない（冪等性）
         expect(mockOctokit.rest.issues.addLabels).not.toHaveBeenCalled();
       }
     }
@@ -259,7 +252,7 @@ rules:
       expect(decisionsResult.isOk()).toBe(true);
       if (decisionsResult.isOk()) {
         expect(decisionsResult.value).toHaveLength(1);
-        expect(decisionsResult.value[0]?.label).toBe('area:core'); // 優先度50 > 10
+        expect(decisionsResult.value[0]?.label).toBe('area:core');
       }
     }
   });
@@ -278,13 +271,12 @@ rules:
     expect(configResult.isOk()).toBe(true);
 
     if (configResult.isOk()) {
-      // デフォルト除外パターンに該当するファイルのみ
       const files = ['.git/config', 'node_modules/package/index.js'];
       const decisionsResult = decideLabelsForFiles(files, configResult.value);
 
       expect(decisionsResult.isOk()).toBe(true);
       if (decisionsResult.isOk()) {
-        expect(decisionsResult.value).toHaveLength(0); // 除外されるため、ラベルなし
+        expect(decisionsResult.value).toHaveLength(0);
       }
     }
   });
@@ -321,12 +313,10 @@ namespaces:
 `;
     fs.writeFileSync(configPath, config, 'utf-8');
 
-    // Step 1: 設定読み込み
     const configResult = loadDirectoryLabelerConfig(configPath);
     expect(configResult.isOk()).toBe(true);
 
     if (configResult.isOk()) {
-      // Step 2: ラベル決定
       const files = ['src/components/Button.tsx', 'src/api/handler.ts', 'src/components/__tests__/Button.test.tsx'];
       const decisionsResult = decideLabelsForFiles(files, configResult.value);
 
@@ -335,12 +325,10 @@ namespaces:
         const decisions = decisionsResult.value;
         expect(decisions.length).toBeGreaterThan(0);
 
-        // area:frontend と area:backend が決定される（テストファイルは除外またはarea:testsになる可能性）
         const labels = decisions.map(d => d.label);
         expect(labels).toContain('area:frontend');
         expect(labels).toContain('area:backend');
 
-        // Step 3: ラベル適用
         mockOctokit.rest.issues.listLabelsOnIssue.mockResolvedValue({
           data: [],
         });

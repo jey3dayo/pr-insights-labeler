@@ -16,9 +16,6 @@ import { parseSize } from '../parsers/size-parser.js';
 
 export type { SizeThresholds } from '../parsers/action-input-parsers.js';
 
-/**
- * Normalized action inputs after validation (excluding githubToken/language)
- */
 export interface NormalizedActionInputs {
   fileSizeLimit: number;
   fileSizeLimitEnabled: boolean;
@@ -165,9 +162,6 @@ function parseFailureConditions(
   return ok({ failOnLargeFiles, failOnTooManyFiles, failOnPrSize });
 }
 
-/**
- * Normalize and validate raw action input strings
- */
 export function normalizeActionInputStrings(
   inputs: ActionInputStrings,
 ): Result<NormalizedActionInputs, ConfigurationError | ParseError> {

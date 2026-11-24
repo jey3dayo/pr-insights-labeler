@@ -1,70 +1,47 @@
-/**
- * Default configuration for Directory-Based Labeler
- * Contains default options, namespace policies, and exclusion patterns
- */
-
 import type { MinimatchOptions, NamespacePolicy } from '../types/directory-labeler.js';
 
-/**
- * Default minimatch options
- */
 export const DEFAULT_OPTIONS: Required<MinimatchOptions> = {
   dot: true,
   nocase: false,
   matchBase: false,
 } as const;
 
-/**
- * Default namespace policies
- */
 export const DEFAULT_NAMESPACES: Required<NamespacePolicy> = {
   exclusive: ['size', 'area', 'type'],
   additive: ['scope', 'meta'],
 } as const;
 
-/**
- * Default exclusion patterns for Directory-Based Labeler
- *
- * These patterns are applied at the Pattern Matcher level and
- * combined with user-defined exclusion patterns using logical OR.
- */
 export const DEFAULT_EXCLUDES: readonly string[] = [
-  // IDE and Editor directories
   '.vscode/**',
   '.idea/**',
 
-  // Git hooks and version control
   '.husky/**',
   '.git/**',
 
-  // Dependencies
   'node_modules/**',
 
-  // Lock files (generic pattern)
   '**/*.lock',
-  '**/*.lock.yaml', // apm, Helm-style compound extension
-  '**/*.lock.json', // NuGet packages.lock.json
-  '**/*.lock.hcl', // Terraform provider lock
+  '**/*.lock.yaml',
+  '**/*.lock.json',
+  '**/*.lock.hcl',
 
-  // Package manager lock files
-  '**/package-lock.json', // npm
-  '**/pnpm-lock.yaml', // pnpm
-  '**/yarn.lock', // Yarn
-  '**/bun.lockb', // Bun
-  '**/composer.lock', // PHP Composer
-  '**/Gemfile.lock', // Ruby Bundler
-  '**/Cargo.lock', // Rust
-  '**/poetry.lock', // Python Poetry
-  '**/Pipfile.lock', // Python Pipenv
-  '**/*.lockfile', // Gradle dependency locking
-  '**/pylock.toml', // PEP 751
-  '**/pylock.+([!.]).toml', // PEP 751 named variants (a single non-dot segment)
-  '**/gems.locked', // Bundler with a `gems.rb` Gemfile
-  '**/conda-lock.yml', // conda-lock
-  '**/cabal.project.freeze', // Haskell Cabal
-  '**/maven_install.json', // Bazel rules_jvm_external
+  '**/package-lock.json',
+  '**/pnpm-lock.yaml',
+  '**/yarn.lock',
+  '**/bun.lockb',
+  '**/composer.lock',
+  '**/Gemfile.lock',
+  '**/Cargo.lock',
+  '**/poetry.lock',
+  '**/Pipfile.lock',
+  '**/*.lockfile',
+  '**/pylock.toml',
+  '**/pylock.+([!.]).toml',
+  '**/gems.locked',
+  '**/conda-lock.yml',
+  '**/cabal.project.freeze',
+  '**/maven_install.json',
 
-  // Yarn Berry generated artifacts that are committed by design
   '**/.pnp.*',
   '**/.yarn/cache/**',
   '**/.yarn/unplugged/**',
@@ -73,25 +50,15 @@ export const DEFAULT_EXCLUDES: readonly string[] = [
   '**/.yarn/plugins/**',
   '**/.yarn/sdks/**',
 
-  // OS-specific files
-  '**/.DS_Store', // macOS
-  '**/Thumbs.db', // Windows
+  '**/.DS_Store',
+  '**/Thumbs.db',
 
-  // Development tool configuration files
-  '**/.dependency-cruiser.js', // Dependency cruiser
-  '**/.dockerignore', // Docker
-  '**/.coderabbit.yaml', // CodeRabbit
-  '**/.github/actionlint.yaml', // actionlint
+  '**/.dependency-cruiser.js',
+  '**/.dockerignore',
+  '**/.coderabbit.yaml',
+  '**/.github/actionlint.yaml',
 ] as const;
 
-/**
- * Default label color for auto-created labels
- * Fixed value (cannot be customized)
- */
 export const DEFAULT_LABEL_COLOR = 'cccccc' as const;
 
-/**
- * Default label description for auto-created labels
- * Fixed value (cannot be customized)
- */
 export const DEFAULT_LABEL_DESCRIPTION = '' as const;

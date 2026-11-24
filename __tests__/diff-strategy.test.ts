@@ -1,9 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-// Setup mocks with factory functions - no external references
 vi.mock('child_process');
 vi.mock('util', () => {
-  // Create the mock function inside the factory to avoid hoisting issues
   const mockFn = vi.fn();
   return {
     promisify: vi.fn(() => mockFn),
@@ -12,7 +10,6 @@ vi.mock('util', () => {
 vi.mock('@actions/github');
 vi.mock('@actions/core');
 
-// Import after mocking
 import { promisify } from 'node:util';
 
 import * as core from '@actions/core';
@@ -29,8 +26,6 @@ describe('DiffStrategy', () => {
   beforeEach(() => {
     vi.clearAllMocks();
 
-    // Initialize i18n for error factory functions with English language
-    // Override environment variables to ensure English language
     const originalLang = process.env['LANG'];
     const originalLanguage = process.env['LANGUAGE'];
     delete process.env['LANG'];
@@ -39,7 +34,6 @@ describe('DiffStrategy', () => {
     resetI18n();
     initializeI18n('en');
 
-    // Restore original environment variables
     if (originalLang) {
       process.env['LANG'] = originalLang;
     }
@@ -47,12 +41,8 @@ describe('DiffStrategy', () => {
       process.env['LANGUAGE'] = originalLanguage;
     }
 
-    // Get the mocked execAsync function
-    // promisify is already mocked to return the same function every time
-    // @ts-expect-error - Mocking promisify to return a vi.fn
-    mockExecAsync = promisify() as ReturnType<typeof vi.fn>;
+    mockExecAsync = (promisify as unknown as () => ReturnType<typeof vi.fn>)();
 
-    // Setup GitHub mock
     mockListFiles = vi.fn();
     mockOctokit = {
       rest: {
@@ -64,7 +54,6 @@ describe('DiffStrategy', () => {
 
     vi.mocked(github.getOctokit).mockReturnValue(mockOctokit);
 
-    // Setup core mocks
     vi.mocked(core.debug).mockImplementation(() => {});
     vi.mocked(core.info).mockImplementation(() => {});
     vi.mocked(core.warning).mockImplementation(() => {});
@@ -199,7 +188,7 @@ describe('DiffStrategy', () => {
 
       expect(result.isOk()).toBe(true);
       if (result.isOk()) {
-        expect(result.value.files).toHaveLength(3); // removed file should be filtered out
+        expect(result.value.files).toHaveLength(3);
         const filenames = result.value.files.map(f => f.filename);
         expect(filenames).not.toContain('src/removed.ts');
       }
@@ -249,10 +238,10 @@ describe('DiffStrategy', () => {
       expect(result.isOk()).toBe(true);
       if (result.isOk()) {
         const files = result.value.files;
-        expect(files[0]?.status).toBe('added'); // only additions
-        expect(files[1]?.status).toBe('renamed'); // 0 additions, 0 deletions
-        expect(files[2]?.status).toBe('modified'); // both additions and deletions
-        expect(files[3]?.status).toBe('modified'); // equal additions and deletions
+        expect(files[0]?.status).toBe('added');
+        expect(files[1]?.status).toBe('renamed');
+        expect(files[2]?.status).toBe('modified');
+        expect(files[3]?.status).toBe('modified');
       }
     });
 
@@ -272,7 +261,6 @@ invalid line
 
       expect(result.isOk()).toBe(true);
       if (result.isOk()) {
-        // Should only parse valid lines
         expect(result.value.files).toHaveLength(2);
         expect(result.value.files[0]?.filename).toBe('src/valid.ts');
         expect(result.value.files[1]?.filename).toBe('src/another-valid.ts');
@@ -296,22 +284,18 @@ invalid line
       if (result.isOk()) {
         expect(result.value.files).toHaveLength(4);
 
-        // First rename with prefix
         expect(result.value.files[0]?.filename).toBe('src/configs/default-excludes.ts');
         expect(result.value.files[0]?.additions).toBe(141);
         expect(result.value.files[0]?.deletions).toBe(0);
 
-        // Rename without prefix
         expect(result.value.files[1]?.filename).toBe('new-file.ts');
         expect(result.value.files[1]?.additions).toBe(50);
         expect(result.value.files[1]?.deletions).toBe(30);
 
-        // Rename with path prefix
         expect(result.value.files[2]?.filename).toBe('path/to/new.ts');
         expect(result.value.files[2]?.additions).toBe(100);
         expect(result.value.files[2]?.deletions).toBe(0);
 
-        // Regular file (no rename)
         expect(result.value.files[3]?.filename).toBe('regular-file.ts');
         expect(result.value.files[3]?.additions).toBe(20);
         expect(result.value.files[3]?.deletions).toBe(10);
@@ -372,7 +356,7 @@ invalid line
               filename: 'file2.ts',
               additions: 0,
               deletions: 100,
-              status: 'removed', // Should be filtered
+              status: 'removed',
             },
             {
               filename: 'file3.ts',

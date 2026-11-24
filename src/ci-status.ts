@@ -1,8 +1,3 @@
-/**
- * CI Status Detection Module
- * Fetches and analyzes CI check results from GitHub Actions
- */
-
 import type { getOctokit } from '@actions/github';
 import { ResultAsync } from 'neverthrow';
 
@@ -13,24 +8,15 @@ import { hasProperty, isNonEmptyString, isObject } from './utils/type-guards.js'
 
 type Octokit = ReturnType<typeof getOctokit>;
 
-/**
- * Represents a GitHub check run object
- */
 interface CheckRun {
   name: string;
   conclusion: string | null;
 }
 
-/**
- * Type guard to check if a value is a valid CheckRun
- */
 function isValidCheckRun(run: unknown): run is CheckRun {
   return isObject(run) && hasProperty(run, 'name') && isNonEmptyString(run.name);
 }
 
-/**
- * Maps check run conclusion to CICheckStatus
- */
 function mapConclusion(conclusion: string | null): CICheckStatus {
   switch (conclusion) {
     case 'success':
@@ -48,9 +34,6 @@ function mapConclusion(conclusion: string | null): CICheckStatus {
   }
 }
 
-/**
- * Determines the status of a specific check type from check runs
- */
 function determineCheckStatus(
   checkRuns: Array<{ name: string; conclusion: string | null }>,
   patterns: string[],
@@ -65,17 +48,14 @@ function determineCheckStatus(
 
   const statuses = relevantChecks.map(check => mapConclusion(check.conclusion));
 
-  // If any check failed, return failed
   if (statuses.some(s => s === 'failed')) {
     return 'failed';
   }
 
-  // If all passed, return passed
   if (statuses.every(s => s === 'passed')) {
     return 'passed';
   }
 
-  // If any pending, return pending
   if (statuses.some(s => s === 'pending')) {
     return 'pending';
   }
@@ -83,14 +63,6 @@ function determineCheckStatus(
   return 'unknown';
 }
 
-/**
- * Fetches CI status from GitHub API
- * @param octokit - GitHub API client
- * @param owner - Repository owner
- * @param repo - Repository name
- * @param headSha - Commit SHA to check
- * @returns CI status or null if unavailable
- */
 export function getCIStatus(
   octokit: Octokit,
   owner: string,
@@ -133,9 +105,6 @@ export function getCIStatus(
   );
 }
 
-/**
- * Checks if all CI checks passed
- */
 export function allCIPassed(ciStatus: CIStatus | null | undefined): boolean {
   if (!ciStatus) {
     return false;
@@ -149,9 +118,6 @@ export function allCIPassed(ciStatus: CIStatus | null | undefined): boolean {
   );
 }
 
-/**
- * Checks if any CI check failed
- */
 export function anyCIFailed(ciStatus: CIStatus | null | undefined): boolean {
   if (!ciStatus) {
     return false;

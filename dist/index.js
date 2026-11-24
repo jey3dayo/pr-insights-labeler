@@ -266677,8 +266677,47 @@ const RISK_LABELS = {
     medium: 'risk/medium',
 };
 
+;// CONCATENATED MODULE: ./src/utils/type-guards.ts
+function isObject(value) {
+    return typeof value === 'object' && value !== null && !Array.isArray(value);
+}
+function isRecord(value) {
+    return isObject(value);
+}
+function isString(value) {
+    return typeof value === 'string';
+}
+function isNonEmptyString(value) {
+    return isString(value) && value !== '';
+}
+function isNumber(value) {
+    return typeof value === 'number' && Number.isFinite(value);
+}
+function isBoolean(value) {
+    return typeof value === 'boolean';
+}
+function isStringArray(value) {
+    return Array.isArray(value) && value.every(isString);
+}
+function isNonEmptyStringArray(value) {
+    return isStringArray(value) && value.length > 0;
+}
+function hasProperty(value, key) {
+    return isObject(value) && key in value;
+}
+function isConfigurationError(value) {
+    return (isObject(value) &&
+        hasProperty(value, 'type') &&
+        value.type === 'ConfigurationError' &&
+        hasProperty(value, 'field') &&
+        isString(value.field) &&
+        hasProperty(value, 'value') &&
+        hasProperty(value, 'message') &&
+        isString(value.message));
+}
+
 ;// CONCATENATED MODULE: ./node_modules/.pnpm/i18next@27.1.1_typescript@5.9.3/node_modules/i18next/dist/esm/i18next.js
-const isString = obj => typeof obj === 'string';
+const i18next_isString = obj => typeof obj === 'string';
 const defer = () => {
   let res;
   let rej;
@@ -266694,7 +266733,7 @@ const makeString = object => {
   if (object == null) return '';
   return String(object);
 };
-const isSafeLanguageCode = code => isString(code) && /^[A-Za-z0-9_@.-]{1,128}$/.test(code) && !code.includes('..') && !['__proto__', 'constructor', 'prototype'].includes(code);
+const isSafeLanguageCode = code => i18next_isString(code) && /^[A-Za-z0-9_@.-]{1,128}$/.test(code) && !code.includes('..') && !['__proto__', 'constructor', 'prototype'].includes(code);
 const callbackApiOf = plugin => plugin?.callbackApi ?? plugin?.constructor?.callbackApi;
 const copy = (a, s, t) => {
   a.forEach(m => {
@@ -266703,9 +266742,9 @@ const copy = (a, s, t) => {
 };
 const lastOfPathSeparatorRegExp = /###/g;
 const cleanKey = key => key && key.includes('###') ? key.replace(lastOfPathSeparatorRegExp, '.') : key;
-const canNotTraverseDeeper = object => !object || isString(object);
+const canNotTraverseDeeper = object => !object || i18next_isString(object);
 const getLastOfPath = (object, path, Empty) => {
-  const stack = !isString(path) ? path : path.split('.');
+  const stack = !i18next_isString(path) ? path : path.split('.');
   let stackIndex = 0;
   while (stackIndex < stack.length - 1) {
     if (canNotTraverseDeeper(object)) return {};
@@ -266774,7 +266813,7 @@ const deepExtend = (target, source, overwrite) => {
   for (const prop in source) {
     if (prop !== '__proto__' && prop !== 'constructor') {
       if (Object.prototype.hasOwnProperty.call(target, prop)) {
-        if (isString(target[prop]) || target[prop] instanceof String || isString(source[prop]) || source[prop] instanceof String) {
+        if (i18next_isString(target[prop]) || target[prop] instanceof String || i18next_isString(source[prop]) || source[prop] instanceof String) {
           if (overwrite) target[prop] = source[prop];
         } else {
           deepExtend(target[prop], source[prop], overwrite);
@@ -266795,7 +266834,7 @@ const _entityMap = {
   "'": '&#39;'
 };
 const i18next_escape = data => {
-  if (isString(data)) {
+  if (i18next_isString(data)) {
     return data.replace(/[&<>"']/g, s => _entityMap[s]);
   }
   return data;
@@ -266922,8 +266961,8 @@ class Logger {
   }
   forward(args, lvl, prefix, debugOnly) {
     if (debugOnly && !this.debug) return null;
-    args = args.map(a => isString(a) ? a.replace(/[\r\n\x00-\x1F\x7F]/g, ' ') : a);
-    if (isString(args[0])) args[0] = `${prefix}${this.prefix} ${args[0]}`;
+    args = args.map(a => i18next_isString(a) ? a.replace(/[\r\n\x00-\x1F\x7F]/g, ' ') : a);
+    if (i18next_isString(args[0])) args[0] = `${prefix}${this.prefix} ${args[0]}`;
     return this.logger[lvl](args);
   }
   create(moduleName) {
@@ -266994,7 +267033,7 @@ class EventEmitter {
 
 const nonEmptyBundles = new WeakSet();
 const assertSeparateArguments = (method, ...args) => {
-  if (args.some(a => !isString(a))) {
+  if (args.some(a => !i18next_isString(a))) {
     throw new TypeError(`${method}: pass language, namespace${method === 'addResource' ? ' and key' : ''} as separate strings; the dotted form ('en.translation.key') was removed in i18next v27`);
   }
 };
@@ -267032,14 +267071,14 @@ class ResourceStore extends EventEmitter {
     if (key) {
       if (Array.isArray(key)) {
         path.push(...key);
-      } else if (isString(key) && keySeparator) {
+      } else if (i18next_isString(key) && keySeparator) {
         path.push(...key.split(keySeparator));
       } else {
         path.push(key);
       }
     }
     const result = getPath(this.data, path);
-    if (result != null || !ignoreJSONStructure || !isString(key)) return result;
+    if (result != null || !ignoreJSONStructure || !i18next_isString(key)) return result;
     return deepFind(this.data?.[lng]?.[ns], key, keySeparator);
   }
   addResource(lng, ns, key, value, options = {
@@ -267152,7 +267191,7 @@ function keysFromSelector(selector, opts) {
   return path.join(keySeparator);
 }
 
-const shouldHandleAsObject = res => !isString(res) && typeof res !== 'boolean' && typeof res !== 'number';
+const shouldHandleAsObject = res => !i18next_isString(res) && typeof res !== 'boolean' && typeof res !== 'number';
 class Translator extends EventEmitter {
   constructor(services, options = {}) {
     super();
@@ -267194,7 +267233,7 @@ class Translator extends EventEmitter {
       if (m && m.length > 0) {
         return {
           key,
-          namespaces: isString(namespaces) ? [namespaces] : namespaces
+          namespaces: i18next_isString(namespaces) ? [namespaces] : namespaces
         };
       }
       const parts = key.split(nsSeparator);
@@ -267203,7 +267242,7 @@ class Translator extends EventEmitter {
     }
     return {
       key,
-      namespaces: isString(namespaces) ? [namespaces] : namespaces
+      namespaces: i18next_isString(namespaces) ? [namespaces] : namespaces
     };
   }
   translate(keys, o, lastKey) {
@@ -267271,7 +267310,7 @@ class Translator extends EventEmitter {
     const noObject = ['[object Number]', '[object Function]', '[object RegExp]'];
     const joinArrays = opt.joinArrays !== undefined ? opt.joinArrays : this.options.joinArrays;
     const handleAsObjectInI18nFormat = !this.i18nFormat || this.i18nFormat.handleAsObject;
-    const needsPluralHandling = opt.count !== undefined && !isString(opt.count);
+    const needsPluralHandling = opt.count !== undefined && !i18next_isString(opt.count);
     const hasDefaultValue = Translator.hasDefaultValue(opt);
     const defaultValueSuffix = needsPluralHandling ? this.pluralResolver.getSuffix(lng, opt.count, opt) : '';
     const defaultValueSuffixOrdinalFallback = opt.ordinal && needsPluralHandling ? this.pluralResolver.getSuffix(lng, opt.count, {
@@ -267286,7 +267325,7 @@ class Translator extends EventEmitter {
     }
     const handleAsObject = shouldHandleAsObject(resForObjHndl);
     const resType = Object.prototype.toString.apply(resForObjHndl);
-    const isObjectHit = handleAsObjectInI18nFormat && resForObjHndl && handleAsObject && !noObject.includes(resType) && !(isString(joinArrays) && Array.isArray(resForObjHndl));
+    const isObjectHit = handleAsObjectInI18nFormat && resForObjHndl && handleAsObject && !noObject.includes(resType) && !(i18next_isString(joinArrays) && Array.isArray(resForObjHndl));
     const objectNotReturned = isObjectHit && !opt.returnObjects && !this.options.returnObjects;
     if (objectNotReturned && this.options.returnedObjectHandler) {
       const r = this.options.returnedObjectHandler(resUsedKey, resForObjHndl, {
@@ -267334,7 +267373,7 @@ class Translator extends EventEmitter {
         }
         res = copy;
       }
-    } else if (handleAsObjectInI18nFormat && isString(joinArrays) && Array.isArray(res)) {
+    } else if (handleAsObjectInI18nFormat && i18next_isString(joinArrays) && Array.isArray(res)) {
       res = res.join(joinArrays);
       if (res) res = this.extendTranslation(res, keys, opt, resolved, lastKey);
     } else {
@@ -267430,13 +267469,13 @@ class Translator extends EventEmitter {
           }
         }
       });
-      const skipOnVariables = isString(res) && (opt?.interpolation?.skipOnVariables !== undefined ? opt.interpolation.skipOnVariables : this.options.interpolation.skipOnVariables);
+      const skipOnVariables = i18next_isString(res) && (opt?.interpolation?.skipOnVariables !== undefined ? opt.interpolation.skipOnVariables : this.options.interpolation.skipOnVariables);
       let nestBef;
       if (skipOnVariables) {
         const nb = res.includes(this.interpolator.nestingPrefixText) ? res.match(this.interpolator.nestingRegexp) : null;
         nestBef = nb && nb.length;
       }
-      let data = opt.replace && !isString(opt.replace) ? opt.replace : opt;
+      let data = opt.replace && !i18next_isString(opt.replace) ? opt.replace : opt;
       if (this.options.interpolation.defaultVariables) data = {
         ...this.options.interpolation.defaultVariables,
         ...data
@@ -267458,7 +267497,7 @@ class Translator extends EventEmitter {
       if (opt.interpolation) this.interpolator.reset();
     }
     const postProcess = opt.postProcess || this.options.postProcess;
-    const postProcessorNames = isString(postProcess) ? [postProcess] : postProcess;
+    const postProcessorNames = i18next_isString(postProcess) ? [postProcess] : postProcess;
     if (res != null && postProcessorNames?.length && opt.applyPostProcessor !== false) {
       const ppOptions = this.options?.postProcessPassResolved ? {
         i18nResolved: {
@@ -267484,7 +267523,7 @@ class Translator extends EventEmitter {
     let exactUsedKey;
     let usedLng;
     let usedNS;
-    if (isString(keys)) keys = [keys];
+    if (i18next_isString(keys)) keys = [keys];
     if (Array.isArray(keys)) keys = keys.map(k => typeof k === 'function' ? keysFromSelector(k, {
       ...this.options,
       ...opt
@@ -267496,9 +267535,9 @@ class Translator extends EventEmitter {
       usedKey = key;
       let namespaces = extracted.namespaces;
       if (this.options.fallbackNS) namespaces = namespaces.concat(this.options.fallbackNS);
-      const needsPluralHandling = opt.count !== undefined && !isString(opt.count);
+      const needsPluralHandling = opt.count !== undefined && !i18next_isString(opt.count);
       const needsZeroSuffixLookup = needsPluralHandling && !opt.ordinal && opt.count === 0;
-      const needsContextHandling = opt.context !== undefined && (isString(opt.context) || typeof opt.context === 'number') && opt.context !== '';
+      const needsContextHandling = opt.context !== undefined && (i18next_isString(opt.context) || typeof opt.context === 'number') && opt.context !== '';
       const codes = opt.lngs ? opt.lngs : this.languageUtils.toResolveHierarchy(opt.lng || this.language, opt.fallbackLng);
       namespaces.forEach(ns => {
         if (this.isValidLookup(found)) return;
@@ -267577,7 +267616,7 @@ class Translator extends EventEmitter {
   }
   getUsedParamsDetails(options = {}) {
     const optionsKeys = ['defaultValue', 'ordinal', 'context', 'replace', 'lng', 'lngs', 'fallbackLng', 'ns', 'keySeparator', 'nsSeparator', 'returnObjects', 'returnDetails', 'joinArrays', 'postProcess', 'interpolation'];
-    const useOptionsReplaceForData = options.replace && !isString(options.replace);
+    const useOptionsReplaceForData = options.replace && !i18next_isString(options.replace);
     let data = useOptionsReplaceForData ? options.replace : options;
     if (useOptionsReplaceForData && typeof options.count !== 'undefined') {
       data = {
@@ -267640,7 +267679,7 @@ class LanguageUtil {
     return this.formatLanguageCode(p[0]);
   }
   formatLanguageCode(code) {
-    if (!isString(code)) return code;
+    if (!i18next_isString(code)) return code;
     let formatted = this.formattedCodes.get(code);
     if (formatted !== undefined) return formatted;
     formatted = this.formatUncached(code);
@@ -267697,7 +267736,7 @@ class LanguageUtil {
   getFallbackCodes(fallbacks, code) {
     if (!fallbacks) return [];
     if (typeof fallbacks === 'function') fallbacks = fallbacks(code);
-    if (isString(fallbacks)) fallbacks = [fallbacks];
+    if (i18next_isString(fallbacks)) fallbacks = [fallbacks];
     if (Array.isArray(fallbacks)) return fallbacks;
     if (!code) return fallbacks.default || [];
     let found = fallbacks[code];
@@ -267714,9 +267753,9 @@ class LanguageUtil {
       this.resolveHierarchyCache = {};
       this._cachedFallbackLng = fallbackLngKey;
     }
-    const hasCacheableFallback = fallbackCode === undefined || fallbackCode === false || isString(fallbackCode);
+    const hasCacheableFallback = fallbackCode === undefined || fallbackCode === false || i18next_isString(fallbackCode);
     const usesUncacheableOptionsFallback = fallbackCode === undefined && typeof this.options.fallbackLng === 'function';
-    const cacheable = isString(code) && hasCacheableFallback && !usesUncacheableOptionsFallback;
+    const cacheable = i18next_isString(code) && hasCacheableFallback && !usesUncacheableOptionsFallback;
     let cacheKey = null;
     if (cacheable) {
       let fallbackCacheKey;
@@ -267737,11 +267776,11 @@ class LanguageUtil {
         this.logger.warn(`rejecting language code not found in supportedLngs: ${c}`);
       }
     };
-    if (isString(code) && (code.includes('-') || code.includes('_'))) {
+    if (i18next_isString(code) && (code.includes('-') || code.includes('_'))) {
       if (this.options.load !== 'languageOnly') addCode(this.formatLanguageCode(code));
       if (this.options.load !== 'languageOnly' && this.options.load !== 'currentOnly') addCode(this.getScriptPartFromCode(code));
       if (this.options.load !== 'currentOnly') addCode(this.getLanguagePartFromCode(code));
-    } else if (isString(code)) {
+    } else if (i18next_isString(code)) {
       addCode(this.formatLanguageCode(code));
     }
     fallbackCodes.forEach(fc => {
@@ -267833,7 +267872,7 @@ class PluralResolver {
 
 const deepFindWithDefaults = (data, defaultData, key, keySeparator = '.', ignoreJSONStructure = true) => {
   let path = getPathWithDefaults(data, defaultData, key);
-  if (path == null && ignoreJSONStructure && isString(key)) {
+  if (path == null && ignoreJSONStructure && i18next_isString(key)) {
     path = deepFind(data, key, keySeparator);
     if (path === undefined) path = deepFind(defaultData, key, keySeparator);
   }
@@ -267927,7 +267966,7 @@ class Interpolator {
     }
     const missingInterpolationHandler = options?.missingInterpolationHandler || this.options.missingInterpolationHandler;
     const skipOnVariables = options?.interpolation?.skipOnVariables !== undefined ? options.interpolation.skipOnVariables : this.options.interpolation.skipOnVariables;
-    if (isString(str) && !str.includes(this.prefixText)) return str;
+    if (i18next_isString(str) && !str.includes(this.prefixText)) return str;
     const todos = [{
       regex: this.regexpUnescape,
       safeValue: val => val
@@ -267951,7 +267990,7 @@ class Interpolator {
         if (value === undefined) {
           if (typeof missingInterpolationHandler === 'function') {
             const temp = missingInterpolationHandler(str, match, options);
-            value = isString(temp) ? temp : '';
+            value = i18next_isString(temp) ? temp : '';
           } else if (options && Object.prototype.hasOwnProperty.call(options, matchedVar)) {
             value = '';
           } else if (skipOnVariables) {
@@ -267964,7 +268003,7 @@ class Interpolator {
             this.logger.warn(`missed to pass in variable ${matchedVar} for interpolating ${str}`);
             value = '';
           }
-        } else if (!isString(value) && !this.useRawValueToEscape) {
+        } else if (!i18next_isString(value) && !this.useRawValueToEscape) {
           value = makeString(value);
         }
         const safeValue = makeString(todo.safeValue(value));
@@ -268017,7 +268056,7 @@ class Interpolator {
       if (clonedOptions.defaultValue && clonedOptions.defaultValue.includes(this.prefix)) delete clonedOptions.defaultValue;
       return key;
     };
-    if (isString(str) && !str.includes(this.nestingPrefixText)) return str;
+    if (i18next_isString(str) && !str.includes(this.nestingPrefixText)) return str;
     const nestingRegexp = new RegExp(this.nestingRegexp);
     let out = '';
     let lastEnd = 0;
@@ -268026,7 +268065,7 @@ class Interpolator {
       clonedOptions = {
         ...options
       };
-      clonedOptions = clonedOptions.replace && !isString(clonedOptions.replace) ? clonedOptions.replace : clonedOptions;
+      clonedOptions = clonedOptions.replace && !i18next_isString(clonedOptions.replace) ? clonedOptions.replace : clonedOptions;
       clonedOptions.applyPostProcessor = false;
       delete clonedOptions.defaultValue;
       const keyEndIndex = /{.*}/s.test(match[1]) ? match[1].lastIndexOf('}') + 1 : match[1].indexOf(this.formatSeparator);
@@ -268035,8 +268074,8 @@ class Interpolator {
         match[1] = match[1].slice(0, keyEndIndex);
       }
       value = fc(handleHasOptions.call(this, match[1].trim(), clonedOptions), clonedOptions);
-      if (value && match[0] === str && !isString(value)) return value;
-      if (!isString(value)) value = makeString(value);
+      if (value && match[0] === str && !i18next_isString(value)) return value;
+      if (!i18next_isString(value)) value = makeString(value);
       if (!value) {
         this.logger.warn(`missed to resolve ${match[1]} for nesting ${str}`);
         value = '';
@@ -268359,8 +268398,8 @@ class Connector extends EventEmitter {
       this.logger.warn('No backend was added via i18next.use. Will not load resources.');
       return callback && callback();
     }
-    if (isString(languages)) languages = this.languageUtils.toResolveHierarchy(languages);
-    if (isString(namespaces)) namespaces = [namespaces];
+    if (i18next_isString(languages)) languages = this.languageUtils.toResolveHierarchy(languages);
+    if (i18next_isString(namespaces)) namespaces = [namespaces];
     const toLoad = this.queueLoad(languages, namespaces, options, callback);
     if (!toLoad.toLoad.length) {
       if (!toLoad.pending.length) callback();
@@ -268461,8 +268500,8 @@ const get = () => ({
   overloadTranslationOptionHandler: args => {
     let ret = {};
     if (typeof args[1] === 'object') ret = args[1];
-    if (isString(args[1])) ret.defaultValue = args[1];
-    if (isString(args[2])) ret.tDescription = args[2];
+    if (i18next_isString(args[1])) ret.defaultValue = args[1];
+    if (i18next_isString(args[2])) ret.tDescription = args[2];
     if (typeof args[2] === 'object' || typeof args[3] === 'object') {
       const options = args[3] || args[2];
       Object.keys(options).forEach(key => {
@@ -268486,9 +268525,9 @@ const get = () => ({
   cacheInBuiltFormats: true
 });
 const transformOptions = options => {
-  if (isString(options.ns)) options.ns = [options.ns];
-  if (isString(options.fallbackLng)) options.fallbackLng = [options.fallbackLng];
-  if (isString(options.fallbackNS)) options.fallbackNS = [options.fallbackNS];
+  if (i18next_isString(options.ns)) options.ns = [options.ns];
+  if (i18next_isString(options.fallbackLng)) options.fallbackLng = [options.fallbackLng];
+  if (i18next_isString(options.fallbackNS)) options.fallbackNS = [options.fallbackNS];
   if (options.supportedLngs && !options.supportedLngs.includes('cimode')) {
     options.supportedLngs = options.supportedLngs.concat(['cimode']);
   }
@@ -268515,7 +268554,7 @@ const configuredLanguageCodes = options => {
   const codes = [].concat(options.supportedLngs || [], options.preload || []);
   codes.push(...Object.keys(options.resources || {}));
   const fallbackLng = options.fallbackLng;
-  if (isString(fallbackLng) || Array.isArray(fallbackLng)) codes.push(...[].concat(fallbackLng));else if (fallbackLng && typeof fallbackLng === 'object') {
+  if (i18next_isString(fallbackLng) || Array.isArray(fallbackLng)) codes.push(...[].concat(fallbackLng));else if (fallbackLng && typeof fallbackLng === 'object') {
     Object.keys(fallbackLng).forEach(code => {
       if (code !== 'default') codes.push(code);
       codes.push(...[].concat(fallbackLng[code]));
@@ -268524,7 +268563,7 @@ const configuredLanguageCodes = options => {
   return codes;
 };
 const isRefusedLanguageCode = (i18n, code) => {
-  if (!isString(code) || isSafeLanguageCode(code) || i18n.configuredLngs?.has(code)) return false;
+  if (!i18next_isString(code) || isSafeLanguageCode(code) || i18n.configuredLngs?.has(code)) return false;
   i18n.logger.once(`lng:${code}`, 'warn', `refused the language code '${code.slice(0, 64)}' from lng, changeLanguage(), the language detector or loadLanguages(): it is not configured and has other characters than letters, digits, '-', '_', '@' and '.' (or '..', or more than 128). List it in supportedLngs to use it`);
   return true;
 };
@@ -268566,7 +268605,7 @@ class I18n extends EventEmitter {
       options = {};
     }
     if (options.defaultNS == null && options.ns) {
-      if (isString(options.ns)) {
+      if (i18next_isString(options.ns)) {
         options.defaultNS = options.ns;
       } else if (!options.ns.includes('translation')) {
         options.defaultNS = options.ns[0];
@@ -268693,7 +268732,7 @@ class I18n extends EventEmitter {
   }
   loadResources(language, callback = i18next_noop) {
     let usedCallback = callback;
-    const usedLng = isString(language) ? language : this.language;
+    const usedLng = i18next_isString(language) ? language : this.language;
     if (typeof language === 'function') usedCallback = language;
     if (!this.options.resources || this.options.partialBundledLanguages) {
       if (usedLng?.toLowerCase() === 'cimode' && (!this.options.preload || this.options.preload.length === 0)) return usedCallback();
@@ -268849,8 +268888,8 @@ class I18n extends EventEmitter {
         const accepted = [].concat(lngs).filter(c => !isRefusedLanguageCode(this, c));
         if (accepted.length < [].concat(lngs).length) lngs = accepted;
       }
-      const fl = isString(lngs) ? lngs : lngs && lngs[0];
-      let l = this.store.hasLanguageSomeTranslations(fl) ? fl : this.services.languageUtils.getBestMatchFromCodes(isString(lngs) ? [lngs] : lngs);
+      const fl = i18next_isString(lngs) ? lngs : lngs && lngs[0];
+      let l = this.store.hasLanguageSomeTranslations(fl) ? fl : this.services.languageUtils.getBestMatchFromCodes(i18next_isString(lngs) ? [lngs] : lngs);
       if (supportedLngs && isRefusedLanguageCode(this, l)) l = this.services.languageUtils.getBestMatchFromCodes([]);
       if (l) {
         if (!this.language) {
@@ -268912,7 +268951,7 @@ class I18n extends EventEmitter {
       }
       return this.t(resultKey, o);
     };
-    if (isString(lng)) {
+    if (i18next_isString(lng)) {
       fixedT.lng = lng;
     } else {
       fixedT.lngs = lng;
@@ -268970,7 +269009,7 @@ class I18n extends EventEmitter {
       if (callback) callback();
       return Promise.resolve();
     }
-    if (isString(ns)) ns = [ns];
+    if (i18next_isString(ns)) ns = [ns];
     ns.forEach(n => {
       if (!this.options.ns.includes(n)) this.options.ns.push(n);
     });
@@ -268982,7 +269021,7 @@ class I18n extends EventEmitter {
   }
   loadLanguages(lngs, callback) {
     const deferred = defer();
-    if (isString(lngs)) lngs = [lngs];
+    if (i18next_isString(lngs)) lngs = [lngs];
     const preloaded = this.options.preload || [];
     const newLngs = lngs.filter(lng => !preloaded.includes(lng) && !isRefusedLanguageCode(this, lng) && this.services.languageUtils.isSupportedCode(lng));
     if (!newLngs.length) {
@@ -269113,48 +269152,6 @@ const loadLanguages = instance.loadLanguages;
 
 
 
-;// CONCATENATED MODULE: ./src/utils/type-guards.ts
-function isObject(value) {
-    return typeof value === 'object' && value !== null && !Array.isArray(value);
-}
-function isRecord(value) {
-    return isObject(value);
-}
-function type_guards_isString(value) {
-    return typeof value === 'string';
-}
-function isNonEmptyString(value) {
-    return type_guards_isString(value) && value !== '';
-}
-function isNumber(value) {
-    return typeof value === 'number' && Number.isFinite(value);
-}
-function isBoolean(value) {
-    return typeof value === 'boolean';
-}
-function isStringArray(value) {
-    return Array.isArray(value) && value.every(type_guards_isString);
-}
-function isNonEmptyStringArray(value) {
-    return isStringArray(value) && value.length > 0;
-}
-function hasProperty(value, key) {
-    return isObject(value) && key in value;
-}
-function isPromise(value) {
-    return isObject(value) && hasProperty(value, 'then') && typeof value.then === 'function';
-}
-function isConfigurationError(value) {
-    return (isObject(value) &&
-        hasProperty(value, 'type') &&
-        value.type === 'ConfigurationError' &&
-        hasProperty(value, 'field') &&
-        type_guards_isString(value.field) &&
-        hasProperty(value, 'value') &&
-        hasProperty(value, 'message') &&
-        type_guards_isString(value.message));
-}
-
 ;// CONCATENATED MODULE: ./src/errors/guards.ts
 
 
@@ -269162,14 +269159,14 @@ function isError(error) {
     return error instanceof Error;
 }
 function isErrorWithMessage(obj) {
-    return isObject(obj) && hasProperty(obj, 'message') && type_guards_isString(obj.message);
+    return isObject(obj) && hasProperty(obj, 'message') && isString(obj.message);
 }
 function isErrorWithTypeAndMessage(obj) {
     return (isObject(obj) &&
         hasProperty(obj, 'type') &&
         hasProperty(obj, 'message') &&
-        type_guards_isString(obj.type) &&
-        type_guards_isString(obj.message));
+        isString(obj.type) &&
+        isString(obj.message));
 }
 function extractErrorStatus(error) {
     if (isObject(error) && hasProperty(error, 'status') && isNumber(error.status)) {
@@ -269182,9 +269179,9 @@ function isComplexityAnalysisError(error) {
         hasProperty(error, 'type') &&
         error.type === 'ComplexityAnalysisError' &&
         hasProperty(error, 'reason') &&
-        type_guards_isString(error.reason) &&
+        isString(error.reason) &&
         hasProperty(error, 'message') &&
-        type_guards_isString(error.message));
+        isString(error.message));
 }
 
 ;// CONCATENATED MODULE: ./src/errors/helpers.ts
@@ -269196,7 +269193,7 @@ function helpers_ensureError(error, defaultMessage = 'Unknown error occurred', E
     }
     const message = isError(error)
         ? error.message
-        : type_guards_isString(error)
+        : isString(error)
             ? error
             : isErrorWithMessage(error)
                 ? error.message
@@ -269231,7 +269228,6 @@ const ja_logs_namespaceObject = /*#__PURE__*/JSON.parse('{"initialization":{"sta
 ;// CONCATENATED MODULE: ./src/locales/ja/summary.json
 const ja_summary_namespaceObject = /*#__PURE__*/JSON.parse('{"overview":{"title":"PRメトリクス概要","subtitle":"プルリクエストメトリクスの自動分析"},"draftPr":{"title":"ドラフトPRをスキップ","message":"Draft PRのため分析をスキップしました。"},"basicMetrics":{"title":"基本メトリクス","totalAdditions":"総追加行数","excludedAdditions":"除外ファイルの追加行数","totalFiles":"変更ファイル数","filesAnalyzed":"解析対象ファイル数","excludedFiles":"分析除外ファイル数","excludedFilesDetail":"分析除外ファイル ({{count}})","binaryFilesSkipped":"バイナリファイルをスキップ","filesWithErrors":"エラーのあるファイル","filesSkippedByLimit":"ファイル数上限によりスキップ","analysisTime":"分析時刻"},"violations":{"title":"違反","sizeSummary":"違反","allWithinLimits":"すべてのファイルがサイズ制限内です","filesExceedSize":"{{count}}個のファイルがサイズ制限を超過","filesExceedLines":"{{count}}個のファイルが行数制限を超過","totalAdditionsExceed":"総追加行数が制限を超過","fileCountExceed":"ファイル数が制限を超過","largeFilesDetected":"大規模ファイルを検出","filesExceedLineLimit":"行数制限超過ファイル","statusCritical":"クリティカル","statusWarning":"警告","largeFiles":"大規模ファイル","tooManyFiles":"ファイル数超過","excessiveAdditions":"追加行数超過","noViolations":"違反は検出されませんでした"},"complexity":{"title":"コード複雑度分析","metrics":"メトリクス","value":"値","maxComplexity":"最大複雑度","avgComplexity":"平均複雑度","analyzedFiles":"分析ファイル数","highFiles":"高複雑度ファイル（上位10件）","allBelowThreshold":"すべてのファイルが複雑度閾値以下です（medium閾値: {{threshold}}未満）","level":{"high":"高","medium":"中"},"functionDetails":"関数別複雑度（上位5件）","moreFunctions":"+{{count}}個の関数（表示省略）","moreFiles":"+{{count}}件のファイルが複雑度閾値を超過（表示省略）","skippedFiles":{"title":"スキップされたファイル","reason":"以下のファイルは複雑度分析から除外されました（集計対象外）：","syntaxErrorNote":"注意: 構文エラーは開発者の修正対象であり、PRの品質評価に含まれます。"},"syntaxErrorFiles":{"title":"構文エラーファイル","reason":"以下のファイルは構文エラーのため、**複雑度0として集計対象に含まれています**：","note":"注意: 構文エラーは開発者の修正対象であり、PRの品質評価に含まれます。"},"skipReasons":{"too_large":"ファイルサイズ超過（1MB以上）","analysis_failed":"AST解析失敗","timeout":"タイムアウト","binary":"バイナリファイル","encoding_error":"エンコーディングエラー","syntax_error":"構文エラー","general":"一般エラー"},"prFilesLimit":{"title":"PRファイル数制限","reason":"GitHub APIの制限により、PR内の一部ファイルが分析対象外となりました。","totalFiles":"PR全体のファイル数","analyzedFiles":"分析対象ファイル数","skippedFiles":"未分析ファイル数","note":"注意: 大規模PRでは、GitHub APIの3000ファイル制限により全ファイルを分析できない場合があります。"},"tsconfigNotFound":{"title":"tsconfig.json未検出","reason":"tsconfig.jsonが見つからなかったため、既定の設定（ecmaVersion: \'latest\', sourceType: \'module\'）を使用しました。","note":"注意: TypeScriptプロジェクトの場合、tsconfig.jsonがあるとより正確な解析が可能です。"},"highComplexityFiles":"High Complexity Files","averageComplexity":"Average Complexity","totalComplexity":"Total Complexity","noComplexityData":"No complexity data available"},"recommendations":{"title":"推奨事項","splitPr":"このPRを小さな変更に分割することを検討してください","reviewCarefully":"複雑度が高いため、慎重にレビューしてください","goodSize":"PRサイズはレビューに適切です"},"fileDetails":{"title":"ファイル詳細","topLargeFiles":"サイズの大きいファイル","fileName":"ファイル名","size":"サイズ","lines":"行数","additions":"追加行数","changes":"変更","limit":"制限値","status":"ステータス","noFiles":"表示するファイルがありません"},"fileAnalysis":{"title":"ファイル分析結果","status":{"lineExceed":"行数超過 ({{limit}})","sizeExceed":"サイズ超過 ({{limit}})","ok":"OK"}},"labels":{"applied":"適用されたラベル","noLabels":"ラベルは適用されていません"},"labelFileGroups":{"title":"適用されたラベルとファイル","reason":"理由","affectedFiles":"影響を受けたファイル","totalAdditions":"総追加行数","analyzedFiles":"解析対象ファイル","highComplexityFiles":"高複雑度ファイル"},"improvementActions":{"title":"改善アクション","intro":"PRサイズを削減する方法をいくつか紹介します：","splitting":{"title":"PR分割戦略","byFeature":"機能別に分割: 独立した機能ごとに別々のPRを作成","byFileGroups":"ファイルグループ別に分割: 関連ファイルをグループ化して段階的にマージ","separateRefactoring":"リファクタリングと新機能を分離: コード改善と新機能を別々のPRに分ける"},"refactoring":{"title":"大規模ファイルのリファクタリング","splitFunctions":"関数やクラスを複数のファイルに分割","extractCommon":"共通ロジックを別モジュールに抽出","organizeByLayer":"レイヤー別にファイルを整理（utils、services、components）"},"generated":{"title":"生成ファイル/ロックファイルの扱い","excludeLock":"ロックファイル（package-lock.json、yarn.lock など）はデフォルトの除外パターンで分析対象外","manageArtifacts":"`.gitignore`でビルド成果物（dist/、build/）を管理","separateGenerated":"自動生成コードの更新は別PRで行うことを検討"},"excludeConfig":{"title":"分析対象からの除外設定","intro":"自動生成ファイルなどレビュー対象外のファイルが制限超過の原因の場合は、ワークフローの`additional_exclude_patterns`入力で分析対象から除外できます：","note":"ロックファイルや node_modules、dist などのデフォルト除外パターンは`use_default_excludes: \\"true\\"`（既定値）のとき適用されます。"}},"bestPractices":{"title":"ベストプラクティス","expandHint":"クリックして展開","keepSmall":"PRは小さく、焦点を絞った内容に保つ","splitLogical":"大きな変更を論理的なコミットに分割する","documentChanges":"重要な変更をコミットメッセージに記録する","reviewBefore":"レビューを依頼する前に自分でコードをレビューする","prSize":{"title":"推奨PRサイズ","recommended":"推奨: 400行未満","recommendedTime":"レビュー時間: 15-30分","recommendedBugRate":"バグ検出率: 高","acceptable":"許容範囲: 400-1000行","acceptableTime":"レビュー時間: 1-2時間","acceptableAdvice":"段階的なレビューを推奨","avoid":"避けるべき: 1000行超","avoidEfficiency":"レビュー効率が大幅に低下","avoidRisk":"バグ見逃しのリスクが高まる"},"fileSize":{"title":"ファイルサイズガイドライン","under500":"1ファイルあたり500行未満を目指す","under300":"複雑なファイルの場合、300行未満が理想的"},"reviewTips":{"title":"レビュー効率向上のヒント","smallerFaster":"小さなPRはマージが早く、CI/CD負荷も軽減","largeMultiple":"大きなPRは複数回のレビューが必要になりがち","groupRelated":"関連する変更をまとめてコンテキスト切り替えを最小化"}}}');
 ;// CONCATENATED MODULE: ./src/i18n.ts
-
 
 
 
@@ -269359,11 +269355,9 @@ function i18n_changeLanguage(lang) {
     }
     instance.language = lang;
     cachedTFunction = bindTFunction();
-    const result = instance.changeLanguage(lang, () => {
+    void instance.changeLanguage(lang, () => {
         cachedTFunction = bindTFunction();
     });
-    if (result && isPromise(result)) {
-    }
 }
 function resetI18n() {
     isI18nInitialized = false;
@@ -276003,7 +275997,7 @@ function parseLanguageField(rawLanguage) {
     if (rawLanguage === undefined) {
         return (0,index_cjs.ok)(undefined);
     }
-    if (!type_guards_isString(rawLanguage)) {
+    if (!isString(rawLanguage)) {
         return (0,index_cjs/* err */._q)(factories_createConfigurationError(LANGUAGE_FIELD, rawLanguage, 'language must be a string'));
     }
     const lang = rawLanguage.toLowerCase();
@@ -276027,7 +276021,7 @@ function parseSummaryField(rawSummary) {
     if (title === undefined) {
         return (0,index_cjs.ok)(undefined);
     }
-    if (!type_guards_isString(title)) {
+    if (!isString(title)) {
         return (0,index_cjs/* err */._q)(factories_createConfigurationError('summary.title', title, 'summary.title must be a string'));
     }
     return (0,index_cjs.ok)({ title });
@@ -276103,7 +276097,7 @@ function parseCategoriesField(rawCategories) {
             const label = category['label'];
             const patterns = category['patterns'];
             const displayName = category['display_name'];
-            if (!type_guards_isString(label)) {
+            if (!isString(label)) {
                 throw factories_createConfigurationError(`categories[${index}].label`, label, 'Category label must be a string');
             }
             if (!Array.isArray(patterns)) {
@@ -276112,7 +276106,7 @@ function parseCategoriesField(rawCategories) {
             const validatedPatterns = [];
             for (let j = 0; j < patterns.length; j++) {
                 const pattern = patterns[j];
-                if (!type_guards_isString(pattern)) {
+                if (!isString(pattern)) {
                     throw factories_createConfigurationError(`categories[${index}].patterns[${j}]`, pattern, 'Pattern must be a string');
                 }
                 const patternValidation = validateMinimatchPattern(pattern);
@@ -276132,10 +276126,10 @@ function parseCategoriesField(rawCategories) {
                 }
                 const en = displayName['en'];
                 const ja = displayName['ja'];
-                if (!type_guards_isString(en)) {
+                if (!isString(en)) {
                     throw factories_createConfigurationError(`categories[${index}].display_name.en`, en, 'display_name.en must be a string');
                 }
-                if (!type_guards_isString(ja)) {
+                if (!isString(ja)) {
                     throw factories_createConfigurationError(`categories[${index}].display_name.ja`, ja, 'display_name.ja must be a string');
                 }
                 normalizedCategory.display_name = { en, ja };
@@ -280496,7 +280490,7 @@ function parseSingleRule(rule, index, labelsSeen, warnings) {
         return (0,index_cjs/* err */._q)(factories_createConfigurationError(`rules[${index}]`, rule, `Rule at index ${index} must be an object`));
     }
     const label = rule['label'];
-    if (!type_guards_isString(label)) {
+    if (!isString(label)) {
         return (0,index_cjs/* err */._q)(factories_createConfigurationError(`rules[${index}].label`, label, `Field "label" is required and must be a string in rule at index ${index}`));
     }
     if (labelsSeen.has(label)) {
@@ -281022,7 +281016,7 @@ async function fetchExistingLabels(octokit, context) {
             const rawHeaders = errorWithResponse.response?.headers;
             const headers = isRecord(rawHeaders) ? rawHeaders : {};
             const retryAfterHeader = headers['retry-after'] ?? headers['Retry-After'];
-            const retryAfter = type_guards_isString(retryAfterHeader)
+            const retryAfter = isString(retryAfterHeader)
                 ? Number.parseInt(retryAfterHeader, 10)
                 : isNumber(retryAfterHeader)
                     ? retryAfterHeader
@@ -281842,7 +281836,7 @@ function parseRetryAfterSeconds(error) {
     }
     const headers = response.headers;
     const retryAfterRaw = headers['retry-after'] ?? headers['Retry-After'];
-    if (type_guards_isString(retryAfterRaw)) {
+    if (isString(retryAfterRaw)) {
         const parsed = Number.parseInt(retryAfterRaw, 10);
         return Number.isFinite(parsed) ? parsed : undefined;
     }

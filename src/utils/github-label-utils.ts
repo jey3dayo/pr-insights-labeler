@@ -1,24 +1,9 @@
-/**
- * GitHub label utilities for fetching current labels
- * Shared across label-manager and label-applicator
- */
-
 import * as github from '@actions/github';
 import { Result, ResultAsync } from 'neverthrow';
 
 import { createGitHubAPIError, ensureError, extractErrorStatus, GitHubAPIError } from '../errors/index.js';
 import type { PRContext } from '../types.js';
 
-/**
- * Fetch current labels from PR
- * Core implementation used by both label-manager and label-applicator
- *
- * @param token - GitHub API token
- * @param owner - Repository owner
- * @param repo - Repository name
- * @param pullNumber - Pull request number
- * @returns Array of current label names or GitHubAPIError
- */
 export function fetchCurrentLabels(
   token: string,
   owner: string,
@@ -39,14 +24,6 @@ export function fetchCurrentLabels(
   ).map(response => response.data.map(label => label.name));
 }
 
-/**
- * Get current labels from PR (for label-manager compatibility)
- * Wrapper that uses PRContext
- *
- * @param token - GitHub API token
- * @param context - PR context
- * @returns Array of current label names or GitHubAPIError
- */
 export async function getCurrentLabels(token: string, context: PRContext): Promise<Result<string[], GitHubAPIError>> {
   const resultAsync = fetchCurrentLabels(token, context.owner, context.repo, context.pullNumber);
   return resultAsync;

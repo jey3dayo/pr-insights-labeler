@@ -1,8 +1,3 @@
-/**
- * Tests for failure-evaluator.ts
- * Comprehensive test coverage for label-based workflow failure control
- */
-
 import { beforeEach, describe, expect, it } from 'vitest';
 
 import type { FailureEvaluationInput } from '../src/failure-evaluator';
@@ -12,9 +7,8 @@ import type { Config } from '../src/input-mapper';
 
 describe('FailureEvaluator', () => {
   beforeEach(() => {
-    // Initialize i18n with English for consistent test output
     initializeI18n('en');
-    changeLanguage('en'); // Ensure English is active
+    changeLanguage('en');
   });
 
   const createBaseConfig = (): Config => ({
@@ -254,7 +248,6 @@ describe('FailureEvaluator', () => {
         };
 
         const failures = evaluateFailureConditions(input);
-        // Should have 2 distinct failures: largeFiles and tooManyLines
         expect(failures).toHaveLength(2);
         expect(failures.some(f => f.includes('Large files detected'))).toBe(true);
         expect(failures.some(f => f.includes('Files with too many lines detected'))).toBe(true);
@@ -400,7 +393,6 @@ describe('FailureEvaluator', () => {
 
         const failures = evaluateFailureConditions(input);
         expect(failures).toHaveLength(1);
-        // Size label is normalized from "size/large" to "large"
         expect(failures[0]).toContain('large');
         expect(failures[0]).toContain('medium');
       });
@@ -418,14 +410,13 @@ describe('FailureEvaluator', () => {
             exceedsAdditions: false,
             exceedsFileCount: false,
           },
-          metrics: { totalAdditions: 600 }, // large size (500-1000)
+          metrics: { totalAdditions: 600 },
           sizeThresholds: config.sizeThresholds,
         };
 
         const failures = evaluateFailureConditions(input);
         expect(failures).toHaveLength(1);
-        // Size is calculated as "large", not "size/large"
-        expect(failures[0]).toContain('large'); // 600 is in large range
+        expect(failures[0]).toContain('large');
       });
 
       it('should detect excessive changes from label', () => {
@@ -490,10 +481,8 @@ describe('FailureEvaluator', () => {
         };
 
         const failures = evaluateFailureConditions(input);
-        // Should have 2 failures: excessive changes + prSize (xxlarge >= large)
         expect(failures).toHaveLength(2);
         expect(failures.some(f => f.includes('PR additions exceed limit'))).toBe(true);
-        // Size is calculated as "xxlarge", not "size/xxlarge"
         expect(failures.some(f => f.includes('xxlarge'))).toBe(true);
       });
 
@@ -570,11 +559,9 @@ describe('FailureEvaluator', () => {
         };
 
         const failures = evaluateFailureConditions(input);
-        // Should have 3 distinct failures: largeFiles, tooManyFiles, prSize
         expect(failures).toHaveLength(3);
         expect(failures.some(f => f.includes('Large files detected'))).toBe(true);
         expect(failures.some(f => f.includes('Too many files in PR'))).toBe(true);
-        // Size label is normalized from "size/large" to "large"
         expect(failures.some(f => f.includes('large'))).toBe(true);
       });
 
@@ -615,7 +602,6 @@ describe('FailureEvaluator', () => {
         };
 
         const failures = evaluateFailureConditions(input);
-        // Should have 3 distinct failures: largeFiles, tooManyLines, tooManyFiles
         expect(failures).toHaveLength(3);
         expect(failures.some(f => f.includes('Large files detected'))).toBe(true);
         expect(failures.some(f => f.includes('Files with too many lines detected'))).toBe(true);
@@ -663,7 +649,7 @@ describe('FailureEvaluator', () => {
 
         const input: FailureEvaluationInput = {
           config,
-          appliedLabels: undefined, // Label fetch failed
+          appliedLabels: undefined,
           violations: {
             largeFiles: [
               {
@@ -702,13 +688,13 @@ describe('FailureEvaluator', () => {
             exceedsAdditions: false,
             exceedsFileCount: false,
           },
-          metrics: { totalAdditions: 1500 }, // xlarge size (1000-3000)
+          metrics: { totalAdditions: 1500 },
           sizeThresholds: config.sizeThresholds,
         };
 
         const failures = evaluateFailureConditions(input);
         expect(failures).toHaveLength(1);
-        expect(failures[0]).toContain('size/xlarge'); // 1500 is in xlarge range
+        expect(failures[0]).toContain('size/xlarge');
       });
     });
 
@@ -770,12 +756,11 @@ describe('FailureEvaluator', () => {
             exceedsAdditions: false,
             exceedsFileCount: false,
           },
-          metrics: { totalAdditions: 500 }, // exactly at medium threshold
+          metrics: { totalAdditions: 500 },
           sizeThresholds: config.sizeThresholds,
         };
 
         const failures = evaluateFailureConditions(input);
-        // At threshold should be classified as medium (>= threshold logic)
         expect(failures).toHaveLength(1);
       });
     });

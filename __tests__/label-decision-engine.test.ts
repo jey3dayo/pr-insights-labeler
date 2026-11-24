@@ -21,7 +21,6 @@ import {
 } from './__fixtures__/index.js';
 
 describe('Label Decision Engine', () => {
-  // Empty violations object for tests where no violations exist
   const emptyViolations = {
     largeFiles: [],
     exceedsFileLines: [],
@@ -225,13 +224,11 @@ describe('Label Decision Engine', () => {
           },
           commitMessages: ['refactor: improve code structure'],
         };
-        // Should use original logic (no tests + core changes = risk/high)
         expect(decideRiskLabel(files, configNoCi, prContext)).toBe('risk/high');
       });
 
       it('should work without prContext (backward compatibility)', () => {
         const files = ['src/index.ts', 'src/utils.ts'];
-        // Should use original logic without prContext
         expect(decideRiskLabel(files, configWithCI)).toBe('risk/high');
       });
     });
@@ -364,25 +361,16 @@ describe('Label Decision Engine', () => {
     });
 
     it('should not add risk/high when test files are excluded from analysis but included in allFiles', () => {
-      // Simulate scenario where test files are excluded from analysis but present in PR
       const metrics: PRMetrics = {
         totalAdditions: 10,
         excludedAdditions: 0,
-        files: [
-          // Only analyzed files (tests excluded)
-          { path: 'src/core.ts', size: 1000, lines: 50, additions: 10, deletions: 5 },
-        ],
-        allFiles: [
-          // All PR files including tests
-          'src/core.ts',
-          '__tests__/core.test.ts', // Test file excluded from analysis
-        ],
+        files: [{ path: 'src/core.ts', size: 1000, lines: 50, additions: 10, deletions: 5 }],
+        allFiles: ['src/core.ts', '__tests__/core.test.ts'],
       };
 
       const result = decideLabels(metrics, config, emptyViolations);
       const decisions = result._unsafeUnwrap();
 
-      // Should NOT have risk/high because test files exist in allFiles
       expect(decisions.labelsToAdd).not.toContain('risk/high');
     });
 
@@ -570,10 +558,9 @@ describe('Label Decision Engine', () => {
       it('should follow additive policy - categories do not conflict', () => {
         const files = ['src/features/profile.ts', '.github/workflows/deploy.yml'];
         const result = decideCategoryLabels(files, categories);
-        // Both categories should be applied (additive policy)
         expect(result).toContain('category/feature');
-        expect(result).toContain('category/ci-cd'); // .github/workflows/** matches ci-cd only
-        expect(result).not.toContain('category/infrastructure'); // .github/** removed from infrastructure
+        expect(result).toContain('category/ci-cd');
+        expect(result).not.toContain('category/infrastructure');
         expect(result.length).toBe(2);
       });
     });

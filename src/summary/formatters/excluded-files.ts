@@ -1,8 +1,5 @@
 import { t } from '../../i18n.js';
 
-/**
- * Format excluded files as a collapsible details block for Summary output.
- */
 export function formatExcludedFiles(files: string[]): string {
   if (files.length === 0) {
     return '';

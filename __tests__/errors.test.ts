@@ -359,7 +359,6 @@ describe('Result Type Utilities', () => {
 
 describe('Error Factory Functions', () => {
   beforeEach(() => {
-    // Override environment variables to ensure English language
     const originalLang = process.env['LANG'];
     const originalLanguage = process.env['LANGUAGE'];
     delete process.env['LANG'];
@@ -368,7 +367,6 @@ describe('Error Factory Functions', () => {
     resetI18n();
     initializeI18n('en');
 
-    // Restore original environment variables
     if (originalLang) {
       process.env['LANG'] = originalLang;
     }

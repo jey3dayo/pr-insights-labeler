@@ -1,11 +1,3 @@
-/**
- * Regression tests for the commit classification logic in
- * scripts/release.sh. The prefix -> section mapping is defined in
- * .github/RELEASE_TEMPLATE.md; these tests pin the shell implementation
- * to that contract by exercising the real functions (sourced, not
- * reimplemented) against a disposable git repository.
- */
-
 import { execFileSync } from 'node:child_process';
 import { mkdtempSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
@@ -47,8 +39,6 @@ function runShellFunction(cwd: string, fn: string, args: string[]): string {
   });
 }
 
-// Returns the `- ...` bullet lines directly under a `##`/`###` heading, i.e.
-// before the next heading or end of output.
 function sectionLines(output: string, heading: string): string[] {
   const lines = output.split('\n');
   const start = lines.indexOf(heading);
@@ -68,17 +58,10 @@ function sectionLines(output: string, heading: string): string[] {
   return result;
 }
 
-// Repo setup plus the two shell invocations below is much slower than an
-// in-process assertion -- the default 5s timeout is too tight under a full
-// `pnpm test` run. Individual `it`s only read the captured strings, so they
-// don't need this.
 const SHELL_SETUP_TIMEOUT_MS = 20000;
 
 describe('scripts/release.sh commit classification', () => {
   let repoDir: string;
-  // generate_changelog/detect_breaking_changes output for the fixed commit
-  // set below is deterministic, so every `it` reads these once-computed
-  // strings instead of re-running the (comparatively expensive) shell calls.
   let changelog: string;
   let breaking: string;
 
@@ -103,18 +86,11 @@ describe('scripts/release.sh commit classification', () => {
     commit(repoDir, "Merge branch 'x'");
     commit(repoDir, 'feat!: breaking thing (#10)');
     commit(repoDir, 'fix(security)!: secure it (#11)');
-    // A commit that has both a BREAKING CHANGE: footer and a `!` subject
-    // marker must not be counted twice.
     commit(repoDir, 'feat(api)!: dual marker (#12)\n\nBREAKING CHANGE: dual marker description');
-    // A `!` commit with a multi-line body: only the subject line may reach
-    // the Breaking Changes section, never the body.
     commit(
       repoDir,
       'fix(core)!: multiline subject (#13)\n\nThis body has several lines.\nSecond detail line.\nThird detail line.',
     );
-    // A commit with two BREAKING CHANGE: footers: each must become its own
-    // bullet, not get collapsed into one array entry with an unmarked
-    // second line.
     commit(
       repoDir,
       'feat: two footers (#20)\n\nBREAKING CHANGE: first description\nBREAKING CHANGE: second description',
@@ -182,7 +158,6 @@ describe('scripts/release.sh commit classification', () => {
   it('gives each of several BREAKING CHANGE: footers on one commit its own bullet', () => {
     expect(breaking).toContain('- first description');
     expect(breaking).toContain('- second description');
-    // The second footer must not be swallowed into the first line's bullet.
     expect(breaking).not.toContain('first description\nsecond description');
     expect(breaking).not.toMatch(/^second description$/m);
   });

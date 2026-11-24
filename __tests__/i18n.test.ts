@@ -1,7 +1,3 @@
-/**
- * i18n初期化とコア機能のテスト
- */
-
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import {
@@ -19,12 +15,10 @@ describe('i18n Core Functions', () => {
   let restoreEnv: () => void;
 
   beforeEach(() => {
-    // Setup environment and i18n
     restoreEnv = setupI18nEnvironment();
   });
 
   afterEach(() => {
-    // Restore environment
     restoreEnv();
   });
 
@@ -54,8 +48,6 @@ describe('i18n Core Functions', () => {
     });
   });
 
-  // determineLanguage() は削除されたため、テストも削除
-
   describe('initializeI18n', () => {
     it('should initialize successfully with English', () => {
       const result = initializeI18n('en');
@@ -77,7 +69,6 @@ describe('i18n Core Functions', () => {
 
       expect(result1.isOk()).toBe(true);
       expect(result2.isOk()).toBe(true);
-      // 2回目の呼び出しで言語が変更される
       expect(getCurrentLanguage()).toBe('ja');
     });
 
@@ -86,7 +77,6 @@ describe('i18n Core Functions', () => {
       expect(result1.isOk()).toBe(true);
       expect(getCurrentLanguage()).toBe('en');
 
-      // 言語を切り替え
       const result2 = initializeI18n('ja');
       expect(result2.isOk()).toBe(true);
       expect(getCurrentLanguage()).toBe('ja');
@@ -96,7 +86,6 @@ describe('i18n Core Functions', () => {
   describe('t (translation function)', () => {
     beforeEach(() => {
       initializeI18n('en');
-      // 明示的に英語に変更
       changeLanguage('en');
     });
 
@@ -118,27 +107,22 @@ describe('i18n Core Functions', () => {
 
     it('should return fallback for invalid keys', () => {
       const result = t('summary', 'nonexistent.key');
-      // i18nextのフォールバック動作に依存
       expect(result).toBeTruthy();
     });
   });
 
   describe('getCurrentLanguage', () => {
     it('should return en when not initialized', () => {
-      // 新しいプロセスでテストする必要があるため、このテストはスキップ
-      // （初期化済みの状態をリセットする方法がない）
       expect(getCurrentLanguage()).toBe('en');
     });
   });
 
   describe('getLabelDisplayName', () => {
     beforeEach(() => {
-      // 英語で初期化
       initializeI18n('en');
     });
 
     it('should return custom display_name from category config (English)', () => {
-      // 確実に英語にリセット
       changeLanguage('en');
 
       const category: CategoryConfig = {
@@ -171,14 +155,12 @@ describe('i18n Core Functions', () => {
     });
 
     it('should fall back to labels namespace translation', () => {
-      // display_nameなしのカテゴリ
       const category: CategoryConfig = {
         label: 'category/tests',
         patterns: ['**/*.test.ts'],
       };
 
       const result = getLabelDisplayName('category/tests', [category]);
-      // labels名前空間に翻訳がある場合はそれを使用、なければラベル名そのまま
       expect(result).toBeTruthy();
     });
 
@@ -194,7 +176,6 @@ describe('i18n Core Functions', () => {
 
     it('should handle empty categories array', () => {
       const result = getLabelDisplayName('size/small', []);
-      // labels名前空間に翻訳がある場合はそれを使用、なければラベル名そのまま
       expect(result).toBeTruthy();
     });
   });

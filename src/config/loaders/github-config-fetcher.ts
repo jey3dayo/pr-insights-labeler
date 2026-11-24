@@ -10,7 +10,7 @@ import {
 } from '../../errors/index.js';
 
 export const CONFIG_FILE_PATH = '.github/pr-labeler.yml';
-export const MAX_CONFIG_SIZE = 1024 * 1024; // 1MB
+export const MAX_CONFIG_SIZE = 1024 * 1024;
 
 /**
  * `value` marker set on the error produced when the file does not exist in the repository.
@@ -23,22 +23,14 @@ export interface FetchRepositoryConfigParams {
   token: string;
   owner: string;
   repo: string;
-  /** Omit to read from the repository default branch */
   ref?: string;
-  /** Repository-relative path of the configuration file. Defaults to `.github/pr-labeler.yml`. */
   path?: string;
 }
 
-/**
- * Whether the fetch failed because the configuration file does not exist in the repository.
- */
 export function isConfigNotFoundError(error: ConfigurationError): boolean {
   return error.value === CONFIG_NOT_FOUND;
 }
 
-/**
- * Fetch configuration file content from GitHub repository
- */
 export function fetchRepositoryConfig(params: FetchRepositoryConfigParams): ResultAsync<string, ConfigurationError> {
   const { token, owner, repo, ref, path = CONFIG_FILE_PATH } = params;
   const octokit = github.getOctokit(token);

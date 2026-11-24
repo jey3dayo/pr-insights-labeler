@@ -1,7 +1,3 @@
-/**
- * フォーマットユーティリティのテスト
- */
-
 import { describe, expect, it } from 'vitest';
 
 import { formatFileSize, formatNumber } from '../src/utils/formatting';
@@ -51,11 +47,8 @@ describe('Formatting Utilities', () => {
     });
 
     it('should use 1024 as base unit', () => {
-      // 1024バイト = 1 KB
       expect(formatFileSize(1024, 'en')).toBe('1 KB');
-      // 1024 * 1024 = 1 MB
       expect(formatFileSize(1048576, 'en')).toBe('1 MB');
-      // 1024 * 1024 * 1024 = 1 GB
       expect(formatFileSize(1073741824, 'en')).toBe('1 GB');
     });
 
@@ -72,7 +65,7 @@ describe('Formatting Utilities', () => {
     });
 
     it('should handle large file sizes', () => {
-      const result = formatFileSize(10737418240, 'en'); // 10 GB
+      const result = formatFileSize(10737418240, 'en');
       expect(result).toBe('10 GB');
     });
   });

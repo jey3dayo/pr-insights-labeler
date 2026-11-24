@@ -6,21 +6,7 @@ export interface PatternValidationError {
   details?: string;
 }
 
-/**
- * Validates a minimatch pattern for syntax correctness.
- *
- * Checks for:
- * - Balanced braces {} (for brace expansion)
- * - Balanced brackets [] (for character classes)
- * - Invalid escape sequences
- * - Empty patterns
- * - Common problematic patterns
- *
- * @param pattern - The minimatch pattern to validate
- * @returns Result containing the validated pattern or a validation error
- */
 export function validateMinimatchPattern(pattern: string): Result<string, PatternValidationError> {
-  // Check for empty pattern
   if (pattern.trim().length === 0) {
     return err({
       pattern,
@@ -29,7 +15,6 @@ export function validateMinimatchPattern(pattern: string): Result<string, Patter
     });
   }
 
-  // Check for balanced braces
   const openBraces = (pattern.match(/\{/g) || []).length;
   const closeBraces = (pattern.match(/\}/g) || []).length;
 
@@ -41,7 +26,6 @@ export function validateMinimatchPattern(pattern: string): Result<string, Patter
     });
   }
 
-  // Check for balanced brackets
   const openBrackets = (pattern.match(/\[/g) || []).length;
   const closeBrackets = (pattern.match(/\]/g) || []).length;
 
@@ -53,8 +37,6 @@ export function validateMinimatchPattern(pattern: string): Result<string, Patter
     });
   }
 
-  // Check for invalid escape sequences
-  // Look for backslash followed by invalid characters in minimatch context
   const invalidEscapeMatch = pattern.match(/\\[^*?[\]{}!()@+\\/-]/);
   if (invalidEscapeMatch) {
     return err({
@@ -64,7 +46,6 @@ export function validateMinimatchPattern(pattern: string): Result<string, Patter
     });
   }
 
-  // Check for empty brace expansion
   if (pattern.includes('{}')) {
     return err({
       pattern,
@@ -73,7 +54,6 @@ export function validateMinimatchPattern(pattern: string): Result<string, Patter
     });
   }
 
-  // Check for empty character class
   if (pattern.includes('[]')) {
     return err({
       pattern,
@@ -82,8 +62,6 @@ export function validateMinimatchPattern(pattern: string): Result<string, Patter
     });
   }
 
-  // Check for unescaped special characters in problematic positions
-  // e.g., pattern starting with } or ] without proper context
   if (/^[}\]]/.test(pattern)) {
     return err({
       pattern,
@@ -92,8 +70,6 @@ export function validateMinimatchPattern(pattern: string): Result<string, Patter
     });
   }
 
-  // Check for nested brace expansion issues
-  // Detect patterns like {{}} which are likely errors
   if (/\{\{|\}\}/.test(pattern)) {
     return err({
       pattern,
@@ -102,16 +78,9 @@ export function validateMinimatchPattern(pattern: string): Result<string, Patter
     });
   }
 
-  // All checks passed
   return ok(pattern);
 }
 
-/**
- * Validates multiple minimatch patterns.
- *
- * @param patterns - Array of patterns to validate
- * @returns Result containing array of validated patterns or first validation error
- */
 export function validateMinimatchPatterns(patterns: string[]): Result<string[], PatternValidationError> {
   const validated: string[] = [];
 
@@ -126,13 +95,6 @@ export function validateMinimatchPatterns(patterns: string[]): Result<string[], 
   return ok(validated);
 }
 
-/**
- * Checks if a pattern is valid without returning detailed errors.
- * Useful for quick validation checks.
- *
- * @param pattern - The minimatch pattern to check
- * @returns true if valid, false otherwise
- */
 export function isValidMinimatchPattern(pattern: string): boolean {
   return validateMinimatchPattern(pattern).isOk();
 }

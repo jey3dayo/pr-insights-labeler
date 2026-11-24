@@ -1,22 +1,15 @@
-/**
- * Tests for environment-loader module
- */
-
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { loadEnvironmentConfig } from '../src/environment-loader.js';
 
 describe('loadEnvironmentConfig', () => {
-  // 環境変数のバックアップ
   let originalEnv: NodeJS.ProcessEnv;
 
   beforeEach(() => {
-    // 環境変数をバックアップ
     originalEnv = { ...process.env };
   });
 
   afterEach(() => {
-    // 環境変数を復元
     process.env = originalEnv;
   });
 

@@ -148,11 +148,9 @@ describe('convertCategoriesToDirectoryConfig', () => {
 
     const result = convertCategoriesToDirectoryConfig(categories);
 
-    // Modify original arrays
     categories[0].patterns.push('new-pattern');
     categories[0].exclude?.push('new-exclude');
 
-    // Result should not be affected
     expect(result.rules[0].include).toEqual(['__tests__/**']);
     expect(result.rules[0].exclude).toEqual(['**/*.skip.ts']);
   });

@@ -8,7 +8,6 @@ import { run } from '../src/index';
 import { writeSummary } from '../src/summary/summary-writer';
 import { analyzePullRequest, applyLabelsStage, finalizeAction, initializeAction } from '../src/workflow/pipeline';
 
-// Mock modules
 vi.mock('@actions/core');
 vi.mock('@actions/github');
 vi.mock('../src/diff-strategy');
@@ -46,7 +45,6 @@ describe('PR Insights Labeler', () => {
     vi.mocked(logErrorI18n).mockReset();
     vi.mocked(setFailed).mockReset();
 
-    // Setup default mocks
     vi.mocked(core.getInput).mockImplementation((name: string) => {
       const defaults: Record<string, string> = {
         github_token: 'test-token-123',
@@ -69,7 +67,6 @@ describe('PR Insights Labeler', () => {
       return defaults[name] || '';
     });
 
-    // Mock GitHub context
     Object.defineProperty(github, 'context', {
       value: {
         repo: { owner: 'test-owner', repo: 'test-repo' },

@@ -1,7 +1,3 @@
-/**
- * Directory-Based Labeler: Config Loaderのユニットテスト
- */
-
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
@@ -20,7 +16,6 @@ describe('Directory-Based Labeler: Config Loader', () => {
   let configPath: string;
 
   beforeEach(() => {
-    // Initialize i18n with English
     const originalLang = process.env['LANG'];
     const originalLanguage = process.env['LANGUAGE'];
     delete process.env['LANG'];
@@ -29,7 +24,6 @@ describe('Directory-Based Labeler: Config Loader', () => {
     resetI18n();
     initializeI18n('en');
 
-    // Restore original environment variables
     if (originalLang) {
       process.env['LANG'] = originalLang;
     }
@@ -37,13 +31,11 @@ describe('Directory-Based Labeler: Config Loader', () => {
       process.env['LANGUAGE'] = originalLanguage;
     }
 
-    // テスト用の一時ディレクトリを作成
     tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'dir-labeler-test-'));
     configPath = path.join(tempDir, 'directory-labeler.yml');
   });
 
   afterEach(() => {
-    // 一時ディレクトリをクリーンアップ
     if (fs.existsSync(tempDir)) {
       fs.rmSync(tempDir, { recursive: true, force: true });
     }
@@ -394,7 +386,6 @@ namespaces:
 
       const result = validateDirectoryLabelerConfig(configWithDuplicates);
 
-      // 重複は警告のみで、バリデーション自体は成功
       expect(result.isOk()).toBe(true);
       if (result.isOk()) {
         expect(result.value.rules).toHaveLength(2);
@@ -408,7 +399,7 @@ namespaces:
           {
             label: 'test',
             include: ['**/*.ts'],
-            priority: 'high', // 文字列は不正
+            priority: 'high',
           },
         ],
       };

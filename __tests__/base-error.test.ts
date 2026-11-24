@@ -1,10 +1,8 @@
-/**
- * Tests for BaseError class and ErrorLevel type
- */
-
 import { describe, expect, it } from 'vitest';
 
 import { BaseError, type ErrorLevel } from '../src/errors/base-error.js';
+
+type IsAssignable<From, To> = From extends To ? true : false;
 
 class TestError extends BaseError {
   constructor(message: string, errorLevel: ErrorLevel = 'warning') {
@@ -143,8 +141,8 @@ describe('ErrorLevel type', () => {
     expect(level).toBe('info');
   });
 
-  // TypeScript compile-time type checking (no runtime test needed)
-  // @ts-expect-error Invalid error level
-
-  const _invalidLevel: ErrorLevel = 'error';
+  it('should reject error as a level', () => {
+    const invalidLevelIsRejected: IsAssignable<'error', ErrorLevel> = false;
+    expect(invalidLevelIsRejected).toBe(false);
+  });
 });
