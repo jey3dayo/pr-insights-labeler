@@ -274495,10 +274495,7 @@ function isExcluded(filePath, patterns) {
             windowsPathsNoEscape: true,
         };
         if (minimatch(normalizedPath, normalizedPattern, options)) {
-            if (isNegation) {
-                return false;
-            }
-            excluded = true;
+            excluded = !isNegation;
         }
     }
     return excluded;
