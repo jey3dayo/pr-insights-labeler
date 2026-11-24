@@ -7,12 +7,16 @@
 
 ## 📋 前提条件
 
-- ✅ `action.yml` が適切に設定されている
-- ✅ `README.md` が充実している
-- ✅ ブランディング設定済み（アイコン・カラー）
-- ✅ MITライセンス設定済み
+Marketplace へ公開する前に、以下の準備が整っていることを確認します。
 
-## 🚀 推奨：自動リリース
+- ✅ `action.yml` が適切に設定されています
+- ✅ `README.md` に必要な利用方法が記載されています
+- ✅ ブランディング設定（アイコン・カラー）が完了しています
+- ✅ MIT ライセンスが設定されています
+
+## 🚀 推奨: 自動リリース
+
+通常は自動リリーススクリプトを使用します。
 
 ```bash
 # インタラクティブリリース
@@ -22,17 +26,19 @@ mise release
 bash scripts/release.sh
 ```
 
-スクリプトが以下を自動実行：
+スクリプトは次の処理を自動で実行します。
 
-1. バージョン選択（patch/minor/major）
-2. 品質チェック（lint/test/build）
-3. Changelog生成
-4. タグ作成（v1.9.0 + v1）
-5. GitHub Release作成
+1. バージョン種別（patch / minor / major）を選択します
+2. 品質チェック（lint / test / build）を実行します
+3. Changelog を生成します
+4. タグ（`v1.9.0` および `v1`）を作成・更新します
+5. GitHub Release を作成します
 
-## 📝 手動リリース手順（スクリプト非使用）
+## 📝 手動リリース手順（スクリプトを使わない場合）
 
 ### 1. ローカル品質チェック
+
+リリース前に、すべての品質チェックが通ることを確認します。
 
 ```bash
 pnpm lint
@@ -41,15 +47,17 @@ pnpm test
 pnpm build
 ```
 
-### 2. バージョン決定
+### 2. バージョン番号の決定
 
-セマンティックバージョニング：
+セマンティックバージョニングに従って、次のバージョン番号を決めます。
 
-- **Patch** (v1.8.1 → v1.8.2): バグフィックス
-- **Minor** (v1.8.1 → v1.9.0): 新機能
-- **Major** (v1.8.1 → v2.0.0): 破壊的変更
+- **Patch**（`v1.8.1` → `v1.8.2`）: バグ修正
+- **Minor**（`v1.8.1` → `v1.9.0`）: 後方互換性のある新機能追加
+- **Major**（`v1.8.1` → `v2.0.0`）: 破壊的変更
 
-### 3. タグ作成
+### 3. タグの作成とプッシュ
+
+具体的なバージョンタグと、メジャーバージョンタグを作成してプッシュします。
 
 ```bash
 # 次のバージョン（例: v1.9.0）
@@ -71,21 +79,21 @@ git push origin "v${NEXT_VERSION}"
 git push origin v1 --force
 ```
 
-### 4. GitHub Release作成
+### 4. GitHub Release の作成
 
-#### Web UI
+#### Web UI で作成する場合
 
-1. [リリース作成ページ](https://github.com/jey3dayo/pr-insights-labeler/releases/new)
-2. Tag: `v1.9.0`
-3. Target: `main`
-4. Title: `v1.9.0`
-5. Primary Category: `Continuous integration`
-6. Another Category: `Code quality`
-7. Release notes: 変更内容を記載
+1. [リリース作成ページ](https://github.com/jey3dayo/pr-insights-labeler/releases/new)を開きます
+2. **Tag** に `v1.9.0` を選択します
+3. **Target** に `main` を選択します
+4. **Title** に `v1.9.0` を入力します
+5. **Primary Category** に `Continuous integration` を選択します
+6. **Another Category** に `Code quality` を選択します
+7. **Release notes** に変更内容を記載して公開します
 
-#### CLI
+#### CLI で作成する場合
 
-`NEXT_VERSION` は前述の手順で設定済みとして、比較リンク用に `PREV_VERSION`（直前のタグ）も用意します。
+前の手順で設定した `NEXT_VERSION` に加え、差分比較リンク用に直前の安定版タグを `PREV_VERSION` として指定します。
 
 ```bash
 PREV_VERSION="1.8.1"  # 直前の安定版タグ
@@ -131,56 +139,56 @@ EOF
 )"
 ```
 
-## 🏷️ Marketplace カテゴリ選択
+## 🏷️ Marketplace カテゴリの選択
 
 ### 推奨カテゴリ
 
 - **Primary Category**: `Continuous integration`
-  - CI/CDワークフローで使用されるため
+  - CI/CD ワークフロー内で利用されるアクションのためです
 - **Another Category**: `Code quality`
-  - PRの品質評価・レビュー支援が主目的
+  - PR の品質評価とレビュー支援が主な目的のためです
 
-### その他の適切なカテゴリ
+### その他の候補カテゴリ
 
-- `Code review` - PRレビュープロセスを支援
-- `Monitoring` - PR メトリクスの監視
+- `Code review` - PR レビューの効率化を支援します
+- `Monitoring` - PR メトリクスの監視に利用できます
 
-## ✅ Marketplace公開確認
+## ✅ Marketplace 公開後の確認
 
-リリース作成後：
+リリースを作成したら、以下の3点を確認します。
 
-1. Marketplace表示確認
-   - [PR Insights Labeler - GitHub Marketplace](https://github.com/marketplace/actions/pr-insights-labeler)
+1. **Marketplace での表示確認**
+   - [PR Insights Labeler - GitHub Marketplace](https://github.com/marketplace/actions/pr-insights-labeler) を開き、説明やバージョンが正しく反映されているか確認します
 
-2. バッジ更新（任意）
+2. **バッジの更新（任意）**
 
    ```markdown
    [![GitHub Marketplace](https://img.shields.io/badge/Marketplace-PR%20Insights%20Labeler-blue.svg)](https://github.com/marketplace/actions/pr-insights-labeler)
    ```
 
-3. 動作確認
+3. **動作確認**
 
    ```yaml
    # 他のリポジトリでテスト
    - uses: jey3dayo/pr-insights-labeler@v1
    ```
 
-## 🔄 メジャーバージョンタグ管理
+## 🔄 メジャーバージョンタグの管理
 
-**重要**: GitHub Actionsは `@v1` のようなメジャーバージョンで参照されます。
+**重要**: GitHub Actions では、`@v1` のようにメジャーバージョンでアクションを参照する使い方が一般的です。
 
-### なぜv1タグが必要？
+### `v1` タグが必要な理由
 
-ユーザーは以下のように使用：
+利用者は次のようにバージョンを指定してアクションを呼び出します。
 
 ```yaml
-- uses: jey3dayo/pr-insights-labeler@v1  # メジャーバージョン
-- uses: jey3dayo/pr-insights-labeler@v1.9.0  # 具体的バージョン
+- uses: jey3dayo/pr-insights-labeler@v1      # メジャーバージョン
+- uses: jey3dayo/pr-insights-labeler@v1.9.0  # 具体的なバージョン
 ```
 
-### v1タグの更新方法
+### `v1` タグの更新方法
 
-リリースごとに `v1` タグを最新バージョンに更新：
+マイナーリリースやパッチリリースのたびに、`v1` タグが最新リリースを指すよう更新します。
 
 ```bash
 # v1.9.0 リリース時
@@ -192,9 +200,9 @@ git tag -f v1 v1.10.0^{}
 git push origin v1 --force
 ```
 
-### 破壊的変更時
+### 破壊的変更を含むリリース時
 
-メジャーバージョンアップ時は新しいメジャータグを作成：
+メジャーバージョンを上げる場合は、新しいメジャーバージョンタグを作成します。
 
 ```bash
 # v2.0.0 リリース時
@@ -207,4 +215,4 @@ git push origin v2.0.0 v2
 
 - [GitHub Actions - Publishing actions in GitHub Marketplace](https://docs.github.com/en/actions/creating-actions/publishing-actions-in-github-marketplace)
 - [Semantic Versioning](https://semver.org/)
-- [Release Process](release-process.md)
+- [リリース手順](release-process.md)

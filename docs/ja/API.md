@@ -5,7 +5,7 @@
 
 **言語**: 日本語（英語版は未整備）
 
-PR Insights Labelerの詳細なAPI仕様書です。
+PR Insights Labeler の入力・出力仕様、エラー種別、およびエラーファクトリーの多言語化（i18n）仕様をまとめたリファレンスです。
 
 ## 📥 Inputs
 
@@ -16,12 +16,12 @@ PR Insights Labelerの詳細なAPI仕様書です。
 - **型**: `string`
 - **必須**: ❌
 - **デフォルト**: `"100KB"`
-- **説明**: 個別ファイルのサイズ上限
-- **フォーマット**: 数値 + 単位（B, KB, MB, GB）または数値のみ（バイト）
+- **説明**: 個別ファイルのサイズ上限を指定します
+- **フォーマット**: 数値＋単位（`B`、`KB`、`MB`、`GB`）または数値のみ（バイト）
 - バリデーション:
-  - 単位は大文字小文字を区別しない
-  - 複数の単位を含む場合はエラー（例: `"10KB 20MB"`）
-  - 負の値は不可
+  - 単位の大文字・小文字は区別しません
+  - 複数の単位を含む場合はエラーになります（例: `"10KB 20MB"`）
+  - 負の値は指定できません
 - 使用例:
 
   ```yaml
@@ -35,7 +35,7 @@ PR Insights Labelerの詳細なAPI仕様書です。
 - **型**: `string` (boolean)
 - **必須**: ❌
 - **デフォルト**: `"true"`
-- **説明**: ファイルサイズチェックの有効／無効を切り替え（`"false"` で `file_size_limit` による違反検出・ラベル付与をスキップ）
+- **説明**: ファイルサイズチェックの有効・無効を切り替えます（`"false"` にすると `file_size_limit` による違反検出とラベル付与をスキップします）
 - 使用例:
 
   ```yaml
@@ -47,10 +47,10 @@ PR Insights Labelerの詳細なAPI仕様書です。
 - **型**: `string`
 - **必須**: ❌
 - **デフォルト**: `"500"`
-- **説明**: 個別ファイルの行数上限（ファイル全体の行数、diff追加行数ではない）
+- **説明**: 個別ファイルの行数上限を指定します（diff の追加行数ではなく、ファイル全体の行数が対象です）
 - バリデーション:
-  - 正の整数のみ
-  - 非数値はエラー
+  - 正の整数のみ指定できます
+  - 数値以外はエラーになります
 - 使用例:
 
   ```yaml
@@ -63,7 +63,7 @@ PR Insights Labelerの詳細なAPI仕様書です。
 - **型**: `string` (boolean)
 - **必須**: ❌
 - **デフォルト**: `"true"`
-- **説明**: ファイル行数チェックの有効／無効を切り替え（`"false"` で `file_lines_limit` による違反検出・ラベル付与をスキップ）
+- **説明**: ファイル行数チェックの有効・無効を切り替えます（`"false"` にすると `file_lines_limit` による違反検出とラベル付与をスキップします）
 - 使用例:
 
   ```yaml
@@ -75,8 +75,8 @@ PR Insights Labelerの詳細なAPI仕様書です。
 - **型**: `string`
 - **必須**: ❌
 - **デフォルト**: `"5000"`
-- **説明**: PR全体の追加行数上限（diff-based、削除行数は含まない）
-- **バリデーション**: 正の整数のみ
+- **説明**: PR 全体の追加行数上限を指定します（diff ベースで計算し、削除行数は含みません）
+- **バリデーション**: 正の整数のみ指定できます
 - 使用例:
 
   ```yaml
@@ -89,7 +89,7 @@ PR Insights Labelerの詳細なAPI仕様書です。
 - **型**: `string` (boolean)
 - **必須**: ❌
 - **デフォルト**: `"true"`
-- **説明**: PR全体の追加行数チェックの有効／無効を切り替え（`"false"` で `pr_additions_limit` による違反検出・ラベル付与をスキップ）
+- **説明**: PR 全体の追加行数チェックの有効・無効を切り替えます（`"false"` にすると `pr_additions_limit` による違反検出とラベル付与をスキップします）
 - 使用例:
 
   ```yaml
@@ -101,8 +101,8 @@ PR Insights Labelerの詳細なAPI仕様書です。
 - **型**: `string`
 - **必須**: ❌
 - **デフォルト**: `"50"`
-- **説明**: PR内の最大ファイル数（削除されたファイルは除く）
-- **バリデーション**: 正の整数のみ
+- **説明**: PR 内の最大変更ファイル数を指定します（削除されたファイルは含みません）
+- **バリデーション**: 正の整数のみ指定できます
 - 使用例:
 
   ```yaml
@@ -115,7 +115,7 @@ PR Insights Labelerの詳細なAPI仕様書です。
 - **型**: `string` (boolean)
 - **必須**: ❌
 - **デフォルト**: `"true"`
-- **説明**: PR内のファイル数チェックの有効／無効を切り替え（`"false"` で `pr_files_limit` による違反検出・ラベル付与をスキップ）
+- **説明**: PR 内のファイル数チェックの有効・無効を切り替えます（`"false"` にすると `pr_files_limit` による違反検出とラベル付与をスキップします）
 - 使用例:
 
   ```yaml
@@ -131,7 +131,7 @@ PR Insights Labelerの詳細なAPI仕様書です。
 - **型**: `string` (boolean)
 - **必須**: ❌
 - **デフォルト**: `"true"`
-- **説明**: 内部パラメータ（PR Insights Labeler のサイズラベルが自動的に適用されます）
+- **説明**: 内部パラメータです（PR Insights Labeler のサイズラベルが自動で適用されます）
 - 使用例:
 
   ```yaml
@@ -143,12 +143,12 @@ PR Insights Labelerの詳細なAPI仕様書です。
 - **型**: `string` (JSON)
 - **必須**: ❌
 - **デフォルト**: `'{"S": {"additions": 100, "files": 10}, "M": {"additions": 500, "files": 30}, "L": {"additions": 1000, "files": 50}}'`
-- **説明**: 内部パラメータ（`.github/pr-labeler.yml` でサイズラベルの閾値を設定してください）
+- **説明**: 内部パラメータです（サイズラベルのしきい値は `.github/pr-labeler.yml` で設定してください）
 - バリデーション:
-  - S, M, Lの3つのサイズが必須
-  - 各サイズに`additions`と`files`フィールドが必須
-  - 値は非負の整数
-  - 単調性: S ≤ M ≤ L（additionsとfilesそれぞれで）
+  - `S`、`M`、`L` の3つのサイズ定義が必須です
+  - 各サイズに `additions` と `files` フィールドが必須です
+  - 値は非負の整数のみ指定できます
+  - `additions` と `files` のそれぞれについて、`S ≤ M ≤ L` の単調性を満たす必要があります
 - 使用例:
 
   ```yaml
@@ -165,7 +165,7 @@ PR Insights Labelerの詳細なAPI仕様書です。
 - **型**: `string`
 - **必須**: ❌
 - **デフォルト**: `"auto/large-files"`
-- **説明**: ファイルサイズまたは行数制限違反時に適用されるラベル
+- **説明**: ファイルサイズまたは行数の制限違反を検出した際に付与するラベル名です
 - 使用例:
 
   ```yaml
@@ -178,7 +178,7 @@ PR Insights Labelerの詳細なAPI仕様書です。
 - **型**: `string`
 - **必須**: ❌
 - **デフォルト**: `"auto/too-many-files"`
-- **説明**: ファイル数制限違反時に適用されるラベル
+- **説明**: 変更ファイル数の制限違反を検出した際に付与するラベル名です
 - 使用例:
 
   ```yaml
@@ -195,7 +195,7 @@ PR Insights Labelerの詳細なAPI仕様書です。
 - **型**: `string` (boolean)
 - **必須**: ❌
 - **デフォルト**: `"true"`
-- **説明**: Draft PRをスキップ（分析を実行しない）
+- **説明**: Draft PR をスキップし、解析を実行しないようにします
 - 使用例:
 
   ```yaml
@@ -208,11 +208,11 @@ PR Insights Labelerの詳細なAPI仕様書です。
 - **型**: `string` (enum)
 - **必須**: ❌
 - **デフォルト**: `"auto"`
-- **説明**: コメント投稿モード
-- 受け入れ値:
-  - `"auto"`: 違反がある場合のみコメント投稿、違反解消時は削除
-  - `"always"`: 常にコメント投稿
-  - `"never"`: コメント投稿しない（既存コメントは削除）
+- **説明**: PR へのコメント投稿モードを指定します
+- 指定可能な値:
+  - `"auto"`: 違反がある場合のみコメントを投稿し、違反が解消されたらコメントを削除します
+  - `"always"`: 常にコメントを投稿します
+  - `"never"`: コメントを投稿しません（既存のコメントは削除します）
 - 使用例:
 
   ```yaml
@@ -226,8 +226,8 @@ PR Insights Labelerの詳細なAPI仕様書です。
 - **型**: `string` (`""` | `"true"` | `"false"`)
 - **必須**: ❌
 - **デフォルト**: `""`（無効）
-- **説明**: 大きなファイル（`auto/large-files`ラベルまたは違反）が検出された場合にワークフローを失敗させる
-- **判定条件**: ラベル（`auto/large-files`）または実際のファイルサイズ違反のいずれか
+- **説明**: 大きなファイル（`auto/large-files` ラベルまたはサイズ違反）を検出したときにワークフローを失敗させます
+- **判定条件**: `auto/large-files` ラベルが付与された場合、または実際のファイルサイズ違反が検出された場合
 - 使用例:
 
   ```yaml
@@ -240,8 +240,8 @@ PR Insights Labelerの詳細なAPI仕様書です。
 - **型**: `string` (`""` | `"true"` | `"false"`)
 - **必須**: ❌
 - **デフォルト**: `""`（無効）
-- **説明**: ファイル数超過（`auto/too-many-files`ラベルまたは違反）が検出された場合にワークフローを失敗させる
-- **判定条件**: ラベル（`auto/too-many-files`）または実際のファイル数違反のいずれか
+- **説明**: ファイル数超過（`auto/too-many-files` ラベルまたはファイル数違反）を検出したときにワークフローを失敗させます
+- **判定条件**: `auto/too-many-files` ラベルが付与された場合、または実際のファイル数違反が検出された場合
 - 使用例:
 
   ```yaml
@@ -254,12 +254,12 @@ PR Insights Labelerの詳細なAPI仕様書です。
 - **型**: `string` (`""` | `"small"` | `"medium"` | `"large"` | `"xlarge"` | `"xxlarge"`)
 - **必須**: ❌
 - **デフォルト**: `""`（無効）
-- **説明**: PRサイズが指定閾値以上の場合にワークフローを失敗させる
+- **説明**: PR サイズが指定したしきい値以上になったときにワークフローを失敗させます
 - 判定条件:
-  - 適用されたサイズラベル（`size/large`など）または
-  - 実際の追加行数から計算されたサイズカテゴリ
-- **依存関係**: `size_enabled: "true"`が必要（指定時に`size_enabled: false`ならConfigurationError）
-- **バリデーション**: 無効な値が指定された場合はConfigurationErrorを返す
+  - 適用されたサイズラベル（`size/large` など）、または
+  - 実際の追加行数から算出されたサイズカテゴリ
+- **依存関係**: `size_enabled: "true"` が必要です（このオプションを指定した状態で `size_enabled: "false"` にすると `ConfigurationError` になります）
+- **バリデーション**: 無効な値を指定した場合は `ConfigurationError` を返します
 - 使用例:
 
   ```yaml
@@ -269,22 +269,22 @@ PR Insights Labelerの詳細なAPI仕様書です。
   ```
 
 - **サイズ順序**: `small < medium < large < xlarge < xxlarge`
-- **閾値例**（デフォルト設定）:
-  - `small`: < 200行
-  - `medium`: 200-499行
-  - `large`: 500-999行
-  - `xlarge`: 1000-2999行
-  - `xxlarge`: 3000行以上
+- **しきい値の例**（デフォルト設定）:
+  - `small`: 200 行未満
+  - `medium`: 200〜499 行
+  - `large`: 500〜999 行
+  - `xlarge`: 1,000〜2,999 行
+  - `xxlarge`: 3,000 行以上
 
 #### `enable_summary`
 
 - **型**: `string` (boolean)
 - **必須**: ❌
 - **デフォルト**: `"true"`
-- **説明**: GitHub Actions SummaryにPRメトリクスを出力
+- **説明**: GitHub Actions Summary へ PR メトリクスを出力するかどうかを指定します
 - 動作:
-  - `"true"`: 分析結果をActions Summaryに表示
-  - `"false"`: Summary出力をスキップ
+  - `"true"`: 解析結果を Actions Summary に表示します
+  - `"false"`: Summary の出力をスキップします
 - 使用例:
 
   ```yaml
@@ -293,8 +293,8 @@ PR Insights Labelerの詳細なAPI仕様書です。
   ```
 
 - 注意:
-  - Summary書き込み失敗は非致命的エラー（警告ログのみ、アクション継続）
-  - ラベル・コメント機能とは独立して動作
+  - Summary の書き込みに失敗しても非致命的エラーとして扱い、警告ログを出力してアクションを継続します
+  - ラベル付与やコメント投稿の機能とは独立して動作します
 
 ---
 
@@ -305,13 +305,13 @@ PR Insights Labelerの詳細なAPI仕様書です。
 - **型**: `string`
 - **必須**: ❌
 - **デフォルト**: `""`
-- **説明**: デフォルト除外パターンに追加する除外パターン
+- **説明**: デフォルトの除外パターンに追加で適用する除外パターンを指定します
 - **フォーマット**: カンマ区切りまたは改行区切り
-- **パターン構文**: minimatch（glob）
+- **パターン構文**: `minimatch`（glob）
 - 特殊処理:
-  - `#`で始まる行はコメントとして無視
-  - 空白行は無視
-  - 重複パターンは自動削除
+  - `#` で始まる行はコメントとして無視します
+  - 空行は無視します
+  - 重複するパターンは自動で取り除きます
 - 使用例:
 
   ```yaml
@@ -336,12 +336,12 @@ PR Insights Labelerの詳細なAPI仕様書です。
 
 - **型**: `string`
 - **必須**: ✅
-- **説明**: GitHub API認証トークン
-- **優先順位**: `github_token`入力 > `GITHUB_TOKEN`環境変数 > `GH_TOKEN`環境変数
+- **説明**: GitHub API 認証に使用するトークンを指定します
+- **優先順位**: `github_token` 入力 > `GITHUB_TOKEN` 環境変数 > `GH_TOKEN` 環境変数
 - 権限要件:
-  - `pull-requests: write` - ラベル管理用
-  - `issues: write` - コメント投稿用
-  - `contents: read` - ファイル読み取り用
+  - `pull-requests: write` - ラベルの管理に必要です
+  - `issues: write` - コメントの投稿に必要です
+  - `contents: read` - ファイルの読み取りに必要です
 - 使用例:
 
   ```yaml
@@ -359,13 +359,13 @@ PR Insights Labelerの詳細なAPI仕様書です。
 
 - **型**: `string`
 - **必須**: ❌
-- **デフォルト**: なし（優先順位チェーンの最終段で `'en'` を使用）
-- **説明**: 出力メッセージ、エラーメッセージ、ログ、PRコメントの言語設定
-- **サポート言語**: `"en"` (English), `"ja"` (日本語)
+- **デフォルト**: なし（優先順位チェーンの最終段で `'en'` を使用します）
+- **説明**: 出力メッセージ、エラーメッセージ、ログ、PR コメントの表示言語を指定します
+- **サポート言語**: `"en"` (English)、`"ja"` (日本語)
 - 優先順位:
   1. GitHub Actions ワークフローの `with.language`
   2. `.github/pr-labeler.yml` の `language` フィールド
-  3. 環境変数 (`LANGUAGE` → `LANG`)
+  3. 環境変数（`LANGUAGE` → `LANG`）
   4. デフォルト: `'en'` (English)
 - 使用例:
 
@@ -380,7 +380,7 @@ PR Insights Labelerの詳細なAPI仕様書です。
       large: 1000
   ```
 
-  または環境変数で指定:
+  環境変数で指定する場合の例です。
 
   ```yaml
   # .github/workflows/pr-check.yml
@@ -392,15 +392,15 @@ PR Insights Labelerの詳細なAPI仕様書です。
   ```
 
 - 動作:
-  - GitHub Actions Summary、エラーメッセージ、ログ、PRコメントが指定した言語で出力されます
-  - GitHub API呼び出し時のラベル名（`label` フィールド）は常に英語のまま使用されます
-  - カスタムラベル表示名は `display_name` で多言語対応できます
+  - GitHub Actions Summary、エラーメッセージ、ログ、PR コメントが指定した言語で出力されます
+  - GitHub API 呼び出しに使うラベル名（`label` フィールド）は常に英語のまま扱われます
+  - カスタムラベルの表示名は `display_name` で多言語対応できます
 
 #### `display_name`（カテゴリ設定の多言語表示名）
 
 - **型**: `object`
 - **必須**: ❌
-- **説明**: カテゴリラベルの多言語表示名
+- **説明**: カテゴリラベルの多言語表示名を指定します
 - 構造:
 
   ```typescript
@@ -440,13 +440,13 @@ PR Insights Labelerの詳細なAPI仕様書です。
   ```
 
 - 動作:
-  - GitHub Actions SummaryやPRコメントで、現在の言語に応じた表示名が使用されます
-  - 例: `language: ja` の場合、「テストファイル」と表示されます
-  - GitHub APIでは常に英語のラベル名（`label: 'category/tests'`）が使用されます
+  - GitHub Actions Summary や PR コメントで、現在の言語に応じた表示名が使われます
+  - たとえば `language: ja` の場合は「テストファイル」と表示されます
+  - GitHub API 上では常に英語のラベル名（`label: 'category/tests'`）が使用されます
 
 - バリデーション:
-  - `display_name` が設定される場合、`en` と `ja` の両方が必須です
-  - どちらか一方のみの設定はエラーになります
+  - `display_name` を設定する場合は、`en` と `ja` の両方が必須です
+  - どちらか一方しか指定しない場合はエラーになります
 
   ```yaml
   # ❌ エラー: ja が欠けている
@@ -473,7 +473,7 @@ PR Insights Labelerの詳細なAPI仕様書です。
 ### `large_files`
 
 - **型**: `string` (JSON array)
-- **説明**: サイズまたは行数制限を超過したファイルの詳細情報
+- **説明**: サイズまたは行数の制限を超過したファイルの詳細一覧です
 - 構造:
 
   ```json
@@ -499,19 +499,19 @@ PR Insights Labelerの詳細なAPI仕様書です。
 ### `pr_additions`
 
 - **型**: `string`
-- **説明**: PR全体の総追加行数（diff-based）
+- **説明**: PR 全体の総追加行数です（diff ベース）
 - **例**: `"1523"`
 
 ### `pr_files`
 
 - **型**: `string`
-- **説明**: PR内の総ファイル数（削除されたファイルは除く）
+- **説明**: PR 内の総変更ファイル数です（削除されたファイルは含みません）
 - **例**: `"42"`
 
 ### `exceeds_file_size`
 
 - **型**: `string` (`"true"` | `"false"`)
-- **説明**: いずれかのファイルがサイズ制限を超過しているか
+- **説明**: いずれかのファイルがサイズ制限を超過しているかを示します
 - 使用例:
 
   ```yaml
@@ -523,22 +523,22 @@ PR Insights Labelerの詳細なAPI仕様書です。
 ### `exceeds_file_lines`
 
 - **型**: `string` (`"true"` | `"false"`)
-- **説明**: いずれかのファイルが行数制限を超過しているか
+- **説明**: いずれかのファイルが行数制限を超過しているかを示します
 
 ### `exceeds_additions`
 
 - **型**: `string` (`"true"` | `"false"`)
-- **説明**: PR全体の追加行数が制限を超過しているか
+- **説明**: PR 全体の追加行数が制限を超過しているかを示します
 
 ### `exceeds_file_count`
 
 - **型**: `string` (`"true"` | `"false"`)
-- **説明**: PRのファイル数が制限を超過しているか
+- **説明**: PR の変更ファイル数が制限を超過しているかを示します
 
 ### `has_violations`
 
 - **型**: `string` (`"true"` | `"false"`)
-- **説明**: いずれかの違反が存在するか（上記すべての論理和）
+- **説明**: いずれかの制限違反が存在するかを示します（上記フラグの論理和です）
 - 使用例:
 
   ```yaml
@@ -553,71 +553,71 @@ PR Insights Labelerの詳細なAPI仕様書です。
 
 ### ConfigurationError
 
-設定パラメータの検証エラー
+設定パラメータの検証に失敗したときに発生するエラーです。
 
-#### 一般的なエラー
+#### よくあるエラー
 
-1. ファイルサイズ解析失敗:
+1. ファイルサイズの解析に失敗した場合:
 
    ```
    [ConfigurationError] Invalid file size format: '10KB 20MB'.
    Multiple units detected. Use single value like '10KB' or '20MB'
    ```
 
-   **対処**: 単一の値のみを指定
+   **対処**: 単一のサイズ値のみを指定してください。
 
-2. 数値解析失敗:
+2. 数値の解析に失敗した場合:
 
    ```
    [ConfigurationError] File lines limit must be a number
    ```
 
-   **対処**: 数値文字列を指定（例: `"500"`）
+   **対処**: 数値文字列を指定してください（例: `"500"`）。
 
-3. トークン未設定:
+3. トークンが未設定の場合:
 
    ```
    [ConfigurationError] GitHub token is required.
    Set github_token input or GITHUB_TOKEN/GH_TOKEN environment variable
    ```
 
-   **対処**: `github_token`を明示的に設定
+   **対処**: `github_token` を明示的に設定してください。
 
 ### ParseError
 
-JSON解析・検証エラー
+JSON の解析やバリデーションに失敗したときに発生するエラーです。
 
-#### 一般的なエラー
+#### よくあるエラー
 
-1. JSON構文エラー:
+1. JSON の構文エラー:
 
    ```
    [ParseError] Invalid JSON for size thresholds
    ```
 
-   **対処**: 有効なJSON構文を使用
+   **対処**: 正しい JSON 形式で記述してください。
 
-2. 必須フィールド欠如:
+2. 必須フィールドの欠如:
 
    ```
    [ParseError] Missing required size thresholds (S, M, L)
    ```
 
-   **対処**: S, M, Lすべてを含める
+   **対処**: `S`、`M`、`L` のすべてを定義してください。
 
-3. 単調性違反:
+3. 単調性の違反:
 
    ```
    [ParseError] Size thresholds must be monotonic (S ≤ M ≤ L for additions)
    ```
 
-   **対処**: S ≤ M ≤ Lの順序を保つ
+   **対処**: `S ≤ M ≤ L` の順序を満たすように値を設定してください。
 
 ### GitHubAPIError
 
-GitHub API呼び出しエラー
+GitHub API の呼び出しに失敗したときに発生するエラーです。
 
-#### 一般的なエラー
+#### よくあるエラー
 
 1. 権限不足:
 
@@ -625,7 +625,7 @@ GitHub API呼び出しエラー
    [GitHubAPIError] Failed to update labels: Resource not accessible by integration
    ```
 
-   **対処**: workflowに適切な`permissions`を設定
+   **対処**: ワークフローに適切な `permissions` を設定してください。
 
 2. レート制限:
 
@@ -633,7 +633,7 @@ GitHub API呼び出しエラー
    [GitHubAPIError] API rate limit exceeded
    ```
 
-   **対処**: リトライまたは実行頻度を調整
+   **対処**: 時間をおいて再実行するか、ワークフローの実行頻度を調整してください。
 
 3. ネットワークエラー:
 
@@ -641,29 +641,29 @@ GitHub API呼び出しエラー
    [GitHubAPIError] Failed to fetch diff files: Network error
    ```
 
-   **対処**: リトライまたはGitHub Statusを確認
+   **対処**: 再実行するか、GitHub Status で障害情報を確認してください。
 
 ### FileAnalysisError
 
-ファイル分析エラー（非致命的）
+個別ファイルの解析に失敗したときに発生する非致命的なエラーです。
 
-#### 一般的なエラー
+#### よくあるエラー
 
-1. ファイル読み取り失敗:
+1. ファイルの読み取り失敗:
 
    ```
    [FileAnalysisError] Failed to read file src/test.ts: ENOENT
    ```
 
-   **対処**: ファイルは`filesWithErrors`にリストされ、分析は継続
+   **対処**: 該当ファイルは `filesWithErrors` に記録され、残りのファイルの解析は継続します。
 
-2. 行数カウント失敗:
+2. 行数カウントの失敗:
 
    ```
    [FileAnalysisError] Failed to count lines in src/binary.dat
    ```
 
-   **対処**: バイナリファイルは自動スキップ、分析は継続
+   **対処**: バイナリファイルは自動でスキップされ、解析は継続します。
 
 ---
 
@@ -681,11 +681,11 @@ GitHub API呼び出しエラー
 
 #### 動作
 
-- デフォルト制限値を使用
-- 違反時のみコメント投稿（`comment_on_pr: auto`）
-- サイズラベル自動適用
-- GitHub Actions Summaryに出力
-- 違反時もワークフローは継続
+- デフォルトの制限値を使用します
+- 違反がある場合のみコメントを投稿します（`comment_on_pr: auto`）
+- サイズラベルを自動で付与します
+- GitHub Actions Summary に結果を出力します
+- 違反があってもワークフロー自体は失敗させずに継続します
 
 #### 2. カスタム制限
 
@@ -713,7 +713,7 @@ GitHub API呼び出しエラー
     comment_on_pr: "always"        # 常にコメント
 ```
 
-#### 4. Summary出力のみ
+#### 4. Summary 出力のみ
 
 ```yaml
 - uses: jey3dayo/pr-insights-labeler@v1
@@ -730,7 +730,7 @@ GitHub API呼び出しエラー
 
 ### 高度な使用パターン
 
-#### 1. Slack通知との連携
+#### 1. Slack 通知との連携
 
 ```yaml
 - name: Check PR Metrics
@@ -793,7 +793,7 @@ GitHub API呼び出しエラー
       **/__mocks__/**
 ```
 
-#### 4. フォークからのPR（セキュリティ考慮）
+#### 4. フォークからの PR（セキュリティ考慮）
 
 ```yaml
 on:
@@ -831,9 +831,9 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
 ```
 
-**注意**: `pull_request_target`はフォークからのPRでもベースリポジトリのコンテキストで実行されるため、セキュリティリスクがあります。信頼できるコードのみに使用してください。`.github/pr-labeler.yml` と `.github/directory-labeler.yml` はこのイベントの場合、ローカルチェックアウトの内容にかかわらずGitHub API経由でベースの参照から読み込まれます。
+**注意**: `pull_request_target` はフォークからの PR でもベースリポジトリのコンテキストで実行されるため、セキュリティリスクがあります。リスクを理解したうえで、安全なワークフロー構成でのみ使用してください。なお、このイベントでは `.github/pr-labeler.yml` と `.github/directory-labeler.yml` のどちらも、ローカルチェックアウトの内容にかかわらず GitHub API 経由でベースの参照から読み込まれます。
 
-上記のcheckoutステップは、このワークフローがキューに入った後にPRが更新されると意図的に失敗します。解析対象は常にイベントpayloadに記録されたhead SHAのみで、更新後は新たな `synchronize` runが正しいheadを解析します。**このステップに `continue-on-error` を付けないでください。** checkoutの失敗を無視するとbaseのcheckoutのままジョブが続行し、行数・複雑度などローカルファイルを読む解析がPR headではなくbase revisionを対象に計算されてしまいます。第二の防御として、このアクション自体も `pull_request_target` の場合、解析前にローカルの `HEAD` がイベントのhead SHAと一致するかを検証し、一致しなければ失敗します。詳細は[advanced-usage.md](advanced-usage.md#フォークprの取り扱い)を参照してください。
+上記のチェックアウトステップは、ワークフローがキューに入ったあとに PR が更新された場合、意図的に失敗する設計になっています。解析対象は常にイベントペイロードに記録された head SHA のみとし、PR の更新後に起動する新しい `synchronize` 実行が最新の head を解析します。**このステップには `continue-on-error` を付けないでください。** チェックアウト失敗を無視すると base のチェックアウトのままジョブが続き、行数や複雑度のようにローカルファイルを読む解析が PR head ではなく base リビジョンに対して計算されてしまいます。第二の防御として、アクション本体も `pull_request_target` 実行時は解析前にローカルの `HEAD` がイベントの head SHA と一致するかを検証し、一致しない場合は失敗させます。詳細は [advanced-usage.md](advanced-usage.md#フォークprの取り扱い) を参照してください。
 
 ---
 
@@ -841,9 +841,9 @@ jobs:
 
 ### トークンの取り扱い
 
-- **推奨**: `${{ secrets.GITHUB_TOKEN }}`を使用（自動生成、スコープ限定）
-- **非推奨**: Personal Access Tokenの使用（不要な権限を持つ可能性）
-- **自動マスキング**: トークンは`core.setSecret()`で自動的にログからマスクされます
+- **推奨**: `${{ secrets.GITHUB_TOKEN }}` を使用します（自動生成され、スコープが限定されます）
+- **非推奨**: Personal Access Token の使用は避けてください（不要な権限を持つ可能性があります）
+- **自動マスキング**: トークンは `core.setSecret()` によってログから自動でマスクされます
 
 ### 権限の最小化
 
@@ -857,15 +857,15 @@ permissions:
 
 ### エラーハンドリング
 
-- **非致命的エラー**: Summary書き込み失敗、コメント投稿失敗（警告ログのみ）
-- **致命的エラー**: 設定エラー、トークン未設定、PR以外での実行
-- **ワークフロー失敗制御**: `fail_on_large_files`、`fail_on_too_many_files`、`fail_on_pr_size`によるユーザー制御の失敗条件
+- **非致命的エラー**: Summary の書き込み失敗やコメント投稿の失敗は警告ログのみを出力して継続します
+- **致命的エラー**: 設定エラー、トークン未設定、PR 以外のイベントでの実行時は失敗として終了します
+- **ワークフロー失敗制御**: `fail_on_large_files`、`fail_on_too_many_files`、`fail_on_pr_size` によって任意の失敗条件を設定できます
 
 ### パフォーマンス
 
-- **大規模PR対応**: 100+ファイルのPRでもパフォーマンス劣化なし
-- **メモリ効率**: ストリーミングI/Oでメモリ使用量を最小化
-- **API効率**: ページネーション、バッチ処理、キャッシュ活用
+- **大規模 PR 対応**: 100 ファイル以上の PR でも安定して処理できます
+- **メモリ効率**: ストリーミング I/O を活用し、メモリ消費を抑えています
+- **API 効率**: ページネーション、バッチ処理、キャッシュを組み合わせて API 呼び出しを最小化しています
 
 ---
 
@@ -873,7 +873,7 @@ permissions:
 
 ### 概要
 
-全てのエラーファクトリー関数は、i18nextベースの翻訳システムと統合されています。エラーメッセージは、ユーザーが設定した言語（英語または日本語）に応じて自動的に翻訳されます。
+すべてのエラーファクトリー関数は、i18next ベースの翻訳システムと連携しています。エラーメッセージは設定された言語（英語または日本語）に応じて自動で翻訳されます。
 
 ### サポートする言語
 
@@ -882,7 +882,7 @@ permissions:
 
 ### エラーファクトリー関数の基本シグネチャ
 
-全てのエラーファクトリー関数は、以下のパターンに従います:
+すべてのエラーファクトリー関数は、次のシグネチャパターンに従います。
 
 ```typescript
 createXxxError(
@@ -905,7 +905,7 @@ const error = createConfigurationError('language', 'invalid');
 // => message: "設定フィールドが無効です: language"
 ```
 
-#### 2. カスタムメッセージ（翻訳をバイパス）
+#### 2. カスタムメッセージ（翻訳をスキップ）
 
 ```typescript
 // 任意の言語環境
@@ -917,7 +917,7 @@ const error = createConfigurationError('field', 'value', 'Custom error message')
 
 #### createConfigurationError
 
-設定パラメータの検証エラー
+設定パラメータの検証エラーを生成します。
 
 ```typescript
 createConfigurationError(
@@ -931,9 +931,9 @@ createConfigurationError(
 
 #### パラメータ
 
-- `field`: 設定フィールド名（例: `"language"`, `"file_size_limit"`）
-- `value`: 不正な値（デバッグ用、エラーオブジェクトに保持）
-- `customMessage`: オプション - カスタムエラーメッセージ
+- `field`: 設定フィールド名（例: `"language"`、`"file_size_limit"`）
+- `value`: 不正な値（デバッグ用にエラーオブジェクトへ保持します）
+- `customMessage`: 任意のカスタムエラーメッセージ
 
 #### 例
 
@@ -955,7 +955,7 @@ const errorCustom = createConfigurationError(
 
 #### createGitHubAPIError
 
-GitHub API呼び出しエラー
+GitHub API 呼び出し時のエラーを生成します。
 
 ```typescript
 createGitHubAPIError(
@@ -968,8 +968,8 @@ createGitHubAPIError(
 
 #### パラメータ
 
-- `message`: エラーの詳細メッセージ（APIレスポンスから取得）
-- `status`: オプション - HTTPステータスコード
+- `message`: エラーの詳細メッセージ（API レスポンスから取得します）
+- `status`: 任意の HTTP ステータスコード
 
 #### 例
 
@@ -984,7 +984,7 @@ const errorJa = createGitHubAPIError('APIリクエストが失敗しました', 
 
 #### createFileSystemError
 
-ファイルシステム操作エラー
+ファイルシステム操作のエラーを生成します。
 
 ```typescript
 createFileSystemError(
@@ -998,14 +998,14 @@ createFileSystemError(
 
 - `errors.fileSystem.readError` - ファイル読み込みエラー
 - `errors.fileSystem.writeError` - ファイル書き込みエラー
-- `errors.fileSystem.fileNotFound` - ファイル未検出
+- `errors.fileSystem.fileNotFound` - ファイル未検出エラー
 - `errors.fileSystem.permissionDenied` - 権限エラー
 
 #### パラメータ
 
-- `path`: ファイルパス（技術詳細として保持）
-- `operation`: オプション - 操作種別（デフォルト: `'read'`）
-- `customMessage`: オプション - カスタムエラーメッセージ
+- `path`: ファイルパス（技術詳細としてそのまま保持します）
+- `operation`: 任意の操作種別（デフォルトは `'read'`）
+- `customMessage`: 任意のカスタムエラーメッセージ
 
 #### 例
 
@@ -1023,7 +1023,7 @@ const errorNotFound = createFileSystemError('/missing.ts', 'notFound');
 
 #### createParseError
 
-JSON解析・検証エラー
+JSON などの解析・検証エラーを生成します。
 
 ```typescript
 createParseError(
@@ -1036,8 +1036,8 @@ createParseError(
 
 #### パラメータ
 
-- `input`: 不正な入力文字列（技術詳細として保持）
-- `customMessage`: オプション - カスタムエラーメッセージ
+- `input`: 不正な入力文字列（技術詳細としてそのまま保持します）
+- `customMessage`: 任意のカスタムエラーメッセージ
 
 #### 例
 
@@ -1058,7 +1058,7 @@ const errorCustom = createParseError(
 
 #### createFileAnalysisError
 
-ファイル分析エラー（非致命的）
+個別ファイルの解析エラー（非致命的）を生成します。
 
 ```typescript
 createFileAnalysisError(file: string): FileAnalysisError
@@ -1083,7 +1083,7 @@ const errorJa = createFileAnalysisError('src/test.ts');
 
 #### createDiffError
 
-Diff取得エラー
+差分（diff）取得時のエラーを生成します。
 
 ```typescript
 createDiffError(
@@ -1107,7 +1107,7 @@ const errorJa = createDiffError('local-git', 'gitコマンドが失敗しまし�
 
 #### createPatternError
 
-パターンマッチングエラー
+パターンマッチングのエラーを生成します。
 
 ```typescript
 createPatternError(pattern: string): PatternError
@@ -1139,7 +1139,7 @@ const errorJa = createPatternError('*.invalid');
 
 ### 技術詳細の保持
 
-翻訳されたエラーメッセージでも、以下の技術詳細は**変更されずに保持**されます:
+翻訳されたエラーメッセージであっても、ファイルパスやステータスコードなどの技術詳細は**変更せずにそのまま保持**します。
 
 ```typescript
 // ファイルパスの保持
@@ -1173,7 +1173,7 @@ src/locales/
     └── summary.json   # サマリーメッセージ (日本語)
 ```
 
-#### errors.json の構造
+#### `errors.json` の構造
 
 ```json
 {
@@ -1202,9 +1202,9 @@ src/locales/
 
 ### 新しいエラーの追加方法
 
-#### ステップ1: 翻訳リソースにキーを追加
+#### ステップ1: 翻訳リソースにキーを追加する
 
-`src/locales/en/errors.json` と `src/locales/ja/errors.json` の両方にキーを追加:
+`src/locales/en/errors.json` と `src/locales/ja/errors.json` の両方に翻訳キーを追加します。
 
 ```json
 // src/locales/en/errors.json
@@ -1224,9 +1224,9 @@ src/locales/
 }
 ```
 
-#### ステップ2: エラー型定義を追加
+#### ステップ2: エラー型定義を追加する
 
-`src/errors/types.ts` にエラー型を定義:
+`src/errors/types.ts` にエラー型を定義します。
 
 ```typescript
 export type MyNewError = {
@@ -1236,9 +1236,9 @@ export type MyNewError = {
 };
 ```
 
-#### ステップ3: エラーファクトリー関数を実装
+#### ステップ3: エラーファクトリー関数を実装する
 
-`src/errors/factories.ts` にファクトリー関数を追加:
+`src/errors/factories.ts` にファクトリー関数を追加します。
 
 ```typescript
 export const createMyNewError = (detail: string, customMessage?: string): MyNewError => ({
@@ -1248,9 +1248,9 @@ export const createMyNewError = (detail: string, customMessage?: string): MyNewE
 });
 ```
 
-#### ステップ4: テストを追加
+#### ステップ4: テストを追加する
 
-`__tests__/error-factories-i18n.test.ts` にテストを追加:
+`__tests__/error-factories-i18n.test.ts` に英語・日本語のテストを追加します。
 
 ```typescript
 describe('MyNewError', () => {
@@ -1270,13 +1270,13 @@ describe('MyNewError', () => {
 });
 ```
 
-#### ステップ5: 型定義の再生成
+#### ステップ5: 型定義を再生成する
 
 ```bash
 pnpm build
 ```
 
-これにより、`scripts/generate-i18n-types.ts` が実行され、翻訳キーの型定義が自動生成されます。
+このコマンドにより `scripts/generate-i18n-types.ts` が実行され、翻訳キーの型定義が自動で更新されます。
 
 ### 既存コードの移行ガイド
 
@@ -1286,7 +1286,7 @@ pnpm build
 throw createConfigurationError('field', value, 'Hard-coded English message');
 ```
 
-#### 移行後（翻訳キー使用）
+#### 移行後（翻訳キーを使用）
 
 ```typescript
 // カスタムメッセージを削除し、翻訳キーに依存
@@ -1295,16 +1295,16 @@ throw createConfigurationError('field', value);
 
 #### 移行チェックリスト
 
-- [ ] 翻訳リソース（`src/locales/*/errors.json`）に対応するキーが存在するか確認
-- [ ] カスタムメッセージが必要な場合のみ、`customMessage` パラメータを使用
-- [ ] テストで両言語（英語・日本語）の出力を確認
-- [ ] 技術詳細（ファイルパス、エラーコード等）が適切に保持されているか確認
+- [ ] 翻訳リソース（`src/locales/*/errors.json`）に対応するキーがあるか確認しています
+- [ ] カスタムメッセージが必要な箇所にのみ `customMessage` パラメータを使っています
+- [ ] テストで英語・日本語の両方の出力を確認しています
+- [ ] ファイルパスやエラーコードなどの技術詳細が適切に保持されているか確認しています
 
 #### カスタムメッセージが必要なケース
 
-以下の場合は、`customMessage` パラメータを使用してください:
+次のような場合は、`customMessage` パラメータを使用してください。
 
-1. 詳細な技術情報を含むエラー:
+1. 翻訳リソースに収まりにくい詳細な技術情報を含むエラーの場合:
 
    ```typescript
    createConfigurationError(
@@ -1314,7 +1314,7 @@ throw createConfigurationError('field', value);
    );
    ```
 
-2. 動的な翻訳が不可能な場合:
+2. 動的に組み立てる必要があり、固定の翻訳キーで表現できない場合:
 
    ```typescript
    const errorDetails = generateComplexErrorMessage();
@@ -1325,22 +1325,22 @@ throw createConfigurationError('field', value);
 
 #### 1. 翻訳キーの命名規則
 
-- **名前空間**: `errors`, `logs`, `summary` を使用
-- **カテゴリ分け**: 関連するエラーをカテゴリでグループ化
+- **名前空間**: `errors`、`logs`、`summary` を使用します
+- **カテゴリ分け**: 関連するエラーをカテゴリ単位でまとめます
   - `configuration.*` - 設定エラー
-  - `github.*` - GitHub APIエラー
+  - `github.*` - GitHub API エラー
   - `fileSystem.*` - ファイルシステムエラー
   - `parsing.*` - パースエラー
   - `analysis.*` - 分析エラー
   - `pattern.*` - パターンマッチングエラー
   - `violation.*` - 制限違反エラー
-- **変数補間**: `{{variable}}` 形式を使用
+- **変数補間**: `{{variable}}` 形式を使用します
 
 #### 2. 技術詳細の扱い
 
-- **翻訳しない**: ファイルパス、エラーコード、HTTPステータスコード
-- **変数補間で保持**: `{{path}}`, `{{code}}`, `{{message}}` などを使用
-- **エラーオブジェクトに保持**: `error.path`, `error.status` などのプロパティに格納
+- **翻訳しない**: ファイルパス、エラーコード、HTTP ステータスコードは翻訳しません
+- **変数補間で保持**: `{{path}}`、`{{code}}`、`{{message}}` などのプレースホルダーで埋め込みます
+- **エラーオブジェクトに保持**: `error.path` や `error.status` などのプロパティにも格納します
 
 #### 3. テストパターン
 
@@ -1371,43 +1371,43 @@ describe('Error Factory i18n', () => {
 
 #### 4. 後方互換性
 
-- 既存のエラーファクトリー関数は、`customMessage` パラメータをサポート
-- `customMessage` を渡すと、翻訳をバイパスしてカスタムメッセージを使用
-- 既存コードは変更なしで動作（破壊的変更なし）
+- 既存のエラーファクトリー関数はすべて `customMessage` パラメータを引き続き受け付けます
+- `customMessage` を渡した場合は翻訳をスキップしてその文字列をそのまま使用します
+- 既存コードは書き換えなくても動作するため、破壊的変更はありません
 
 ### よくある質問 (FAQ)
 
-#### Q1: カスタムメッセージと翻訳キーの使い分けは？
+#### Q1: カスタムメッセージと翻訳キーはどう使い分けますか？
 
-**A**: 基本的には翻訳キーを使用し、以下の場合のみカスタムメッセージを使用します:
+**A**: 原則として翻訳キーを使用し、次のいずれかに当てはまる場合のみカスタムメッセージを使用します。
 
-- 詳細な技術情報を含むエラー（翻訳リソースに収まらない）
-- 動的に生成されるエラーメッセージ
-- 一時的な対応（翻訳リソース登録前）
+- 詳細な修正案内や技術情報を含み、翻訳リソースに収まらないエラー
+- 実行時に動的に組み立てられるエラーメッセージ
+- 翻訳リソースへ登録する前の一時的な対応
 
-#### Q2: 翻訳リソースに新しいキーを追加した後、型エラーが出る
+#### Q2: 翻訳リソースに新しいキーを追加したあと、型エラーが出ます
 
-**A**: `pnpm build` を実行して型定義を再生成してください。`scripts/generate-i18n-types.ts` が自動的に型定義を更新します。
+**A**: `pnpm build` を実行して型定義を再生成してください。`scripts/generate-i18n-types.ts` により翻訳キーの型定義が自動で更新されます。
 
-#### Q3: 既存のエラーメッセージを翻訳対応にするには？
+#### Q3: 既存のエラーメッセージを翻訳対応にする手順を教えてください
 
-**A**: 移行チェックリストに従って以下を実施:
+**A**: 移行チェックリストに沿って、次の手順で進めます。
 
-1. 翻訳リソースにキーを追加
-2. `customMessage` パラメータを削除
-3. テストで両言語の出力を確認
+1. 翻訳リソースにキーを追加します
+2. 呼び出し側の `customMessage` パラメータを削除します
+3. テストで英語・日本語の両方の出力を確認します
 
-#### Q4: 英語と日本語以外の言語をサポートしたい
+#### Q4: 英語と日本語以外の言語を追加したいです
 
-**A**: 現在は `en` と `ja` のみサポートしています。他の言語を追加するには:
+**A**: 現在は `en` と `ja` のみをサポートしています。新しい言語を追加する場合は、次の3箇所を更新してください。
 
-1. `src/locales/{lang}/` ディレクトリを追加
-2. `src/types/i18n.d.ts` の `LanguageCode` に言語コードを追加
-3. `src/i18n.ts` の `normalizeLanguageCode` 関数を更新
+1. `src/locales/{lang}/` ディレクトリを追加します
+2. `src/types/i18n.d.ts` の `LanguageCode` に言語コードを追加します
+3. `src/i18n.ts` の `normalizeLanguageCode` 関数を更新します
 
-#### Q5: エラーメッセージに複数の変数を含めたい
+#### Q5: エラーメッセージに複数の変数を埋め込めますか？
 
-**A**: 翻訳リソースで複数の変数を定義できます:
+**A**: はい、翻訳リソースに複数のプレースホルダーを定義して補間できます。
 
 ```json
 {
@@ -1429,4 +1429,4 @@ t('errors', 'myError', { file: 'test.ts', line: 42, message: 'syntax error' });
 - [pattern-matcher.ts](../../src/pattern-matcher.ts) - デフォルト除外パターン一覧
 - [src/errors/factories.ts](../../src/errors/factories.ts) - エラーファクトリー実装
 - [src/locales/](../../src/locales/) - 翻訳リソース
-- [**tests**/error-factories-i18n.test.ts](../../__tests__/error-factories-i18n.test.ts) - i18nテスト
+- [**tests**/error-factories-i18n.test.ts](../../__tests__/error-factories-i18n.test.ts) - i18n テスト

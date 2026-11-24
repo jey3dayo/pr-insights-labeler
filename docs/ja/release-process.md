@@ -5,7 +5,7 @@
 
 **言語**: 日本語（英語版は未整備）
 
-このドキュメントは、PR Insights Labelerの新バージョンをリリースする手順を説明します。
+PR Insights Labeler の新バージョンをリリースするための手順書です。
 
 ## 📋 目次
 
@@ -21,9 +21,9 @@
 
 ## 自動化リリース（推奨）
 
-`/release` コマンドを使用すると、リリースプロセス全体を自動化できます。
+`/release` コマンドを使うと、リリース作業を一括で自動化できます。
 
-### 基本使用方法
+### 基本的な使い方
 
 ```bash
 # パッチリリース (v1.0.1 → v1.0.2)
@@ -39,68 +39,68 @@
 /release patch --dry-run
 ```
 
-### 自動実行される内容
+### 自動で実行される処理
 
-1. ✅ **リリース前チェック**: lint/test/build の自動実行
-2. ✅ **バージョン計算**: 現在のバージョンから次のバージョンを自動計算
-3. ✅ **ドキュメント更新**: package.json と CHANGELOG.md を自動更新
-4. ✅ **コミット作成**: `chore: release vX.Y.Z` で自動コミット
-5. ✅ **タグ作成**: vX.Y.Z と vX タグを自動作成・更新
-6. ✅ **プッシュ**: main ブランチとタグを自動プッシュ
-7. ✅ **GitHub Release**: リリースノートを自動生成・公開
+1. ✅ **リリース前チェック**: lint / test / build を自動で実行します
+2. ✅ **バージョン計算**: 現在のバージョンから次のバージョン番号を算出します
+3. ✅ **ファイル更新**: `package.json` と `CHANGELOG.md` を自動で更新します
+4. ✅ **コミット作成**: `chore: release vX.Y.Z` でコミットを作成します
+5. ✅ **タグ作成**: `vX.Y.Z` とメジャーバージョンタグ（`vX`）を作成・更新します
+6. ✅ **プッシュ**: `main` ブランチとタグをリモートへプッシュします
+7. ✅ **GitHub Release 作成**: リリースノートを自動生成して公開します
 
 ### 詳細
 
-詳細な使用方法とオプションは [.claude/skills/release/SKILL.md](../../.claude/skills/release/SKILL.md) を参照してください。
+詳しい使い方とオプションは [.claude/skills/release/SKILL.md](../../.claude/skills/release/SKILL.md) を参照してください。
 
 ---
 
 ## バージョニング戦略
 
-このプロジェクトは[Semantic Versioning 2.0.0](https://semver.org/)に従います。
+このプロジェクトは [Semantic Versioning 2.0.0](https://semver.org/) に準拠しています。
 
 ### バージョン番号の形式: `MAJOR.MINOR.PATCH`
 
-- **MAJOR**: 互換性のないAPI変更
+- **MAJOR**: 後方互換性のない変更
 - **MINOR**: 後方互換性のある機能追加
 - **PATCH**: 後方互換性のあるバグ修正
 
-### 例
+### バージョン更新の例
 
 - `1.0.0` → `1.0.1`: バグ修正のみ（PATCH）
-- `1.0.0` → `1.1.0`: 新機能追加（MINOR）
-- `1.0.0` → `2.0.0`: 破壊的変更（MAJOR）
+- `1.0.0` → `1.1.0`: 新機能の追加（MINOR）
+- `1.0.0` → `2.0.0`: 破壊的変更を含む更新（MAJOR）
 
 ---
 
 ## リリース前チェックリスト
 
-リリース前に以下の項目を確認してください：
+リリース作業を始める前に、以下の項目を確認してください。
 
 ### 1. コード品質
 
-- [ ] すべてのテストが成功している（`pnpm test`）
+- [ ] すべてのテストが成功しています（`pnpm test`）
 
   ```bash
   pnpm test
   # 期待: All tests passed
   ```
 
-- [ ] 型チェックが通っている（`pnpm type-check`）
+- [ ] 型チェックにエラーがありません（`pnpm type-check`）
 
   ```bash
   pnpm type-check
   # 期待: No errors
   ```
 
-- [ ] Lintエラーがない（`pnpm lint`）
+- [ ] Lint エラーや警告がありません（`pnpm lint`）
 
   ```bash
   pnpm lint
   # 期待: No errors or warnings
   ```
 
-- [ ] フォーマットが適用されている（`pnpm format:check`）
+- [ ] フォーマットが適用されています（`pnpm format:check`）
 
   ```bash
   pnpm format:check
@@ -109,14 +109,14 @@
 
 ### 2. ビルド
 
-- [ ] ビルドが成功している（`pnpm build`）
+- [ ] ビルドが正常に完了しています（`pnpm build`）
 
   ```bash
   pnpm build
   # 期待: dist/index.js が生成される
   ```
 
-- [ ] `dist/`ディレクトリがコミットされている
+- [ ] `dist/` ディレクトリがコミットされています
 
   ```bash
   git status dist/
@@ -125,37 +125,37 @@
 
 ### 3. ドキュメント
 
-- [ ] `CHANGELOG.md`が更新されている
-- [ ] `README.md`の使用例が最新である
-- [ ] 新機能の説明が追加されている（該当する場合）
+- [ ] `CHANGELOG.md` が更新されています
+- [ ] `README.md` の使用例が最新の内容になっています
+- [ ] 新機能の説明がドキュメントに追加されています（該当する場合）
 
 ### 4. 動作確認
 
-- [ ] 実際のGitHub Actionsワークフローで動作確認済み
-- [ ] 主要な機能シナリオをテスト済み
-  - ラベル付け
+- [ ] 実際の GitHub Actions ワークフロー上で動作を確認済みです
+- [ ] 主要な機能シナリオをテスト済みです
+  - ラベル付与
   - コメント投稿
-  - Summary出力
+  - Summary 出力
   - 違反検出
 
 ---
 
 ## 手動リリース手順
 
-以下は手動でリリースを行う場合の手順です。自動化リリースを使用する場合は、[自動化リリース（推奨）](#自動化リリース推奨)を参照してください。
+手動でリリースを行う際の手順です。自動リリースを使う場合は、[自動化リリース（推奨）](#自動化リリース推奨)を参照してください。
 
-### Step 1: バージョン番号の決定
+### Step 1: バージョン番号を決定する
 
-変更内容に基づいて新しいバージョン番号を決定します：
+変更内容に合わせて、次のバージョン番号を決めます。
 
 ```bash
 # 現在のバージョンを確認
 cat package.json | grep version
 ```
 
-### Step 2: CHANGELOG.md の更新
+### Step 2: CHANGELOG.md を更新する
 
-新しいバージョンのエントリを追加：
+新しいバージョンのエントリを追記します。
 
 ```markdown
 ## [X.Y.Z] - YYYY-MM-DD
@@ -172,7 +172,9 @@ cat package.json | grep version
 [X.Y.Z]: https://github.com/jey3dayo/pr-insights-labeler/releases/tag/vX.Y.Z
 ```
 
-### Step 3: package.json のバージョン更新
+### Step 3: package.json のバージョンを更新する
+
+`package.json` を直接編集するか、`npm version` コマンドで更新します。
 
 ```bash
 # 手動で編集
@@ -184,7 +186,7 @@ npm version minor  # 1.0.0 → 1.1.0
 npm version major  # 1.0.0 → 2.0.0
 ```
 
-### Step 4: ビルド実行
+### Step 4: ビルドを実行する
 
 ```bash
 # 依存関係のインストール（必要に応じて）
@@ -193,11 +195,11 @@ pnpm install
 # ビルド
 pnpm build
 
-# dist/の変更を確認
+# dist/ の変更を確認
 git status dist/
 ```
 
-### Step 5: コミット
+### Step 5: 変更をコミットする
 
 ```bash
 # 変更をステージング
@@ -207,7 +209,7 @@ git add package.json CHANGELOG.md dist/
 git commit -m "chore: release v1.0.0"
 ```
 
-### Step 6: タグの作成
+### Step 6: タグを作成する
 
 ```bash
 # 具体的なバージョンタグを作成（vプレフィックスを付ける）
@@ -220,9 +222,9 @@ git tag -f v1 v1.0.0^{}
 git tag -l "v1*"
 ```
 
-**重要**: GitHub Actionsで `@v1` を使用できるようにするため、メジャーバージョンタグ（例: v1, v2）を必ず更新してください。
+**重要**: GitHub Actions で `@v1` のように参照できるようにするため、メジャーバージョンタグ（`v1`、`v2` など）も必ず更新してください。
 
-### Step 7: プッシュ
+### Step 7: リモートへプッシュする
 
 ```bash
 # コミットとタグをプッシュ
@@ -233,9 +235,9 @@ git push origin v1.0.0
 git push origin v1 --force
 ```
 
-### Step 8: actions.lock の更新（`v1` を動かした場合）
+### Step 8: actions.lock を更新する（`v1` を進めた場合）
 
-`released-action-check.yml` は公開済み `@v1` を smoke する。リリースで `v1` タグを進めたあと、lock が古い commit のままだと CI は旧バンドルを検証し続ける。partial ref（`@v1`）は通常の `mise run actions-lock:generate` では locked commit が進まないため、`--relock` を使う:
+`released-action-check.yml` は、公開済みの `@v1` を対象にスモークテストを実行します。リリースで `v1` タグを進めたあとに `actions.lock` が古いコミットのまま残っていると、CI は旧バンドルを検証し続けてしまいます。`@v1` のような部分参照（partial ref）は通常の `mise run actions-lock:generate` ではロック先コミットが更新されないため、`actions-lock:relock` を実行してコミットしてください。
 
 ```bash
 mise run actions-lock:relock
@@ -250,7 +252,7 @@ git push origin main
 
 ### リリースノートのテンプレート
 
-リリースノートは統一されたフォーマットに従ってください。詳細は [.github/RELEASE_TEMPLATE.md](../../.github/RELEASE_TEMPLATE.md) を参照してください。
+リリースノートは統一されたフォーマットで記載してください。詳細は [.github/RELEASE_TEMPLATE.md](../../.github/RELEASE_TEMPLATE.md) を参照してください。
 
 ### 標準フォーマット
 
@@ -280,9 +282,9 @@ git push origin main
 
 **参考例**: [v1.5.0 Release](https://github.com/jey3dayo/pr-insights-labeler/releases/tag/v1.5.0)
 
-### 自動化スクリプト使用時
+### 自動化スクリプトを使う場合
 
-`scripts/release.sh` を使用する場合、リリースノートは自動的にテンプレート形式で生成されます：
+`scripts/release.sh` を使用すると、テンプレートに沿ったリリースノートが自動で生成されます。
 
 ```bash
 # インタラクティブリリース（推奨）
@@ -292,18 +294,18 @@ git push origin main
 /release patch
 ```
 
-### Web UIでの作成（手動）
+### Web UI で手動作成する場合
 
-1. GitHubリポジトリページにアクセス
-2. 「Releases」タブをクリック
-3. 「Draft a new release」ボタンをクリック
-4. 以下の情報を入力：
-   - **Tag version**: `v1.0.0`（既存のタグを選択）
+1. GitHub のリポジトリページを開きます
+2. 「Releases」タブをクリックします
+3. 「Draft a new release」ボタンをクリックします
+4. 次の項目を入力します
+   - **Tag version**: `v1.0.0`（作成済みのタグを選択します）
    - **Release title**: `v1.0.0`
-   - **Description**: [.github/RELEASE_TEMPLATE.md](../../.github/RELEASE_TEMPLATE.md) のフォーマットに従って記述
-5. 「Publish release」をクリック
+   - **Description**: [.github/RELEASE_TEMPLATE.md](../../.github/RELEASE_TEMPLATE.md) のフォーマットに沿って記載します
+5. 「Publish release」をクリックします
 
-### CLIでの作成（GitHub CLI使用）
+### GitHub CLI で作成する場合
 
 ```bash
 # GitHub CLIをインストール（未インストールの場合）
@@ -325,16 +327,16 @@ gh release create v1.0.0 \
 
 ## ロールバック手順
 
-リリース後に問題が発覚した場合のロールバック手順：
+リリース後に問題が見つかった場合は、以下の手順でロールバックします。
 
-### 1. GitHub Releaseの取り下げ
+### 1. GitHub Release を取り下げる
 
 ```bash
 # Web UIで削除するか、CLIを使用
 gh release delete v1.0.0 --yes
 ```
 
-### 2. Gitタグの削除
+### 2. Git タグを削除する
 
 ```bash
 # ローカルのタグを削除
@@ -344,7 +346,7 @@ git tag -d v1.0.0
 git push origin :refs/tags/v1.0.0
 ```
 
-### 3. コミットの取り消し（必要に応じて）
+### 3. コミットを取り消す（必要な場合）
 
 ```bash
 # 最新コミットを取り消す（ローカルのみ）
@@ -354,9 +356,9 @@ git reset --hard HEAD~1
 git push origin main --force
 ```
 
-### 4. ホットフィックスのリリース
+### 4. ホットフィックスをリリースする
 
-問題を修正した後、新しいパッチバージョンをリリース：
+問題を修正したあと、新しいパッチバージョンをリリースします。
 
 ```bash
 # 例: 1.0.0 に問題があった場合 → 1.0.1 をリリース
@@ -373,7 +375,7 @@ git push origin main --tags
 
 ### ビルドエラー
 
-**症状**: `pnpm build` が失敗する
+**症状**: `pnpm build` が失敗します。
 
 #### 解決策
 
@@ -391,7 +393,7 @@ pnpm build
 
 ### テスト失敗
 
-**症状**: テストが失敗する
+**症状**: テストが失敗します。
 
 #### 解決策
 
@@ -408,7 +410,7 @@ pnpm test:coverage
 
 ### タグが既に存在する
 
-**症状**: `git tag` で "already exists" エラー
+**症状**: `git tag` 実行時に "already exists" エラーが発生します。
 
 #### 解決策
 
@@ -422,9 +424,9 @@ git tag -a v1.0.0 -m "Release v1.0.0"
 git push origin v1.0.0
 ```
 
-### GitHub Releaseが作成できない
+### GitHub Release を作成できない
 
-**症状**: `gh release create` が失敗する
+**症状**: `gh release create` が失敗します。
 
 #### 解決策
 
@@ -439,9 +441,9 @@ gh auth login
 gh release create v1.0.0 --title "v1.0.0" --notes "..."
 ```
 
-### dist/が更新されていない
+### `dist/` が更新されていない
 
-**症状**: `dist/index.js` が古いまま
+**症状**: `dist/index.js` が古い内容のままになっています。
 
 #### 解決策
 
@@ -469,16 +471,16 @@ git commit -m "chore: rebuild dist/"
 
 ---
 
-## メンテナ向けメモ
+## メンテナー向けメモ
 
 ### 定期的なメンテナンス
 
-- **依存関係の更新**: 月次で `pnpm update` を実行
-- **セキュリティ監査**: `pnpm audit` で脆弱性をチェック
-- **TypeScript/Node.jsバージョンアップ**: 年次で最新LTSへ移行検討
+- **依存関係の更新**: 月に1回、`pnpm update` で依存パッケージを見直します
+- **セキュリティ監査**: `pnpm audit` で脆弱性がないか確認します
+- **TypeScript / Node.js のバージョンアップ**: 年に1回を目安に、最新の LTS バージョンへの移行を検討します
 
 ### リリース頻度の目安
 
-- **PATCH**: バグ修正は即座にリリース
-- **MINOR**: 新機能は1-2週間ごとにまとめてリリース
-- **MAJOR**: 破壊的変更は慎重に、十分な告知期間を設ける
+- **PATCH**: バグ修正は準備でき次第すぐにリリースします
+- **MINOR**: 新機能は 1〜2 週間ごとにまとめてリリースします
+- **MAJOR**: 破壊的変更は事前に十分な告知期間を設け、慎重にリリースします
