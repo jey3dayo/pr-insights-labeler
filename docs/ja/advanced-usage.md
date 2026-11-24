@@ -5,7 +5,7 @@
 
 **言語**: [English](../en/advanced-usage.md) | 日本語
 
-PR Insights Labelerの実践的な例と高度な設定です。
+PR Insights Labeler の実践的な活用例と、高度な設定方法をまとめたガイドです。
 
 ## 目次
 
@@ -20,19 +20,19 @@ PR Insights Labelerの実践的な例と高度な設定です。
 
 ## フォークPRの取り扱い
 
-フォークからのPRを処理する場合、権限が制限されます。適切なアクセスのために `pull_request_target` イベントを使用してください。
+フォークからの PR を処理する場合、通常の `pull_request` イベントでは権限が制限されます。ラベル付与やコメント投稿を行うには、`pull_request_target` イベントを使用してください。
 
 ### セキュリティ上の考慮事項
 
-⚠️ **重要**: `pull_request_target` はベースリポジトリのコンテキストで実行され、書き込み権限が付与されます。このイベントは必要な場合にのみ使用し、セキュリティへの影響を理解した上で使用してください。
+⚠️ **重要**: `pull_request_target` はベースリポジトリのコンテキストで実行されるため、書き込み権限が付与されます。セキュリティへの影響を十分に理解したうえで、必要な場合にのみ使用してください。
 
-- **リスク**: フォークPR内の悪意あるコードがシークレットにアクセスする可能性
-- **緩和策**: このアクションはPR headをデータとして読み取ってメトリクスを計算するだけです（ファイルサイズは `fs.stat`、行数は `wc -l`、複雑度は `overrideConfigFile: true` とこのアクション内蔵の parser / rule によるESLint実行で計算し、リポジトリ自体のESLint設定は読み込みません）。サンプルワークフローのどのステップも、PRのスクリプト・package hooks・PR側の設定ファイルを実行しません
-- **ベストプラクティス**: ワークフローを承認する前にフォークPRをレビュー
+- **リスク**: フォーク PR に含まれる悪意あるコードが実行されると、シークレットへアクセスされる可能性があります
+- **緩和策**: このアクションは PR head をデータとして読み取ってメトリクスを計算するだけです。ファイルサイズは `fs.stat`、行数は `wc -l`、複雑度は `overrideConfigFile: true` とアクション内蔵のパーサー・ルールを用いた ESLint 実行で計算し、対象リポジトリ側の ESLint 設定は読み込みません。また、サンプルワークフローのどのステップでも、PR 内のスクリプトやパッケージフック、PR 側の設定ファイルは実行しません
+- **ベストプラクティス**: ワークフローの実行を承認する前に、フォーク PR の変更内容をレビューしてください
 
-#### ベースリポジトリをチェックアウトしたうえで、解析用にPR headをチェックアウトする
+#### ベースリポジトリをチェックアウトしたうえで、解析用に PR head をチェックアウトする
 
-`pull_request_target` では、ローカルでのdiff計算にbaseとheadの両方のcommit、およびその間のmerge-baseまでの履歴がオブジェクトDBに必要です。`actions/checkout@v7` のデフォルト（`fetch-depth: 1`）にはこの履歴がなく、`fetch-depth: 0` も「チェックアウト元のremoteの全履歴」しか保証しません。ベースリポジトリをoriginとする安全な既定構成でも、フォークのhead commitは通常のbranch refの外にあるため取得されないままです。そのためフォークPRではhead commitを明示的にfetchする必要があります。必要な履歴が揃わない場合、このアクションは失敗するのではなくGitHub API経由でのdiff取得にフォールバックします。
+`pull_request_target` でローカルの diff 計算を行うには、base と head の両コミット、およびその間の merge-base までの履歴がローカルのオブジェクト DB に必要です。`actions/checkout@v7` のデフォルト（`fetch-depth: 1`）では履歴が不足しており、`fetch-depth: 0` を指定しても「チェックアウト先のリモートの全履歴」しか取得されません。ベースリポジトリを `origin` とする安全な既定構成では、フォークの head コミットは通常のブランチ ref の外にあるため取得されないままになります。そのため、フォーク PR では head コミットを明示的に fetch する必要があります。なお、必要な履歴が揃わない場合でもアクション自体は失敗せず、GitHub API 経由での diff 取得にフォールバックします。
 
 ```yaml
       - uses: actions/checkout@v7
@@ -54,15 +54,15 @@ PR Insights Labelerの実践的な例と高度な設定です。
           git checkout --detach "$FETCHED_SHA"
 ```
 
-head SHAは `git fetch` / `git checkout` に渡され、`actions/checkout` 自体には渡されません。`actions/checkout` 自身が持つ `pull_request_target` 向けの安全対策（近年のリリースにある `allow-unsafe-pr-checkout` など、既定でこのイベント下でのフォークhead checkoutを拒否する仕組み）は `checkout` アクションへ渡す対象に対するものであり、その後の素の `git checkout` には適用されません。案内するバージョンをv7に上げる際に、この違いをv7のソースで再確認しました。v7の安全対策は `repository`、`ref`、解決されたcommitのいずれかがフォークのPR headを指す場合にのみcheckoutを拒否し、この手順ではそのいずれもアクションへ渡しません。なお、この確認はv7のソースを読んだもので、実際のフォークPRでの実行は未検証です。
+ここでは head SHA を `git fetch` と `git checkout` に直接渡しており、`actions/checkout` 自体には渡していません。`actions/checkout` が備えている `pull_request_target` 向けの安全対策（近年のリリースにある `allow-unsafe-pr-checkout` など、既定でフォーク head のチェックアウトを拒否する仕組み）は、`checkout` アクションへ渡した対象に適用されるものであり、後続の素の `git checkout` には適用されません。案内バージョンを v7 に引き上げる際、この違いを v7 のソースコードで再確認しています。v7 の安全対策は `repository`、`ref`、解決されたコミットのいずれかがフォークの PR head を指す場合にのみチェックアウトを拒否するため、この手順では該当しません。なお、この確認は v7 のソースコード読解によるもので、実際のフォーク PR 上での実行検証は未実施です。
 
-このステップが解析するのは `pull_request_target` イベントのpayloadに記録されたhead SHAだけで、可変refそのものではありません。`refs/pull/${PR_NUMBER}/head` は可変なため、このワークフローがキューに入った後にPRが更新されると、fetchしたcommitは `HEAD_SHA` と一致しなくなります。その場合、このステップは誤ったrevisionをcheckoutせずに意図的に失敗します。更新によって起動する `synchronize` runが新しいheadを解析するため、自然に回復します。
+また、このステップが解析対象とするのは、`pull_request_target` イベントのペイロードに記録された head SHA のみであり、可変の ref そのものではありません。`refs/pull/${PR_NUMBER}/head` は可変のため、ワークフローがキューに入ってから PR が更新されると、fetch したコミットは `HEAD_SHA` と一致しなくなります。その場合、このステップは別のリビジョンをチェックアウトせずに意図的に失敗します。PR の更新によって新たに起動される `synchronize` イベントの実行が最新の head を解析するため、そのまま自然に回復します。
 
-**このステップに `continue-on-error` を付けないでください。** checkoutが失敗してもジョブを続行させると、解析はPR headではなくbaseのcheckoutに対して行われます。GitHub API経由のdiff fallbackは機能しますが、行数・複雑度などローカルのファイル内容を読む解析は、PRの実際の変更ではなくbase revisionを対象に計算されてしまいます。
+**このステップには `continue-on-error` を設定しないでください。** チェックアウトが失敗してもジョブを続行してしまうと、解析が PR head ではなく base のチェックアウトに対して実行されます。GitHub API 経由の diff フォールバック自体は動きますが、行数や複雑度のようにローカルファイルの内容を読む解析は、PR の実際の変更ではなく base リビジョンを対象に計算されてしまいます。
 
-第二の防御として、このアクション自体も `pull_request_target` の場合、解析前にローカルの `HEAD` がイベントのhead SHAと一致するかを検証します。一致しない場合は誤ったrevisionへラベルを付けるのではなく、アクションが失敗します。
+第二の防御として、このアクション本体でも `pull_request_target` 実行時は解析前にローカルの `HEAD` がイベントの head SHA と一致するかを検証しています。一致しない場合は、誤ったリビジョンにラベルを付けるのではなくアクションを失敗させます。
 
-ポリシー設定と解析対象は別に扱われます。イベントが `pull_request_target` の場合、`.github/pr-labeler.yml` と `.github/directory-labeler.yml` はどちらも、ローカルチェックアウトの内容にかかわらずGitHub API経由でベースの参照（取得できない場合はデフォルトブランチ）から読み込まれます。その結果、いずれかのファイルを変更するフォークPRでは新しい設定はプレビューされず、ベース側の設定が適用されます。通常の `pull_request` イベントでは、`.github/pr-labeler.yml` はGitHub API経由でheadの参照から、`.github/directory-labeler.yml` はローカルチェックアウトから読み込まれるため、同一リポジトリのPRでは従来どおり設定変更をプレビューできます。
+ポリシー設定ファイルと解析対象コードは分けて扱われます。イベントが `pull_request_target` の場合、`.github/pr-labeler.yml` と `.github/directory-labeler.yml` はどちらも、ローカルチェックアウトの内容にかかわらず GitHub API 経由でベースの参照（取得できない場合はデフォルトブランチ）から読み込まれます。そのため、これらの設定ファイルを変更するフォーク PR では新しい設定はプレビューされず、ベース側の設定が適用されます。一方、通常の `pull_request` イベントでは、`.github/pr-labeler.yml` は GitHub API 経由で head の参照から、`.github/directory-labeler.yml` はローカルチェックアウトから読み込まれるため、同一リポジトリ内の PR では従来どおり設定変更をプレビューできます。
 
 ### 設定例
 
@@ -106,24 +106,26 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
 ```
 
-### 使用すべき場合
+### 適しているケース
 
-- ✅ 外部コントリビューションを受け入れるオープンソースプロジェクト
-- ✅ フォークPRがあるパブリックリポジトリ
-- ❌ プライベートリポジトリ（代わりに `pull_request` イベントを使用）
+- ✅ 外部からのコントリビューションを受け入れているオープンソースプロジェクト
+- ✅ フォーク PR が発生するパブリックリポジトリ
+- ❌ プライベートリポジトリ（通常の `pull_request` イベントを使用してください）
 
 ## 条件付き実行
 
-特定のファイルやパスが変更された場合にのみPR Insights Labelerを実行します。
+特定のファイルやパス、ラベル、ブランチに応じて PR Insights Labeler の実行を制御できます。
 
 ### 特定ファイルのスキップ
+
+変更されたパスを絞り込みつつ、追加の除外パターンを指定する例です。
 
 ```yaml
 name: PR Check
 
 on:
   pull_request:
-    # これらのパスに対してのみ実行
+    # これらのパスが変更された場合のみ実行
     paths:
       - 'src/**'
       - '!src/**/*.test.ts'  # テストファイルを除外
@@ -145,7 +147,7 @@ jobs:
 
 ### ラベルによるスキップ
 
-特定のラベルが存在する場合にPR Insights Labelerをスキップ:
+特定のラベルが付いている PR で実行をスキップする例です。
 
 ```yaml
 name: PR Check
@@ -170,7 +172,7 @@ jobs:
 
 ### ブランチによるスキップ
 
-特定のブランチをスキップ:
+特定のブランチからの PR をスキップする例です。
 
 ```yaml
 name: PR Check
@@ -195,9 +197,9 @@ jobs:
 
 ## 厳格モード
 
-違反が検出された場合にワークフローを失敗させます。コード品質基準の強制に便利です。
+制限違反を検出した場合にワークフローを失敗させる設定です。チームの品質基準を強制したい場合に有効です。
 
-### 例: 大きなファイルで失敗
+### 例: 大きなファイルや大規模 PR で失敗させる
 
 ```yaml
 name: PR Check (Strict)
@@ -224,25 +226,25 @@ jobs:
           file_size_limit: "100KB"
           file_lines_limit: "300"
           pr_additions_limit: "500"
-          fail_on_large_files: "true"       # ファイルが制限を超えた場合失敗
-          fail_on_too_many_files: "true"    # ファイル数が多すぎる場合失敗
-          fail_on_pr_size: "large"          # PRサイズが "large" 以上で失敗
-          size_enabled: "true"              # fail_on_pr_size に必要
-          comment_on_pr: "always"           # 違反時は常にコメント
+          fail_on_large_files: "true"       # ファイルが制限を超えた場合に失敗
+          fail_on_too_many_files: "true"    # ファイル数が上限を超えた場合に失敗
+          fail_on_pr_size: "large"          # PRサイズが "large" 以上の場合に失敗
+          size_enabled: "true"              # fail_on_pr_size の利用に必要
+          comment_on_pr: "always"           # 違反時は常にコメントを投稿
 ```
 
-### 厳格モードのユースケース
+### 厳格モードが向いているケース
 
-- ✅ 大きな変更にレビューが必要なミッションクリティカルなコードベース
-- ✅ コードスタイルと複雑度の基準を強制
-- ✅ 大きなファイルの誤コミットを防止
-- ❌ オープンソースプロジェクト（コントリビューションを妨げる可能性）
+- ✅ 大きな変更に厳格なレビューが必要なミッションクリティカルなコードベース
+- ✅ コード品質や複雑度の基準を機械的に守らせたいプロジェクト
+- ✅ 大容量ファイルの誤コミットを防ぎたいリポジトリ
+- ❌ 外部コントリビューションを募るオープンソースプロジェクト（参加のハードルが上がる場合があります）
 
 ## サマリー専用モード
 
-ラベルやコメントを適用せずに、GitHub Actions Summaryで可視性を提供します。
+ラベル付与やコメント投稿を行わず、GitHub Actions Summary へのレポート出力だけを行う構成です。
 
-### 例: 読み取り専用分析
+### 例: 読み取り専用の分析
 
 ```yaml
 name: PR Analysis (Summary Only)
@@ -256,7 +258,7 @@ jobs:
     runs-on: ubuntu-latest
 
     permissions:
-      contents: read  # 読み取りのみ必要
+      contents: read  # 読み取り権限のみ必要
 
     steps:
       - uses: actions/checkout@v7
@@ -278,19 +280,19 @@ jobs:
           enable_summary: "true"
 ```
 
-### 使用すべき場合
+### 適しているケース
 
-- ✅ `pull-requests: write` 権限のないリポジトリ
-- ✅ ラベル適用が不可能なフォークPR
-- ✅ PRワークフローに影響を与えない内部分析
+- ✅ `pull-requests: write` 権限を付与できないリポジトリ
+- ✅ ラベルを適用できないフォーク PR の解析
+- ✅ PR のワークフローに影響を与えずにメトリクスだけを確認したい場合
 
 ## ラベルの選択的有効化
 
-ラベルタイプを個別に制御します。
+各ラベル種別の有効・無効を個別に制御できます。
 
 ### デフォルト: 複雑度ラベルのみ無効
 
-デフォルトでは、size、category、risk ラベルは有効で、complexity ラベルのみ無効です:
+デフォルトでは `size`、`category`、`risk` ラベルが有効で、`complexity` ラベルのみ無効になっています。
 
 ```yaml
 - uses: jey3dayo/pr-insights-labeler@v1
@@ -300,7 +302,7 @@ jobs:
     # complexity ラベルはデフォルトで無効（有効化するには complexity_enabled: "true" を指定）
 ```
 
-### 特定のラベルタイプを無効化
+### 特定のラベル種別を無効化する
 
 ```yaml
 # 例1: 複雑度ラベルを明示的に無効化（デフォルトと同じ）
@@ -312,7 +314,7 @@ jobs:
 ```
 
 ```yaml
-# 例2: サイズとリスクラベルのみ
+# 例2: サイズラベルとリスクラベルのみ有効化
 - uses: jey3dayo/pr-insights-labeler@v1
   with:
     github_token: ${{ secrets.GITHUB_TOKEN }}
@@ -322,18 +324,18 @@ jobs:
     risk_enabled: "true"
 ```
 
-### 選択的有効化とカスタム閾値
+### 選択的有効化とカスタムしきい値の組み合わせ
 
 ```yaml
 - uses: jey3dayo/pr-insights-labeler@v1
   with:
     github_token: ${{ secrets.GITHUB_TOKEN }}
 
-    # サイズラベル: カスタム閾値
+    # サイズラベル: カスタムしきい値
     size_enabled: "true"
     size_thresholds: '{"small": 50, "medium": 200, "large": 500, "xlarge": 1500}'
 
-    # 複雑度ラベル: カスタム閾値（明示的に有効化）
+    # 複雑度ラベル: カスタムしきい値（明示的に有効化）
     complexity_enabled: "true"
     complexity_thresholds: '{"medium": 15, "high": 30}'
 
@@ -344,14 +346,14 @@ jobs:
     risk_enabled: "true"
 ```
 
-### 命名規則
+### パラメータの命名規則
 
-- `*_enabled`: 各ラベルタイプの有効/無効
-- `*_thresholds`: サイズと複雑度ラベルの閾値をカスタマイズ
+- `*_enabled`: 各ラベル種別の有効・無効を切り替えます
+- `*_thresholds`: サイズラベルや複雑度ラベルのしきい値をカスタマイズします
 
 ## PR Insights Labeler YAML設定
 
-`.github/pr-labeler.yml` でリポジトリ全体のデフォルトを定義します。完全なスキーマとデフォルト値は [Configuration Guide](../en/configuration.md#yaml-config-file) にあるため、ここでは参照を重複させず代表的な項目だけを示します。
+`.github/pr-labeler.yml` を使うと、リポジトリ全体のデフォルト設定を定義できます。完全なスキーマとデフォルト値は [Configuration Guide](../en/configuration.md#yaml-config-file) にまとまっているため、ここでは代表的な設定項目のみを抜粋します。
 
 ```yaml
 # .github/pr-labeler.yml (例の抜粋)
@@ -381,19 +383,19 @@ runtime:
   fail_on_error: false
 ```
 
-`.github/pr-labeler.yml` がなくてもデフォルト設定ですぐ動作します。詳細情報とカスタムカテゴリの例は [カテゴリガイド](../en/categories.md) を参照してください。
+`.github/pr-labeler.yml` がなくてもデフォルト設定のまま動作します。デフォルトカテゴリやカスタムカテゴリの詳しい例は[カテゴリガイド](../en/categories.md)を参照してください。
 
 ## ディレクトリベースのラベリング
 
-Globパターンを使用して、変更されたファイルパスに基づいて自動的にラベルを適用します。
+Glob パターンを使い、変更されたファイルのパスに応じて自動でラベルを付与できます。
 
 ### 機能概要
 
-- **パスベースマッピング**: ディレクトリパターン（glob）からラベルを自動決定
-- **優先度制御**: 優先度、最長マッチ、定義順による柔軟な制御
-- **名前空間ポリシー**: 排他的（replace）/追加的（add）による競合解決
-- **デフォルトON**: 既定で有効。不要な場合は `enable_directory_labeling: "false"` で無効化
-- **ラベル自動作成**: 不足しているラベルを自動作成
+- **パスベースマッピング**: ディレクトリパターン（glob）から付与するラベルを自動で決定します
+- **優先度制御**: 優先度、最長マッチ、定義順のルールで適用ラベルを制御します
+- **名前空間ポリシー**: 排他的（`exclusive` / 置換）または追加的（`additive` / 併用）に競合を解決します
+- **デフォルトで有効**: 既定で有効になっています。不要な場合は `enable_directory_labeling: "false"` で無効化できます
+- **ラベルの自動作成**: リポジトリに存在しないラベルは自動で作成されます
 
 ### 設定例
 
@@ -424,7 +426,7 @@ jobs:
 
 ### 設定ファイル
 
-`.github/directory-labeler.yml` を作成:
+`.github/directory-labeler.yml` を作成します。
 
 ```yaml
 version: 1
@@ -511,11 +513,13 @@ namespaces:
 
 ### 優先度とマッチングルール
 
-1. **優先度**（高い数値 = 高い優先度）
-2. **最長マッチ**（より具体的なパスが優先）
-3. **定義順**（同順位の場合、ファイル内で先に定義されたものが優先）
+複数のルールにマッチした場合は、次の順序で優先するラベルを決定します。
 
-### 例
+1. **優先度**: `priority` の数値が大きいルールが優先されます
+2. **最長マッチ**: より具体的なパスパターンが優先されます
+3. **定義順**: 上記が同じ場合、ファイル内で先に定義されたルールが優先されます
+
+### 判定例
 
 ```yaml
 rules:
@@ -528,10 +532,10 @@ rules:
     priority: 20
 ```
 
-`src/api/users.ts` の場合:
+`src/api/users.ts` が変更された場合、次のように判定されます。
 
-- 両方のルールがマッチ
-- `area:backend` が優先（最長マッチ）
+- 両方のルールにマッチします
+- より具体的なパスを持つ `area:backend` が優先されます（最長マッチ）
 
 ### 関連情報
 
@@ -540,11 +544,11 @@ rules:
 
 ## 多言語サポート
 
-PR Insights LabelerはGitHub Actions Summary、エラーメッセージ、ログ、PRコメントの英語と日本語出力をサポートしています。
+PR Insights Labeler は、GitHub Actions Summary、エラーメッセージ、ログ、PR コメントの英語・日本語出力に対応しています。
 
-### 言語設定方法
+### 言語の設定方法
 
-ローカライズの優先順位チェーンは [Configuration Guide](../en/configuration.md#multi-language-support) に記載されています。ワークフローに合うレイヤーを選んで設定してください。
+言語の優先順位は [Configuration Guide](../en/configuration.md#multi-language-support) を参照してください。運用に合わせて、次のいずれかの方法で設定できます。
 
 ```yaml
 # ワークフローごとの明示指定（最優先）
@@ -580,17 +584,17 @@ categories:
 
 ### 翻訳される内容
 
-- ✅ GitHub Actions Summary出力
+- ✅ GitHub Actions Summary の出力
 - ✅ エラーメッセージと警告
-- ✅ PRコメント（有効時）
+- ✅ PR コメント（有効時）
 - ✅ ログメッセージ
-- ✅ ラベル表示名（Summary/コメント内）
-- ❌ GitHub APIのラベル名（常に英語）
+- ✅ ラベルの表示名（Summary やコメント内）
+- ❌ GitHub API 上のラベル名（常に英語で管理されます）
 
 ---
 
 ## 関連ドキュメント
 
-- [設定ガイド](../en/configuration.md) - 完全な入力パラメータリファレンス
+- [設定ガイド](../en/configuration.md) - 全入力パラメータのリファレンス
 - [トラブルシューティングガイド](../en/troubleshooting.md) - よくある問題と解決策
-- [メインREADME](../README.md) - クイックスタートと概要
+- [ドキュメントインデックス](../README.md) - 各言語のドキュメント一覧

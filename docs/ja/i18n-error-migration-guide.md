@@ -1,4 +1,4 @@
-# 🌐 エラーファクトリーi18n移行ガイド
+# 🌐 エラーファクトリー i18n 移行ガイド
 
 **対象**: 開発者
 **タグ**: `category/development`, `audience/developer`
@@ -7,7 +7,7 @@
 
 ## 概要
 
-このガイドは、既存のエラーハンドリングコードを多言語対応のエラーファクトリーに移行するための実践的な手順を提供します。
+既存のエラーハンドリングコードを、多言語対応のエラーファクトリーへ移行するための手順書です。
 
 ## 目次
 
@@ -23,7 +23,7 @@
 
 ### ステップ1: 現状調査
 
-既存のエラーハンドリングコードを特定します。
+カスタムメッセージを直接渡している既存のエラーハンドリング箇所を洗い出します。
 
 ```bash
 # カスタムメッセージを使用しているエラーを検索
@@ -34,7 +34,7 @@ grep -r "createFileSystemError.*'.*'" src/
 
 ### ステップ2: 翻訳リソースの確認
 
-対象のエラーに対応する翻訳キーが存在するか確認します。
+対象のエラーに対応する翻訳キーが登録されているか確認します。
 
 ```bash
 # errors.json の確認
@@ -42,13 +42,13 @@ cat src/locales/en/errors.json | jq .
 cat src/locales/ja/errors.json | jq .
 ```
 
-### ステップ3: コード移行
+### ステップ3: コードの移行
 
-カスタムメッセージを削除し、翻訳キーに依存するコードに変更します。
+不要なカスタムメッセージを削除し、翻訳キーを使ってメッセージを生成する呼び出し方へ書き換えます。
 
-### ステップ4: テスト実行
+### ステップ4: テストの実行
 
-移行後のコードが正しく動作することを確認します。
+移行後のコードが英語・日本語の両環境で正しく動作することを確認します。
 
 ```bash
 pnpm test __tests__/error-factories-i18n.test.ts
@@ -74,7 +74,7 @@ throw createConfigurationError('language', code, 'Invalid language code');
 throw createConfigurationError('language', code);
 ```
 
-#### 確認
+#### 出力の確認
 
 ```typescript
 // 英語環境
@@ -88,7 +88,7 @@ throw createConfigurationError('language', code);
 
 ### パターン2: 詳細情報を含むエラー
 
-詳細な技術情報を含む場合、カスタムメッセージを継続使用します。
+ユーザーへの具体的な修正案内など、詳細な情報を含む場合はカスタムメッセージをそのまま使用します。
 
 #### 移行前
 
@@ -142,16 +142,16 @@ throw createFileSystemError(path, 'read');
 // JA: "ファイルの読み込みに失敗しました: /path/to/config.yml"
 ```
 
-#### 操作種別の選択
+#### 操作種別の選び方
 
 - `'read'` - ファイル読み込みエラー
 - `'write'` - ファイル書き込みエラー
-- `'notFound'` - ファイル未検出
+- `'notFound'` - ファイルが見つからないエラー
 - `'permission'` - 権限エラー
 
 ---
 
-### パターン4: GitHub APIエラー
+### パターン4: GitHub API エラー
 
 #### 移行前
 
@@ -168,7 +168,7 @@ throw createGitHubAPIError(apiErrorMessage, status);
 // JA: "GitHub APIエラー: {apiErrorMessage}"
 ```
 
-**注意**: GitHub APIから返されるエラーメッセージは英語のため、翻訳キーで包含します。
+**注意**: GitHub API から返るエラーメッセージ自体は英語のため、翻訳キーのテンプレートで囲んで出力します。
 
 ---
 
@@ -198,7 +198,7 @@ throw createParseError(input, 'Invalid JSON for size thresholds');
 
 ### レシピ1: 設定バリデーションエラーの移行
 
-**シナリオ**: ユーザー入力の設定値が不正な場合
+**シナリオ**: ユーザーが入力した設定値が不正な場合のエラーを移行します。
 
 ```typescript
 // Before
@@ -220,7 +220,7 @@ function validateFileSize(input: string): Result<number, ConfigurationError> {
 }
 ```
 
-#### テスト
+#### テスト例
 
 ```typescript
 describe('validateFileSize - i18n', () => {
@@ -252,7 +252,7 @@ describe('validateFileSize - i18n', () => {
 
 ### レシピ2: ファイル読み込みエラーの移行
 
-**シナリオ**: 設定ファイルの読み込み失敗
+**シナリオ**: 設定ファイルの読み込みに失敗した場合のエラーを移行します。
 
 ```typescript
 // Before
@@ -284,15 +284,15 @@ async function loadConfig(path: string): Promise<Result<Config, FileSystemError>
 
 #### 改善点
 
-1. エラー種別を明示（`'read'`, `'notFound'`, `'permission'`）
-2. 適切な翻訳メッセージが自動選択される
-3. カスタムメッセージ不要
+1. 操作種別（`'read'`、`'notFound'`、`'permission'`）を明示しています
+2. エラー種別に応じた翻訳メッセージが自動で選ばれます
+3. カスタムメッセージを手書きする必要がなくなります
 
 ---
 
-### レシピ3: GitHub API呼び出しエラーの移行
+### レシピ3: GitHub API 呼び出しエラーの移行
 
-**シナリオ**: GitHub APIからのエラーレスポンス
+**シナリオ**: GitHub API からエラーレスポンスが返った場合の処理を移行します。
 
 ```typescript
 // Before
@@ -335,15 +335,15 @@ async function fetchPullRequest(
 
 #### 改善点
 
-1. APIのエラーメッセージを保持
-2. 翻訳キーで包含（"GitHub API error: " / "GitHub APIエラー: "）
-3. 技術詳細（ステータスコード）を保持
+1. GitHub API から返された原文のエラーメッセージをそのまま保持できます
+2. 翻訳キーのプレフィックス（`"GitHub API error: "` / `"GitHub APIエラー: "`）を言語に応じて切り替えられます
+3. HTTP ステータスコードなどの技術情報も失われません
 
 ---
 
 ### レシピ4: 複数エラーの集約
 
-**シナリオ**: 複数の設定エラーを収集して報告
+**シナリオ**: 複数の設定エラーをまとめて収集して報告する場合の移行例です。
 
 ```typescript
 // Before
@@ -393,7 +393,7 @@ function validateConfig(input: RawConfig): Result<Config, ConfigurationError[]> 
 }
 ```
 
-#### エラー表示例
+#### エラー出力例
 
 ```typescript
 const result = validateConfig(invalidInput);
@@ -414,9 +414,9 @@ if (result.isErr()) {
 
 ---
 
-### レシピ5: カスタムメッセージが必要なケース
+### レシピ5: カスタムメッセージを残すべきケース
 
-**シナリオ**: 詳細なガイダンスを提供する必要がある
+**シナリオ**: 複雑なバリデーションルールなど、詳しい修正案内を伝えたい場合の例です。
 
 ```typescript
 // カスタムメッセージを継続使用（推奨）
@@ -452,10 +452,10 @@ function parseThresholds(input: string): Result<Thresholds, ParseError> {
 }
 ```
 
-#### 判断基準
+#### 使い分けの目安
 
-- **翻訳キー使用**: 一般的なエラー（"Invalid format", "File not found"など）
-- **カスタムメッセージ使用**: 詳細なガイダンス、複雑なバリデーションルール
+- **翻訳キーを使う場合**: 一般的なエラー（`"Invalid format"`、`"File not found"` など）
+- **カスタムメッセージを使う場合**: 詳細な修正ガイドや複雑なバリデーションルールを伝える必要があるエラー
 
 ---
 
@@ -463,7 +463,7 @@ function parseThresholds(input: string): Result<Thresholds, ParseError> {
 
 ### 問題1: 翻訳されたメッセージが表示されない
 
-**原因**: i18nが初期化されていない
+**原因**: i18n が初期化されていません。
 
 #### 解決策
 
@@ -478,9 +478,9 @@ initializeI18n(config);  // 必須
 
 ---
 
-### 問題2: 型エラー "Property 'xxx' does not exist"
+### 問題2: 型エラー `"Property 'xxx' does not exist"` が発生する
 
-**原因**: 翻訳リソースに新しいキーを追加したが、型定義が再生成されていない
+**原因**: 翻訳リソースに新しいキーを追加したあと、型定義が再生成されていません。
 
 #### 解決策
 
@@ -494,9 +494,9 @@ pnpm run generate:i18n-types
 
 ---
 
-### 問題3: テストで言語切り替えができない
+### 問題3: テストで言語を切り替えられない
 
-**原因**: テスト間でi18nの状態が共有されている
+**原因**: テストケース間で i18n の状態が共有されています。
 
 #### 解決策
 
@@ -523,9 +523,9 @@ describe('My Test', () => {
 
 ---
 
-### 問題4: カスタムメッセージが翻訳される
+### 問題4: カスタムメッセージが反映されず翻訳されてしまう
 
-**原因**: `customMessage` パラメータを渡していない
+**原因**: `customMessage` パラメータを引数として渡していません。
 
 #### 解決策
 
@@ -540,21 +540,21 @@ const error = createConfigurationError('field', value, 'My custom message');
 
 ---
 
-### 問題5: 技術詳細が翻訳されてしまう
+### 問題5: パスなどの技術情報までメッセージに埋め込んでしまっている
 
-**原因**: 技術詳細をカスタムメッセージに含めている
+**原因**: ファイルパスなどの技術情報をカスタムメッセージ内に直接展開しています。
 
 #### 解決策
 
 ```typescript
-// 誤り（パスが翻訳される可能性）
+// 誤り（メッセージが特定言語に固定される）
 const error = createFileSystemError(
   path,
   undefined,
   `ファイルが見つかりません: ${path}`  // パスを含むカスタムメッセージ
 );
 
-// 正しい（翻訳キーを使用、パスは変数補間）
+// 正しい（翻訳キーを使用し、パスは変数補間で渡す）
 const error = createFileSystemError(path, 'notFound');
 // EN: "File not found: /path/to/file"
 // JA: "ファイルが見つかりません: /path/to/file"
@@ -567,45 +567,45 @@ const error = createFileSystemError(path, 'notFound');
 
 ### 移行前チェックリスト
 
-- [ ] 対象のエラーファクトリー関数を特定
-- [ ] 翻訳リソースに対応するキーが存在するか確認
-- [ ] カスタムメッセージが必要かどうか判断
-- [ ] 技術詳細（パス、コード等）の扱いを確認
+- [ ] 移行対象のエラーファクトリー関数を特定しています
+- [ ] 翻訳リソースに対応するキーが存在するか確認しています
+- [ ] カスタムメッセージを残すべきか判断しています
+- [ ] パスやコードなどの技術情報の扱いを確認しています
 
 ### 移行後チェックリスト
 
-- [ ] カスタムメッセージを削除または適切に使用
-- [ ] 翻訳キーが正しく参照されている
-- [ ] 技術詳細が適切に保持されている
-- [ ] 英語と日本語の両方でテスト実施
-- [ ] 型エラーがないことを確認（`pnpm type-check`）
-- [ ] リントエラーがないことを確認（`pnpm lint`）
-- [ ] 全テストが成功することを確認（`pnpm test`）
+- [ ] 不要なカスタムメッセージを削除し、必要な箇所のみ残しています
+- [ ] 翻訳キーが正しく参照されています
+- [ ] 技術情報がプロパティとメッセージに正しく保持されています
+- [ ] 英語と日本語の両環境でテストを実行しています
+- [ ] 型エラーがないことを確認しています（`pnpm type-check`）
+- [ ] リントエラーがないことを確認しています（`pnpm lint`）
+- [ ] すべてのテストが成功することを確認しています（`pnpm test`）
 
 ### デプロイ前チェックリスト
 
-- [ ] すべての移行が完了
-- [ ] ビルドが成功（`pnpm build`）
-- [ ] 統合テストが成功
-- [ ] ドキュメントが更新されている
-- [ ] レビューが完了
+- [ ] 対象箇所の移行がすべて完了しています
+- [ ] ビルドが成功しています（`pnpm build`）
+- [ ] 統合テストが成功しています
+- [ ] 関連ドキュメントを更新しています
+- [ ] レビューが完了しています
 
 ---
 
 ## まとめ
 
-この移行ガイドに従うことで、既存のエラーハンドリングコードを安全かつ効率的に多言語対応に移行できます。
+移行作業で意識すべきポイントを振り返ります。
 
 ### 重要なポイント
 
-1. 一般的なエラーは翻訳キーを使用
-2. 詳細なガイダンスが必要な場合はカスタムメッセージを継続使用
-3. 技術詳細（パス、コード）は必ず保持
-4. テストで両言語の出力を確認
-5. 型定義は `pnpm build` で自動再生成
+1. 一般的なエラーは翻訳キーを使います
+2. 詳細な修正案内が必要なエラーはカスタムメッセージを継続して使います
+3. ファイルパスやステータスコードなどの技術情報は、翻訳せずにそのまま保持します
+4. テストでは英語・日本語の両方の出力を検証します
+5. 翻訳キーを追加したら `pnpm build`（または `pnpm run generate:i18n-types`）で型定義を再生成します
 
-#### さらなるリソース
+#### 関連資料
 
-- [API.md - エラーファクトリーi18n統合](./API.md#-エラーファクトリーの多言語化-i18n-integration)
-- [src/errors/factories.ts](../../src/errors/factories.ts) - 実装例
-- [**tests**/error-factories-i18n.test.ts](../../__tests__/error-factories-i18n.test.ts) - テスト例
+- [API.md - エラーファクトリー i18n 統合](./API.md#-エラーファクトリーの多言語化-i18n-integration)
+- [src/errors/factories.ts](../../src/errors/factories.ts) - エラーファクトリーの実装
+- [**tests**/error-factories-i18n.test.ts](../../__tests__/error-factories-i18n.test.ts) - i18n テストの実装例
