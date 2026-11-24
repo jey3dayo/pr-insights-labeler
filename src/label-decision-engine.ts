@@ -48,7 +48,7 @@ export function decideLabels(
   }
 
   if (config.categoryLabeling.enabled) {
-    const categoryResults = decideCategoryLabelsWithFiles(metrics.allFiles, config.categories);
+    const categoryResults = decideCategoryLabelsWithFiles(metrics.filesForClassification, config.categories);
     labelsToAdd.push(...categoryResults.map(r => r.label));
     for (const result of categoryResults) {
       reasoning.push({
@@ -61,7 +61,7 @@ export function decideLabels(
   }
 
   if (config.risk.enabled) {
-    const files = metrics.allFiles;
+    const files = metrics.filesForClassification;
     const riskLabel = decideRiskLabel(files, config.risk, prContext);
     if (riskLabel) {
       labelsToAdd.push(riskLabel);

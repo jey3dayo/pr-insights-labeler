@@ -222,6 +222,27 @@ describe('PatternMatcher', () => {
       expect(isExcluded('notes/random.md', defaultPatterns)).toBe(false);
     });
 
+    it('should exclude env files but not env templates by default', () => {
+      const defaultPatterns = getDefaultExcludePatterns();
+
+      expect(isExcluded('.env', defaultPatterns)).toBe(true);
+      expect(isExcluded('.env.local', defaultPatterns)).toBe(true);
+      expect(isExcluded('.env.production', defaultPatterns)).toBe(true);
+      expect(isExcluded('packages/app/.env.local', defaultPatterns)).toBe(true);
+
+      expect(isExcluded('.env.example', defaultPatterns)).toBe(false);
+      expect(isExcluded('.env.template', defaultPatterns)).toBe(false);
+      expect(isExcluded('packages/app/.env.example', defaultPatterns)).toBe(false);
+    });
+
+    it('should let negation patterns re-include matched files', () => {
+      const patterns = ['*.log', '!keep.log'];
+
+      expect(isExcluded('error.log', patterns)).toBe(true);
+      expect(isExcluded('keep.log', patterns)).toBe(false);
+      expect(isExcluded('src/keep.log', patterns)).toBe(false);
+    });
+
     it('should work with custom patterns', () => {
       const customPatterns = ['*.test.ts', 'src/temp/**', '*.tmp'];
 

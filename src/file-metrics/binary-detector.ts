@@ -69,14 +69,16 @@ const BINARY_EXTENSIONS = new Set([
   '.DS_Store',
 ]);
 
-export async function isBinaryFile(filePath: string): Promise<boolean> {
+export async function isBinaryFile(filePath: string, workspaceRoot?: string): Promise<boolean> {
   const ext = path.extname(filePath).toLowerCase();
   if (BINARY_EXTENSIONS.has(ext)) {
     return true;
   }
 
+  const localPath = workspaceRoot ? path.resolve(workspaceRoot, filePath) : filePath;
+
   try {
-    const buffer = await fs.readFile(filePath, { encoding: null });
+    const buffer = await fs.readFile(localPath, { encoding: null });
     const sample = buffer.slice(0, 8192);
 
     for (let i = 0; i < sample.length; i++) {

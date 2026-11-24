@@ -18,8 +18,11 @@ export function isExcluded(filePath: string, patterns: string[]): boolean {
 
   const normalizedPath = normalizePattern(filePath);
 
+  let excluded = false;
+
   for (const pattern of patterns) {
-    const normalizedPattern = normalizePattern(pattern);
+    const isNegation = pattern.startsWith('!');
+    const normalizedPattern = normalizePattern(isNegation ? pattern.slice(1) : pattern);
 
     const options = {
       dot: true,
@@ -28,9 +31,12 @@ export function isExcluded(filePath: string, patterns: string[]): boolean {
     };
 
     if (minimatch(normalizedPath, normalizedPattern, options)) {
-      return true;
+      if (isNegation) {
+        return false;
+      }
+      excluded = true;
     }
   }
 
-  return false;
+  return excluded;
 }

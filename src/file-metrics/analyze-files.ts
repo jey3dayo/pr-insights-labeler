@@ -28,7 +28,7 @@ function createInitialState(files: DiffFile[], config: AnalysisConfig): Internal
         filesSkippedBinary: [],
         filesWithErrors: [],
         filesSkippedByLimit: [],
-        allFiles: files.map(f => f.filename),
+        filesForClassification: files.map(f => f.filename),
       },
       violations: {
         largeFiles: [],
@@ -59,6 +59,7 @@ async function collectFileMetrics(
   const lineResult = await getFileLineCount(
     file.filename,
     config.fileLineLimitEnabled ? config.fileLineLimit + 1 : undefined,
+    context.workspaceRoot,
   );
 
   if (sizeResult.isErr() || lineResult.isErr()) {
@@ -97,7 +98,7 @@ async function processFile(
     return;
   }
 
-  if (await isBinaryFile(file.filename)) {
+  if (await isBinaryFile(file.filename, context.workspaceRoot)) {
     result.metrics.filesSkippedBinary.push(file.filename);
     logDebug(`Skipping binary file: ${file.filename}`);
     return;

@@ -117,6 +117,22 @@ describe('FileMetrics', () => {
       }
     });
 
+    it('should resolve local probes against workspaceRoot when provided', async () => {
+      vi.mocked(fs.stat).mockResolvedValue(createMockStats(4096));
+
+      const result = await getFileSize('src/test.ts', 'token', {
+        owner: 'owner',
+        repo: 'repo',
+        workspaceRoot: '/workspace',
+      });
+
+      expect(result.isOk()).toBe(true);
+      if (result.isOk()) {
+        expect(result.value).toBe(4096);
+      }
+      expect(fs.stat).toHaveBeenCalledWith('/workspace/src/test.ts');
+    });
+
     it('should fallback to GitHub API when both fs and git fail', async () => {
       vi.mocked(fs.stat).mockRejectedValue(new Error('File not found'));
       mockExecAsync.mockRejectedValue(new Error('Not a git repo'));
@@ -171,6 +187,21 @@ describe('FileMetrics', () => {
         expect(result.value.isCapped).toBe(false);
       }
       expect(mockExecAsync).toHaveBeenCalledWith('wc', ['-l', 'src/test.ts']);
+    });
+
+    it('should resolve the wc target against workspaceRoot when provided', async () => {
+      mockExecAsync.mockResolvedValue({
+        stdout: '     42 /workspace/src/test.ts',
+        stderr: '',
+      });
+
+      const result = await getFileLineCount('src/test.ts', undefined, '/workspace');
+
+      expect(result.isOk()).toBe(true);
+      if (result.isOk()) {
+        expect(result.value.lines).toBe(42);
+      }
+      expect(mockExecAsync).toHaveBeenCalledWith('wc', ['-l', '/workspace/src/test.ts']);
     });
 
     it('should fallback to Node.js streaming implementation when wc fails', async () => {

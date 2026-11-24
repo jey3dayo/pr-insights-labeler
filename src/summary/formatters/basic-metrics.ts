@@ -8,23 +8,18 @@ export interface FormatBasicMetricsOptions {
   filesAnalyzedLabel?: string;
 }
 
+interface CountLine {
+  label: string;
+  value: number;
+}
+
 interface RenderBasicMetricsOptions extends FormatBasicMetricsOptions {
-  totalFilesLabel: string;
-  totalFilesValue: number;
-  filesAnalyzedLine?: {
-    label: string;
-    value: number;
-  };
+  totalFilesLine?: CountLine;
+  filesAnalyzedLine?: CountLine;
 }
 
 function renderBasicMetrics(metrics: AnalysisResult['metrics'], options: RenderBasicMetricsOptions): string {
-  const {
-    includeHeader = true,
-    includeTimestamp = true,
-    totalFilesLabel,
-    totalFilesValue,
-    filesAnalyzedLine,
-  } = options;
+  const { includeHeader = true, includeTimestamp = true, totalFilesLine, filesAnalyzedLine } = options;
   let output = '';
 
   if (includeHeader) {
@@ -39,7 +34,10 @@ function renderBasicMetrics(metrics: AnalysisResult['metrics'], options: RenderB
 
   output += `- ${t('summary', 'basicMetrics.totalAdditions')}: **${formatNumber(metrics.totalAdditions)}**\n`;
   output += `- ${t('summary', 'basicMetrics.excludedAdditions')}: **${formatNumber(metrics.excludedAdditions)}**\n`;
-  output += `- ${totalFilesLabel}: **${formatNumber(totalFilesValue)}**\n`;
+
+  if (totalFilesLine) {
+    output += `- ${totalFilesLine.label}: **${formatNumber(totalFilesLine.value)}**\n`;
+  }
 
   if (filesAnalyzedLine) {
     output += `- ${filesAnalyzedLine.label}: **${formatNumber(filesAnalyzedLine.value)}**\n`;
@@ -71,8 +69,10 @@ function renderBasicMetrics(metrics: AnalysisResult['metrics'], options: RenderB
 export function formatBasicMetrics(metrics: AnalysisResult['metrics'], options?: FormatBasicMetricsOptions): string {
   return renderBasicMetrics(metrics, {
     ...options,
-    totalFilesLabel: options?.filesAnalyzedLabel ?? t('summary', 'basicMetrics.totalFiles'),
-    totalFilesValue: metrics.filesAnalyzed.length,
+    totalFilesLine: {
+      label: options?.filesAnalyzedLabel ?? t('summary', 'basicMetrics.totalFiles'),
+      value: metrics.filesAnalyzed.length,
+    },
   });
 }
 
@@ -84,8 +84,10 @@ export function formatSummaryBasicMetrics(
 ): string {
   return renderBasicMetrics(metrics, {
     ...options,
-    totalFilesLabel: t('summary', 'basicMetrics.totalFiles'),
-    totalFilesValue: metrics.totalFiles,
+    totalFilesLine: {
+      label: t('summary', 'basicMetrics.totalFiles'),
+      value: metrics.totalFiles,
+    },
     filesAnalyzedLine: {
       label: t('summary', 'basicMetrics.filesAnalyzed'),
       value: metrics.filesAnalyzed.length,

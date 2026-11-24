@@ -1,11 +1,14 @@
 import * as path from 'node:path';
 
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
 import { aggregateMetrics, createComplexityAnalyzer } from '../src/complexity-analyzer.js';
 import type { FileComplexity } from '../src/labeler-types.js';
 
-describe('ComplexityAnalyzer', () => {
+describe('ComplexityAnalyzer (real ESLint, unmocked)', () => {
+  it('uses the real analyzer factory, not a mock', () => {
+    expect(vi.isMockFunction(createComplexityAnalyzer)).toBe(false);
+  });
   describe('analyzeFile', () => {
     const analyzer = createComplexityAnalyzer();
     const fixturesDir = path.join(__dirname, 'fixtures');

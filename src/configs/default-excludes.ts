@@ -134,6 +134,8 @@ export const DEFAULT_EXCLUDE_PATTERNS: string[] = [
 
   '.env',
   '.env.*',
+  '!.env.example',
+  '!.env.template',
 
   '*.sqlite',
   '*.sqlite3',

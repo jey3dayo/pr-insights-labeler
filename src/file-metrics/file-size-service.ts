@@ -1,5 +1,6 @@
 import { execFile } from 'node:child_process';
 import { promises as fs } from 'node:fs';
+import * as path from 'node:path';
 import { promisify } from 'node:util';
 
 import * as github from '@actions/github';
@@ -39,10 +40,12 @@ function createFsStatProbe(filePath: string): SizeProbe {
   };
 }
 
-function createGitLsTreeProbe(filePath: string): SizeProbe {
+function createGitLsTreeProbe(filePath: string, workspaceRoot?: string): SizeProbe {
   return async () => {
     try {
-      const { stdout } = await execFileAsync('git', ['ls-tree', '-l', 'HEAD', filePath]);
+      const { stdout } = await execFileAsync('git', ['ls-tree', '-l', 'HEAD', filePath], {
+        ...(workspaceRoot && { cwd: workspaceRoot }),
+      });
       const tabParts = stdout.trim().split('\t');
       if (tabParts.length >= 2 && tabParts[0]) {
         const metaParts = tabParts[0].trim().split(/\s+/);
@@ -90,9 +93,11 @@ export async function getFileSize(
 ): Promise<Result<number, FileAnalysisError>> {
   logDebug(`Getting size for file: ${filePath}`);
 
+  const localPath = context.workspaceRoot ? path.resolve(context.workspaceRoot, filePath) : filePath;
+
   const size = await runProbes([
-    createFsStatProbe(filePath),
-    createGitLsTreeProbe(filePath),
+    createFsStatProbe(localPath),
+    createGitLsTreeProbe(filePath, context.workspaceRoot),
     createGitHubApiProbe(filePath, token, context),
   ]);
 

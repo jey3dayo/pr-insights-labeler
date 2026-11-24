@@ -56,6 +56,7 @@ function buildSummaryMarkdown(
         const labelFileGroupsSection = formatLabelFileGroups(
           options.reasoning,
           analysis.metrics.filesAnalyzed,
+          analysis.metrics.excludedAdditions,
           complexity?.metrics,
         );
         if (labelFileGroupsSection) {

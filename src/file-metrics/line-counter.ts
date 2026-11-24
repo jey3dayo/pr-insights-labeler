@@ -1,5 +1,6 @@
 import { execFile } from 'node:child_process';
 import { createReadStream } from 'node:fs';
+import * as path from 'node:path';
 import { createInterface } from 'node:readline';
 import { promisify } from 'node:util';
 
@@ -19,11 +20,14 @@ export interface LineCountResult {
 export async function getFileLineCount(
   filePath: string,
   maxLines?: number,
+  workspaceRoot?: string,
 ): Promise<Result<LineCountResult, FileAnalysisError>> {
   logDebug(`Counting lines in file: ${filePath}`);
 
+  const localPath = workspaceRoot ? path.resolve(workspaceRoot, filePath) : filePath;
+
   try {
-    const { stdout } = await execFileAsync('wc', ['-l', filePath]);
+    const { stdout } = await execFileAsync('wc', ['-l', localPath]);
     const match = stdout.match(/^\s*(\d+)/);
     if (match && match[1]) {
       const lines = Number.parseInt(match[1], 10);
@@ -38,7 +42,7 @@ export async function getFileLineCount(
   }
 
   try {
-    const fileStream = createReadStream(filePath, { encoding: 'utf-8' });
+    const fileStream = createReadStream(localPath, { encoding: 'utf-8' });
     const rl = createInterface({
       input: fileStream,
       crlfDelay: Infinity,
