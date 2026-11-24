@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.15.4] - 2026-11-25
+
+### 🐛 Fixed
+
+- `.env.example` and `.env.template` are no longer excluded from file analysis: the default exclude pattern `.env.*` matched them despite the documented intent. Exclude patterns now support negation (`!...` re-includes a file, with later patterns overriding earlier ones), and the default excludes carry `!.env.example` / `!.env.template` (#192)
+- the PR summary size section now shows the real excluded-additions count (`excluding N lines from excluded files`) instead of always treating it as zero (#192)
+
+### 🔄 Changed
+
+- remove comments across the codebase via the no-comments pass (1,636 blocks; external-constraint and contract comments kept) and apply the flagged reshapes: `allFiles` renamed to `filesForClassification`, i18n error creation moved to a dependency-free leaf factory, file metrics resolve paths against the workflow workspace root instead of the process cwd (#191, #192)
+
 ## [1.15.3] - 2026-11-21
 
 ### 🔄 Changed
@@ -631,6 +642,7 @@ PRメトリクス分析に基づいた高度な自動ラベル付け機能を追
 
 [1.0.1]: https://github.com/jey3dayo/pr-insights-labeler/releases/tag/v1.0.1
 [1.0.0]: https://github.com/jey3dayo/pr-insights-labeler/releases/tag/v1.0.0
+[1.15.4]: https://github.com/jey3dayo/pr-insights-labeler/releases/tag/v1.15.4
 [1.15.3]: https://github.com/jey3dayo/pr-insights-labeler/releases/tag/v1.15.3
 [1.15.2]: https://github.com/jey3dayo/pr-insights-labeler/releases/tag/v1.15.2
 [1.15.1]: https://github.com/jey3dayo/pr-insights-labeler/releases/tag/v1.15.1
