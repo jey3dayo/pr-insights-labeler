@@ -1,4 +1,5 @@
 import { t } from '../i18n.js';
+import { createConfigurationErrorObject } from './configuration-error.js';
 import { ensureError } from './helpers.js';
 import type {
   CacheError,
@@ -36,16 +37,8 @@ export const createGitHubAPIError = (message: string, status?: number): GitHubAP
   return withOptionalField(error, 'status', status);
 };
 
-export const createConfigurationError = (
-  field: string,
-  value: unknown,
-  customMessage?: string,
-): ConfigurationError => ({
-  type: 'ConfigurationError',
-  field,
-  value,
-  message: customMessage || t('errors', 'configuration.invalidField', { field }),
-});
+export const createConfigurationError = (field: string, value: unknown, customMessage?: string): ConfigurationError =>
+  createConfigurationErrorObject(field, value, customMessage || t('errors', 'configuration.invalidField', { field }));
 
 export const createParseError = (input: string, customMessage?: string): ParseError => ({
   type: 'ParseError',

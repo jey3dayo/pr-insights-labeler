@@ -53,7 +53,7 @@ export interface PRMetrics {
   totalAdditions: number;
   excludedAdditions: number;
   files: FileMetrics[];
-  allFiles: string[];
+  filesForClassification: string[];
   complexity?: ComplexityMetrics;
 }
 

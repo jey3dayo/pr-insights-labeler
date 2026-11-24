@@ -6,6 +6,7 @@ import { escapeMarkdown } from './common.js';
 export function formatLabelFileGroups(
   reasoning: LabelReasoning[],
   fileMetrics: FileMetrics[],
+  excludedAdditions: number,
   complexityMetrics?: ComplexityMetrics,
 ): string {
   if (reasoning.length === 0) {
@@ -15,7 +16,6 @@ export function formatLabelFileGroups(
   let output = `### 🏷️ ${t('summary', 'labelFileGroups.title')}\n\n`;
 
   const categoryGroups = groupByCategory(reasoning);
-  const excludedAdditions = calculateExcludedAdditions(fileMetrics);
 
   if (categoryGroups.category.length > 0) {
     for (const item of categoryGroups.category) {
@@ -176,8 +176,4 @@ function formatReasonSection(item: LabelReasoning, files: string[], renderFiles:
   output += closeDetails();
 
   return output;
-}
-
-function calculateExcludedAdditions(_fileMetrics: FileMetrics[]): number {
-  return 0;
 }

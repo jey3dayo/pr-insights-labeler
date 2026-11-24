@@ -246,7 +246,7 @@ describe('Label Decision Engine', () => {
           { path: '__tests__/index.test.ts', size: 3000, lines: 80, additions: 50, deletions: 10 },
           { path: 'docs/README.md', size: 2000, lines: 50, additions: 100, deletions: 5 },
         ],
-        allFiles: ['src/index.ts', '__tests__/index.test.ts', 'docs/README.md'],
+        filesForClassification: ['src/index.ts', '__tests__/index.test.ts', 'docs/README.md'],
       };
 
       const result = decideLabels(metrics, config, emptyViolations);
@@ -264,7 +264,7 @@ describe('Label Decision Engine', () => {
         totalAdditions: 50,
         excludedAdditions: 0,
         files: [{ path: 'src/small.ts', size: 1000, lines: 30, additions: 50, deletions: 5 }],
-        allFiles: ['src/small.ts'],
+        filesForClassification: ['src/small.ts'],
       };
 
       const result = decideLabels(metrics, config, emptyViolations);
@@ -277,7 +277,7 @@ describe('Label Decision Engine', () => {
         totalAdditions: 100,
         excludedAdditions: 0,
         files: [{ path: 'src/core.ts', size: 5000, lines: 150, additions: 100, deletions: 10 }],
-        allFiles: ['src/core.ts'],
+        filesForClassification: ['src/core.ts'],
       };
 
       const result = decideLabels(metrics, config, emptyViolations);
@@ -290,7 +290,7 @@ describe('Label Decision Engine', () => {
         totalAdditions: 150,
         excludedAdditions: 0,
         files: [{ path: 'src/index.ts', size: 5000, lines: 150, additions: 150, deletions: 20 }],
-        allFiles: ['src/index.ts'],
+        filesForClassification: ['src/index.ts'],
       };
 
       const result = decideLabels(metrics, config, emptyViolations);
@@ -305,7 +305,7 @@ describe('Label Decision Engine', () => {
         totalAdditions: 120,
         excludedAdditions: 0,
         files: [{ path: 'src/a.ts', size: 1000, lines: 50, additions: 120, deletions: 0 }],
-        allFiles: ['src/a.ts'],
+        filesForClassification: ['src/a.ts'],
       };
 
       const result = decideLabels(metrics, config, emptyViolations);
@@ -323,7 +323,7 @@ describe('Label Decision Engine', () => {
         totalAdditions: 120,
         excludedAdditions: 0,
         files: [{ path: 'src/a.ts', size: 1000, lines: 50, additions: 120, deletions: 0 }],
-        allFiles: ['src/a.ts'],
+        filesForClassification: ['src/a.ts'],
         complexity: {
           maxComplexity: 99,
           avgComplexity: 50,
@@ -351,7 +351,7 @@ describe('Label Decision Engine', () => {
         totalAdditions: 1200,
         excludedAdditions: 0,
         files: [{ path: 'src/a.ts', size: 1000, lines: 50, additions: 1200, deletions: 0 }],
-        allFiles: ['src/a.ts'],
+        filesForClassification: ['src/a.ts'],
       };
 
       const result = decideLabels(metrics, customConfig, emptyViolations);
@@ -360,12 +360,12 @@ describe('Label Decision Engine', () => {
       expect(decisions.reasoning.find(r => r.category === 'size')).toBeUndefined();
     });
 
-    it('should not add risk/high when test files are excluded from analysis but included in allFiles', () => {
+    it('should not add risk/high when test files are excluded from analysis but included in filesForClassification', () => {
       const metrics: PRMetrics = {
         totalAdditions: 10,
         excludedAdditions: 0,
         files: [{ path: 'src/core.ts', size: 1000, lines: 50, additions: 10, deletions: 5 }],
-        allFiles: ['src/core.ts', '__tests__/core.test.ts'],
+        filesForClassification: ['src/core.ts', '__tests__/core.test.ts'],
       };
 
       const result = decideLabels(metrics, config, emptyViolations);
@@ -387,7 +387,7 @@ describe('Label Decision Engine', () => {
           { path: '__tests__/foo.test.ts', size: 1000, lines: 50, additions: 120, deletions: 0 },
           { path: 'docs/guide.md', size: 500, lines: 20, additions: 30, deletions: 0 },
         ],
-        allFiles: ['__tests__/foo.test.ts', 'docs/guide.md'],
+        filesForClassification: ['__tests__/foo.test.ts', 'docs/guide.md'],
       };
 
       const result = decideLabels(metrics, customConfig, emptyViolations);
@@ -406,7 +406,7 @@ describe('Label Decision Engine', () => {
         totalAdditions: 120,
         excludedAdditions: 0,
         files: [{ path: 'src/critical.ts', size: 1000, lines: 50, additions: 120, deletions: 0 }],
-        allFiles: ['src/critical.ts'],
+        filesForClassification: ['src/critical.ts'],
       };
 
       const result = decideLabels(metrics, customConfig, emptyViolations);
@@ -428,7 +428,7 @@ describe('Label Decision Engine', () => {
         totalAdditions: 1200,
         excludedAdditions: 0,
         files: [{ path: '__tests__/foo.test.ts', size: 1000, lines: 50, additions: 1200, deletions: 0 }],
-        allFiles: ['__tests__/foo.test.ts'],
+        filesForClassification: ['__tests__/foo.test.ts'],
         complexity: {
           maxComplexity: 99,
           avgComplexity: 50,
@@ -646,7 +646,7 @@ describe('Label Decision Engine', () => {
           { path: 'src/file1.ts', size: 5000, lines: 150, additions: 150, deletions: 20 },
           { path: 'src/file2.ts', size: 3000, lines: 80, additions: 100, deletions: 10 },
         ],
-        allFiles: ['src/file1.ts', 'src/file2.ts'],
+        filesForClassification: ['src/file1.ts', 'src/file2.ts'],
       };
 
       const result = decideLabels(metrics, config, emptyViolations);
@@ -662,7 +662,7 @@ describe('Label Decision Engine', () => {
         totalAdditions: 120,
         excludedAdditions: 0,
         files: [{ path: 'src/complex.ts', size: 5000, lines: 150, additions: 120, deletions: 10 }],
-        allFiles: ['src/complex.ts'],
+        filesForClassification: ['src/complex.ts'],
         complexity: {
           maxComplexity: 25,
           avgComplexity: 25,
@@ -688,7 +688,7 @@ describe('Label Decision Engine', () => {
         totalAdditions: 100,
         excludedAdditions: 0,
         files: [{ path: '__tests__/test.test.ts', size: 3000, lines: 80, additions: 100, deletions: 10 }],
-        allFiles: ['__tests__/test.test.ts', 'docs/README.md'],
+        filesForClassification: ['__tests__/test.test.ts', 'docs/README.md'],
       };
 
       const result = decideLabels(metrics, config, emptyViolations);
@@ -712,7 +712,7 @@ describe('Label Decision Engine', () => {
           { path: 'src/core.ts', size: 5000, lines: 150, additions: 80, deletions: 10 },
           { path: 'package.json', size: 2000, lines: 50, additions: 20, deletions: 5 },
         ],
-        allFiles: ['src/core.ts', 'package.json'],
+        filesForClassification: ['src/core.ts', 'package.json'],
       };
 
       const result = decideLabels(metrics, config, emptyViolations);
@@ -729,7 +729,7 @@ describe('Label Decision Engine', () => {
         totalAdditions: 100,
         excludedAdditions: 0,
         files: [{ path: 'large.ts', size: 5000, lines: 150, additions: 100, deletions: 10 }],
-        allFiles: ['large.ts'],
+        filesForClassification: ['large.ts'],
       };
       const violations = {
         ...emptyViolations,
@@ -762,7 +762,7 @@ describe('Label Decision Engine', () => {
         totalAdditions: 100,
         excludedAdditions: 0,
         files: [{ path: 'large.ts', size: 5000, lines: 150, additions: 100, deletions: 10 }],
-        allFiles: ['large.ts'],
+        filesForClassification: ['large.ts'],
       };
       const violations = {
         ...emptyViolations,

@@ -84,6 +84,7 @@ export function analyzePullRequest(context: InitializationArtifacts): ResultAsyn
           owner: prContext.owner,
           repo: prContext.repo,
           headSha: prContext.headSha,
+          workspaceRoot: getEnvVar('GITHUB_WORKSPACE') || process.cwd(),
         },
       );
       if (analysisResult.isErr()) {

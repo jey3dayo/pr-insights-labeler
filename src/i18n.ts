@@ -2,6 +2,7 @@ import * as core from '@actions/core';
 import i18next, { type TOptions } from 'i18next';
 import { err, ok, type Result } from 'neverthrow';
 
+import { createConfigurationErrorObject } from './errors/configuration-error.js';
 import { ensureError } from './errors/helpers.js';
 import type { ConfigurationError } from './errors/types.js';
 import commonEn from './locales/en/common.json';
@@ -74,16 +75,16 @@ export function initializeI18n(language: LanguageCode): Result<void, Configurati
         });
       });
 
-      isI18nInitialized = true;
-      cachedTFunction = bindTFunction();
-
-      const currentLang = getCurrentLanguage();
+      const currentLang = normalizeLanguageCode(i18next.language);
       if (currentLang !== language) {
         core.debug(`[i18n] Changing language from ${currentLang} to ${language}`);
-        changeLanguage(language);
+        applyLanguage(language);
       } else {
+        cachedTFunction = bindTFunction();
         core.debug('[i18n] Language already set, skipping changeLanguage');
       }
+
+      isI18nInitialized = true;
 
       core.debug('[i18n] Reused existing i18n instance');
       return ok(undefined);
@@ -110,12 +111,7 @@ export function initializeI18n(language: LanguageCode): Result<void, Configurati
   } catch (error) {
     const errorMessage = ensureError(error).message;
     core.debug(`[i18n] Initialization failed: ${errorMessage}`);
-    return err({
-      type: 'ConfigurationError' as const,
-      field: 'language',
-      value: language,
-      message: `Failed to initialize i18n: ${errorMessage}`,
-    });
+    return err(createConfigurationErrorObject('language', language, `Failed to initialize i18n: ${errorMessage}`));
   }
 }
 
@@ -152,11 +148,7 @@ export function isInitialized(): boolean {
   return isI18nInitialized;
 }
 
-export function changeLanguage(lang: LanguageCode): void {
-  if (!isI18nInitialized) {
-    return;
-  }
-
+function applyLanguage(lang: LanguageCode): void {
   // Make the new language observable synchronously for callers/tests.
   // i18next may switch asynchronously in Node, so set the visible state first.
   i18next.language = lang;
@@ -165,6 +157,14 @@ export function changeLanguage(lang: LanguageCode): void {
   void i18next.changeLanguage(lang, () => {
     cachedTFunction = bindTFunction();
   });
+}
+
+export function changeLanguage(lang: LanguageCode): void {
+  if (!isI18nInitialized) {
+    return;
+  }
+
+  applyLanguage(lang);
 }
 
 export function resetI18n(): void {

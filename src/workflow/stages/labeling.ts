@@ -198,7 +198,7 @@ export function applyLabelsStage(
         totalAdditions: analysis.metrics.totalAdditions,
         excludedAdditions: analysis.metrics.excludedAdditions,
         files: analysis.metrics.filesAnalyzed,
-        allFiles: analysis.metrics.allFiles,
+        filesForClassification: analysis.metrics.filesForClassification,
         ...(complexityMetrics && { complexity: complexityMetrics }),
       };
 

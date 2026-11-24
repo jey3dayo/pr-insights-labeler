@@ -259610,7 +259610,7 @@ module.exports = Queue;
 
 /***/ }),
 
-/***/ 43109:
+/***/ 72181:
 /***/ ((__unused_webpack_module, __unused_webpack___webpack_exports__, __nccwpck_require__) => {
 
 "use strict";
@@ -269152,6 +269152,16 @@ const loadLanguages = instance.loadLanguages;
 
 
 
+;// CONCATENATED MODULE: ./src/errors/configuration-error.ts
+function createConfigurationErrorObject(field, value, message) {
+    return {
+        type: 'ConfigurationError',
+        field,
+        value,
+        message,
+    };
+}
+
 ;// CONCATENATED MODULE: ./src/errors/guards.ts
 
 
@@ -269242,6 +269252,7 @@ const ja_summary_namespaceObject = /*#__PURE__*/JSON.parse('{"overview":{"title"
 
 
 
+
 let isI18nInitialized = false;
 function bindTFunction() {
     return instance.t.bind(instance);
@@ -269281,16 +269292,16 @@ function initializeI18n(language) {
                     instance.addResourceBundle(lang, ns, resource, true, true);
                 });
             });
-            isI18nInitialized = true;
-            cachedTFunction = bindTFunction();
-            const currentLang = getCurrentLanguage();
+            const currentLang = normalizeLanguageCode(instance.language);
             if (currentLang !== language) {
                 core_debug(`[i18n] Changing language from ${currentLang} to ${language}`);
-                i18n_changeLanguage(language);
+                applyLanguage(language);
             }
             else {
+                cachedTFunction = bindTFunction();
                 core_debug('[i18n] Language already set, skipping changeLanguage');
             }
+            isI18nInitialized = true;
             core_debug('[i18n] Reused existing i18n instance');
             return (0,index_cjs.ok)(undefined);
         }
@@ -269314,12 +269325,7 @@ function initializeI18n(language) {
     catch (error) {
         const errorMessage = helpers_ensureError(error).message;
         core_debug(`[i18n] Initialization failed: ${errorMessage}`);
-        return (0,index_cjs/* err */._q)({
-            type: 'ConfigurationError',
-            field: 'language',
-            value: language,
-            message: `Failed to initialize i18n: ${errorMessage}`,
-        });
+        return (0,index_cjs/* err */._q)(createConfigurationErrorObject('language', language, `Failed to initialize i18n: ${errorMessage}`));
     }
 }
 function i18n_t(namespace, key, options) {
@@ -269349,15 +269355,18 @@ function getCurrentLanguage() {
 function isInitialized() {
     return isI18nInitialized;
 }
-function i18n_changeLanguage(lang) {
-    if (!isI18nInitialized) {
-        return;
-    }
+function applyLanguage(lang) {
     instance.language = lang;
     cachedTFunction = bindTFunction();
     void instance.changeLanguage(lang, () => {
         cachedTFunction = bindTFunction();
     });
+}
+function i18n_changeLanguage(lang) {
+    if (!isI18nInitialized) {
+        return;
+    }
+    applyLanguage(lang);
 }
 function resetI18n() {
     isI18nInitialized = false;
@@ -269380,6 +269389,7 @@ function getLabelDisplayName(labelName, categories) {
 ;// CONCATENATED MODULE: ./src/errors/factories.ts
 
 
+
 function withOptionalField(base, key, value) {
     if (value !== undefined) {
         base[key] = value;
@@ -269396,12 +269406,7 @@ const factories_createGitHubAPIError = (message, status) => {
     const error = { type: 'GitHubAPIError', message: translatedMessage };
     return withOptionalField(error, 'status', status);
 };
-const factories_createConfigurationError = (field, value, customMessage) => ({
-    type: 'ConfigurationError',
-    field,
-    value,
-    message: customMessage || i18n_t('errors', 'configuration.invalidField', { field }),
-});
+const factories_createConfigurationError = (field, value, customMessage) => createConfigurationErrorObject(field, value, customMessage || i18n_t('errors', 'configuration.invalidField', { field }));
 const createParseError = (input, customMessage) => ({
     type: 'ParseError',
     input,
@@ -269741,7 +269746,7 @@ function escapeMarkdown(text) {
 
 
 function renderBasicMetrics(metrics, options) {
-    const { includeHeader = true, includeTimestamp = true, totalFilesLabel, totalFilesValue, filesAnalyzedLine, } = options;
+    const { includeHeader = true, includeTimestamp = true, totalFilesLine, filesAnalyzedLine } = options;
     let output = '';
     if (includeHeader) {
         output += `### 📈 ${i18n_t('summary', 'basicMetrics.title')}`;
@@ -269753,7 +269758,9 @@ function renderBasicMetrics(metrics, options) {
     }
     output += `- ${i18n_t('summary', 'basicMetrics.totalAdditions')}: **${common_formatNumber(metrics.totalAdditions)}**\n`;
     output += `- ${i18n_t('summary', 'basicMetrics.excludedAdditions')}: **${common_formatNumber(metrics.excludedAdditions)}**\n`;
-    output += `- ${totalFilesLabel}: **${common_formatNumber(totalFilesValue)}**\n`;
+    if (totalFilesLine) {
+        output += `- ${totalFilesLine.label}: **${common_formatNumber(totalFilesLine.value)}**\n`;
+    }
     if (filesAnalyzedLine) {
         output += `- ${filesAnalyzedLine.label}: **${common_formatNumber(filesAnalyzedLine.value)}**\n`;
     }
@@ -269779,15 +269786,19 @@ function renderBasicMetrics(metrics, options) {
 function formatBasicMetrics(metrics, options) {
     return renderBasicMetrics(metrics, {
         ...options,
-        totalFilesLabel: options?.filesAnalyzedLabel ?? i18n_t('summary', 'basicMetrics.totalFiles'),
-        totalFilesValue: metrics.filesAnalyzed.length,
+        totalFilesLine: {
+            label: options?.filesAnalyzedLabel ?? i18n_t('summary', 'basicMetrics.totalFiles'),
+            value: metrics.filesAnalyzed.length,
+        },
     });
 }
 function formatSummaryBasicMetrics(metrics, options) {
     return renderBasicMetrics(metrics, {
         ...options,
-        totalFilesLabel: i18n_t('summary', 'basicMetrics.totalFiles'),
-        totalFilesValue: metrics.totalFiles,
+        totalFilesLine: {
+            label: i18n_t('summary', 'basicMetrics.totalFiles'),
+            value: metrics.totalFiles,
+        },
         filesAnalyzedLine: {
             label: i18n_t('summary', 'basicMetrics.filesAnalyzed'),
             value: metrics.filesAnalyzed.length,
@@ -270131,13 +270142,12 @@ function formatImprovementActions(violations) {
 ;// CONCATENATED MODULE: ./src/summary/formatters/label-file-groups.ts
 
 
-function formatLabelFileGroups(reasoning, fileMetrics, complexityMetrics) {
+function formatLabelFileGroups(reasoning, fileMetrics, excludedAdditions, complexityMetrics) {
     if (reasoning.length === 0) {
         return '';
     }
     let output = `### 🏷️ ${i18n_t('summary', 'labelFileGroups.title')}\n\n`;
     const categoryGroups = groupByCategory(reasoning);
-    const excludedAdditions = calculateExcludedAdditions(fileMetrics);
     if (categoryGroups.category.length > 0) {
         for (const item of categoryGroups.category) {
             output += formatCategoryLabel(item);
@@ -270266,9 +270276,6 @@ function formatReasonSection(item, files, renderFiles) {
     output += closeDetails();
     return output;
 }
-function calculateExcludedAdditions(_fileMetrics) {
-    return 0;
-}
 
 ;// CONCATENATED MODULE: ./src/summary/formatters/labels.ts
 
@@ -270321,7 +270328,7 @@ function buildSummaryMarkdown(analysis, complexity, options) {
         markdown += `# 📊 ${summaryTitle}\n\n`;
         markdown += formatSummaryBasicMetrics(analysis.metrics);
         if (options?.reasoning && options.reasoning.length > 0) {
-            const labelFileGroupsSection = formatLabelFileGroups(options.reasoning, analysis.metrics.filesAnalyzed, complexity?.metrics);
+            const labelFileGroupsSection = formatLabelFileGroups(options.reasoning, analysis.metrics.filesAnalyzed, analysis.metrics.excludedAdditions, complexity?.metrics);
             if (labelFileGroupsSection) {
                 markdown += labelFileGroupsSection;
             }
@@ -274439,6 +274446,8 @@ const DEFAULT_EXCLUDE_PATTERNS = [
     '.temp/**',
     '.env',
     '.env.*',
+    '!.env.example',
+    '!.env.template',
     '*.sqlite',
     '*.sqlite3',
     '*.db',
@@ -274476,18 +274485,20 @@ function isExcluded(filePath, patterns) {
         return false;
     }
     const normalizedPath = normalizePattern(filePath);
+    let excluded = false;
     for (const pattern of patterns) {
-        const normalizedPattern = normalizePattern(pattern);
+        const isNegation = pattern.startsWith('!');
+        const normalizedPattern = normalizePattern(isNegation ? pattern.slice(1) : pattern);
         const options = {
             dot: true,
             matchBase: !normalizedPattern.includes('/'),
             windowsPathsNoEscape: true,
         };
         if (minimatch(normalizedPath, normalizedPattern, options)) {
-            return true;
+            excluded = !isNegation;
         }
     }
-    return false;
+    return excluded;
 }
 
 ;// CONCATENATED MODULE: ./src/file-metrics/binary-detector.ts
@@ -274559,13 +274570,14 @@ const BINARY_EXTENSIONS = new Set([
     '.sqlite3',
     '.DS_Store',
 ]);
-async function isBinaryFile(filePath) {
+async function isBinaryFile(filePath, workspaceRoot) {
     const ext = external_node_path_.extname(filePath).toLowerCase();
     if (BINARY_EXTENSIONS.has(ext)) {
         return true;
     }
+    const localPath = workspaceRoot ? external_node_path_.resolve(workspaceRoot, filePath) : filePath;
     try {
-        const buffer = await external_node_fs_.promises.readFile(filePath, { encoding: null });
+        const buffer = await external_node_fs_.promises.readFile(localPath, { encoding: null });
         const sample = buffer.slice(0, 8192);
         for (let i = 0; i < sample.length; i++) {
             if (sample[i] === 0) {
@@ -274588,6 +274600,7 @@ async function isBinaryFile(filePath) {
 }
 
 ;// CONCATENATED MODULE: ./src/file-metrics/file-size-service.ts
+
 
 
 
@@ -274620,10 +274633,12 @@ function createFsStatProbe(filePath) {
         return undefined;
     };
 }
-function createGitLsTreeProbe(filePath) {
+function createGitLsTreeProbe(filePath, workspaceRoot) {
     return async () => {
         try {
-            const { stdout } = await file_size_service_execFileAsync('git', ['ls-tree', '-l', 'HEAD', filePath]);
+            const { stdout } = await file_size_service_execFileAsync('git', ['ls-tree', '-l', 'HEAD', filePath], {
+                ...(workspaceRoot && { cwd: workspaceRoot }),
+            });
             const tabParts = stdout.trim().split('\t');
             if (tabParts.length >= 2 && tabParts[0]) {
                 const metaParts = tabParts[0].trim().split(/\s+/);
@@ -274665,9 +274680,10 @@ function createGitHubApiProbe(filePath, token, context) {
 }
 async function getFileSize(filePath, token, context) {
     actions_io_logDebug(`Getting size for file: ${filePath}`);
+    const localPath = context.workspaceRoot ? external_node_path_.resolve(context.workspaceRoot, filePath) : filePath;
     const size = await runProbes([
-        createFsStatProbe(filePath),
-        createGitLsTreeProbe(filePath),
+        createFsStatProbe(localPath),
+        createGitLsTreeProbe(filePath, context.workspaceRoot),
         createGitHubApiProbe(filePath, token, context),
     ]);
     if (typeof size === 'number') {
@@ -274686,11 +274702,13 @@ const external_node_readline_namespaceObject = require("node:readline");
 
 
 
+
 const line_counter_execFileAsync = (0,external_node_util_.promisify)(external_node_child_process_namespaceObject.execFile);
-async function getFileLineCount(filePath, maxLines) {
+async function getFileLineCount(filePath, maxLines, workspaceRoot) {
     actions_io_logDebug(`Counting lines in file: ${filePath}`);
+    const localPath = workspaceRoot ? external_node_path_.resolve(workspaceRoot, filePath) : filePath;
     try {
-        const { stdout } = await line_counter_execFileAsync('wc', ['-l', filePath]);
+        const { stdout } = await line_counter_execFileAsync('wc', ['-l', localPath]);
         const match = stdout.match(/^\s*(\d+)/);
         if (match && match[1]) {
             const lines = Number.parseInt(match[1], 10);
@@ -274705,7 +274723,7 @@ async function getFileLineCount(filePath, maxLines) {
         actions_io_logDebug(`wc -l failed: ${helpers_ensureError(error).message}`);
     }
     try {
-        const fileStream = (0,external_node_fs_.createReadStream)(filePath, { encoding: 'utf-8' });
+        const fileStream = (0,external_node_fs_.createReadStream)(localPath, { encoding: 'utf-8' });
         const rl = (0,external_node_readline_namespaceObject.createInterface)({
             input: fileStream,
             crlfDelay: Infinity,
@@ -274749,7 +274767,7 @@ function createInitialState(files, config) {
                 filesSkippedBinary: [],
                 filesWithErrors: [],
                 filesSkippedByLimit: [],
-                allFiles: files.map(f => f.filename),
+                filesForClassification: files.map(f => f.filename),
             },
             violations: {
                 largeFiles: [],
@@ -274770,7 +274788,7 @@ function recordViolation(list, violation, message) {
 }
 async function collectFileMetrics(file, config, token, context) {
     const sizeResult = await getFileSize(file.filename, token, context);
-    const lineResult = await getFileLineCount(file.filename, config.fileLineLimitEnabled ? config.fileLineLimit + 1 : undefined);
+    const lineResult = await getFileLineCount(file.filename, config.fileLineLimitEnabled ? config.fileLineLimit + 1 : undefined, context.workspaceRoot);
     if (sizeResult.isErr() || lineResult.isErr()) {
         return undefined;
     }
@@ -274794,7 +274812,7 @@ async function processFile(state, file, config, token, context) {
         result.metrics.excludedAdditions += file.additions;
         return;
     }
-    if (await isBinaryFile(file.filename)) {
+    if (await isBinaryFile(file.filename, context.workspaceRoot)) {
         result.metrics.filesSkippedBinary.push(file.filename);
         actions_io_logDebug(`Skipping binary file: ${file.filename}`);
         return;
@@ -274997,6 +275015,7 @@ function analyzePullRequest(context) {
             owner: prContext.owner,
             repo: prContext.repo,
             headSha: prContext.headSha,
+            workspaceRoot: getEnvVar('GITHUB_WORKSPACE') || process.cwd(),
         });
         if (analysisResult.isErr()) {
             throw analysisResult.error;
@@ -281462,7 +281481,7 @@ function decideLabels(metrics, config, violations, prContext, violationLabels) {
         }
     }
     if (config.categoryLabeling.enabled) {
-        const categoryResults = decideCategoryLabelsWithFiles(metrics.allFiles, config.categories);
+        const categoryResults = decideCategoryLabelsWithFiles(metrics.filesForClassification, config.categories);
         labelsToAdd.push(...categoryResults.map(r => r.label));
         for (const result of categoryResults) {
             reasoning.push({
@@ -281474,7 +281493,7 @@ function decideLabels(metrics, config, violations, prContext, violationLabels) {
         }
     }
     if (config.risk.enabled) {
-        const files = metrics.allFiles;
+        const files = metrics.filesForClassification;
         const riskLabel = decideRiskLabel(files, config.risk, prContext);
         if (riskLabel) {
             labelsToAdd.push(riskLabel);
@@ -281746,7 +281765,7 @@ function applyLabelsStage(context, artifacts) {
             totalAdditions: analysis.metrics.totalAdditions,
             excludedAdditions: analysis.metrics.excludedAdditions,
             files: analysis.metrics.filesAnalyzed,
-            allFiles: analysis.metrics.allFiles,
+            filesForClassification: analysis.metrics.filesForClassification,
             ...(complexityMetrics && { complexity: complexityMetrics }),
         };
         const octokit = getOctokit(token);
@@ -430879,7 +430898,7 @@ module.exports = {"rE":"2.7.0"};
 /******/ 	// module cache are used so entry inlining is disabled
 /******/ 	// startup
 /******/ 	// Load entry module and return exports
-/******/ 	var __webpack_exports__ = __nccwpck_require__(43109);
+/******/ 	var __webpack_exports__ = __nccwpck_require__(72181);
 /******/ 	module.exports = __webpack_exports__;
 /******/ 	
 /******/ })()

@@ -6,6 +6,7 @@ export interface RepoContext {
   owner: string;
   repo: string;
   headSha?: string;
+  workspaceRoot?: string;
 }
 
 export interface AnalysisConfig {

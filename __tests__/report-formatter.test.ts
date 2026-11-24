@@ -1421,7 +1421,7 @@ describe('ReportFormatter', () => {
     });
 
     it('should return empty string when no reasoning provided', () => {
-      const result = formatLabelFileGroups([], createFileMetrics());
+      const result = formatLabelFileGroups([], createFileMetrics(), 0);
       expect(result).toBe('');
     });
 
@@ -1441,7 +1441,7 @@ describe('ReportFormatter', () => {
         },
       ];
 
-      const result = formatLabelFileGroups(reasoning, createFileMetrics());
+      const result = formatLabelFileGroups(reasoning, createFileMetrics(), 0);
 
       expect(result).toContain('### 🏷️ Applied Labels and Files');
       expect(result).toContain('<details>');
@@ -1464,7 +1464,7 @@ describe('ReportFormatter', () => {
         },
       ];
 
-      const result = formatLabelFileGroups(reasoning, createFileMetrics());
+      const result = formatLabelFileGroups(reasoning, createFileMetrics(), 0);
 
       expect(result).toContain('risk/high');
       expect(result).toContain('Reason');
@@ -1484,7 +1484,7 @@ describe('ReportFormatter', () => {
         },
       ];
 
-      const result = formatLabelFileGroups(reasoning, createFileMetrics(), createComplexityMetrics());
+      const result = formatLabelFileGroups(reasoning, createFileMetrics(), 0, createComplexityMetrics());
 
       expect(result).toContain('complexity/high');
       expect(result).toContain('High Complexity Files');
@@ -1510,10 +1510,11 @@ describe('ReportFormatter', () => {
         { path: '__tests__/test.ts', size: 2000, lines: 60, additions: 50, deletions: 5 },
       ];
 
-      const result = formatLabelFileGroups(reasoning, fileMetrics);
+      const result = formatLabelFileGroups(reasoning, fileMetrics, 120);
 
       expect(result).toContain('size/large');
       expect(result).toContain('Total Additions');
+      expect(result).toContain('excluding 120 lines from excluded files');
       expect(result).toContain('500');
       expect(result).toContain('Analyzed Files');
       expect(result).toContain('src/index.ts');
@@ -1531,7 +1532,7 @@ describe('ReportFormatter', () => {
         },
       ];
 
-      const result = formatLabelFileGroups(reasoning, createFileMetrics());
+      const result = formatLabelFileGroups(reasoning, createFileMetrics(), 0);
 
       expect(result).toContain('### 🏷️ Applied Labels and Files');
       expect(result).not.toContain('category/tests');
@@ -1547,7 +1548,7 @@ describe('ReportFormatter', () => {
         },
       ];
 
-      const result = formatLabelFileGroups(reasoning, createFileMetrics());
+      const result = formatLabelFileGroups(reasoning, createFileMetrics(), 0);
 
       expect(result).toContain('### 🏷️ Applied Labels and Files');
       expect(result).not.toContain('category/tests');
@@ -1581,7 +1582,7 @@ describe('ReportFormatter', () => {
         },
       ];
 
-      const result = formatLabelFileGroups(reasoning, createFileMetrics(), createComplexityMetrics());
+      const result = formatLabelFileGroups(reasoning, createFileMetrics(), 0, createComplexityMetrics());
 
       const categoryIndex = result.indexOf('category/tests');
       const riskIndex = result.indexOf('risk/medium');
@@ -1606,7 +1607,7 @@ describe('ReportFormatter', () => {
         },
       ];
 
-      const result = formatLabelFileGroups(reasoning, createFileMetrics());
+      const result = formatLabelFileGroups(reasoning, createFileMetrics(), 0);
 
       expect(result).toContain('適用されたラベルとファイル');
       expect(result).toContain('category/tests');
@@ -1625,7 +1626,7 @@ describe('ReportFormatter', () => {
         },
       ];
 
-      const result = formatLabelFileGroups(reasoning, createFileMetrics());
+      const result = formatLabelFileGroups(reasoning, createFileMetrics(), 0);
 
       expect(result).toContain('special_file.test.ts');
       expect(result).toContain('[bracket].ts');

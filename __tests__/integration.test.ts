@@ -74,20 +74,18 @@ const FIXTURE_FILENAMES = ['small.ts', 'large.ts', 'file.ts', 'feature.ts'];
 
 describe('Integration Tests', () => {
   let summaryFile: string;
-  let originalCwd: string;
   let fixtureDir: string;
 
   beforeEach(() => {
     vi.clearAllMocks();
 
-    originalCwd = process.cwd();
     fixtureDir = fs.mkdtempSync(path.join(os.tmpdir(), 'pr-insights-labeler-integration-'));
     fs.mkdirSync(path.join(fixtureDir, 'src'), { recursive: true });
     const fixtureContent = 'export function sample(): number {\n  return 1;\n}\n';
     for (const name of FIXTURE_FILENAMES) {
       fs.writeFileSync(path.join(fixtureDir, 'src', name), fixtureContent);
     }
-    process.chdir(fixtureDir);
+    process.env['GITHUB_WORKSPACE'] = fixtureDir;
 
     vi.mocked(github.context).payload.pull_request = {
       number: 1,
@@ -151,7 +149,7 @@ describe('Integration Tests', () => {
       fs.unlinkSync(summaryFile);
     }
 
-    process.chdir(originalCwd);
+    delete process.env['GITHUB_WORKSPACE'];
     fs.rmSync(fixtureDir, { recursive: true, force: true });
   });
 

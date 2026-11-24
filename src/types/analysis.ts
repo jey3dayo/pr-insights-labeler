@@ -18,7 +18,7 @@ export interface Metrics {
   filesSkippedBinary: string[];
   filesWithErrors: string[];
   filesSkippedByLimit: string[];
-  allFiles: string[];
+  filesForClassification: string[];
 }
 
 export interface AnalysisResult {
