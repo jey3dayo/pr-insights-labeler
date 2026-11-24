@@ -243,6 +243,13 @@ describe('PatternMatcher', () => {
       expect(isExcluded('src/keep.log', patterns)).toBe(false);
     });
 
+    it('should let a later pattern override an earlier negation', () => {
+      const patterns = [...getDefaultExcludePatterns(), '.env.example'];
+
+      expect(isExcluded('.env.example', patterns)).toBe(true);
+      expect(isExcluded('.env.template', patterns)).toBe(false);
+    });
+
     it('should work with custom patterns', () => {
       const customPatterns = ['*.test.ts', 'src/temp/**', '*.tmp'];
 

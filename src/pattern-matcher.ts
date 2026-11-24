@@ -31,10 +31,7 @@ export function isExcluded(filePath: string, patterns: string[]): boolean {
     };
 
     if (minimatch(normalizedPath, normalizedPattern, options)) {
-      if (isNegation) {
-        return false;
-      }
-      excluded = true;
+      excluded = !isNegation;
     }
   }
 
