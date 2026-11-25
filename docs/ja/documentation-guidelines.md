@@ -75,9 +75,10 @@
 ### ディレクトリ構造
 
 ```
-pr-labeler/
+pr-insights-labeler/
 ├── README.md                # プロジェクト概要（英語）
 ├── README.ja.md             # プロジェクト概要（日本語）
+├── AGENTS.md                # 開発・AI協働ガイド
 ├── docs/
 │   ├── README.md            # 言語別インデックス
 │   ├── assets/              # 共有画像
@@ -87,7 +88,7 @@ pr-labeler/
 │   │   ├── labeling-rules.md
 │   │   ├── categories.md
 │   │   ├── troubleshooting.md
-│   │   └── ...              # API/Releaseはメンテナ向けのためJAのみで可（翻訳不要）
+│   │   └── ...              # API/Releaseはメンテナー向けのためJAのみで可（翻訳不要）
 │   └── ja/                  # 日本語ドキュメント
 │       ├── advanced-usage.md
 │       ├── labeling-rules.md
@@ -96,12 +97,10 @@ pr-labeler/
 │       ├── marketplace-release.md
 │       ├── i18n-error-migration-guide.md
 │       └── documentation-guidelines.md
-├── .claude/
-│   └── commands/       # cc-sddコマンドドキュメント
-└── .specify/
-    ├── spec.md         # 機能仕様書
-    ├── plan.md         # 実装計画書
-    └── tasks.md        # タスクリスト
+└── .claude/
+    ├── commands/            # カスタムコマンド
+    ├── rules/               # ルール定義
+    └── skills/              # スキル定義
 ```
 
 ### ファイル命名規則
@@ -112,27 +111,24 @@ pr-labeler/
 
 ## 📊 現在のドキュメント一覧
 
-| ファイル名                            | 言語  | タグ                                                                      | 概要                                 | ステータス  |
-| ------------------------------------- | ----- | ------------------------------------------------------------------------- | ------------------------------------ | ----------- |
-| README.md                             | EN    | `category/documentation`, `audience/user`                                 | プロジェクト概要・使用方法           | ✅ 作成済   |
-| README.ja.md                          | JA    | `category/documentation`, `audience/user`                                 | プロジェクト概要・使用方法（日本語） | ✅ 作成済   |
-| docs/README.md                        | EN/JA | `category/documentation`, `audience/user`, `audience/developer`           | 言語別インデックス                   | ✅ 作成済   |
-| AGENTS.md                             | EN    | `category/documentation`, `audience/developer`, `environment/development` | Claude Code 協働ガイド               | ✅ 作成済   |
-| docs/en/configuration.md              | EN    | `category/action`, `audience/user`, `audience/developer`                  | Action 設定ガイド                    | ✅ 作成済   |
-| docs/en/advanced-usage.md             | EN    | `category/action`, `audience/developer`                                   | 高度な使用例（英語）                 | ✅ 作成済   |
-| docs/en/labeling-rules.md             | EN    | `category/documentation`, `audience/developer`, `audience/contributor`    | ラベル判定サマリ（英語）             | ✅ 作成済   |
-| docs/en/categories.md                 | EN    | `category/documentation`, `audience/developer`, `audience/maintainer`     | カテゴリラベル詳細                   | ✅ 作成済   |
-| docs/en/troubleshooting.md            | EN    | `category/operations`, `audience/user`, `audience/developer`              | トラブルシューティング（英語）       | ✅ 作成済   |
-| docs/ja/advanced-usage.md             | JA    | `category/action`, `audience/developer`                                   | 高度な使用例（日本語）               | ✅ 作成済   |
-| docs/ja/labeling-rules.md             | JA    | `category/documentation`, `audience/developer`, `audience/contributor`    | ラベル判定サマリ（日本語）           | ✅ 作成済   |
-| docs/ja/API.md                        | JA    | `category/api`, `audience/developer`, `environment/development`           | API 仕様書                           | ✅ 作成済   |
-| docs/ja/release-process.md            | JA    | `category/deployment`, `audience/maintainer`                              | リリース手順                         | ✅ 作成済   |
-| docs/ja/marketplace-release.md        | JA    | `category/deployment`, `audience/maintainer`, `environment/production`    | Marketplace 公開手順                 | ✅ 作成済   |
-| docs/ja/i18n-error-migration-guide.md | JA    | `category/development`, `audience/developer`                              | i18n 移行ガイド                      | ✅ 作成済   |
-| docs/ja/documentation-guidelines.md   | JA    | `category/documentation`, `audience/developer`                            | ドキュメント管理体系                 | ✅ 作成済   |
-| .specify/spec.md                      | EN    | `category/cc-sdd`, `audience/developer`                                   | 機能仕様書                           | ⏳ 随時更新 |
-| .specify/plan.md                      | EN    | `category/cc-sdd`, `audience/developer`                                   | 実装計画書                           | ⏳ 随時更新 |
-| .specify/tasks.md                     | EN    | `category/cc-sdd`, `audience/developer`                                   | タスク管理                           | ⏳ 随時更新 |
+| ファイル名                            | 言語  | タグ                                                                      | 概要                                 | ステータス |
+| ------------------------------------- | ----- | ------------------------------------------------------------------------- | ------------------------------------ | ---------- |
+| README.md                             | EN    | `category/documentation`, `audience/user`                                 | プロジェクト概要・使用方法           | ✅ 作成済  |
+| README.ja.md                          | JA    | `category/documentation`, `audience/user`                                 | プロジェクト概要・使用方法（日本語） | ✅ 作成済  |
+| docs/README.md                        | EN/JA | `category/documentation`, `audience/user`, `audience/developer`           | 言語別インデックス                   | ✅ 作成済  |
+| AGENTS.md                             | JA    | `category/documentation`, `audience/developer`, `environment/development` | 開発・AI 協働ガイド                  | ✅ 作成済  |
+| docs/en/configuration.md              | EN    | `category/action`, `audience/user`, `audience/developer`                  | Action 設定ガイド                    | ✅ 作成済  |
+| docs/en/advanced-usage.md             | EN    | `category/action`, `audience/developer`                                   | 高度な使用例（英語）                 | ✅ 作成済  |
+| docs/en/labeling-rules.md             | EN    | `category/documentation`, `audience/developer`, `audience/contributor`    | ラベル判定サマリ（英語）             | ✅ 作成済  |
+| docs/en/categories.md                 | EN    | `category/documentation`, `audience/developer`, `audience/maintainer`     | カテゴリラベル詳細                   | ✅ 作成済  |
+| docs/en/troubleshooting.md            | EN    | `category/operations`, `audience/user`, `audience/developer`              | トラブルシューティング（英語）       | ✅ 作成済  |
+| docs/ja/advanced-usage.md             | JA    | `category/action`, `audience/developer`                                   | 高度な使用例（日本語）               | ✅ 作成済  |
+| docs/ja/labeling-rules.md             | JA    | `category/documentation`, `audience/developer`, `audience/contributor`    | ラベル判定サマリ（日本語）           | ✅ 作成済  |
+| docs/ja/API.md                        | JA    | `category/api`, `audience/developer`, `environment/development`           | API 仕様書                           | ✅ 作成済  |
+| docs/ja/release-process.md            | JA    | `category/deployment`, `audience/maintainer`                              | リリース手順                         | ✅ 作成済  |
+| docs/ja/marketplace-release.md        | JA    | `category/deployment`, `audience/maintainer`, `environment/production`    | Marketplace 公開手順                 | ✅ 作成済  |
+| docs/ja/i18n-error-migration-guide.md | JA    | `category/development`, `audience/developer`                              | i18n 移行ガイド                      | ✅ 作成済  |
+| docs/ja/documentation-guidelines.md   | JA    | `category/documentation`, `audience/developer`                            | ドキュメント管理体系                 | ✅ 作成済  |
 
 ### ステータス凡例
 

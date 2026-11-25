@@ -171,6 +171,7 @@ module.exports = tseslint.config(
       'dist/**/*',
       'coverage/**/*',
       'node_modules/**/*',
+      '.worktrees/**/*',
       '.vitest/**/*',
       '*.config.js',
       '*.config.ts',

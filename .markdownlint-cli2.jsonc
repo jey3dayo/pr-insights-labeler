@@ -79,6 +79,7 @@
     "**/node_modules/**",
     "**/dist/**",
     "**/.git/**",
+    "**/.worktrees/**",
     "**/_*.md", // アンダースコアで始まるmarkdownファイルを除外
     "**/.codex/**"
   ]
