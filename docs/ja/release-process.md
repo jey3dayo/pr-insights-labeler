@@ -100,11 +100,11 @@ PR Insights Labeler の新バージョンをリリースするための手順書
   # 期待: No errors or warnings
   ```
 
-- [ ] フォーマットが適用されています（`pnpm format:check`）
+- [ ] フォーマットが適用されています（`pnpm prettier`）
 
   ```bash
-  pnpm format:check
-  # 期待: All files formatted correctly
+  pnpm prettier
+  # 期待: All matched files use Prettier code style!
   ```
 
 ### 2. ビルド
