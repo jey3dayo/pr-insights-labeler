@@ -83,6 +83,32 @@ describe('Directory-Based Labeler: Pattern Matcher', () => {
       expect(compiledExplicitDot[0]?.matcher('project/.github/workflows/ci.yml')).toBe(true);
     });
 
+    test('オプション未指定時はデフォルト値（dot: true）が適用される', () => {
+      const compiled = compilePatterns(['src/**/*'], {});
+
+      expect(compiled[0]?.matcher('src/.hidden/file.ts')).toBe(true);
+    });
+
+    test('オプション未指定時はデフォルト値（nocase: false）が適用される', () => {
+      const compiled = compilePatterns(['src/**/*.TS'], {});
+
+      expect(compiled[0]?.matcher('src/index.ts')).toBe(false);
+    });
+
+    test('オプション未指定時はデフォルト値（matchBase: false）が適用される', () => {
+      const compiled = compilePatterns(['*.ts'], {});
+
+      expect(compiled[0]?.matcher('src/index.ts')).toBe(false);
+    });
+
+    test('priority引数がコンパイル済みパターンに伝播する', () => {
+      const withPriority = compilePatterns(['src/**'], {}, 42);
+      expect(withPriority[0]?.priority).toBe(42);
+
+      const withoutPriority = compilePatterns(['src/**'], {});
+      expect(withoutPriority[0]?.priority).toBeUndefined();
+    });
+
     test('nocaseオプションで大文字小文字を区別しない', () => {
       const patterns = ['src/**/*.TS'];
       const compiledCaseSensitive = compilePatterns(patterns, { nocase: false });
@@ -246,6 +272,28 @@ describe('Directory-Based Labeler: Pattern Matcher', () => {
 
       expect(result.matched).toBe(true);
       expect(result.matchedPattern).toBe('src/components/**');
+    });
+
+    test('priorityとマッチ長が競合する場合はpriorityが勝つ', () => {
+      const patterns: CompiledPattern[] = [
+        {
+          pattern: 'src/components/**',
+          matcher: (path: string) => path.startsWith('src/components/'),
+          priority: 10,
+        },
+        {
+          pattern: 'src/**',
+          matcher: (path: string) => path.startsWith('src/'),
+          priority: 50,
+        },
+      ];
+
+      const excludePatterns = compilePatterns([], { dot: true });
+      const result = matchIncludePatterns('src/components/Button.tsx', patterns, excludePatterns);
+
+      expect(result.matched).toBe(true);
+      expect(result.matchedPattern).toBe('src/**');
+      expect(result.priority).toBe(50);
     });
 
     test('priority未指定時: 最長マッチで決定', () => {
