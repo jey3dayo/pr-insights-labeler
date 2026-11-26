@@ -193,6 +193,152 @@ describe('Directory-Based Labeler: Decision Engine', () => {
       }
     });
 
+    test('優先度が低い後続ルールは、先行の高優先度ルールを上書きしない', () => {
+      const config: DirectoryLabelerConfig = {
+        version: 1,
+        rules: [
+          {
+            label: 'high-short',
+            include: ['src/**'],
+            priority: 50,
+          },
+          {
+            label: 'low-long',
+            include: ['src/components/**'],
+            priority: 10,
+          },
+        ],
+      };
+
+      const files = ['src/components/Button.tsx'];
+
+      const result = decideLabelsForFiles(files, config);
+
+      expect(result.isOk()).toBe(true);
+      if (result.isOk()) {
+        const decisions = result.value;
+        expect(decisions).toHaveLength(1);
+        expect(decisions[0]?.label).toBe('high-short');
+      }
+    });
+
+    test('優先度が同点の場合、後続の短いマッチは先行の長いマッチを上書きしない', () => {
+      const config: DirectoryLabelerConfig = {
+        version: 1,
+        rules: [
+          {
+            label: 'first-long',
+            include: ['src/components/**'],
+            priority: 10,
+          },
+          {
+            label: 'second-short',
+            include: ['src/**'],
+            priority: 10,
+          },
+        ],
+      };
+
+      const files = ['src/components/Button.tsx'];
+
+      const result = decideLabelsForFiles(files, config);
+
+      expect(result.isOk()).toBe(true);
+      if (result.isOk()) {
+        const decisions = result.value;
+        expect(decisions).toHaveLength(1);
+        expect(decisions[0]?.label).toBe('first-long');
+      }
+    });
+
+    test('優先度・マッチ長が完全同点の場合は先行ルールが勝つ', () => {
+      const config: DirectoryLabelerConfig = {
+        version: 1,
+        rules: [
+          {
+            label: 'first-tie',
+            include: ['src/components/*'],
+          },
+          {
+            label: 'second-tie',
+            include: ['src/*/Button.tsx'],
+          },
+        ],
+      };
+
+      const files = ['src/components/Button.tsx'];
+
+      const result = decideLabelsForFiles(files, config);
+
+      expect(result.isOk()).toBe(true);
+      if (result.isOk()) {
+        const decisions = result.value;
+        expect(decisions).toHaveLength(1);
+        expect(decisions[0]?.label).toBe('first-tie');
+      }
+    });
+
+    test('複数ラベルは優先度の降順にソートされる', () => {
+      const config: DirectoryLabelerConfig = {
+        version: 1,
+        rules: [
+          {
+            label: 'p10',
+            include: ['aaa/**'],
+            priority: 10,
+          },
+          {
+            label: 'p50',
+            include: ['bbb/**'],
+            priority: 50,
+          },
+          {
+            label: 'p30',
+            include: ['ccc/**'],
+            priority: 30,
+          },
+        ],
+      };
+
+      const files = ['aaa/x.ts', 'bbb/x.ts', 'ccc/x.ts'];
+
+      const result = decideLabelsForFiles(files, config);
+
+      expect(result.isOk()).toBe(true);
+      if (result.isOk()) {
+        expect(result.value.map(d => d.label)).toEqual(['p50', 'p30', 'p10']);
+      }
+    });
+
+    test('優先度が同点の複数ラベルはマッチ長の降順にソートされる', () => {
+      const config: DirectoryLabelerConfig = {
+        version: 1,
+        rules: [
+          {
+            label: 'short',
+            include: ['x/**'],
+          },
+          {
+            label: 'long',
+            include: ['longer-dir-name/**'],
+          },
+          {
+            label: 'mid',
+            include: ['mid-dir/**'],
+          },
+        ],
+      };
+
+      const files = ['x/f.ts', 'longer-dir-name/f.ts', 'mid-dir/f.ts'];
+
+      const result = decideLabelsForFiles(files, config);
+
+      expect(result.isOk()).toBe(true);
+      if (result.isOk()) {
+        expect(result.value.map(d => d.label)).toEqual(['long', 'mid', 'short']);
+      }
+    });
+
     test('空のファイルリストは空配列を返す', () => {
       const config: DirectoryLabelerConfig = {
         version: 1,
@@ -251,6 +397,32 @@ describe('Directory-Based Labeler: Decision Engine', () => {
         expect(decisions).toHaveLength(1);
         expect(decisions[0]?.matchedFiles).toHaveLength(1);
         expect(decisions[0]?.matchedFiles).toContain('src/index.ts');
+      }
+    });
+
+    test('useDefaultExcludes: false の場合はデフォルト除外を適用しない', () => {
+      const config: DirectoryLabelerConfig = {
+        version: 1,
+        useDefaultExcludes: false,
+        rules: [
+          {
+            label: 'all',
+            include: ['**/*'],
+          },
+        ],
+      };
+
+      const files = ['src/index.ts', 'node_modules/package/index.js'];
+
+      const result = decideLabelsForFiles(files, config);
+
+      expect(result.isOk()).toBe(true);
+      if (result.isOk()) {
+        const decisions = result.value;
+        expect(decisions).toHaveLength(1);
+        expect(decisions[0]?.matchedFiles).toHaveLength(2);
+        expect(decisions[0]?.matchedFiles).toContain('src/index.ts');
+        expect(decisions[0]?.matchedFiles).toContain('node_modules/package/index.js');
       }
     });
   });
@@ -331,6 +503,43 @@ describe('Directory-Based Labeler: Decision Engine', () => {
       expect(result.selected[0]?.label).toBe('long-pattern');
       expect(result.rejected).toHaveLength(1);
       expect(result.rejected[0]?.label).toBe('short-pattern');
+    });
+
+    test('優先度とマッチ長が競合する場合は優先度が勝つ', () => {
+      const decisions: LabelDecision[] = [
+        {
+          label: 'long-low',
+          matchedPattern: 'a/**',
+          matchedFiles: ['a/x.ts'],
+          priority: 10,
+          matchLength: 30,
+        },
+        {
+          label: 'short-high',
+          matchedPattern: 'b/**',
+          matchedFiles: ['b/x.ts'],
+          priority: 50,
+          matchLength: 5,
+        },
+      ];
+
+      const result = filterByMaxLabels(decisions, 1);
+
+      expect(result.selected.map(d => d.label)).toEqual(['short-high']);
+      expect(result.rejected.map(d => d.label)).toEqual(['long-low']);
+    });
+
+    test('3件以上の場合は優先度の降順に選択される', () => {
+      const decisions: LabelDecision[] = [
+        { label: 'p10', matchedPattern: 'a/**', matchedFiles: ['a/x.ts'], priority: 10, matchLength: 10 },
+        { label: 'p50', matchedPattern: 'b/**', matchedFiles: ['b/x.ts'], priority: 50, matchLength: 10 },
+        { label: 'p30', matchedPattern: 'c/**', matchedFiles: ['c/x.ts'], priority: 30, matchLength: 10 },
+      ];
+
+      const result = filterByMaxLabels(decisions, 2);
+
+      expect(result.selected.map(d => d.label)).toEqual(['p50', 'p30']);
+      expect(result.rejected.map(d => d.label)).toEqual(['p10']);
     });
 
     test('max_labels=0は無制限として扱う', () => {

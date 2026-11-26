@@ -1,3 +1,4 @@
+import { promises as fs } from 'node:fs';
 import * as path from 'node:path';
 
 import { describe, expect, it, vi } from 'vitest';
@@ -57,6 +58,41 @@ describe('ComplexityAnalyzer (real ESLint, unmocked)', () => {
         expect(error.filename).toBe(filePath);
       }
     });
+
+    it('should accept a file whose size equals maxFileSize', async () => {
+      const filePath = path.join(fixturesDir, 'complexity-sample.ts');
+      const { size } = await fs.stat(filePath);
+      const result = await analyzer.analyzeFile(filePath, { maxFileSize: size });
+
+      expect(result.isOk()).toBe(true);
+    });
+
+    it('should include filename and details when the file cannot be read', async () => {
+      const filePath = path.join(fixturesDir, 'non-existent.ts');
+      const result = await analyzer.analyzeFile(filePath);
+
+      expect(result.isErr()).toBe(true);
+      if (result.isErr()) {
+        const error = result.error;
+        expect(error.reason).toBe('analysis_failed');
+        expect(error.filename).toBe(filePath);
+        expect(error.details).toContain('Failed to stat file');
+        expect(error.details).toContain(filePath);
+      }
+    });
+
+    it('should analyze a TSX file containing JSX', async () => {
+      const filePath = path.join(fixturesDir, 'complexity-jsx.tsx');
+      const result = await analyzer.analyzeFile(filePath);
+
+      expect(result.isOk()).toBe(true);
+      if (result.isOk()) {
+        const complexity = result.value;
+        expect(complexity.isSyntaxError).toBe(false);
+        expect(complexity.functions.length).toBeGreaterThan(0);
+        expect(complexity.complexity).toBeGreaterThan(0);
+      }
+    });
   });
 
   describe('analyzeFiles', () => {
@@ -90,6 +126,20 @@ describe('ComplexityAnalyzer (real ESLint, unmocked)', () => {
         expect(metrics.analyzedFiles).toBe(1);
         expect(metrics.skippedFiles).toHaveLength(1);
         expect(metrics.skippedFiles[0]?.reason).toBe('analysis_failed');
+      }
+    });
+
+    it('should set truncated to false and include details for skipped files', async () => {
+      const filePaths = [path.join(fixturesDir, 'complexity-sample.ts'), path.join(fixturesDir, 'non-existent.ts')];
+
+      const result = await analyzer.analyzeFiles(filePaths);
+
+      expect(result.isOk()).toBe(true);
+      if (result.isOk()) {
+        const metrics = result.value;
+        expect(metrics.truncated).toBe(false);
+        expect(metrics.skippedFiles).toHaveLength(1);
+        expect(metrics.skippedFiles[0]?.details).toContain('Failed to stat file');
       }
     });
   });
